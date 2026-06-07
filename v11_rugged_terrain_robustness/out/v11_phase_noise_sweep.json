@@ -1,0 +1,42 @@
+[
+  {
+    "sigma_s": 0.0,
+    "success_rate": 1.0,
+    "mean_touchdowns": 12.0
+  },
+  {
+    "sigma_s": 0.005,
+    "success_rate": 0.8,
+    "mean_touchdowns": 11.0
+  },
+  {
+    "sigma_s": 0.01,
+    "success_rate": 0.6,
+    "mean_touchdowns": 9.4
+  },
+  {
+    "sigma_s": 0.015,
+    "success_rate": 0.2,
+    "mean_touchdowns": 7.6
+  },
+  {
+    "sigma_s": 0.02,
+    "success_rate": 0.2,
+    "mean_touchdowns": 7.8
+  },
+  {
+    "sigma_s": 0.03,
+    "success_rate": 0.2,
+    "mean_touchdowns": 8.6
+  },
+  {
+    "sigma_s": 0.045,
+    "success_rate": 0.0,
+    "mean_touchdowns": 6.4
+  },
+  {
+    "sigma_s": 0.06,
+    "success_rate": 0.0,
+    "mean_touchdowns": 4.8
+  }
+]

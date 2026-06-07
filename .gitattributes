@@ -1,0 +1,119 @@
+# Git 属性配置 - hw-1 项目
+# 规范文件处理、行尾符和大文件管理
+
+# ============================================================
+# 行尾符规范化
+# ============================================================
+# 自动转换文本文件行尾符
+* text=auto
+
+# Python 源代码使用 LF
+*.py text eol=lf
+*.pyx text eol=lf
+*.pyi text eol=lf
+
+# 配置文件使用 LF
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.ini text eol=lf
+*.cfg text eol=lf
+
+# Shell 脚本使用 LF
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Windows 脚本使用 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# ============================================================
+# Git LFS - 大文件存储
+# ============================================================
+# 视频文件（仿真结果）
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.avi filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.mkv filter=lfs diff=lfs merge=lfs -text
+
+# 大型数据文件
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.hdf5 filter=lfs diff=lfs merge=lfs -text
+*.mat filter=lfs diff=lfs merge=lfs -text
+
+# ABAQUS 输出数据库（如果需要跟踪）
+*.odb filter=lfs diff=lfs merge=lfs -text
+
+# 归档文件
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+
+# ============================================================
+# 二进制文件标记
+# ============================================================
+# 图像文件
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg text
+
+# 文档文件
+*.pdf binary
+*.docx binary
+*.xlsx binary
+
+# Python 编译文件
+*.pyc binary
+*.pyo binary
+*.pyd binary
+*.so binary
+*.dll binary
+
+# ============================================================
+# 差异和合并策略
+# ============================================================
+# Jupyter Notebook 使用专用工具对比
+*.ipynb diff=jupyternotebook merge=jupyternotebook
+
+# MATLAB 代码文件
+*.m text diff=matlab
+*.mlx binary
+
+# 数据文件不做文本对比
+*.csv text
+*.tsv text
+*.pkl binary
+*.pickle binary
+
+# ============================================================
+# 语言统计
+# ============================================================
+# 排除第三方代码和生成文件
+.venv-mujoco/** linguist-vendored
+.venv-codex/** linguist-vendored
+compass-gait-remotion/node_modules/** linguist-vendored
+matlab-v01-v13-gait/slprj/** linguist-generated
+
+# 标记主要语言
+*.py linguist-language=Python
+*.m linguist-language=MATLAB
+
+# ============================================================
+# 导出归档设置
+# ============================================================
+# 排除开发文件（git archive 时）
+.github export-ignore
+.vscode export-ignore
+.idea export-ignore
+tests/ export-ignore
+benchmarks/ export-ignore
+.pre-commit-config.yaml export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore

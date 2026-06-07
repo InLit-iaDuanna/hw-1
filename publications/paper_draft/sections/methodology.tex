@@ -1,0 +1,176 @@
+% Methodology Section
+
+\subsection{Overview: V01-V24 Development Pipeline}
+
+本研究采用迭代开发方法论，通过 24 个版本逐步验证关键假设。图 \ref{fig:version_evolution} 展示了技术路线的演化：
+
+\begin{itemize}
+    \item \textbf{阶段 1（V01-V13）}：纯被动极限环证明 → 准被动控制 → 参数敏感性分析
+    \item \textbf{阶段 2（V14-V17）}：机械升级（摆臂、SEA、电机动力学、状态估计）
+    \item \textbf{阶段 3（V18-V21）}：3D 化探索（侧向稳定否定结果）
+    \item \textbf{阶段 4（V22-V25）}：硬件设计与实地验证
+\end{itemize}
+
+每个版本通过\textbf{决策门}（decision gate）验证是否继续当前路线或转向新方向。例如，V14c 决策门确认摆臂质量为稳定性瓶颈，解封 V15 的 SEA 研究；V18-V20 决策门判定侧向被动稳定不可行，建议跳过 V21 直接进入硬件设计。
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.9\columnwidth]{fig1_version_evolution.pdf}
+    \caption{V01-V24 版本演化时间线。颜色表示版本类型：绿色（成功）、橙色（部分成功）、红色（失败/否定结果）。关键里程碑标注。}
+    \label{fig:version_evolution}
+\end{figure}
+
+\subsection{Baseline: Passive Limit Cycle (V05)}
+
+V05 使用混合动力学（hybrid dynamics）建模指南针步态 \cite{Goswami1996}：
+
+\textbf{连续相（摆动）}：
+\begin{equation}
+    \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \mathbf{0}
+\end{equation}
+其中 $\mathbf{q} = [\theta_{\text{stance}}, \theta_{\text{swing}}]^T$ 为关节角度。
+
+\textbf{离散相（触地）}：
+\begin{equation}
+    \dot{\mathbf{q}}^+ = \mathbf{R} \dot{\mathbf{q}}^-
+\end{equation}
+其中 $\mathbf{R}$ 为碰撞映射矩阵（假设完全非弹性碰撞）。
+
+通过 Poincaré 截面分析（图 \ref{fig:phase_portrait}），V05 证明纯被动极限环在斜坡角 $\gamma = 0.05$ rad 下存在，收敛指标 $\max|\lambda| = 0.92 < 1$（Floquet 乘子）。
+
+\subsection{Quasi-Passive Control: FSM Design (V13.6, V13.7)}
+
+\subsubsection{4-Phase Finite State Machine}
+
+V13.6 将步态周期离散化为 4 个事件驱动的相位：
+
+\begin{enumerate}
+    \item \textbf{Phase 1 (Pre-Liftoff)}：髋部扭矩 $\tau_{\text{hip}} = k_P \Delta\theta + k_D \Delta\dot{\theta}$，准备摆动腿离地
+    \item \textbf{Phase 2 (Early Swing)}：能量注入 $\tau_{\text{hip}} = k_E \cdot \text{sign}(\dot{\theta}_{\text{hip}})$，加速摆动腿
+    \item \textbf{Phase 3 (Late Swing)}：负反馈 $\tau_{\text{hip}} = -k_D \dot{\theta}_{\text{hip}}$，减速避免过冲
+    \item \textbf{Phase 4 (Pre-Touchdown)}：刹车 $\tau_{\text{hip}} = -k_{\text{brake}} \dot{\theta}_{\text{hip}}$，准备触地
+\end{enumerate}
+
+相位切换基于\textbf{决策门条件}：
+\begin{itemize}
+    \item $1 \to 2$：摆动腿离地（接触力 $< 0.1$ N）
+    \item $2 \to 3$：髋角度达到目标 $\theta_{\text{hip}} > \theta_{\text{target}}$
+    \item $3 \to 4$：髋速度降至阈值 $\dot{\theta}_{\text{hip}} < \omega_{\text{brake}}$
+    \item $4 \to 1$：摆动腿触地（接触力 $> 0.1$ N）
+\end{itemize}
+
+\subsubsection{Friction Compensation (V13.7)}
+
+V16 发现 Dynamixel MX-64AR 电机的库仑摩擦（$\tau_C = 0.20$ N·m）与 FSM 形成共振失败带（0.013-0.20 N·m），导致步态崩溃（前向距离 $0.19$ m vs 理想 $4.62$ m）。
+
+V13.7 提出前馈补偿：
+\begin{equation}
+    \tau_{\text{output}} = \tau_{\text{FSM}} + \tau_C \cdot \text{sign\_smooth}(\omega_{\text{joint}}, \epsilon)
+\end{equation}
+其中 $\text{sign\_smooth}(\omega, \epsilon) = \tanh(\omega / \epsilon)$ 避免不连续性（$\epsilon = 0.01$ rad/s）。
+
+补偿后，V13.7 在 MX-64AR 配置下完全恢复性能（表 \ref{tab:friction_comp}），$\tau_C$ 扫描 10/10 全通过。
+
+\begin{table}[t]
+\centering
+\caption{摩擦补偿效果对比}
+\label{tab:friction_comp}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+配置 & 前向距离 (m) & 触地次数 & 结果 \\
+\midrule
+V14c (ideal) & 4.62 & 10 & 成功 \\
+V16 (mx64ar, 无补偿) & 0.19 & 4 & 失败 \\
+V13.7 (mx64ar, 有补偿) & 4.63 & 10 & 成功 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{State Estimation (V17)}
+
+\subsubsection{Sensor Model}
+
+V17 集成真实传感器噪声：
+
+\textbf{编码器量化}：
+\begin{equation}
+    \theta_{\text{meas}} = \text{round}\left(\frac{\theta_{\text{true}}}{2\pi / 4096}\right) \cdot \frac{2\pi}{4096}
+\end{equation}
+
+\textbf{速度估计（Kalman 滤波）}：
+\begin{align}
+    \hat{\omega}_{k|k-1} &= \hat{\omega}_{k-1|k-1} + \Delta t \cdot \alpha_{k-1} \\
+    K_k &= P_{k|k-1} / (P_{k|k-1} + R) \\
+    \hat{\omega}_{k|k} &= \hat{\omega}_{k|k-1} + K_k (\omega_{\text{meas}} - \hat{\omega}_{k|k-1})
+\end{align}
+其中 $R = (0.05 \text{ rad/s})^2$ 为速度测量噪声方差。
+
+\textbf{躯干位置（Forward Kinematics）}：
+\begin{equation}
+    \mathbf{p}_{\text{hip}} = \mathbf{p}_{\text{contact}} + l_{\text{leg}} [\sin\theta_{\text{leg}}, \cos\theta_{\text{leg}}]^T
+\end{equation}
+
+\textbf{接触延迟模型}：触地检测延迟 $\Delta t_{\text{contact}}$ 通过历史状态补偿：
+\begin{equation}
+    \mathbf{q}_{\text{contact}} = \mathbf{q}_{\text{current}} - \dot{\mathbf{q}}_{\text{current}} \Delta t_{\text{contact}}
+\end{equation}
+
+\subsubsection{Robustness Analysis}
+
+噪声容限实验（表 \ref{tab:state_est}）显示：
+\begin{itemize}
+    \item \textbf{noise\_scale=1.0}（MX-64AR 规格）：成功（4.67 m, 10 次触地）
+    \item \textbf{noise\_scale=3.0}：临界通过（safety margin 3×）
+    \item \textbf{$\Delta t_{\text{contact}} > 15$ ms}：失败（FSM 时序破坏）
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{状态估计噪声容限}
+\label{tab:state_est}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+噪声倍数 & 前向距离 (m) & 触地次数 & 结果 \\
+\midrule
+1.0× & 4.67 & 10 & 成功 \\
+3.0× & 3.85 & 10 & 成功 \\
+5.0× & 1.23 & 5 & 失败 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Lateral Stability Exploration (V18-V20)}
+
+\subsubsection{3D Model with Lateral Degrees of Freedom}
+
+V18 扩展 2D 模型为 3D：
+\begin{equation}
+    \mathbf{q}_{\text{3D}} = [\theta_{\text{hip}}, \theta_{\text{knee}}, \phi_{\text{roll}}, \phi_{\text{abd}}]^T
+\end{equation}
+其中 $\phi_{\text{roll}}$ 为躯干滚转角，$\phi_{\text{abd}}$ 为髋外展角。
+
+\textbf{V18（被动侧向稳定）}：测试被动弹簧 $\tau_{\text{roll}} = -k_{\text{roll}} \phi_{\text{roll}}$。结果：低刚度（$k_{\text{roll}} < 200$ N·m/rad）发散，高刚度（$\geq 500$ N·m/rad）等效 2D。\textit{结论：被动侧向稳定不存在。}
+
+\textbf{V19（髋外展主动稳定）}：使用电机驱动 $\phi_{\text{abd}}$，测试 PD、反馈等策略。最佳结果 7 次触地（目标 10），侧向漂移率 0.05-0.10 m/step，外展修正能力 $<0.01$ m/step（5-10× 不足）。\textit{结论：单一髋外展执行器不足。}
+
+\textbf{V20（步宽控制）}：实现 3D IK 和 LIPM 步宽规划器，但控制律集成未完成。Smoke Test 失败（1 s 后跌倒）。\textit{结论：步宽控制未验证。}
+
+综合 V18-V20，\textbf{决策门判定}：跳过 V21，直接进入 V22 硬件设计（2D 矢状面），将 3D 行走作为未来工作。
+
+\subsection{Hardware Design (V22)}
+
+V22 提供 2D 样机设计文档：
+
+\textbf{机械结构}：腿长 1.00 m（大腿 0.49 m + 小腿 0.51 m），总质量 5-6 kg。
+
+\textbf{驱动电机}：Dynamixel MX-64AR × 4（髋 × 2 + 膝 × 2），额定扭矩 6.0 N·m，库仑摩擦 0.20 N·m。
+
+\textbf{传感器}：编码器 4096 CPR（内置）、IMU（MPU-6050）、接触开关（响应时间 $<10$ ms）。
+
+\textbf{控制系统}：Raspberry Pi 4B，控制频率 1000 Hz，Python 实时内核补丁。
+
+\textbf{2D 约束}：侧向导轨（铝型材 + 直线滑块），滑动摩擦系数 $\mu \approx 0.05$（需系统辨识 V23 测量）。
+
+\textbf{参数映射}：仿真参数与硬件参数偏差 $<5\%$（详见 SIMULATION\_MAPPING.md）。
+
+物料清单（BOM）总成本 6500-8000 元（见 BOM.md）。

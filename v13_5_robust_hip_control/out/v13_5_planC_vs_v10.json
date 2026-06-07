@@ -1,0 +1,37 @@
+{
+  "slice": "C_foot_leg",
+  "grid": 6,
+  "n_total": 36,
+  "v13_v10_baseline_success": "6/36 = 16.7%",
+  "v13_v10_success_cells": [
+    [
+      "0.034",
+      "0.90"
+    ],
+    [
+      "0.038",
+      "0.90"
+    ],
+    [
+      "0.038",
+      "0.94"
+    ],
+    [
+      "0.038",
+      "0.98"
+    ],
+    [
+      "0.046",
+      "1.06"
+    ],
+    [
+      "0.046",
+      "1.10"
+    ]
+  ],
+  "v13_5_planC_success": "0/36 = 0.0%",
+  "v13_5_planC_success_cells": [],
+  "delta_pp": -16.7,
+  "verdict": "regressed",
+  "v13_5_planC_kE_Estar_success": "0/36 = 0.0%"
+}

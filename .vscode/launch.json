@@ -1,0 +1,99 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Python: 当前文件",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Python: 仿真脚本 (V13.7)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/v13_7_refactored/simulate_v13_7.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--duration",
+        "10.0"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Python: 仿真脚本 (V14 被动摆臂)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/v14_passive_arms/simulate_v14.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--duration",
+        "10.0"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Python: 仿真脚本 (V19 髋外展主动)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/v19_hip_abduction_active/simulate_v19.py",
+      "console": "integratedTerminal",
+      "args": [
+        "--duration",
+        "10.0"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Python: Pytest 当前文件",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "${file}",
+        "-v"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Python: Pytest 所有测试",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "tests/",
+        "-v"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "name": "Python: 基准测试",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/benchmarks/benchmark_runner.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    }
+  ]
+}

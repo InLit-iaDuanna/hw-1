@@ -1,0 +1,25 @@
+{
+  "params": {
+    "slope_deg": 5.0,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "foot_radius": 0.04,
+    "step_length": 0.34,
+    "steps": 12,
+    "initial_speed": 0.24,
+    "impact_speed_retention": 0.86,
+    "knee_stop_speed_retention": 0.95,
+    "gravity_gain_scale": 0.12,
+    "max_knee_flex_deg": 38.0,
+    "swing_clearance": 0.13,
+    "sample_dt": 0.004166666666666667
+  },
+  "fixed_point_speed": 0.4589363588800846,
+  "limit_cycle_step_time": 0.7408434599291327,
+  "steps": 12,
+  "alternating_contacts": 12,
+  "forward_distance_m": 4.08,
+  "final_poincare_error": 0.001957878207914987,
+  "no_actuators": true,
+  "model_role": "hybrid passive limit-cycle generator + MuJoCo visual playback"
+}

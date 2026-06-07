@@ -1,0 +1,12 @@
+\begin{abstract}
+准被动双足行走通过最小化能量输入和利用自然动力学实现高效步态，但在真实电机摩擦下稳定性易受破坏。本文提出一种基于事件驱动有限状态机（FSM）的准被动步态控制方法，结合前馈摩擦补偿和传感器闭环状态估计。通过 V01-V24 迭代开发，我们建立了从纯被动极限环证明、准被动控制律设计到硬件样机设计的完整技术路线。关键贡献包括：（1）V13.7 FSM 控制律在 Dynamixel MX-64AR 电机（库仑摩擦 0.20 N·m）下实现完全恢复（前向距离 4.63 m，10 次触地）；（2）V17 状态估计在编码器量化（4096 CPR）和 3× 噪声裕度下验证鲁棒性；（3）V18-V20 否定结果揭示侧向被动稳定的物理极限，为 2D/3D 混合控制策略提供理论依据。仿真结果表明，摩擦补偿消除了 τ_C 共振失败带（0.013-0.20 N·m），使得准被动行走在真实电机约束下可行。本文为准被动双足机器人的硬件落地提供了可验证的设计方法论。
+
+\textbf{关键词}：准被动步态，有限状态机，摩擦补偿，双足机器人，状态估计
+
+\vspace{0.3cm}
+
+\noindent\textbf{Abstract (English)} \\
+Quasi-passive biped walking achieves energy-efficient gaits by minimizing actuation and exploiting natural dynamics, but stability is vulnerable to real motor friction. This paper presents an event-driven finite state machine (FSM) control method for quasi-passive walking, integrating feedforward friction compensation and sensor-based state estimation. Through iterative development from V01 to V24, we establish a complete technical pipeline from passive limit cycle proof, quasi-passive controller design, to hardware prototype specification. Key contributions include: (1) V13.7 FSM controller achieving full recovery under Dynamixel MX-64AR motor friction (0.20 N·m Coulomb friction), with 4.63 m forward distance and 10 touchdown events; (2) V17 state estimator validated under encoder quantization (4096 CPR) and 3× noise margin; (3) V18-V20 negative results revealing physical limits of lateral passive stability, providing theoretical grounding for hybrid 2D/3D control strategies. Simulation results show that friction compensation eliminates the τ_C resonance failure band (0.013-0.20 N·m), making quasi-passive walking feasible under real motor constraints. This work provides a verifiable design methodology for hardware deployment of quasi-passive biped robots.
+
+\textbf{Keywords}: Quasi-passive gait, Finite state machine, Friction compensation, Biped robot, State estimation
+\end{abstract}

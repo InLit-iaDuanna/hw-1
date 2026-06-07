@@ -1,0 +1,93 @@
+{
+  "primary_verdict": "motor_dynamics_breaks_fsm_revisit_control",
+  "sub_finding": "tau_C_FSM_resonant_coupling_non_monotonic",
+  "smoke_verdict": "health_check_failed",
+  "ideal_l0_pass": true,
+  "mx64ar_full_l1_pass": false,
+  "tau_C_scan": {
+    "is_monotonic": false,
+    "success_tau_C_eff_joint_Nm": [
+      0.0,
+      0.0335,
+      0.268,
+      0.402
+    ],
+    "fail_tau_C_eff_joint_Nm": [
+      0.0134,
+      0.067,
+      0.1005,
+      0.134,
+      0.1675,
+      0.201
+    ],
+    "critical_band_joint_tau_C_Nm": [
+      0.402,
+      Infinity
+    ],
+    "non_monotonic_recovery_pockets": [
+      0.0335,
+      0.268,
+      0.402
+    ]
+  },
+  "mx64ar_at_spec_tau_C_eff_joint_Nm": 0.201,
+  "mx64ar_falls_in_fail_band": true,
+  "v22_selection_constraint": "MX-64AR 在 spec τ_C_eff=0.20 N·m 时落入 V13.6.1 FSM 失败带；非单调恢复带 (0, 0.034) 与 (0.27, ∞) 存在但与 spec 不重合。V22 选型必须：(a) 选 τ_C_eff < 0.013 N·m 的低摩擦关节模组（背靠背双 BLDC + 谐波减速器），或 (b) V13.7 引入摩擦补偿项 τ_compensation = τ_C_eff·sign_smooth(ω_des) 让 FSM 在 spec τ_C 下恢复工作。(c) 不可仅按上界保证选型，必须 FSM 实测。",
+  "cot_table_mass_eff_5.6kg": [
+    {
+      "tag": "ideal",
+      "success": true,
+      "forward_m": 4.616822907034934,
+      "active_mech_j": 16.2363012042121,
+      "active_elec_j": 16.2363012042121,
+      "CoT_mech": 0.06401575161254965,
+      "CoT_elec": 0.06401575161254965,
+      "elec_to_mech_ratio": 1.0
+    },
+    {
+      "tag": "mx64ar_J_only",
+      "success": true,
+      "forward_m": 4.593750256677095,
+      "active_mech_j": 16.14519268427205,
+      "active_elec_j": 16.14519268427205,
+      "CoT_mech": 0.06397625549048974,
+      "CoT_elec": 0.06397625549048974,
+      "elec_to_mech_ratio": 1.0
+    },
+    {
+      "tag": "mx64ar_friction",
+      "success": false,
+      "forward_m": 0.19024774678665943,
+      "active_mech_j": 3.358173239285224,
+      "active_elec_j": 45.90985552889902,
+      "CoT_mech": 0.3213117002338384,
+      "CoT_elec": 4.392678008660511,
+      "elec_to_mech_ratio": 13.671080155075854
+    },
+    {
+      "tag": "mx64ar_full",
+      "success": false,
+      "forward_m": 0.188837715623241,
+      "active_mech_j": 3.389770440825928,
+      "active_elec_j": 45.30919033581135,
+      "CoT_mech": 0.3267567108459995,
+      "CoT_elec": 4.367576584807837,
+      "elec_to_mech_ratio": 13.366448001939514
+    },
+    {
+      "tag": "ec_i40_53_full",
+      "success": false,
+      "forward_m": 0.19155948916871837,
+      "active_mech_j": 3.5713691848830216,
+      "active_elec_j": 36.51577845925169,
+      "CoT_mech": 0.3393704641543001,
+      "CoT_elec": 3.469923170398231,
+      "elec_to_mech_ratio": 10.224587985419308
+    }
+  ],
+  "next_steps": [
+    "V13.7 摩擦补偿增量版本：在 control_v136 hip 输出端加 τ_C_compensation = τ_C_eff·sign_smooth(ω)，重跑 mx64ar_full smoke 验证是否恢复 (>5pct 偏差或 alt_td=10)。",
+    "若 V13.7 通过，V16 verdict 升级为 motor_dynamics_compatible_with_friction_compensation。",
+    "若 V13.7 仍失败，验证 V14c 决策门 §2 假设 'V13.6.1 FSM 是 (kp,kd) 孤立点解' 在真实摩擦下崩溃，回到 V13.6.1 phase grid search 在含真实 τ_C 的 motor_dynamics 在线下重扫。"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version": "hw-1-v1.0",
+  "timestamp": "2026-06-04T12:11:19.240241",
+  "success": false,
+  "simulated_time": 0.834,
+  "stop_reason": "hip_too_low",
+  "forward_distance": -0.2685173147880546,
+  "final_height": -0.5994765859841834,
+  "average_velocity": -0.32720614388186764,
+  "model_info": {
+    "n_joints": 5,
+    "n_actuators": 2,
+    "total_mass": 3.9
+  },
+  "metadata": {
+    "experiment": "hopper_forward"
+  }
+}

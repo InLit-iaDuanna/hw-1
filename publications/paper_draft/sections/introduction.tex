@@ -1,0 +1,35 @@
+% Introduction Section
+
+\subsection{Motivation}
+
+人类行走展现出高度的能量效率和动态稳定性，这激发了被动动态步行（passive dynamic walking）研究领域的诞生 \cite{McGeer1990}。纯被动行走机器人仅依赖重力和惯性在斜坡上形成周期步态，无需主动驱动，但对参数和初始条件高度敏感 \cite{Goswami1996,Goswami1998}。为实现平地行走和鲁棒性，准被动（quasi-passive）策略引入最小化主动控制，在保持能量效率的同时提供稳定裕度 \cite{Collins2005,Spong2005}。
+
+然而，从仿真到硬件的迁移面临挑战：真实电机的库仑摩擦、粘滞摩擦和转动惯量会显著改变动力学特性，导致仿真中稳定的控制律在硬件上失效 \cite{Wisse2007}。现有研究多假设理想驱动器或使用高阶补偿器，但缺乏系统性方法来量化摩擦对准被动步态的影响。
+
+\subsection{Research Questions}
+
+本文研究的核心问题是：
+\begin{enumerate}
+    \item \textbf{RQ1}：如何设计事件驱动控制律，使准被动步态在真实电机摩擦下保持稳定？
+    \item \textbf{RQ2}：前馈摩擦补偿能否完全恢复理想驱动器的性能？
+    \item \textbf{RQ3}：传感器噪声和量化误差对状态估计的容忍度是多少？
+    \item \textbf{RQ4}：侧向被动稳定的物理极限在哪里？是否需要主动控制？
+\end{enumerate}
+
+\subsection{Contributions}
+
+本文的主要贡献包括：
+
+\textbf{C1. 系统化迭代开发方法论}（V01-V24）：我们建立了从纯被动极限环证明（V05）、准被动控制律设计（V08-V10）、参数敏感性分析（V11-V13）、电机动力学验证（V13.7, V16, V17）到硬件设计（V22）的完整技术路线（图 \ref{fig:version_evolution}）。每个版本通过决策门（decision gate）验证关键假设，确保技术积累的可靠性。
+
+\textbf{C2. 摩擦补偿的 FSM 控制律}（V13.7）：提出事件驱动 4 相位有限状态机（FSM），结合前馈摩擦补偿 $\tau_{\text{comp}} = \tau_C \cdot \text{sign\_smooth}(\omega_{\text{joint}})$。实验表明，该方法消除了 Dynamixel MX-64AR 电机（$\tau_C = 0.20$ N·m）的共振失败带（0.013-0.20 N·m），使成功率从 0\%（无补偿）恢复到 100\%（有补偿）。
+
+\textbf{C3. 传感器闭环状态估计}（V17）：集成编码器量化（4096 CPR）、Kalman 速度滤波、正运动学（FK）躯干位置估计和确定性接触延迟模型。噪声容限分析显示，系统可承受 3× 标准噪声（safety margin），但接触开关延迟需控制在 $<15$ ms 以内。
+
+\textbf{C4. 侧向稳定性的否定结果}（V18-V20）：通过 3D 仿真探索，证明矢状面被动稳定与冠状面被动稳定\textit{无法同时实现}。被动侧向约束刚度 $k_{\text{roll}} < 200$ N·m/rad 导致躯干滚转发散，而 $k_{\text{roll}} \geq 500$ N·m/rad 等效于 2D 刚性约束。单一髋外展（hip abduction）执行器的侧向修正能力（$<0.01$ m/step）远低于漂移速率（0.05-0.10 m/step），提供了"矢状面被动 + 冠状面主动"混合策略的理论依据。
+
+\textbf{C5. 硬件设计方法论}（V22）：基于 V13.7 + V17 的 2D 矢状面样机设计，包含机械结构、电机选型（Dynamixel MX-64AR × 4）、传感器配置、仿真参数映射和系统辨识流程。物料清单（BOM）总成本 6500-8000 元，为硬件验证提供可制造方案。
+
+\subsection{Paper Organization}
+
+论文结构如下：第 \ref{sec:related_work} 节回顾被动步态、准被动控制和硬件实现的相关工作；第 \ref{sec:methodology} 节详述 V01-V24 技术路线、FSM 控制律设计和状态估计方法；第 \ref{sec:results} 节报告关键实验结果；第 \ref{sec:discussion} 节讨论否定结果的学术价值和硬件迁移策略；第 \ref{sec:conclusion} 节总结并展望未来工作。

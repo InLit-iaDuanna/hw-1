@@ -1,0 +1,110 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "foot_radius": 0.04,
+    "foot_length": 0.12,
+    "toe_radius": 0.028,
+    "ankle_limit_deg": 25.0,
+    "ankle_damping": 0.08,
+    "ankle_stiffness": 10.0,
+    "friction": 1.35,
+    "hip_mass": 5.0,
+    "torso_mass": 0.05,
+    "torso_height": 0.3,
+    "initial_vx": 0.03,
+    "knee_limit_deg": 70.0,
+    "duration": 12.0,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "hip_torque_limit": 4.0,
+    "knee_torque_limit": 4.0,
+    "hip_kp": 15.0,
+    "hip_kd": 2.7,
+    "knee_kp": 16.0,
+    "knee_kd": 2.0,
+    "gait_period": 0.8,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "recovery_clearance": 0.38,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035
+  },
+  "v135_extra": {
+    "T_meas_alpha": 0.3,
+    "T_meas_min": 0.4,
+    "T_meas_max": 1.6,
+    "T_meas_final": 0.50971952,
+    "period_history": [
+      0.4,
+      0.45400000000000007,
+      0.42700000000000005,
+      0.496,
+      0.44799999999999995,
+      0.5059999999999998
+    ]
+  },
+  "score": 1253.90759251127,
+  "success": false,
+  "alternating_touchdowns": 6,
+  "contact_events": [
+    {
+      "time": 0.14300000000000002,
+      "foot": "left",
+      "T_meas": 0.8
+    },
+    {
+      "time": 0.364,
+      "foot": "right",
+      "T_meas": 0.6799999999999999
+    },
+    {
+      "time": 0.8180000000000001,
+      "foot": "left",
+      "T_meas": 0.6122
+    },
+    {
+      "time": 1.245,
+      "foot": "right",
+      "T_meas": 0.55664
+    },
+    {
+      "time": 1.741,
+      "foot": "left",
+      "T_meas": 0.538448
+    },
+    {
+      "time": 2.189,
+      "foot": "right",
+      "T_meas": 0.5113136
+    },
+    {
+      "time": 2.695,
+      "foot": "left",
+      "T_meas": 0.50971952
+    }
+  ],
+  "forward_distance": 1.3009380697710984,
+  "simulated_time": 3.6,
+  "failure": "fall_down",
+  "active_input_energy_j": 4.0495638916653265,
+  "net_actuator_work_j": -6.009548863312009,
+  "energy_per_alternation_j": 0.6749273152775545,
+  "quasi_passive": true,
+  "pure_passive": false,
+  "controller": "v13_5_adaptive_period_pd"
+}

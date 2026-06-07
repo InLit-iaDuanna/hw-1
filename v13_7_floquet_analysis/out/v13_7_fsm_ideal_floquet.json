@@ -1,0 +1,46 @@
+{
+  "config": "v13_7_fsm_ideal",
+  "duration": 20.0,
+  "success": true,
+  "alternations": 17,
+  "forward_distance": 8.645206322386459,
+  "n_section_points": 17,
+  "fixed_point": [
+    -0.030240865096653625,
+    0.5542260023364843,
+    0.03091090448534319,
+    0.35101762465397185
+  ],
+  "eigvals_real": [
+    -1.0007657666464524,
+    0.28394533254201415,
+    0.1444795647246033,
+    -0.06050295565492762
+  ],
+  "eigvals_imag": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "eigvals_abs": [
+    1.0007657666464524,
+    0.28394533254201415,
+    0.1444795647246033,
+    0.06050295565492762
+  ],
+  "max_abs_floquet": 1.0007657666464524,
+  "n_pairs_used": 14,
+  "E_star_J": 53.70297416618242,
+  "E_std_J": 0.5622846095796393,
+  "mass_kg": 5.1,
+  "motor_hip": "ideal_v14c_degenerate",
+  "motor_knee": "ideal_v14c_degenerate",
+  "friction_compensation": false,
+  "state_keys": [
+    "right_hip",
+    "right_hip_vel",
+    "right_knee",
+    "right_knee_vel"
+  ]
+}

@@ -1,0 +1,87 @@
+HW-1 PRESENTATION MATERIALS INDEX
+=================================
+
+Generated: 2026-06-05
+Project: hw-1 Quasi-Passive Biped Robot
+
+Directory Structure:
+--------------------
+
+presentations/
+├── figures_highres/          # 9 PNG figures @ 300 DPI for PPT
+├── diagrams/                 # 9 SVG files for editing (Inkscape, Illustrator)
+├── keyframes/                # Video preview frames + VIDEO_INDEX.json
+├── animations/               # (Reserved for future GIF animations)
+├── data_tables/              # CSV files (version_summary, performance_metrics)
+├── quick_demo_5min/          # 5 essential figures + DEMO_GUIDE.txt
+└── full_defense_30min/       # All 9 figures + DEFENSE_GUIDE.txt
+
+Figure Inventory:
+-----------------
+
+Main Figures (for paper):
+1. fig1_version_evolution.png      - V01-V24 development timeline
+2. fig2_stability_domain.png       - Parameter space heatmap
+3. fig3_energy_analysis.png        - Cost of Transport + energy decomposition
+4. fig4_phase_portrait.png         - Limit cycle trajectories
+5. fig5_hardware_specs.png         - V22 mechanical design
+
+Enhanced Analytical Figures (for defense):
+6. fig6_friction_compensation.png  - V16→V13.7 problem & solution
+7. fig7_state_estimation.png       - V17 noise robustness analysis
+8. fig8_3d_failure_analysis.png    - V18-V20 negative results
+9. fig9_poincare_convergence.png   - V5 stability proof
+
+Video Keyframes (link to originals in out/ directories):
+- V05_limit_cycle_preview.png
+- V10_rolling_foot_preview.png
+- V13.7_friction_comp_preview.png
+- V17_state_estimation_preview.png
+
+Data Tables:
+- version_summary.csv              - 11 key versions with metadata
+- performance_metrics.csv          - Quantitative comparison table
+
+Usage Guidelines:
+-----------------
+
+For 5-minute demo:
+  Use: quick_demo_5min/
+  Focus: Key innovation (friction compensation) + negative results
+
+For 30-minute defense:
+  Use: full_defense_30min/
+  Follow: DEFENSE_GUIDE.txt timing and structure
+
+For paper submission:
+  Use: ../paper_figures/output/*.pdf (vector format for LaTeX)
+
+For poster:
+  Use: figures_highres/*.png (300 DPI for printing)
+
+For editing/customization:
+  Use: diagrams/*.svg (open with Inkscape or Adobe Illustrator)
+
+Quality Standards:
+------------------
+
+✓ All figures: 300 DPI minimum
+✓ Colorblind-friendly palette (Wong 2011)
+✓ Consistent fonts (Arial/Helvetica 9-11 pt)
+✓ IEEE/Elsevier compatible formatting
+✓ Multi-format output (SVG/PDF/PNG)
+
+Next Steps:
+-----------
+
+1. Review figures in figures_highres/
+2. Create PowerPoint template using quick_demo_5min/ figures
+3. Expand to full defense PPT using full_defense_30min/ materials
+4. Embed video keyframes or link to full videos
+5. Print poster using PNG files @ 300 DPI
+
+Contact:
+--------
+Project Lead: 段泽琪
+Institution: 工业设计博士 (学号 2024211317)
+Project Path: D:\Dunna\Documents\hw-1\presentations\

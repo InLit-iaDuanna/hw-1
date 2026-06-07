@@ -1,0 +1,106 @@
+{
+  "params": {
+    "slope_deg": 0,
+    "foot_radius": 0.04,
+    "foot_length": 0.08,
+    "friction": 1.25,
+    "hip_mass": 5.0,
+    "torso_mass": 0.01,
+    "torso_height": 0.36,
+    "initial_vx": 0.05,
+    "knee_limit_deg": 58,
+    "duration": 12,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.12,
+    "knee_stiffness": 1,
+    "hip_joint_damping": 0.02,
+    "hip_joint_stiffness": 0.0,
+    "joint_damping": 0.014,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.42,
+    "swing_foot_clearance": 0.1,
+    "swing_hip_vel": 0.18,
+    "swing_knee_vel": -0.08,
+    "assist_torque": 8,
+    "assist_duration": 0.12,
+    "assist_target_deg": -16.0,
+    "support_assist_torque": 0.2,
+    "support_target_deg": 18.0,
+    "assist_kp": 15,
+    "assist_kd": 1.0,
+    "phase_assist": true,
+    "phase_mode": "event",
+    "gait_period": 0.8,
+    "hip_amplitude_deg": 24.0,
+    "hip_offset_deg": 0.0,
+    "swing_back_deg": 24,
+    "swing_front_deg": -32,
+    "stance_front_deg": -20,
+    "stance_back_deg": 28
+  },
+  "score": 1243.4311743234366,
+  "alternating_touchdowns": 10,
+  "contact_events": [
+    {
+      "time": 0.14400000000000002,
+      "foot": "left"
+    },
+    {
+      "time": 0.325,
+      "foot": "right"
+    },
+    {
+      "time": 0.506,
+      "foot": "left"
+    },
+    {
+      "time": 0.686,
+      "foot": "right"
+    },
+    {
+      "time": 0.867,
+      "foot": "left"
+    },
+    {
+      "time": 1.048,
+      "foot": "right"
+    },
+    {
+      "time": 1.229,
+      "foot": "left"
+    },
+    {
+      "time": 1.41,
+      "foot": "right"
+    },
+    {
+      "time": 1.59,
+      "foot": "left"
+    },
+    {
+      "time": 1.7710000000000001,
+      "foot": "right"
+    },
+    {
+      "time": 1.952,
+      "foot": "left"
+    }
+  ],
+  "forward_distance": 2.0207545319401947,
+  "simulated_time": 2.315,
+  "failure": "fall_down",
+  "actuator_count": 2,
+  "actuator_names": [
+    "left_hip_assist",
+    "right_hip_assist"
+  ],
+  "knee_actuators": [],
+  "active_input_energy_j": 17.048120362574345,
+  "net_actuator_work_j": 5.846902345992661,
+  "energy_per_alternation_j": 1.7048120362574344,
+  "quasi_passive": true,
+  "uses_reward_function": false
+}

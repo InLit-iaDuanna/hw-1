@@ -1,0 +1,19 @@
+{
+  "motor_preset": "ideal",
+  "compensate_friction": false,
+  "k_sea": 5000.0,
+  "success": true,
+  "alternating_touchdowns": 11,
+  "forward_distance": 4.8528117039890555,
+  "simulated_time": 11.9995,
+  "failure": "completed",
+  "active_input_energy_j": 16.65376838790931,
+  "spring_pe_max_J": 0.02102147309090438,
+  "q_link_max_left_deg": 0.1595294034738094,
+  "q_link_max_right_deg": 0.08811337631258291,
+  "hip_saturation_count": 0,
+  "knee_saturation_count": 0,
+  "coulomb_dissipation_J": 0.0,
+  "tau_C_hip_Nm": 0.0,
+  "tau_sat_hip_Nm": 1000000000.0
+}

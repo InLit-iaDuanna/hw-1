@@ -1,0 +1,204 @@
+{
+  "A_slope_foot": {
+    "n_total": 36,
+    "n_success": 1,
+    "success_rate": 0.027777777777777776,
+    "cot_min": 0.07539526840564383,
+    "cot_median": 0.07539526840564383,
+    "cot_max": 0.07539526840564383,
+    "failure_modes": {
+      "stuck": 14,
+      "fall_down": 21,
+      "completed": 1
+    },
+    "meta": {
+      "slice": "A_slope_foot",
+      "grid": 6,
+      "duration": 12.0,
+      "x": [
+        "slope_deg",
+        -1.0,
+        1.0
+      ],
+      "y": [
+        "foot_radius",
+        0.03,
+        0.05
+      ],
+      "title": "slope_deg vs foot_radius"
+    }
+  },
+  "B_slope_leg": {
+    "n_total": 36,
+    "n_success": 4,
+    "success_rate": 0.1111111111111111,
+    "cot_min": 0.06678640655783727,
+    "cot_median": 0.07231573080883806,
+    "cot_max": 0.09614011253013162,
+    "failure_modes": {
+      "fall_down": 29,
+      "stuck": 3,
+      "completed": 4
+    },
+    "meta": {
+      "slice": "B_slope_leg",
+      "grid": 6,
+      "duration": 12.0,
+      "x": [
+        "slope_deg",
+        -1.0,
+        1.0
+      ],
+      "y": [
+        "leg_scale",
+        0.9,
+        1.1
+      ],
+      "title": "slope_deg vs leg_scale"
+    }
+  },
+  "C_foot_leg": {
+    "n_total": 36,
+    "n_success": 6,
+    "success_rate": 0.16666666666666666,
+    "cot_min": 0.06514336389957177,
+    "cot_median": 0.07236541498716244,
+    "cot_max": 0.07682856744134033,
+    "failure_modes": {
+      "stuck": 16,
+      "completed": 6,
+      "fall_down": 14
+    },
+    "meta": {
+      "slice": "C_foot_leg",
+      "grid": 6,
+      "duration": 12.0,
+      "x": [
+        "foot_radius",
+        0.03,
+        0.05
+      ],
+      "y": [
+        "leg_scale",
+        0.9,
+        1.1
+      ],
+      "title": "foot_radius vs leg_scale"
+    }
+  },
+  "D_slope_torso": {
+    "n_total": 36,
+    "n_success": 5,
+    "success_rate": 0.1388888888888889,
+    "cot_min": 0.06508202747952545,
+    "cot_median": 0.06752548940598885,
+    "cot_max": 0.0994001403590881,
+    "failure_modes": {
+      "fall_down": 26,
+      "stuck": 5,
+      "completed": 5
+    },
+    "meta": {
+      "slice": "D_slope_torso",
+      "grid": 6,
+      "duration": 12.0,
+      "x": [
+        "slope_deg",
+        -1.0,
+        1.0
+      ],
+      "y": [
+        "torso_ratio",
+        0.005,
+        0.05
+      ],
+      "title": "slope_deg vs torso_ratio (m_torso / m_hip)"
+    }
+  },
+  "E_hip_gains": {
+    "n_total": 36,
+    "n_success": 4,
+    "success_rate": 0.1111111111111111,
+    "cot_min": 0.07047218600990121,
+    "cot_median": 0.07197142770403166,
+    "cot_max": 0.07256635581624912,
+    "failure_modes": {
+      "fall_down": 30,
+      "stuck": 2,
+      "completed": 4
+    },
+    "meta": {
+      "slice": "E_hip_gains",
+      "grid": 6,
+      "duration": 12.0,
+      "x": [
+        "hip_kp",
+        15.0,
+        45.0
+      ],
+      "y": [
+        "hip_kd",
+        3.0,
+        9.0
+      ],
+      "title": "hip_kp vs hip_kd (slope=0, geometry=baseline)"
+    }
+  },
+  "F_kp_ratio": {
+    "n_total": 36,
+    "n_success": 2,
+    "success_rate": 0.05555555555555555,
+    "cot_min": 0.0686641225734799,
+    "cot_median": 0.07942493859409615,
+    "cot_max": 0.07942493859409615,
+    "failure_modes": {
+      "fall_down": 34,
+      "completed": 2
+    },
+    "meta": {
+      "slice": "F_kp_ratio",
+      "grid": 6,
+      "duration": 12.0,
+      "x": [
+        "hip_kp",
+        15.0,
+        45.0
+      ],
+      "y": [
+        "hip_kd_ratio",
+        0.1,
+        0.3
+      ],
+      "title": "hip_kp vs hip_kd/hip_kp ratio"
+    }
+  },
+  "G_kp_torque": {
+    "n_total": 36,
+    "n_success": 4,
+    "success_rate": 0.1111111111111111,
+    "cot_min": 0.07047218600990121,
+    "cot_median": 0.07197142770403178,
+    "cot_max": 0.07256635581624872,
+    "failure_modes": {
+      "fall_down": 14,
+      "stuck": 18,
+      "completed": 4
+    },
+    "meta": {
+      "slice": "G_kp_torque",
+      "grid": 6,
+      "duration": 12.0,
+      "x": [
+        "hip_kp",
+        15.0,
+        45.0
+      ],
+      "y": [
+        "hip_torque_limit",
+        4.0,
+        20.0
+      ],
+      "title": "hip_kp vs hip_torque_limit (ratio=0.20 fixed)"
+    }
+  }
+}

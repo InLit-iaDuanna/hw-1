@@ -1,0 +1,146 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "foot_radius": 0.04,
+    "foot_length": 0.12,
+    "toe_radius": 0.028,
+    "ankle_limit_deg": 25.0,
+    "ankle_damping": 0.08,
+    "ankle_stiffness": 10.0,
+    "friction": 1.35,
+    "hip_mass": 5.0,
+    "torso_mass": 0.05,
+    "torso_height": 0.3,
+    "initial_vx": 0.03,
+    "knee_limit_deg": 70.0,
+    "duration": 12.0,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "hip_torque_limit": 4.0,
+    "knee_torque_limit": 4.0,
+    "hip_kp": 30.0,
+    "hip_kd": 6.0,
+    "knee_kp": 16.0,
+    "knee_kd": 2.0,
+    "gait_period": 0.8,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "recovery_clearance": 0.38,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035
+  },
+  "v135_extra": {
+    "T_meas_alpha": 0.0,
+    "T_meas_min": 0.4,
+    "T_meas_max": 1.6,
+    "T_meas_final": 0.8,
+    "period_history": [
+      0.4,
+      0.512,
+      0.44300000000000006,
+      0.611,
+      0.4620000000000002,
+      1.323,
+      1.3000000000000003,
+      1.2429999999999994,
+      1.2300000000000004,
+      1.2270000000000003,
+      1.2249999999999996,
+      1.2240000000000002
+    ]
+  },
+  "score": 5584.264094882747,
+  "success": true,
+  "alternating_touchdowns": 12,
+  "contact_events": [
+    {
+      "time": 0.148,
+      "foot": "left",
+      "T_meas": 0.8
+    },
+    {
+      "time": 0.369,
+      "foot": "right",
+      "T_meas": 0.8
+    },
+    {
+      "time": 0.881,
+      "foot": "left",
+      "T_meas": 0.8
+    },
+    {
+      "time": 1.324,
+      "foot": "right",
+      "T_meas": 0.8
+    },
+    {
+      "time": 1.935,
+      "foot": "left",
+      "T_meas": 0.8
+    },
+    {
+      "time": 2.3970000000000002,
+      "foot": "right",
+      "T_meas": 0.8
+    },
+    {
+      "time": 3.72,
+      "foot": "left",
+      "T_meas": 0.8
+    },
+    {
+      "time": 5.0200000000000005,
+      "foot": "right",
+      "T_meas": 0.8
+    },
+    {
+      "time": 6.263,
+      "foot": "left",
+      "T_meas": 0.8
+    },
+    {
+      "time": 7.493,
+      "foot": "right",
+      "T_meas": 0.8
+    },
+    {
+      "time": 8.72,
+      "foot": "left",
+      "T_meas": 0.8
+    },
+    {
+      "time": 9.945,
+      "foot": "right",
+      "T_meas": 0.8
+    },
+    {
+      "time": 11.169,
+      "foot": "left",
+      "T_meas": 0.8
+    }
+  ],
+  "forward_distance": 4.556503787042756,
+  "simulated_time": 11.994,
+  "failure": "completed",
+  "active_input_energy_j": 16.215377446606112,
+  "net_actuator_work_j": 12.529835737269927,
+  "energy_per_alternation_j": 1.3512814538838427,
+  "quasi_passive": true,
+  "pure_passive": false,
+  "controller": "v13_5_adaptive_period_pd"
+}

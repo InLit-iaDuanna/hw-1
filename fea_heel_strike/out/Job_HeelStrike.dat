@@ -1,0 +1,232 @@
+1
+
+   Abaqus 2026                                  Date 02-Jun-2026   Time 12:42:18
+   For use by Supplied by Team-SolidSQUAD under license from Dassault Systemes or its subsidiary.
+
+
+
+                         The Abaqus Software is a product of:
+
+                           Dassault Systemes Americas Corp.
+                           1301 Atwood Avenue, Suite 101W
+                              Johnston, RI 02919, USA
+ 
+
+
+                   The Abaqus Software is available only under license
+                   from Dassault Systemes or its subsidiary and may be
+                   used or reproduced only in accordance with the terms
+                   of such license.
+ 
+                          On machine isDunna 
+                          you are authorized to run
+                          Abaqus/Explicit until 31-Dec-2055
+
+                          Your site id is:  
+
+
+ 
+                    For assistance or any other information you may
+                    obtain contact information for your local office
+                    from the world wide web at:
+
+                      https://www.3ds.com/products-services/simulia/services-support/locations/
+
+ 
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+                *                                                         * 
+                *                   *****************                     * 
+                *                   *  N O T I C E  *                     * 
+                *                   *****************                     * 
+                *                                                         * 
+                *                                                         * 
+                *                       Abaqus 2026                       * 
+                *                                                         * 
+                *       BUILD ID: 2025_09_23-22.43.03 RELr428 206049      * 
+                *                                                         * 
+                *                                                         * 
+                *  Please make sure you are using                         * 
+                *  release Abaqus 2026 manuals                            * 
+                *  plus the notes accompanying this release.              * 
+                *                                                         * 
+                *                                                         * 
+                *                                                         * 
+                *                                                         * 
+                * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+
+
+ 
+
+
+
+     PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   *******************************************************
+
+
+     END PROCESSING PART, INSTANCE, AND ASSEMBLY INFORMATION
+   ***********************************************************
+
+
+
+
+     OPTIONS BEING PROCESSED
+   ***************************
+
+
+  *heading
+          Heel-Strike Impact: 2D Axisymmetric, PLA hemisphere R=40mm                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
+  *material, name=PLA
+  *density
+  *elastic
+  *plastic
+  *solidsection, elset=ALLELS, material=PLA
+  *solidsection, elset=ALLELS, material=PLA
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *surface, type=SEGMENTS, name=GROUND_SURF
+  *surface, type=SEGMENTS, name=GROUND_SURF
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *surfaceinteraction, name=FRIC
+  *friction
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *boundary
+  *solidsection, elset=ALLELS, material=PLA
+  *nonstructuralmass, elset=ALLELS, units=TOTALMASS
+  *rigidbody, refnode=862, analyticalsurface=GROUND_SURF
+  *initialconditions, type=VELOCITY
+  *friction
+  *initialconditions, type=VELOCITY
+  *elementoutput
+  
+                               E L E M E N T   Q U A L I T Y  C H E C K S        
+  
+  
+ ***NOTES: DISTORTED ISOPARAMETRIC ELEMENTS: ANGLE BETWEEN ISOPARAMETRIC LINES 
+           IS LESS THAN 45 DEGREES OR GREATER THAN 135 DEGREES.
+  
+           TETRAHEDRAL QUALITY MEASURE: VOLUME OF TETRAHEDRON DIVIDED BY THE 
+           VOLUME OF EQUILATERAL TETRAHEDRON WITH SAME CIRCUMSPHERE RADIUS; 
+           0 FOR DEGENERATE TETRAHEDRON AND 1 FOR EQUILATERIAL TETRAHEDRON. IT 
+           IS RECOMMENDED THAT THE TETRAHEDRAL QUALITY MEASURE BE GREATER THAN 
+           0.02, THE MIN INTERIOR (DIHEDRAL) ANGLE BE GREATER THAN 10 DEGREES, 
+           AND THE MAX INTERIOR (DIHEDRAL) ANGLE BE LESS THAN 160 DEGREES. 
+  
+           MODIFIED TETRAHEDRAL QUALITY MEASURE: ANGLES BETWEEN THE TWO LINE 
+           SEGMENTS ON EACH EDGE; THE EDGES OF MODIFIED TETRAHEDRAL SHOULD BE 
+           AS STRAIGHT AS POSSIBLE. IT IS RECOMMENDED THAT THE ANGLE BETWEEN 
+           THE TWO LINE SEGMENTS ON EACH EDGE IS BETWEEN 160 AND 180 DEGREES. 
+  
+           TRIANGULAR QUALITY MEASURE: AREA OF TRIANGLE DIVIDED BY THE AREA OF 
+           EQUILATERAL TRIANGLE WITH SAME CIRCUMCIRCLE RADIUS; 0 FOR DEGENERATE 
+           TRIANGLE AND 1 FOR EQUILATERAL TRIANGLE. IT IS RECOMMENDED THAT THE
+           TRIANGULAR QUALITY MEASURE BE GREATER THAN 0.01, THE MIN INTERIOR 
+           ANGLE BE GREATER THAN 10 DEGREES, AND THE MAX INTERIOR ANGLE BE LESS 
+           THAN 160 DEGREES. 
+  
+           NODAL ADJUSTMENTS ARISING FROM CONTACT INTERACTIONS AND/OR TIE 
+           CONSTRAINTS CAN CAUSE SEVERE ELEMENT DISTORTION. IT MAY BE NECESSARY 
+           TO REMESH IN ORDER TO REDUCE THE AMOUNT OF ADJUSTMENT. 
+
+ ***WARNING: 40 elements are distorted. Either the isoparametric angles are out 
+             of the suggested limits or the triangular or tetrahedral quality 
+             measure is bad. The elements have been identified in element set 
+             WarnElemDistorted.
+  
+ --------------------------------------------------------------------------------
+ Distorted triangular elements
+  
+ Element   Quality measure     Min angle        Max angle     Adjusted nodes 
+ --------- ---------------- ---------------- ---------------- -------------- 
+         1         0.120609              4.5            87.75       NO       
+        21          0.12061              4.5            87.75       NO       
+        41         0.120609              4.5          87.7501       NO       
+        61          0.12061              4.5            87.75       NO       
+        81          0.12061              4.5            87.75       NO       
+       101          0.12061              4.5            87.75       NO       
+       121         0.120609              4.5          87.7501       NO       
+       141          0.12061              4.5            87.75       NO       
+       161          0.12061              4.5            87.75       NO       
+       181         0.120609              4.5          87.7501       NO       
+       201          0.12061              4.5            87.75       NO       
+       221          0.12061              4.5            87.75       NO       
+       241          0.12061              4.5            87.75       NO       
+       261         0.120609              4.5            87.75       NO       
+       281          0.12061              4.5            87.75       NO       
+       301         0.120609              4.5            87.75       NO       
+       321          0.12061              4.5            87.75       NO       
+       341         0.120609              4.5            87.75       NO       
+       361          0.12061              4.5            87.75       NO       
+       381         0.120609              4.5            87.75       NO       
+       401         0.120609              4.5            87.75       NO       
+       421          0.12061              4.5            87.75       NO       
+       441         0.120609              4.5            87.75       NO       
+       461          0.12061              4.5            87.75       NO       
+       481         0.120609              4.5            87.75       NO       
+       501          0.12061              4.5            87.75       NO       
+       521         0.120609              4.5            87.75       NO       
+       541          0.12061              4.5            87.75       NO       
+       561          0.12061              4.5            87.75       NO       
+       581          0.12061              4.5            87.75       NO       
+       601         0.120609              4.5          87.7501       NO       
+       621          0.12061              4.5            87.75       NO       
+       641          0.12061              4.5            87.75       NO       
+       661         0.120609              4.5          87.7501       NO       
+       681          0.12061              4.5            87.75       NO       
+       701          0.12061              4.5            87.75       NO       
+       721          0.12061              4.5            87.75       NO       
+       741         0.120609              4.5          87.7501       NO       
+       761          0.12061              4.5            87.75       NO       
+       781         0.120609              4.5            87.75       NO       
+  
+  
+  *output, field, numberinterval=200
+  *output, history, timeinterval=5e-06
+  *step, name=Impact, nlgeom=YES
+  *energyoutput
+  *step, name=Impact, nlgeom=YES
+  *dynamic, explicit
+  *output, field, numberinterval=200
+  *nodeoutput
+  *elementoutput
+  *output, history, timeinterval=5e-06
+  *nodeoutput, nset=GROUND_RP
+  *energyoutput
+  *endstep
+  *surfaceinteraction, name=FRIC
+  *friction
+  *surfacebehavior, pressure-overclosure=HARD
+  *boundary
+  *surface, type=SEGMENTS, name=GROUND_SURF
+  *step, name=Impact, nlgeom=YES
+  *dynamic, explicit
+  *contact
+  *contactinclusions, allexterior
+  *contactpropertyassignment
+  *endstep
+
+
+
+                            P R O B L E M   S I Z E
+
+
+          NUMBER OF ELEMENTS IS                                   800
+          NUMBER OF NODES IS                                      861
+          NUMBER OF NODES DEFINED BY THE USER                     861
+          TOTAL NUMBER OF VARIABLES IN THE MODEL                 1723
+          (DEGREES OF FREEDOM PLUS MAX NO. OF ANY LAGRANGE MULTIPLIER
+           VARIABLES. INCLUDE *PRINT,SOLVE=YES TO GET THE ACTUAL NUMBER.)
+
+
+
+                              END OF USER INPUT PROCESSING
+
+
+
+     JOB TIME SUMMARY
+       USER TIME (SEC)      =       4.E-01
+       SYSTEM TIME (SEC)    =       4.E-01
+       TOTAL CPU TIME (SEC) =       8.E-01
+       WALLCLOCK TIME (SEC) =            0

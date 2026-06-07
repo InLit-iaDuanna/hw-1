@@ -1,0 +1,7 @@
+impulse_n,alternations,simulated_time_s,forward_distance_m,max_roll_deg,max_hip_y_m,failure,success
+0.0,3,1.495,0.1668,13.04,0.5001,lateral_drift,0
+5.0,3,1.495,0.1668,13.04,0.5001,lateral_drift,0
+10.0,3,1.495,0.1668,13.04,0.5001,lateral_drift,0
+15.0,3,1.495,0.1668,13.04,0.5001,lateral_drift,0
+20.0,3,1.495,0.1668,13.04,0.5001,lateral_drift,0
+-10.0,3,1.495,0.1668,13.04,0.5001,lateral_drift,0

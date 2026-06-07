@@ -1,0 +1,83 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.Model(modelType=STANDARD_EXPLICIT, name='HeelStrike_V10')
+del mdb.models['Model-1']
+mdb.models['HeelStrike_V10'].ConstrainedSketch(name='heel_profile', sheetSize=
+    0.2)
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    2.44929359829471e-18, 0.04), point2=(0.00625737860160924, 
+    0.0395075336238055))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.00625737860160924, 0.0395075336238055), point2=(0.0123606797749979, 
+    0.0380422606518061))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0123606797749979, 0.0380422606518061), point2=(0.0181596199895819, 
+    0.0356402609675347))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0181596199895819, 0.0356402609675347), point2=(0.0235114100916989, 
+    0.0323606797749979))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0235114100916989, 0.0323606797749979), point2=(0.0282842712474619, 
+    0.0282842712474619))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0282842712474619, 0.0282842712474619), point2=(0.0323606797749979, 
+    0.0235114100916989))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0323606797749979, 0.0235114100916989), point2=(0.0356402609675347, 
+    0.0181596199895819))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0356402609675347, 0.0181596199895819), point2=(0.0380422606518061, 
+    0.0123606797749979))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0380422606518061, 0.0123606797749979), point2=(0.0395075336238055, 
+    0.00625737860160923))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0395075336238055, 0.00625737860160923), point2=(0.04, 0.0))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(0.04, 0.0), 
+    point2=(0.0395075336238055, -0.00625737860160923))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0395075336238055, -0.00625737860160923), point2=(0.0380422606518061, 
+    -0.0123606797749979))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0380422606518061, -0.0123606797749979), point2=(0.0356402609675347, 
+    -0.0181596199895819))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0356402609675347, -0.0181596199895819), point2=(0.0323606797749979, 
+    -0.0235114100916989))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0323606797749979, -0.0235114100916989), point2=(0.0282842712474619, 
+    -0.0282842712474619))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0282842712474619, -0.0282842712474619), point2=(0.0235114100916989, 
+    -0.0323606797749979))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0235114100916989, -0.0323606797749979), point2=(0.0181596199895819, 
+    -0.0356402609675347))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0181596199895819, -0.0356402609675347), point2=(0.0123606797749979, 
+    -0.0380422606518061))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.0123606797749979, -0.0380422606518061), point2=(0.00625737860160924, 
+    -0.0395075336238055))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(
+    0.00625737860160924, -0.0395075336238055), point2=(2.44929359829471e-18, 
+    -0.04))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(0.0, -0.04), 
+    point2=(0.0, 0.04))
+mdb.models['HeelStrike_V10'].Part(dimensionality=THREE_D, name='Heel', type=
+    DEFORMABLE_BODY)
+mdb.models['HeelStrike_V10'].parts['Heel'].BaseSolidRevolve(angle=360.0, 
+    sketch=mdb.models['HeelStrike_V10'].sketches['heel_profile'])
+#* 实体旋转特征创建失败

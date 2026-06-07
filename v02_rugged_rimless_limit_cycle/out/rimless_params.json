@@ -1,0 +1,18 @@
+{
+  "params": {
+    "slope_deg": 5.0,
+    "spoke_count": 8,
+    "leg_length": 1.0,
+    "gravity": 9.81,
+    "initial_omega": 0.55,
+    "steps": 45,
+    "sample_per_step": 80
+  },
+  "alpha_deg": 22.5,
+  "fixed_point_omega": 0.7077048372993008,
+  "final_error": 7.993605777301127e-15,
+  "forward_distance_m": 34.44150891285808,
+  "steps": 45,
+  "no_actuators": true,
+  "proof_role": "classic passive rimless wheel Poincare fixed point"
+}

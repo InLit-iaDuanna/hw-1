@@ -1,0 +1,45 @@
+% Related Work Section
+
+\subsection{Passive Dynamic Walking}
+
+被动动态步行的开创性工作由 McGeer \cite{McGeer1990} 提出，展示了无驱动双腿机器人在斜坡上依靠重力和碰撞形成周期步态的能力。指南针模型（compass gait）作为最小双足系统，由 Goswami et al. \cite{Goswami1996,Goswami1998} 进行了深入的稳定性和分岔分析，揭示了极限环的 Poincaré 截面特性和对参数的敏感性。Collins et al. \cite{Collins2001} 将被动步行扩展到 3D 带膝机器人，证明了该原理在真实硬件上的可行性。
+
+然而，纯被动步态仅限于特定斜坡角度和初始条件，无法适应平地或扰动。Wisse et al. \cite{Wisse2007} 分析了足部形状（点足、圆弧足、弹性踝）对稳定域的影响，指出踝部弹性可扩大收敛区域但引入新的失稳模式。
+
+\subsection{Quasi-Passive Control Strategies}
+
+准被动控制策略在保持自然动力学的同时引入最小主动调节。Collins et al. \cite{Collins2005} 的 Cornell Biped 使用踝部推送（ankle push-off）和髋部摆动控制，实现平地高效行走（CoT $\sim$ 0.2）。Spong \& Bullo \cite{Spong2005} 提出基于对称性的控制方法，利用轨道稳定性（orbital stability）设计反馈律。
+
+事件驱动控制在混合动力学系统中广泛应用。Grizzle et al. \cite{Grizzle2014} 基于虚拟约束（virtual constraints）和零动力学（zero dynamics）设计控制器，但依赖精确模型和连续轨迹跟踪。相比之下，Hobbelen \& Wisse \cite{Hobbelen2008} 的有限状态机方法将步态周期离散化为触地检测和相位切换，降低计算复杂度但需人工调参。
+
+本文的 FSM 方法（V13.6, V13.7）结合决策门（decision gate）自动筛选稳定参数，避免手动调优。
+
+\subsection{Friction Compensation in Legged Robots}
+
+电机摩擦对准被动步态的影响研究较少。Wisse et al. \cite{Wisse2007} 提到摩擦导致能量损失但未量化其对稳定性的破坏。Bhounsule et al. \cite{Bhounsule2014} 的 ATRIAS 机器人使用串联弹性驱动器（SEA）隔离摩擦，但增加机械复杂度。
+
+本文（V16, V13.7）首次定量分析库仑摩擦与 FSM 控制律的耦合共振现象：在 Dynamixel MX-64AR 电机（$\tau_C = 0.20$ N·m）的失败带（0.013-0.20 N·m）内，控制输出与摩擦扭矩形成相位锁定，破坏极限环。前馈补偿 $\tau_{\text{comp}} = \tau_C \cdot \text{sign\_smooth}(\omega)$ 精确对消摩擦扭矩，恢复稳定性。
+
+\subsection{State Estimation with Sensor Noise}
+
+状态估计在动态行走中至关重要。Bloesch et al. \cite{Bloesch2013} 的扩展卡尔曼滤波（EKF）融合 IMU 和关节编码器，适用于 ANYmal 四足机器人。Rotella et al. \cite{Rotella2014} 针对双足的快速动力学设计无迹卡尔曼滤波（UKF）。
+
+现有工作多假设高精度传感器（如 13-bit 编码器），而低成本机器人（如 Dynamixel）的 12-bit 编码器（4096 CPR）量化误差显著。本文（V17）首次评估量化噪声对准被动步态的影响，发现 3× 噪声裕度下仍可保持稳定（10 次触地），但接触延迟 $>15$ ms 会打破 FSM 时序。
+
+\subsection{Lateral Stability in 3D Walking}
+
+3D 行走的侧向稳定性通常通过主动髋外展 \cite{Hobbelen2008}、步宽调制 \cite{Rebula2007} 或脚底滚动 \cite{Wisse2007} 实现。Hobbelen \& Wisse \cite{Hobbelen2008} 的 Flame 机器人使用髋外展 PD 控制，但侧向漂移仍是主要失败模式。
+
+本文（V18-V20）通过系统性探索发现：\textit{被动侧向稳定在准被动步态中不存在}。低刚度（$k_{\text{roll}} < 200$ N·m/rad）导致发散，高刚度（$\geq 500$ N·m/rad）等效于 2D 约束。单一髋外展执行器的修正能力不足（5-10× 差距），步宽控制需复杂 IK 和轨迹规划，未能验证。这些否定结果为"2D 矢状面优先，3D 作为未来工作"的设计决策提供理论支撑。
+
+\subsection{Research Gap}
+
+现有研究缺乏从仿真到硬件的系统性方法论，特别是：
+\begin{itemize}
+    \item 电机摩擦对准被动步态的定量影响未充分研究
+    \item 传感器量化误差在低成本平台上的容忍度未明确
+    \item 侧向被动稳定的物理极限缺乏理论分析
+    \item 迭代开发中的决策门和版本管理方法未被文献覆盖
+\end{itemize}
+
+本文通过 24 个版本的渐进式验证填补这些空白。

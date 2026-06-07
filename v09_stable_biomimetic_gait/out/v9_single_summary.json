@@ -1,0 +1,86 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "foot_radius": 0.04,
+    "foot_length": 0.1,
+    "friction": 1.35,
+    "hip_mass": 5.0,
+    "torso_mass": 0.2,
+    "torso_height": 0.3,
+    "initial_vx": 0.04,
+    "knee_limit_deg": 70.0,
+    "duration": 12.0,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "hip_torque_limit": 8.0,
+    "knee_torque_limit": 2.0,
+    "hip_kp": 18.0,
+    "hip_kd": 4.0,
+    "knee_kp": 10.0,
+    "knee_kd": 1.2,
+    "gait_period": 1.0,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "recovery_clearance": 0.38,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035
+  },
+  "score": 422.26036819021647,
+  "success": false,
+  "success_criteria": {
+    "simulated_time_s": 10.0,
+    "alternating_touchdowns": 10,
+    "forward_distance_m": 0.8,
+    "must_complete_without_failure": true
+  },
+  "alternating_touchdowns": 2,
+  "contact_events": [
+    {
+      "time": 0.137,
+      "foot": "left"
+    },
+    {
+      "time": 0.358,
+      "foot": "right"
+    },
+    {
+      "time": 1.06,
+      "foot": "left"
+    }
+  ],
+  "forward_distance": 1.280355961680307,
+  "simulated_time": 3.16,
+  "failure": "fall_down",
+  "actuator_count": 4,
+  "actuator_names": [
+    "left_hip_muscle",
+    "left_knee_stabilizer",
+    "right_hip_muscle",
+    "right_knee_stabilizer"
+  ],
+  "knee_actuators": [
+    "left_knee_stabilizer",
+    "right_knee_stabilizer"
+  ],
+  "active_input_energy_j": 2.4536631702006626,
+  "net_actuator_work_j": -15.396268110489993,
+  "energy_per_alternation_j": 1.2268315851003313,
+  "quasi_passive": true,
+  "pure_passive": false,
+  "uses_reward_function": false
+}

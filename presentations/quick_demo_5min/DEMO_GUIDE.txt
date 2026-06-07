@@ -1,0 +1,25 @@
+5-MINUTE QUICK DEMO GUIDE
+========================
+
+Time allocation:
+- Slide 1 (30s): Title + Problem statement
+- Slide 2 (60s): Version evolution (fig1) - Show V01→V24 progression
+- Slide 3 (90s): Key innovation (fig6) - Friction compensation breakthrough
+- Slide 4 (60s): Negative results (fig8) - 3D lateral stability failure
+- Slide 5 (45s): Hardware design (fig5) - V22 mechanical specs
+- Slide 6 (30s): Conclusion + Future work
+
+Total: 5 minutes 15 seconds (including buffer)
+
+Key messages:
+1. Iterative development methodology (V01-V24)
+2. Friction compensation eliminates motor-induced failure bands
+3. 3D lateral stability is fundamentally limited (honest negative result)
+4. Low-cost hardware design (<8000 RMB) ready for fabrication
+
+Figures included in this directory:
+  - fig1_version_evolution.png
+  - fig2_stability_domain.png
+  - fig6_friction_compensation.png
+  - fig8_3d_failure_analysis.png
+  - fig5_hardware_specs.png

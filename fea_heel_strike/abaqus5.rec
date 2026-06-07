@@ -1,0 +1,23 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.Model(modelType=STANDARD_EXPLICIT, name='Test')
+mdb.models['Test'].ConstrainedSketch(name='test', sheetSize=0.2)
+mdb.models['Test'].sketches['test'].rectangle(point1=(0.0, -0.04), point2=(
+    0.04, 0.04))
+mdb.models['Test'].Part(dimensionality=AXISYMMETRIC, name='Rect', type=
+    DEFORMABLE_BODY)
+mdb.models['Test'].parts['Rect'].BaseShell(sketch=
+    mdb.models['Test'].sketches['test'])
+#* 创建壳的拉伸特征失败

@@ -1,0 +1,521 @@
+digraph hw1_versions {
+    rankdir=TB;
+    node [fontname="Microsoft YaHei", fontsize=10, style=filled];
+    edge [fontname="Microsoft YaHei", fontsize=8];
+    bgcolor="#FAFAFA";
+
+    subgraph cluster_1 {
+        label="阶段1: 理论证明与2D步态";
+        style=rounded;
+        color="#1976D2";
+
+        "V01" [
+            label="V01\n初始 MuJoCo 指南针步态\n理论证明 | 已完成\n---\n纯被动: 否\n动画: 有\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V02" [
+            label="V02\nRimless wheel 对照\n理论证明 | 纯被动\n---\n纯被动: 是\n用途: 解释重力补能\n",
+            shape=ellipse,
+            fillcolor="#E3F2FD",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V03" [
+            label="V03\n指南针极限环对照\n理论证明 | 纯被动\n---\n纯被动: 是\n用途: 解释极限环\n",
+            shape=ellipse,
+            fillcolor="#E3F2FD",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V04" [
+            label="V04\n带膝极限环对照\n理论证明 | 部分纯被动\n---\n纯被动: 部分\n用途: 带膝趋势\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V05" [
+            label="V05\n混合动力学证明版\n理论证明 | 纯被动\n---\n纯被动: 是\n证明: 混合动力学\n",
+            shape=ellipse,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V06" [
+            label="V06\nMVE 作业表达版\n机械转译 | 已完成\n---\n纯被动: 展示层\n用途: PPT 主图\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V07" [
+            label="V07\n真实接触纯被动探索\n真实接触 | 失败\n---\n纯被动: 是\n结论: 失败\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#F44336",
+            penwidth=1.5
+        ];
+        "V08" [
+            label="V08\n准被动补能探索\n真实接触 | 准被动\n---\n纯被动: 否\n补能: 准被动\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V09" [
+            label="V09\n准被动稳定行走\n真实接触 | 准被动\n---\n纯被动: 否\n稳定: 是\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V10" [
+            label="V10\n足踝滚动仿生步态\n真实接触 | 准被动\n---\n成功率: 16.7% (切片C)\nCoT: ~0.08\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V11" [
+            label="V11\n地形与扰动鲁棒性\n真实接触 | 准被动\n---\n鲁棒性: 小幅通过\n扰动: 强扰动失败\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V12" [
+            label="V12\n能量与 CoT 分析\n分析层 | 已完成\n---\n分析: 能量/Floquet\n用途: 附录\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V13" [
+            label="V13\n参数敏感性图谱\n分析层 | 已完成\n---\n分析: 参数容差\n用途: 附录\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V13.5" [
+            label="V13.5\nhip 控制律重设计探索\n探索层 | 失败\n---\n方案A: 否决\n方案A': 否决\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#F44336",
+            penwidth=1.5
+        ];
+        "V13b" [
+            label="V13b\n长程极限环辨识\n分析层 | 已完成\n---\nFloquet: max|λ|=0.944\nE*: 52.66±0.53 J\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V13.6" [
+            label="V13.6\n事件驱动 FSM hip 控制律\n准被动 | 已完成\n---\n成功率: 11.1% (切片C)\nforward: 4.86m\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V13.6.1" [
+            label="V13.6.1\nFSM phase 参数精调\n准被动 | 已完成\n---\n成功率: 13.9% (切片C)\n切片A: 11.1%\n",
+            shape=box,
+            fillcolor="#E3F2FD",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+    }
+
+    subgraph cluster_2 {
+        label="阶段2: 2D机械升级";
+        style=rounded;
+        color="#1976D2";
+
+        "V14" [
+            label="V14\n被动摆臂\n机构维度 | 已完成\n---\n成功率: 5/35 (14.3%)\n结论: 质量≥0.05即失败\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V14b" [
+            label="V14b\nFSM + 被动摆臂\n机构维度 | 已完成\n---\n成功率: 14/35 (40%)\n关键行: 5/5 (m=0.05)\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V14c" [
+            label="V14c\narm_mass 减重扫描\n机构维度 | 已完成\n---\nm=0.05: 3/36\nm=0.01: 5/36\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V15.0" [
+            label="V15.0\nPEA 探索\n弹性肌腱 | 失败\n---\n结论: PEA 打破 FSM\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#F44336",
+            penwidth=1.5
+        ];
+        "V15.1" [
+            label="V15.1\nSEA direct-drive\n弹性肌腱 | 已完成\n---\nk=500: forward=4.92m\nk=5000: 5/36\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V15.1L1" [
+            label="V15.1L1\nSEA + L1 电机\n弹性肌腱 | 已完成\n---\nk=500+comp: 4.90m PASS\n结论: 需补偿\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#666666",
+            penwidth=1.5
+        ];
+        "V15.2" [
+            label="V15.2\nPratt 内环 SEA\n弹性肌腱 | 失败\n---\n结论: 内环不适用 FSM\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#F44336",
+            penwidth=1.5
+        ];
+        "V16" [
+            label="V16\nL1 电机动力学\n真实电机 | 已完成\n---\nmx64ar: 失败 (0.19m)\nτ_C_spec: 0.20 (失败带)\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V13.7" [
+            label="V13.7\n前馈摩擦补偿\n准被动 | 已完成\n---\nmx64ar: 4.63m PASS\nτ_C扫描: 10/10 全通过\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V17" [
+            label="V17\n传感器闭环状态估计\n准被动 | 已完成\n---\nnoise=1.0: 4.67m PASS\nrmse_vx: 0.079\n",
+            shape=box,
+            fillcolor="#FFF3E0",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+    }
+
+    subgraph cluster_3 {
+        label="阶段3: 3D化探索";
+        style=rounded;
+        color="#1976D2";
+
+        "V18" [
+            label="V18\n3D 侧向被动稳定探索\n探索层 | 否定结果\n---\nroll_k<200: 发散\nroll_k≥500: 等效2D\n",
+            shape=box,
+            fillcolor="#FCE4EC",
+            color="#F44336",
+            penwidth=1.5
+        ];
+        "V19" [
+            label="V19\n髋外展主动稳定\n探索层 | 否定结果\n---\n最佳: 7 alt/2.97s\n目标: 10 alt/12s (未达标)\n",
+            shape=box,
+            fillcolor="#FCE4EC",
+            color="#F44336",
+            penwidth=1.5
+        ];
+        "V20" [
+            label="V20\n步宽控制探索\n探索层 | 否定结果\n---\nsmoke: 0 alt (失败)\n架构: 3D IK+规划器\n",
+            shape=box,
+            fillcolor="#FCE4EC",
+            color="#F44336",
+            penwidth=1.5
+        ];
+        "V21" [
+            label="V21\n3D 扰动鲁棒性\n探索层 | 跳过\n---\n决策: 跳过\n原因: 3D 全否定\n",
+            shape=box,
+            fillcolor="#FCE4EC",
+            color="#666666",
+            penwidth=1.5
+        ];
+    }
+
+    subgraph cluster_4 {
+        label="阶段4: 硬件落地";
+        style=rounded;
+        color="#1976D2";
+
+        "V22" [
+            label="V22\n硬件设计 v1\n硬件 | 设计文档\n---\n电机: MX-64AR×4\n预算: 6500-8000元\n",
+            shape=folder,
+            fillcolor="#E8F5E9",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V23" [
+            label="V23\n系统辨识\n硬件 | 方法论文档\n---\n辨识: 摩擦/惯量/弹簧\n误差: <10%\n",
+            shape=folder,
+            fillcolor="#E8F5E9",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V24" [
+            label="V24\nSim-to-real 迁移\n硬件 | 策略文档\n---\n随机化: 质量±10%/摩擦1.0-1.6\n目标: 成功率>50%\n",
+            shape=folder,
+            fillcolor="#E8F5E9",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+        "V25" [
+            label="V25\n实地行走\n硬件 | 待实施\n---\n状态: 等待硬件制作\n周期: 2-3个月\n",
+            shape=box,
+            fillcolor="#E8F5E9",
+            color="#D32F2F",
+            penwidth=3.0
+        ];
+    }
+
+    // 依赖关系
+    "V01" -> "V02" [
+        label="理论对照：从复杂到简化",
+        style=dashed,
+        penwidth=2.0,
+        color="#757575"
+    ];
+    "V01" -> "V03" [
+        label="理论对照：指南针极限环",
+        style=dashed,
+        penwidth=2.0,
+        color="#757575"
+    ];
+    "V03" -> "V04" [
+        label="扩展：加入膝关节",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V03" -> "V05" [
+        label="理论证明：混合动力学",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V05" -> "V06" [
+        label="转译：理论到机械结构",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V06" -> "V07" [
+        label="探索：真实接触纯被动",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V07" -> "V08" [
+        label="修正：失败后加补能",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V08" -> "V09" [
+        label="改进：稳定行走",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V09" -> "V10" [
+        label="扩展：足踝滚动仿生",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V10" -> "V11" [
+        label="分析：地形扰动鲁棒性",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V10" -> "V12" [
+        label="分析：能量 CoT Floquet",
+        style=dashed,
+        penwidth=2.0,
+        color="#757575"
+    ];
+    "V10" -> "V13" [
+        label="分析：参数敏感性图谱",
+        style=dashed,
+        penwidth=2.0,
+        color="#757575"
+    ];
+    "V13" -> "V13.5" [
+        label="探索：hip 控制律重设计",
+        style=dotted,
+        penwidth=2.0,
+        color="#F57C00"
+    ];
+    "V13.5" -> "V13b" [
+        label="分析：为方案C提供极限环目标",
+        style=dashed,
+        penwidth=2.0,
+        color="#757575"
+    ];
+    "V13.5" -> "V13.6" [
+        label="修正：方案A/A'否决后的FSM",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V13.6" -> "V13.6.1" [
+        label="优化：phase参数精调",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V10" -> "V14" [
+        label="探索：被动摆臂可行性",
+        style=dotted,
+        penwidth=2.0,
+        color="#F57C00"
+    ];
+    "V13.6" -> "V14b" [
+        label="合并：FSM + 被动摆臂",
+        style=solid,
+        penwidth=2.0,
+        color="#388E3C"
+    ];
+    "V14" -> "V14b" [
+        label="合并：FSM恢复摆臂稳定性",
+        style=solid,
+        penwidth=2.0,
+        color="#388E3C"
+    ];
+    "V13.6.1" -> "V14c" [
+        label="探索：arm_mass减重扫描",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V14b" -> "V14c" [
+        label="对照：确认arm_mass为根因",
+        style=dashed,
+        penwidth=2.0,
+        color="#757575"
+    ];
+    "V14c" -> "V15.0" [
+        label="探索：PEA (失败)",
+        style=dotted,
+        penwidth=2.0,
+        color="#F57C00"
+    ];
+    "V14c" -> "V15.1" [
+        label="探索：SEA direct-drive",
+        style=dotted,
+        penwidth=2.0,
+        color="#F57C00"
+    ];
+    "V14c" -> "V15.2" [
+        label="探索：Pratt内环SEA (失败)",
+        style=dotted,
+        penwidth=2.0,
+        color="#F57C00"
+    ];
+    "V15.2" -> "V15.1" [
+        label="修正：去内环改直传",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V15.1" -> "V15.1L1" [
+        label="合并：SEA + L1电机",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V14c" -> "V16" [
+        label="并行：L1电机动力学 (不依赖V15)",
+        style=solid,
+        penwidth=2.0,
+        color="#388E3C"
+    ];
+    "V16" -> "V13.7" [
+        label="修复：前馈摩擦补偿",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V13.6.1" -> "V13.7" [
+        label="合并：FSM + 摩擦补偿",
+        style=solid,
+        penwidth=2.0,
+        color="#388E3C"
+    ];
+    "V13.7" -> "V17" [
+        label="扩展：传感器闭环估计",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V16" -> "V15.1L1" [
+        label="合并：电机动力学 + SEA",
+        style=solid,
+        penwidth=2.0,
+        color="#388E3C"
+    ];
+    "V10" -> "V18" [
+        label="探索：3D侧向被动稳定",
+        style=dotted,
+        penwidth=2.0,
+        color="#F57C00"
+    ];
+    "V18" -> "V19" [
+        label="修正：引入髋外展主动",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V19" -> "V20" [
+        label="扩展：步宽控制",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V20" -> "V21" [
+        label="计划：3D扰动鲁棒性 (跳过)",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V17" -> "V22" [
+        label="应用：2D主线硬件设计",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V13.7" -> "V22" [
+        label="应用：摩擦补偿控制律",
+        style=solid,
+        penwidth=2.0,
+        color="#388E3C"
+    ];
+    "V22" -> "V23" [
+        label="支持：系统辨识方法",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V23" -> "V24" [
+        label="支持：Sim-to-real策略",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+    "V24" -> "V25" [
+        label="实施：实地行走",
+        style=solid,
+        penwidth=2.5,
+        color="#1976D2"
+    ];
+}

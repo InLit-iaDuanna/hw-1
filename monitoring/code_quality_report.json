@@ -1,0 +1,269 @@
+{
+  "ruff": {
+    "tool": "ruff",
+    "status": "fail",
+    "violations": [
+      {
+        "cell": null,
+        "code": "I001",
+        "end_location": {
+          "column": 20,
+          "row": 346
+        },
+        "filename": "D:\\Dunna\\Documents\\hw-1\\common\\data_io.py",
+        "fix": {
+          "applicability": "safe",
+          "edits": [
+            {
+              "content": "        import json\n        import tempfile\n\n        from data_storage import get_connection, import_summary_json\n",
+              "end_location": {
+                "column": 1,
+                "row": 347
+              },
+              "location": {
+                "column": 1,
+                "row": 344
+              }
+            }
+          ],
+          "message": "Organize imports"
+        },
+        "location": {
+          "column": 9,
+          "row": 344
+        },
+        "message": "Import block is un-sorted or un-formatted",
+        "noqa_row": 344,
+        "severity": "error",
+        "url": "https://docs.astral.sh/ruff/rules/unsorted-imports"
+      },
+      {
+        "cell": null,
+        "code": "F841",
+        "end_location": {
+          "column": 11,
+          "row": 187
+        },
+        "filename": "D:\\Dunna\\Documents\\hw-1\\common\\examples\\example_model_loader.py",
+        "fix": {
+          "applicability": "unsafe",
+          "edits": [
+            {
+              "content": "",
+              "end_location": {
+                "column": 14,
+                "row": 187
+              },
+              "location": {
+                "column": 5,
+                "row": 187
+              }
+            }
+          ],
+          "message": "Remove assignment to unused variable `model1`"
+        },
+        "location": {
+          "column": 5,
+          "row": 187
+        },
+        "message": "Local variable `model1` is assigned to but never used",
+        "noqa_row": 187,
+        "severity": "error",
+        "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+      },
+      {
+        "cell": null,
+        "code": "F841",
+        "end_location": {
+          "column": 11,
+          "row": 191
+        },
+        "filename": "D:\\Dunna\\Documents\\hw-1\\common\\examples\\example_model_loader.py",
+        "fix": {
+          "applicability": "unsafe",
+          "edits": [
+            {
+              "content": "",
+              "end_location": {
+                "column": 14,
+                "row": 191
+              },
+              "location": {
+                "column": 5,
+                "row": 191
+              }
+            }
+          ],
+          "message": "Remove assignment to unused variable `model2`"
+        },
+        "location": {
+          "column": 5,
+          "row": 191
+        },
+        "message": "Local variable `model2` is assigned to but never used",
+        "noqa_row": 191,
+        "severity": "error",
+        "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+      },
+      {
+        "cell": null,
+        "code": "F841",
+        "end_location": {
+          "column": 11,
+          "row": 196
+        },
+        "filename": "D:\\Dunna\\Documents\\hw-1\\common\\examples\\example_model_loader.py",
+        "fix": {
+          "applicability": "unsafe",
+          "edits": [
+            {
+              "content": "",
+              "end_location": {
+                "column": 14,
+                "row": 196
+              },
+              "location": {
+                "column": 5,
+                "row": 196
+              }
+            }
+          ],
+          "message": "Remove assignment to unused variable `model3`"
+        },
+        "location": {
+          "column": 5,
+          "row": 196
+        },
+        "message": "Local variable `model3` is assigned to but never used",
+        "noqa_row": 196,
+        "severity": "error",
+        "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+      },
+      {
+        "cell": null,
+        "code": "F841",
+        "end_location": {
+          "column": 11,
+          "row": 90
+        },
+        "filename": "D:\\Dunna\\Documents\\hw-1\\common\\examples\\example_simulation_runner.py",
+        "fix": {
+          "applicability": "unsafe",
+          "edits": [
+            {
+              "content": "",
+              "end_location": {
+                "column": 14,
+                "row": 90
+              },
+              "location": {
+                "column": 5,
+                "row": 90
+              }
+            }
+          ],
+          "message": "Remove assignment to unused variable `result`"
+        },
+        "location": {
+          "column": 5,
+          "row": 90
+        },
+        "message": "Local variable `result` is assigned to but never used",
+        "noqa_row": 90,
+        "severity": "error",
+        "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+      },
+      {
+        "cell": null,
+        "code": "F841",
+        "end_location": {
+          "column": 11,
+          "row": 152
+        },
+        "filename": "D:\\Dunna\\Documents\\hw-1\\common\\examples\\example_simulation_runner.py",
+        "fix": {
+          "applicability": "unsafe",
+          "edits": [
+            {
+              "content": "",
+              "end_location": {
+                "column": 14,
+                "row": 152
+              },
+              "location": {
+                "column": 5,
+                "row": 152
+              }
+            }
+          ],
+          "message": "Remove assignment to unused variable `result`"
+        },
+        "location": {
+          "column": 5,
+          "row": 152
+        },
+        "message": "Local variable `result` is assigned to but never used",
+        "noqa_row": 152,
+        "severity": "error",
+        "url": "https://docs.astral.sh/ruff/rules/unused-variable"
+      },
+      {
+        "cell": null,
+        "code": "B007",
+        "end_location": {
+          "column": 22,
+          "row": 219
+        },
+        "filename": "D:\\Dunna\\Documents\\hw-1\\common\\examples\\example_simulation_runner.py",
+        "fix": {
+          "applicability": "unsafe",
+          "edits": [
+            {
+              "content": "_i",
+              "end_location": {
+                "column": 22,
+                "row": 219
+              },
+              "location": {
+                "column": 21,
+                "row": 219
+              }
+            }
+          ],
+          "message": "Rename unused `i` to `_i`"
+        },
+        "location": {
+          "column": 21,
+          "row": 219
+        },
+        "message": "Loop control variable `i` not used within loop body",
+        "noqa_row": 219,
+        "severity": "error",
+        "url": "https://docs.astral.sh/ruff/rules/unused-loop-control-variable"
+      }
+    ],
+    "total_violations": 7,
+    "violation_types": {
+      "I001": 1,
+      "F841": 5,
+      "B007": 1
+    }
+  },
+  "mypy": {
+    "tool": "mypy",
+    "status": "fail",
+    "errors": 9,
+    "notes": 6,
+    "output": "data_storage\\query_interface.py:16: error: Library stubs not installed for \"pandas\"  [import-untyped]\ndata_storage\\query_interface.py:78: error: Argument 1 to \"append\" of \"list\" has incompatible type \"float\"; expected \"str\"  [arg-type]\ndata_storage\\query_interface.py:82: error: Argument 1 to \"append\" of \"list\" has incompatible type \"float\"; expected \"str\"  [arg-type]\ndata_storage\\query_interface.py:86: error: Argument 1 to \"append\" of \"list\" has incompatible type \"float\"; expected \"str\"  [arg-type]\ndata_storage\\db_schema.py:209: error: Incompatible return value type (got \"int | None\", expected \"int\")  [return-value]\ndata_storage\\data_exporter.py:15: error: Library stubs not installed for \"pandas\"  [import-untyped]\ndata_storage\\data_exporter.py:15: note: Hint: \"python3 -m pip install pandas-stubs\"\ndata_storage\\data_exporter.py:15: note: (or run \"mypy --install-types\" to install all missing stub packages)\ndata_storage\\data_exporter.py:15: note: See https://mypy.readthedocs.io/en/stable/running_mypy.html#missing-imports\ndata_storage\\data_importer.py:210: error: Incompatible return value type (got \"int | None\", expected \"int\")  [return-value]\ncommon\\examples\\example_integrated_workflow.py:141: error: Argument 2 to \"save_timeseries_csv\" has incompatible type \"dict[str, list[float]]\"; expected \"dict[str, list[Any] | ndarray[Any, Any]]\"  [arg-type]\ncommon\\examples\\example_integrated_workflow.py:141: note: \"dict\" is invariant -- see https://mypy.readthedocs.io/en/stable/common_issues.html#variance\ncommon\\examples\\example_integrated_workflow.py:141: note: Consider using \"Mapping\" instead, which is covariant in the value type\ncommon\\simulation_framework.py:84: error: Argument 1 to \"float\" has incompatible type \"float | None\"; expected \"str | Buffer | SupportsFloat | SupportsIndex\"  [arg-type]\npyproject.toml: note: unused section(s): module = ['scipy.*']\nFound 9 errors in 6 files (checked 19 source files)\n"
+  },
+  "formatting": {
+    "tool": "ruff format",
+    "status": "fail",
+    "files_need_formatting": [
+      "common\\data_io.py",
+      "common\\examples\\example_integrated_workflow.py",
+      "common\\terrain.py"
+    ],
+    "message": "3 个文件需要格式化"
+  }
+}

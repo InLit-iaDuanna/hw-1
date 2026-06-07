@@ -1,0 +1,57 @@
+<mujoco model="passive_rimless_wheel_physics">
+  <compiler angle="degree" coordinate="local"/>
+  <option timestep="0.001" integrator="RK4" gravity="0 0 -9.81"/>
+  <visual>
+    <global offwidth="1280" offheight="720"/>
+  </visual>
+
+  <default>
+    <joint damping="0.001" armature="0.0005"/>
+    <geom condim="3" friction="1.2 0.02 0.002" solref="0.004 1" solimp="0.92 0.98 0.001"/>
+  </default>
+
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.82 0.88 0.86" rgb2="0.96 0.94 0.88" width="512" height="512"/>
+    <material name="ramp_mat" texture="grid" texrepeat="16 2" rgba="0.76 0.82 0.78 1"/>
+    <material name="spoke_mat" rgba="0.05 0.47 0.57 1"/>
+    <material name="stance_mat" rgba="0.86 0.29 0.21 1"/>
+    <material name="hub_mat" rgba="0.08 0.12 0.20 1"/>
+    <material name="foot_mat" rgba="0.08 0.08 0.08 1"/>
+  </asset>
+
+  <worldbody>
+    <light name="key" pos="-3 -4 6" dir="0.35 0.5 -1" diffuse="0.85 0.85 0.85"/>
+    <geom name="ramp" type="plane" pos="0 0 0" euler="0 5 0" size="80 2.0 0.08" material="ramp_mat" contype="1" conaffinity="1"/>
+
+    <body name="wheel" pos="0 0 1">
+      <joint name="wheel_x" type="slide" axis="1 0 0" damping="0.0005"/>
+      <joint name="wheel_z" type="slide" axis="0 0 1" damping="0.0005"/>
+      <joint name="wheel_pitch" type="hinge" axis="0 1 0" damping="0.001"/>
+      <geom name="hub" type="sphere" size="0.09" mass="4.0" material="hub_mat" contype="0" conaffinity="0"/>
+
+      <geom name="spoke_0" type="capsule" fromto="0 0 0 0 0 -0.96" size="0.018" mass="0.04" material="stance_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_0" type="sphere" pos="0 0 -1" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+
+      <geom name="spoke_1" type="capsule" fromto="0 0 0 -0.679 0 -0.679" size="0.016" mass="0.035" material="spoke_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_1" type="sphere" pos="-0.707 0 -0.707" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+
+      <geom name="spoke_2" type="capsule" fromto="0 0 0 -0.96 0 0" size="0.016" mass="0.035" material="spoke_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_2" type="sphere" pos="-1 0 0" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+
+      <geom name="spoke_3" type="capsule" fromto="0 0 0 -0.679 0 0.679" size="0.016" mass="0.035" material="spoke_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_3" type="sphere" pos="-0.707 0 0.707" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+
+      <geom name="spoke_4" type="capsule" fromto="0 0 0 0 0 0.96" size="0.016" mass="0.035" material="spoke_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_4" type="sphere" pos="0 0 1" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+
+      <geom name="spoke_5" type="capsule" fromto="0 0 0 0.679 0 0.679" size="0.016" mass="0.035" material="spoke_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_5" type="sphere" pos="0.707 0 0.707" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+
+      <geom name="spoke_6" type="capsule" fromto="0 0 0 0.96 0 0" size="0.016" mass="0.035" material="spoke_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_6" type="sphere" pos="1 0 0" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+
+      <geom name="spoke_7" type="capsule" fromto="0 0 0 0.679 0 -0.679" size="0.016" mass="0.035" material="spoke_mat" contype="0" conaffinity="0"/>
+      <geom name="foot_7" type="sphere" pos="0.707 0 -0.707" size="0.045" mass="0.02" material="foot_mat" contype="2" conaffinity="1"/>
+    </body>
+  </worldbody>
+</mujoco>

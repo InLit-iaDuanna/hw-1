@@ -1,0 +1,358 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "foot_radius": 0.04,
+    "foot_length": 0.12,
+    "toe_radius": 0.028,
+    "ankle_limit_deg": 25.0,
+    "ankle_damping": 0.08,
+    "ankle_stiffness": 10.0,
+    "friction": 1.35,
+    "hip_mass": 5.0,
+    "torso_mass": 0.05,
+    "torso_height": 0.3,
+    "initial_vx": 0.03,
+    "knee_limit_deg": 70.0,
+    "duration": 12.0,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "hip_torque_limit": 4.0,
+    "knee_torque_limit": 4.0,
+    "hip_kp": 30.0,
+    "hip_kd": 6.0,
+    "knee_kp": 16.0,
+    "knee_kd": 2.0,
+    "gait_period": 0.8,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "recovery_clearance": 0.38,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035
+  },
+  "v136_phases": {
+    "stance_early": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "stance_late": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "swing_thrust": {
+      "k_E": 7.5,
+      "k_PD": 10.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "swing_retract": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 2.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    }
+  },
+  "phase_durations_s": {
+    "stance_early": 4.339999999999784,
+    "stance_late": 7.660000000000893,
+    "swing_thrust": 4.339999999999784,
+    "swing_retract": 7.660000000000893
+  },
+  "phase_torque_integral_Nms": {
+    "stance_early": 9.655908731658808,
+    "stance_late": 25.991602006073734,
+    "swing_thrust": 11.126528034425027,
+    "swing_retract": 7.215647994308633
+  },
+  "phase_timeline_head": [
+    [
+      0.0,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      0.152,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      0.373,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      0.759,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      1.159,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      1.272,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      1.672,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      2.831,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      3.231,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      4.194,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      4.594,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      5.494,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      5.894,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      6.775,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      7.174,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      8.051,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      8.451,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      9.323,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      9.723,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      10.594,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      10.993,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      11.865,
+      "swing_thrust",
+      "stance_early"
+    ]
+  ],
+  "phase_timeline_tail": [
+    [
+      1.672,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      2.831,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      3.231,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      4.194,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      4.594,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      5.494,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      5.894,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      6.775,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      7.174,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      8.051,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      8.451,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      9.323,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      9.723,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      10.594,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      10.993,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      11.865,
+      "swing_thrust",
+      "stance_early"
+    ]
+  ],
+  "phase_transitions": 22,
+  "score": 5398.5930874843125,
+  "success": true,
+  "alternating_touchdowns": 11,
+  "contact_events": [
+    {
+      "time": 0.151,
+      "foot": "left",
+      "E": 50.96393433856281
+    },
+    {
+      "time": 0.372,
+      "foot": "right",
+      "E": 50.59528703832838
+    },
+    {
+      "time": 0.758,
+      "foot": "left",
+      "E": 50.905767501968384
+    },
+    {
+      "time": 1.2710000000000001,
+      "foot": "right",
+      "E": 51.15343611576844
+    },
+    {
+      "time": 2.83,
+      "foot": "left",
+      "E": 52.78586392009719
+    },
+    {
+      "time": 4.1930000000000005,
+      "foot": "right",
+      "E": 52.85902282251185
+    },
+    {
+      "time": 5.493,
+      "foot": "left",
+      "E": 52.88447415551391
+    },
+    {
+      "time": 6.774,
+      "foot": "right",
+      "E": 52.89542216105258
+    },
+    {
+      "time": 8.05,
+      "foot": "left",
+      "E": 52.89249255194112
+    },
+    {
+      "time": 9.322000000000001,
+      "foot": "right",
+      "E": 52.895457232340874
+    },
+    {
+      "time": 10.593,
+      "foot": "left",
+      "E": 52.89650091420225
+    },
+    {
+      "time": 11.864,
+      "foot": "right",
+      "E": 52.89479840905658
+    }
+  ],
+  "forward_distance": 4.856828261678692,
+  "simulated_time": 11.994,
+  "failure": "completed",
+  "active_input_energy_j": 17.445536072136434,
+  "net_actuator_work_j": 12.60885572999503,
+  "energy_per_alternation_j": 1.585957824739676,
+  "quasi_passive": true,
+  "pure_passive": false,
+  "controller": "v13_6_event_driven_fsm"
+}

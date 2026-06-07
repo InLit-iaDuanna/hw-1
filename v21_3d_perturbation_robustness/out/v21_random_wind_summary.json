@@ -1,0 +1,32 @@
+[
+  {
+    "wind_std_n": 0.0,
+    "mean_alternations": 3.0,
+    "mean_simulated_time_s": 1.495,
+    "success_rate": 0.0
+  },
+  {
+    "wind_std_n": 1.0,
+    "mean_alternations": 3.0,
+    "mean_simulated_time_s": 1.5026666666666666,
+    "success_rate": 0.0
+  },
+  {
+    "wind_std_n": 2.0,
+    "mean_alternations": 3.0,
+    "mean_simulated_time_s": 1.5110000000000001,
+    "success_rate": 0.0
+  },
+  {
+    "wind_std_n": 3.0,
+    "mean_alternations": 3.0,
+    "mean_simulated_time_s": 1.5190000000000001,
+    "success_rate": 0.0
+  },
+  {
+    "wind_std_n": 5.0,
+    "mean_alternations": 3.0,
+    "mean_simulated_time_s": 1.5380000000000003,
+    "success_rate": 0.0
+  }
+]

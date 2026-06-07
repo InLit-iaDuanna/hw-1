@@ -1,0 +1,115 @@
+{
+  "slice": "C_foot_leg",
+  "grid": 6,
+  "n_total": 36,
+  "arm_params_fixed": {
+    "arm_mass": 0.05,
+    "arm_length": 0.4
+  },
+  "v10_pd": {
+    "succ_n": 6,
+    "n_total": 36,
+    "rate_pct": 16.7,
+    "success_cells": [
+      [
+        0.034,
+        0.9
+      ],
+      [
+        0.038,
+        0.9
+      ],
+      [
+        0.038,
+        0.94
+      ],
+      [
+        0.038,
+        0.98
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ]
+  },
+  "v13_6_fsm": {
+    "succ_n": 4,
+    "n_total": 36,
+    "rate_pct": 11.1,
+    "success_cells": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ]
+    ]
+  },
+  "v14b_fsm_passive_arms": {
+    "succ_n": 3,
+    "n_total": 36,
+    "rate_pct": 8.333333333333332,
+    "success_cells": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ]
+    ],
+    "failure_distribution": {
+      "stuck": 8,
+      "fall_down": 25,
+      "completed": 3
+    }
+  },
+  "overlap": {
+    "with_v10_pd": [],
+    "with_v13_6_fsm": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ]
+    ],
+    "v14b_only": [],
+    "overlaps_v10": false,
+    "overlaps_v13_6": true
+  },
+  "delta_vs_v10_pp": -8.366666666666667,
+  "delta_vs_v13_6_pp": -2.7666666666666675,
+  "verdict": "tier_C_failed_geometry_edge_arm_destabilization",
+  "verdict_rules": {
+    ">=17pct": "V14b passes geometry + arm dimensions; V15 may proceed.",
+    "11_to_17pct": "V14b passes ROADMAP section 3.1, but V15 baseline waits for V13.6.1 best.",
+    "<11pct": "Arm mechanism destabilizes geometry edges; reduce arm mass or wait for V13.6.1 best."
+  }
+}

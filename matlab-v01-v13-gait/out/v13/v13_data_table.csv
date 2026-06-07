@@ -1,0 +1,7 @@
+slice,title,grid,duration,n_total,n_success,success_rate,cot_min,cot_median
+A_slope_foot,"slope_deg vs foot_radius",6,12,36,1,2.78%,0.075,0.075
+B_slope_leg,"slope_deg vs leg_scale",6,12,36,4,11.11%,0.067,0.072
+C_foot_leg,"foot_radius vs leg_scale",6,12,36,6,16.67%,0.065,0.072
+D_slope_torso,"slope_deg vs torso_ratio (m_torso / m_hip)",6,12,36,5,13.89%,0.065,0.068
+E_hip_gains,"hip_kp vs hip_kd (slope=0, geometry=baseline)",6,12,36,4,11.11%,0.07,0.072
+F_kp_ratio,"hip_kp vs hip_kd/hip_kp ratio",6,12,36,2,5.56%,0.069,0.079

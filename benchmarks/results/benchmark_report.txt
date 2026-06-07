@@ -1,0 +1,99 @@
+================================================================================
+CROSS-VERSION BENCHMARK REPORT
+================================================================================
+
+Total versions tested: 6
+Successful: 0
+
+--------------------------------------------------------------------------------
+DETAILED RESULTS
+--------------------------------------------------------------------------------
+
+Version: V10
+  Success: NO
+  Forward Distance: 0.12 m
+  Alternations: 2
+  Cost of Transport: 0.000 J/kg/m
+  Mechanical Work: 0.54 J
+  Positive Input Energy: 2.05 J
+  Collision Loss: 0.00 J
+  Simulation Time: 0.26 s
+  Realtime Factor: 46.96x
+  Failure Mode: stuck
+
+Version: V13.6
+  Success: NO
+  Forward Distance: 1.35 m
+  Alternations: 2
+  Cost of Transport: 0.000 J/kg/m
+  Mechanical Work: -8.24 J
+  Positive Input Energy: 1.40 J
+  Collision Loss: 0.00 J
+  Simulation Time: 0.15 s
+  Realtime Factor: 81.35x
+  Failure Mode: fall_down
+  Extra Metrics:
+    phase_durations: {}
+
+Version: V13.7
+  Success: NO
+  Forward Distance: 1.39 m
+  Alternations: 2
+  Cost of Transport: 0.000 J/kg/m
+  Mechanical Work: -10.98 J
+  Positive Input Energy: 0.00 J
+  Collision Loss: 0.00 J
+  Simulation Time: 0.26 s
+  Realtime Factor: 45.45x
+  Failure Mode: fall_down
+  Extra Metrics:
+    coulomb_dissipation: 0.0
+
+Version: V14c
+  Success: NO
+  Forward Distance: 1.39 m
+  Alternations: 2
+  Cost of Transport: 0.000 J/kg/m
+  Mechanical Work: -10.79 J
+  Positive Input Energy: 1.93 J
+  Collision Loss: 0.00 J
+  Simulation Time: 0.21 s
+  Realtime Factor: 57.34x
+  Failure Mode: fall_down
+
+Version: V16
+  Success: NO
+  Forward Distance: 1.38 m
+  Alternations: 2
+  Cost of Transport: 0.000 J/kg/m
+  Mechanical Work: -11.45 J
+  Positive Input Energy: 0.00 J
+  Collision Loss: 0.00 J
+  Simulation Time: 0.24 s
+  Realtime Factor: 50.21x
+  Failure Mode: fall_down
+  Extra Metrics:
+    motor_saturation_rate: 0.0
+
+Version: V17
+  Success: NO
+  Forward Distance: 1.39 m
+  Alternations: 2
+  Cost of Transport: 0.000 J/kg/m
+  Mechanical Work: 0.00 J
+  Positive Input Energy: 0.00 J
+  Collision Loss: 0.00 J
+  Simulation Time: 0.51 s
+  Realtime Factor: 23.69x
+  Failure Mode: fall_down
+  Extra Metrics:
+    estimation_error_vx: 0.0
+    estimation_error_hip_x: 0.0
+
+================================================================================
+KEY FINDINGS
+================================================================================
+
+Best Forward Distance: V13.7 (1.39 m)
+
+================================================================================

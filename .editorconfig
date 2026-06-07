@@ -1,0 +1,63 @@
+# EditorConfig for hw-1 project
+# https://editorconfig.org
+
+root = true
+
+# 所有文件的默认设置
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Python 文件
+[*.py]
+indent_size = 4
+max_line_length = 88
+
+# YAML 文件
+[*.{yml,yaml}]
+indent_size = 2
+
+# JSON 文件
+[*.json]
+indent_size = 2
+
+# TOML 文件
+[*.toml]
+indent_size = 2
+
+# Markdown 文件
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# PowerShell 脚本
+[*.ps1]
+indent_size = 4
+end_of_line = crlf
+
+# Batch 脚本
+[*.{bat,cmd}]
+end_of_line = crlf
+
+# MATLAB 文件
+[*.m]
+indent_size = 4
+
+# XML 配置（MuJoCo）
+[*.xml]
+indent_size = 2
+
+# 忽略生成文件
+[*.{dat,log,tmp}]
+insert_final_newline = false
+trim_trailing_whitespace = false
+
+# 忽略依赖和构建产物
+[{package-lock.json,yarn.lock,*.min.js,*.min.css}]
+insert_final_newline = false
+indent_style = unset
+indent_size = unset

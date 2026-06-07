@@ -1,0 +1,1563 @@
+
+
+--- PAGE 1 ---
+1282
+A Study of the
+Passive Gait
+of a Compass-Like
+Biped Robot:
+Symmetry and Chaos
+Ambarish Goswami+
+INRIA Rh&ocirc;ne-Alpes
+655 avenue de l’Europe, ZIRST
+38330 Montbonnot Saint Martin, France
+Benoit Thuilot*
+LASMEA&mdash;Groupe GRAVIR
+Universit&eacute; Blaise Pascal
+Campus universitaire des Cezeaux
+63177 Aubiere Cedex, France
+Bernard Espiau
+INRIA Rh&ocirc;ne-Alpes
+655 avenue de l’Europe, ZIRST
+38330 Montbonnot Saint Martin, France
+Abstract
+The focus of this work is a systematic study of the passive gait of
+a compass-like, planar, biped robot on inclined slopes. The robot
+is kinematically equivalent to a double pendulum, possessing two
+kneeless legs with point masses and a third point mass at the "hip" 
+joint. Three parameters, namely, the ground-slope angle and the
+normalized mass and length of the robot describe its gait. We show
+that in response to a continuous change in any one of its parame-
+ters, the symmetric and steady stable gait of the unpowered robot
+gradually evolves through a regime of bifurcations characterized by
+progressively complicated asymmetric gaits, eventually arriving at
+an apparently chaotic gait where no two steps are identical. The
+robot can maintain this gait indefinitely.
+A necessary (but not sufficient) condition for the stability of
+such gaits is the contraction of the "phase-fluid" volume. For this
+frictionless robot, the volume contraction, which we compute, is
+caused by the dissipative effects of the ground-impact model. In the
+chaotic regime, the fractal dimension of the robot’s strange attractor
+(2.07) compared to its state-space dimension (4) also reveals strong
+contraction.
+We present a novel graphical technique based on the first return
+map that compactly captures the entire evolution of the gait, from
+symmetry to chaos. Additional passive dissipative elements in the
+robot joint result in a significant improvement in the stability and
+the versatility of the gait, and provide a rich repertoire for simple
+control laws.
+1. Motivation
+Biped robots and other legged robots are potentially better
+suited than wheeled vehicles to the maintenance of hazardous
+environments (such as nuclear and chemical reactors), ex-
+ploration of unstructured and unpaved terrains (for example,
+ocean floors, polar regions, lunar and Martian surfaces), deep-
+forest logging, fruit harvesting, and so on. At present, one of
+the main obstacles to a wider application of legged robots
+is their lack of energy efficiency. In comparison, their bi-
+ological analogues demonstrate impressive energy economy
+during a normal walking gait; in fact, EMG studies (McMa-
+hon 1984; Rose and Gamble 1994) have shown that relative
+muscle inactivity during the swing phase of the human walk
+makes it almost passive. This illustrates the superiority of the
+biological control strategy, which functions in harmony with
+the natural inertial dynamics of the body in the gravitational
+field.
+The long-term motivation behind the current study is to for-
+mulate a simple, biologically inspired active-control law for
+a 17-DOF biped robot (Espiau 1997) being built for Project
+BIP, which is coordinated by the INRIA laboratory in Greno-
+ble, France. The control of such a highly nonlinear dynamic
+system coupled with the well-known stability issues common
+to all bipeds represents a major challenge. Experience shows
+that control strategies unconcerned with the system dynamics
+fail to take advantage of the benevolent dynamics inherent in
+the controlled system, and risk being a control overkill. To
+gain a better understanding of the dynamics of biped locomo-
+tion, we find it instructive to first explore the behavior of a
+simple walker model.
+Physical models (McGeer 1990; Coleman and Ruina 1998)
+and theoretical and simulated results (Goswami, Espiau, and
+Keramane 1997; Garcia, Chatterjee, Ruina, and Coleman
+1998) have demonstrated that even passive biped robots with
+simple kinematics can successfully walk down an inclined
+slope in a steady gait. The motive power of such robots
+comes from the conversion of the robot’s gravitational poten-
+tial energy as it descends down the slope. A delicate balance
+between the kinetic energy available from the conversion of
++Currently at CIS Dept. University of Pennsylvania, Philadelphia, PA 19104,
+USA. e-mail: goswami@graphics.cis.upenn.edu
+*This work was done while Benoit Thuilot was with INRIA Rhone-Alpes.
+The International Journal of Robotics Research
+Vol. 17, No. 12, December 1998, pp. 1282-1301,
+@1998 Sage Publications, Inc.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 2 ---
+1283
+potential energy and that absorbed due to ground impact en-
+sures the maintenance of the steady gait. The particular gait
+adopted by the robot depends on the ground slope, as well as
+its geometric and inertial parameters.
+The existence of natural-locomotion regimes in such sim-
+ple machines suggests the possibility that an attentive but
+minimal control system based on a tuned dynamic system
+might represent the most judicious choice for controlling
+biped robots in complex environments.
+1.1. What Is a Compass Gait?
+The biped robot model studied in this paper is the so-called
+compass-gait model. The gait is so named because the loco-
+motion produced with this model is analogous to the move-
+ment of a pair of compasses or dividers. The Cartesian hip
+trajectory consists of a series of circular arcs centered around
+the support leg’s point of contact with the ground, and having
+a radius equal to the leg length. A particularly useful analy-
+sis of the human gait (Rose and Gamble 1994) decomposes
+the entire gait mechanism into six elementary &dquo;determinants,&dquo;
+each involving a single degree of freedom in one of the joints.
+The compass gait is the first determinant of the gait, and it
+is the simplest kinematics that may exhibit a bipedal walk-
+ing gait. Despite its simplicity, on a descending slope a pas-
+sive compass-gait robot may exhibit &dquo;dynamic gait&dquo; (McGeer
+1990), which means that its center of mass is not constrained
+to stay atop its foot-support point. This feature is normally
+associated with the anthropomorphic gait, and is attributed to
+a superior control performance.
+The robot model, discussed in greater detail in Section 2.1,
+consists of two kneeless legs, each having a point mass, and
+a third point mass coincident with the hip joint. The Acrobot
+(Berkemeier and Fearing 1992; Spong 1995) and the Pen-
+dubot (Block and Spong 1995) are also based on the same
+double-pendulum kinematics, although they do not possess
+the hip mass. Hurmuzlu and Moskowitz (1986) and Yang
+(1994) present studies of other kneeless bipeds with an ad-
+ditional body mass connected to the hip through a pelvic
+joint. In Hurmuzlu and Moskowitz’s (1986) work, particu-
+lar attention was paid to the effect of the robot’s impact with
+the ground, and the impact conditions were justifiably con-
+sidered as an integral part of the governing equations. Bipeds
+with very simple dynamics were also constructed (Katoh and
+Mori 1984; Grishin, Formal’sky, Lensky, and Zhitomirsky
+1994; Formal’sky 1997). These models have telescopically
+retractable legs. The former of this is a 3-DOF model with
+independently adjustable leg lengths, whereas in the latter
+two, the sum of the leg lengths is mechanically constrained
+to be constant. Each of the robot models mentioned in this
+paragraph has some form of actuation.
+The literature on passive bipedal walk is relatively limited.
+Inspired by the research on ballistic walking (Mochon and
+McMahon 1981), McGeer (1990) studied and built passive-
+dynamic robots with and without knees. The physical models
+of these robots demonstrate the remarkable elegance and sim-
+plicity of unpowered walking on inclined slopes. A linearized
+dynamic model of the robot was considered for the analysis
+of the gait. The effect of variation of few design parame-
+ters on the walking performance was studied, including the
+height of the leg’s center of mass, the hip mass fraction, and
+the leg-length mismatch. A leg-length mismatch caused, ex-
+pectedly, a two-period gait. Curiously, for a larger mismatch,
+a four-period gait was found.
+More recently, a systematic study of the full nonlinear
+equations of a simple compass-like, passive, biped robot was
+considered (Goswami, Espiau, and Keramane 1996, 1997;
+Goswami, Thuilot, and Espiau 1996; Thuilot, Goswami, and
+Espiau 1997). Goswami, Espiau, and Keramane (1996) as-
+sociated the steady motion of the robot with a phase-plane
+limit cycle (following Katoh and Mori [1984] and Hurmu-
+zlu and Moskowitz [1986]); this group was the first to report
+the occurrence of a period-doubling bifurcation for this robot.
+Precursors to the current paper, Goswami, Thuilot, and Es-
+piau (1996) and Thuilot, Goswami, and Espiau (1997) studied
+the effects of a parameter change on the gait of the robot. In
+response to a parameter change, the robot gait was found to
+exhibit a period-doubling cascade, finally leading to chaotic
+motion. The fractal dimension of the chaotic attractor was
+measured.
+In other recent work, Garcia et al. (1998) considered an
+even simpler biped model, the &dquo;point-foot walker,&dquo; which is
+also based on the same double-pendulum kinematics. As ex-
+plained later, their model can be obtained as a simpler special
+case of the compass-gait model that is considered here. The
+significant reduction in the complexity of the model permits
+an analytical computation of initial conditions and the stabil-
+ity estimates of one-period gaits. The authors independently
+found the occurrence of period doubling, and were the first to
+find a chaotic gait in this model. Coleman and Ruina (1998)
+developed a simple 3-D passive-dynamic Tinkertoy device
+that walks.
+1.2. Summary of Results
+This paper presents a systematic study of the passive bipedal
+gait of a compass-like robot in response to continuous changes
+in its motion-determining parameters. Three parameters,
+namely, the ground-slope angle and the normalized mass and
+length describe the robot’s dynamic behavior.
+As a first guess for the initial states of the robot that will lead
+it to a stable limit-cycle gait, we use the prediction based on
+the linear model. Once a phase space-limit cycle is found, we
+can numerically prove its stability by calculating the Jacobian
+matrix of the Poincare map of the limit cycle, as was done for
+the &dquo;stride function&dquo; (McGeer 1990). Contraction of phase-
+space volumes is known as a necessary (but not sufficient)
+condition for the asymptotic stability of dynamic systems.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 3 ---
+1284
+For our otherwise frictionless robot, the volume contraction
+is caused by the foot-ground collisions. We quantify the dis-
+sipative effects of the ground-impact model by measuring the
+phase-fluid volume contraction.
+A small change in a parameter normally results in small
+changes in the robot’s gait, while its global qualitative behav-
+ior remains intact. We find that both the robot’s step period and
+step length increase with an increase in any of the three param-
+eters. The robot’s translational velocity, however, increases
+with increased slope and normalized mass, but decreases with
+the normalized length. Also, most of the quantities describing
+the robot gait are monotonic functions of the three parameters.
+However, there are situations when as one of the parame-
+ters exceeds a certain limiting value, a so-called structural in-
+stability sets in. This is manifested by a large-scale qualitative
+change in the gait. These structural instabilities are associated
+with period-doubling bifurcations in the solution of the robot’s
+governing equations. As the parameter continues to change,
+the system may undergo a cascade of repeated bifurcations,
+and may, in the long run, exhibit chaotic behavior. Many of
+the tell-tale signs of chaos, such as a &dquo;broad-band frequency,&dquo;
+similar but nonidentical cycles, and a densely packed attractor
+are all exhibited by these latter gaits.
+We present a novel graphical technique based on the first
+return map that compactly captures the entire evolution of
+the gait, from symmetry to chaos. The fractal dimension
+of the attractor is computed to be 2.07. For a system with
+a four-dimensional state space, this indicates strong phase-
+space volume contraction.
+Additional passive dissipative elements in the robot joint
+result in a significant improvement in the stability and ver-
+satility of the gait, and provide a rich repertoire for simple
+control laws.
+2. Modeling
+2.1. Robot Model and Modeling Assumptions
+Figure 1 shows a sketch of a compass-like biped robot. The
+details of the model and the underlying assumptions are listed
+below:
+Mass: Concentrated at three points:
+~ mass mH at the hip, and
+~ masses m on each leg, located at distances a and
+b from the leg tip and the hip, respectively.
+The total mass of the robot mc = 2m + mh is constant
+and equal to 20 kg, whereas the mass ratio /-t =
+varies from 0.1 to 10 during the simulation trials.
+Leg: The legs are identical. The leg length I = a + b is
+constant and equal to 1 m, whereas the length ratio
+a b varies from 0.1 to 10 during the simulation
+trials.
+Actuation: The robot is unactuated.
+Ground: The robot walks down on a plane surface inclined
+at a constant angle 0 with the horizontal.
+Gait: The motion is constrained in the sagittal plane, and
+consists of the following two stages:
+~ 
+Swing: during this stage, the robot hip pivots
+around the point of support on the ground of its
+support leg. The other leg, called the nonsupport
+leg or the swing leg swings forward (the compass
+robot in Fig. 1 is in the swing stage).
+~ Transition: this occurs instantaneously when the
+swing leg touches the ground and the previous
+support leg leaves the ground.
+Ground impact: The impact of the swing leg with the
+ground is assumed to be slipless plastic. This implies
+that during the instantaneous transition stage (see, for
+instance, the work of Hurmuzlu and Chang [1992]):
+~ the robot configuration remains unchanged, and
+~ the angular momentum of the robot about the im-
+pacting foot as well as the angular momentum
+of the pre-impact support leg about the hip are
+conserved. These conservation laws lead to a dis-
+continuous change in robot velocity.
+Prismatic-joint knee: This is a purely imaginary concoc-
+tion, meant to address the conceptual problem of foot-
+clearance common to all kneeless planar bipeds. The
+prismatic joint is assumed to retract the lower leg to
+clear the ground. The retraction of the lower leg, which
+is assumed massless, does not affect the robot dynam-
+ics. The swing leg returns to its original length I at
+transition. Our emphasis here is on the simplicity of
+the model, rather than its physical realizability. Note,
+however, that physical models of robots of this type
+were developed and studied by Katoh and Mori (1984)
+and Grishin et al. (1994).
+Nominal model: Although we study the passive gait of the
+robot for a range of parameters specified earlier, certain
+results in this paper are centered around a nominal robot
+model that corresponds to it 
+= 2 and P 
+= 1. For results
+involving other models, the parameters of the robot will
+be specified.
+During swing, the robot configuration can be described
+by 0 = [on.&dquo; osf, where Bns and 0, are the angles made,
+respectively, by the nonsupport (swing) leg and the support
+leg with the vertical (counterclockwise positive). The state
+vector q associated with the robot is
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 4 ---
+1285
+Fig. 1. Sketch of a compass-like biped robot on a slope. The
+robot consists of two kneeless legs, each having a point mass,
+and a third point mass coincides with the hip joint. The
+prismatic-joint knee shown in the picture is an imaginary con-
+coction meant to avoid the conceptual foot-clearance problem.
+See Section 2.1 for details.
+During transition, since both legs are in contact with the
+ground, the robot configuration can be completely described
+by the half interleg angle a, or equivalently by the step length
+L, defined as the distance between robot feet; a and L are
+related by L = 21 sin a.
+Before leaving this section, let us provide the definitions
+of certain terms that we frequently use in this paper. A gait
+is symmetric if any two consecutive steps are indistinguish-
+able, that is, all the spatiotemporal variables exactly repeat
+themselves in each step. When a gait does not possess this
+property, it is said to be asymmetric. A gait is periodic if all
+the spatiotemporal variables repeat themselves after every p
+step. The integer p is called the gait period. For symmetric
+gaits, p = 1. In case of a p-period gait, the gait cycle consists
+of p successive steps. The term steady gait is loosely used
+to mean that the robot can walk indefinitely without falling
+down. The step period is the time required to take a step, that
+is, the time between the takeoff of one foot from the ground
+and its subsequent landing.
+As the robot walks, the forward component of velocity of
+its center of mass changes continuously (as in human loco-
+motion). Therefore, we introduce the term average speed of
+progression of the robot, denoted as v, to quantify its forward
+movement averaged over a cycle. In case of a 2n-period gait,
+v is a constant. When n = 0 (i.e., symmetric gait), v is ex-
+pressed as L, where T is the step period. For larger values of
+n, v is the value of T (where k is a step counter) averaged over
+2&dquo; consecutive steps. For a chaotic gait, the average speed of
+progression can be calculated over a certain number of steps,
+and its exact value will be bounded but varying.
+2.2. Governing Equations
+The governing equations of the robot consist of nonlinear dif-
+ferential equations for the swing stage, and algebraic equa-
+tions for the transition. The equations are well known (see,
+for example, work by Goswami, Thuilot, and Espiau [1996]).
+Here we simply present the symbolic form of the equations
+expressed in terms of the normalized parameters A and fB.
+As is true in general, the study of governing equations of the
+robot in terms of normalized parameters brings in significant
+advantages. The swing-stage robot equations, similar to that
+of a frictionless double pendulum, can be written as
+where M(0), N(0, A), and g(0) depend only on /-t and P, and
+not on m, mH, a, and b:
+The algebraic transition equations relate the robot’s states
+just before and just after its collision with the ground. The
+support and the nonsupport legs switch during transition. The
+pre-impact and the post-impact configurations of the robot
+can be simply related by 0+ = JO-, where J is a 2 x 2
+antisymmetric matrix with unit elements. The - and the +
+signs denote the state variables, respectively, before and after
+the collision. The conservation of angular momentum prin-
+ciple applied to the robot gives us Q- (a)é - = Q+(ct)6+,
+from which we can write the joint-velocity relationship A+ -
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 5 ---
+1286
+The complete state vector q before and after impact can
+thus be written as
+with matrix
+It can be shown that the gait characteristics of a robot with
+arbitrary masses m’ and ~t~ can always be deduced from
+those of a robot whose masses are in the same proportion >
+(Goswami, Thuilot, and Espiau 1996). More precisely, the
+gait characteristics of two different robots, with masses (m’,
+, , m’
+m H ), and (m, m H ), such that fi = ~ = km are described
+in the table below. 
+z
+Here, E refers to the total mechanical energy of the robot,
+and AE is the absorption of energy during the ground impact.
+In a similar manner we can show (Goswami, Thuilot, and
+Espiau 1996) that the ~ait characteristics of a robot with arbi-
+trary lengths a’ and b can always be deduced from those of
+a robot whose lengths are in the same proportion, f3. More
+precisely, the gait characteristics of two different robots, with
+I I I 
+~,lengths (a, b) and (a’, b’), such that ~ = 1) = ka are de-
+scribed in the table below.
+The dynamic model of the robot can therefore be param-
+eterized by it and ~6. Note here that the ground slope 0,
+which does not explicitly enter into the governing equations,
+completes our set of parameters. The effects of these three pa-
+rameters on the gait characteristics of the passive biped robot
+are analyzed subsequently.
+3. Stable Passive Gait and Limit Cycle
+Typically, the governing equations for these robots are hy-
+brid in the sense that they consist of nonlinear differential
+equations describing the swing stage and algebraic relation-
+ships characterizing the switch between two successive swing
+stages. The ground slope can be imagined to impose an ex-
+ternal geometric constraint in the configuration space of the
+robot, and the switching conditions can be viewed as the re-
+sult of the robot touching the constraint. The physical model
+on which the switching conditions are based determines the
+physical nature of the robot’s interaction with the constraint.
+Changing the ground slope modifies the geometric constraint,
+thereby fundamentally influencing the robot gait. The rich
+dynamics exhibited by the robot is the result of an interplay
+between the continuous and the algebraic parts of its govern-
+ing equations.
+3.1. Analytical Approach versus Simulation
+Although the robot has a simple kinematics, the hybrid na-
+ture of the governing equations makes it impossible to utilize
+the traditional tools (such as the automatic detection of limit
+cycles [Parker and Chua 1989]) developed to aid the study of
+nonlinear systems.
+There are several approaches that we can adopt in this sit-
+uation. One approach, which was taken by McGeer (1990)
+among others, is to linearize the swing-stage equations of the
+robot about an equilibrium state, making it possible to explic-
+itly integrate these equations. Next, the transition equations
+are concatenated and the conditions for the existence of a
+periodic solution of this coupled system is found. To study
+the stability of this periodic solution, a second linearization
+about the periodic solution is necessary. The problem with
+this approach is that the linear solution is valid only within a
+narrow region around the point of linearization, which is typ-
+ically the stationary vertical configuration of the robot. For
+any real gait, and especially for higher values of the parame-
+ters, the robot significantly deviates from this point. We will
+show that this makes the prediction of the long-term system
+behavior impossible.
+A second approach, adopted in the recent work of Garcia
+et al. (1998) and in a few studies of monopod robots (Vakakis
+and Burdick 1990; Ostrowski and Burdick 1993; Frangois
+1996), is to simplify the model of the robot so that some
+analytical insight into the simplified nonlinear model is avail-
+able. For example, the point-foot walker model considered by
+Garcia et al. (1998) may be obtained as a special case of
+our more general model by setting ’ = -1 
+-~ 0 and
+mH r’
+b a = j- - 0. Because of this simplification, the number
+of robot parameters is reduced from three to one (only the
+ground slope 0), which is useful for graphical visualization
+and analytical probing. Also it is sometimes possible to ob-
+tain an explicit expression for the Poincare map of the robot.
+Although this is an attractive approach, the extension of the
+results to more complex models is not obvious.
+In this study, we have thus decided to preserve the full
+nonlinear equations of the robot. The disadvantage in this
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 6 ---
+1287
+approach is that our exploration must rely to a large extent on
+numerical simulations. However, the computational burden
+is manageable, as the robot model has a relatively small state-
+space dimension and we can focus our study on only one
+leg of the robot (since the legs are identical, they will have
+qualitatively identical dynamics). Furthermore, our results
+can be used to characterize the domain of applicability of
+linear and simplified nonlinear models.
+3.2. A Typical Limit Cycle
+To visualize the entire dynamics of the robot over a gait cycle,
+it is useful to represent the dynamics by means of phase-space
+trajectories. In phase space, steady robot gaits are seen as
+stable limit cycles, and the geometric features of the cycles
+are characteristic of the particular gait (Goswami, Espiau, and
+Keramane 1997; Thuilot, Goswami, and Espiau 1997).
+Figure 2 presents the sketch of a phase-space-limit cycle
+of a symmetric gait of the robot on a 3° slope. The sketch is
+obtained by plotting the angular position and velocity of only
+one leg. Thus, this is a 2-D projection of the limit cycle of
+the entire robot, which is in a 4-D space. For ease of compre-
+hension, we have indicated in the figure the time instants of
+some of the important events during the cycle along with the
+corresponding stick diagrams of the robot. Let us follow the
+phase trajectory at the instant marked I, corresponding to time
+t = 0+, when the rear leg just loses contact with the ground
+(i.e., it becomes the swing leg). The corresponding stick di-
+agram shows a black dot on the front foot to imply ground
+contact. The phase trajectory evolves in the clockwise sense
+in this diagram, as shown by the arrowheads. While crossing
+the velocity axis (at a positive velocity), the biped is in the
+vertical configuration. Instant II corresponds to time t = T -,
+when the swing leg is about to touch the ground. The impact
+between the swing foot and the ground occurs at t = T. We
+observe a velocity jump from II- III due to this impact. The
+upper half of the cycle (I- II) depicts the swing leg suspended
+as a simple pendulum from a moving point (hip). At instant III
+(t = T+), the swing leg becomes the support leg and executes
+the lower half of the phase-plane diagram (III- IV). This half
+of the phase portrait corresponds to the motion of the support
+leg &dquo;hinged&dquo; at the point of support as an inverted simple pen-
+dulum. The velocity jump of the current leg (the nonsupport
+leg of instant I) observed between instants IV and I is due
+to the impact of the other leg with the ground. The cyclic
+trajectory is a limit cycle, and for stable gaits it attracts and
+absorbs all nearby trajectories that enter its attraction basin.
+3.3. Orbital Stability of the Bipedal Gait
+Since we often refer to &dquo;stability&dquo; of the bipedal gait, it is
+helpful to have a precise definition of the term. We consider
+the notion of orbital stability to be the most appropriate in
+the context of biped robot dynamics. Qualitatively speaking,
+Fig. 2. A phase portrait of a symmetric walk. This figure
+corresponds to only one leg of the biped robot, its actual phase
+space being of a higher dimension. One cycle in the figure
+corresponds to two steps of the robot. In the figure, we have
+indicated some of the time stamps that are important in the
+dynamic evolution of the biped. On the outside of the cyclic
+portrait, the configuration of the biped has been shown with
+small stick diagrams. In these diagrams, one leg is dotted,
+the other leg is solid; a black dot at the foot indicates the
+supporting leg.
+a system is orbitally stable if, starting from a steady closed-
+phase trajectory, any finite disturbance leads to another nearby
+trajectory of similar shape (Hurmuzlu and Moskowitz 1987).
+Adapting from Hayashi (1985), we can present this definition
+in a more mathematical framework. In the phase space of
+an autonomous system, the phase trajectory C is said to be
+orbitally stable if given 8 > 0, there is 8 > 0 such that, if
+R’ is a representative point (on another trajectory C’) that is
+within a distance b of C at time to, then R’ remains within a
+distance 8 of C for t > 0. If no such 3 exists, C is orbitally
+unstable. Analogous to the definition of asymptotic stability
+in the sense of Lyapunov, we may say that if the trajectory C
+is orbitally stable, and in addition, the distance between R’
+and C tends to zero as time goes to infinity, the trajectory C
+is asymptotically orbitally stable.
+The concept of orbital stability is less common in the
+robotics literature. Orbital stability requires that the trajec-
+tories C and C’ remain near each other, whereas Lyapunov
+stability of the solution q (t) requires that, in addition, the
+representative points R and R’ (on C and C’, respectively)
+should remain close to each other, if they were close to each
+other initially. Orbital stability does not require that perturbed
+trajectories &dquo;remain in step.&dquo;
+For a general nonlinear system, the analytical demonstra-
+tion of the existence of a limit cycle, its local orbital stability,
+and the analytical procedure to find it still remain a challenge.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 7 ---
+1288
+However, it is possible to test the local stability of a limit
+cycle, once it is found. One method to determine the sta-
+bility of the robot gait is through the numerical computation
+of its Poincare map (McGeer 1990; Goswami, Espiau, and
+Keramane 1996). Limit cycles are fixed points of this map,
+which in the context of biped locomotion, was named the
+&dquo;stride function&dquo; (McGeer 1990). Essentially, the procedure
+consists of injecting small perturbations to the robot states
+around the limit cycle and calculating the eigenvalues of the
+sensitivity matrix. For an orbitally stable cycle, the eigenval-
+ues lie within the unit circle; that is, their moduli are strictly
+less than one.
+It has already been demonstrated theoretically (McGeer
+1990; Garcia et al. 1998) that a passive biped robot walking
+on an inclined slope can exhibit stable limit cycles. A vi-
+sual inspection of the gaits of the physical models constructed
+by McGeer (1990) appeared to have the quality of stability.
+Based on the results of their numerical simulations, Goswami,
+Espiau, and Keramane (1996) reported that a given robot ap-
+pears, interestingly, to exhibit one and only one stable gait on
+a given slope. Depending on the values of the robot parame-
+ters ~, 0, and it, the gait is symmetric or asymmetric. Garcia
+and colleagues (1998) analytically showed the existence of
+one stable and one unstable cycle for their point-foot walker
+walking on small slopes. The current paper focuses on the
+stable cycles only, which represent viable passive gaits.
+3.4. Orbital Stability Implies Contraction of &dquo;Phase Fluid&dquo;
+A necessary condition for the existence of a stable limit cycle
+can be obtained by studying the evolution of a small phase-
+space volume element. The complete state of a dynamic sys-
+tem at a certain instant is represented by a point in the phase
+space of the system. The effect of the perturbations on the
+system at this state is closely related to the behavior of the so-
+called phase fluid (Lanczos 1986) around that point. As the
+dynamic system evolves in the course of time, a small-volume
+element around the system state, representing the possible per-
+turbed states, can be imagined to move around it in the phase
+space. An elegant mathematical treatment culminating in Li-
+ouville’s theorem finds that a small-volume element of the
+phase space of a Hamiltonian system behaves like an incom-
+pressible fluid. Since the Hamiltonian of a frictionless system
+is constant, it can be shown that the divergence of its phase
+fluid is zero (Hilbom 1994). In other words, the phase-space
+volume element may change its shape depending on the dy-
+namics of the particular system, keeping its volume constant
+all along.
+A dissipative system, however, does not obey Liouville’s
+theorem, and for such systems the phase-space volume el-
+ement gradually contracts as it moves. The existence of a
+stable limit cycle in a dynamical system is associated with
+such volume contraction. This makes intuitive sense, as we
+know that a volume element in the attraction basin eventually
+converges to the limit cycle which, being a one-dimensional
+entity, has zero volume. The presence of dissipative elements
+in a system favors the existence of a stable limit cycle, but
+does not guarantee it in any way. However, the presence of a
+limit cycle in a system attests to some form of dissipation.
+Since the existence of stable limit cycles for the compass-
+gait biped has already been demonstrated, the system must
+be dissipating energy. As the swing stage of the robot is
+a Hamiltonian system, the dissipation must come from the
+impact equations. The phase-space volume contraction and
+the strong stabilizing effect of the transition equations was
+pointed out by Hurmuzlu and Moskowitz (1987), and was
+confirmed by Goswami, Espiau, and Keramane (1996) and
+Garcia et al. (1998). In the following, we focus on the char-
+acteristics of the impact equations, and compute the volume
+contraction effected by this.
+Let q 
+* be the state vector of the robot just before the tran-
+sition. We consider a parallelepiped ~ based at the vertex
+q* (with edge vectors ê ji j. jE(I,...,41, with ê j small scalars
+and ij the jth column of identity matrix 14). We would like
+to calculate the change in volume of this parallelepiped (i.e.,
+the &dquo;volume&dquo; of the ensemble of states just before collision)
+due to transition. When q* is perturbed by an amount 8q-,
+a first-order approximation of the state vector just after tran-
+sition is
+Equation (9) can be written in a compact form as
+with
+In view of equation (11), a first-order approximation to the
+&dquo;image&dquo; of ~* through the transition matrix is the polyhe-
+dra ill+, whose edge vectors starting from q*+ are s j wi, j,
+jE(I,...,4), where tuij is the jth column of matrix W I (q*-).
+Since the volume of an n-dimensional parallelepiped is given
+by the determinant of the matrix whose columns are its n-
+edge vectors (Koditschek and Biihler 1991; Heckbert 1994),1. A "hyper" volume element in higher-dimensional systems.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 8 ---
+1289
+the volumes of ill- and ~ are, respectively,
+Therefore, a first-order approximation to the change in phase-
+space volume during the transition stage of a steady gait is,
+using eqs. (11) and (12),
+The determinant can be computed as
+Since ~, 0, and 1 
+- 
+cos2(2a*) are always positive,
+I det(H(&oelig;*))1 < 1, which indicates that phase-space volumes
+are always contracted.
+It is important to recall that contraction does not imply
+stability. For example, the volume of a parallelepiped all
+of whose sides except one are contracted by a factor of two
+during each transition, while the last side is doubled, will
+vanish eventually. However the parallelepiped consists of
+diverging points, and will not represent a stable gait.
+For a stable limit cycle, the rate of contraction describes
+how fast the neighboring trajectories converge. For the
+robot model with > = 2, (J 
+= 1, and a* = 15°, we get
+det(H(a*)) = 0.1. Thus, we can say that locally, the phase-
+space volumes are contracted by a factor of 10, indicating that
+the limit cycle is strongly attractive.
+Finally, let us present two graphical visualizations show-
+ing the effect of H(a) as a mapping between the pre-impact
+and post-impact joint velocities. In Figure 3, we show
+this mapping in the three-dimensional space of joint veloc-
+ities AS, 9ns, and the interleg angle 2a. The wire frame par-
+allelepiped region shown in the figure represents the ensemble
+of pre-impact robot states with both joint velocities varying
+from -100°/sec to + 100°/sec, and the interleg angle varying
+from 0° to 80°. We took horizontal (constant interleg angle)
+slices of this parallelepiped and mapped them through H(a).
+The mapped quadrilateral regions were stacked one above
+another, and the stack was superposed on the pre-impact par-
+allelepiped for direct comparison. By comparing the size of
+a cross-section of the parallelepiped and the size of any of
+the mapped quadrilaterals in the figure, we can clearly see
+the contraction of the space. Also the figure shows the twist
+produced in the space by the mapping.
+Fig. 3. The characteristics of the mapping through the ma-
+trix H(a), demonstrated graphically. The wire-frame paral-
+lelepiped represents an ensemble of pre-impact robot states
+(joint velocities 9S , 9 S, and interleg angle 2a). We have
+taken horizontal (constant interleg angle) slices of this par-
+allelepiped and mapped these square regions through H(a)
+to obtain quadrilateral regions of post-impact robot states
+9s , 6 s. The quadrilaterals at their respective horizontal po-
+sitions (their 2a values) were then stacked one above another
+and the entire stack was superposed on the pre-impact par-
+allelepiped for direct comparison of their sizes. The corre-
+sponding vertices of the quadrilaterals for each horizontal po-
+sition are connected by a line (four lines for four vertices)
+to show the twist produced by the mapping. A pre-impact
+square cross section is mapped to a post-impact quadrilateral
+of much smaller area, illustrating the phase-fluid contraction.
+Another way to investigate the behavior of the matrix H (a)
+is to observe the evolution of its eigenvalues as the robot pa-
+rameters continuously change. In Figure 4a, we show the
+moduli of the two eigenvalues of H (a) as functions of the in-
+terleg angle 2a (varying from 0° to 80°) and fi (varying from
+0.8 to 10). Figure 4b is identical to Figure 4a, except that
+here 2a and > are the variables, with 1L varying between 0.3
+to 10. In both of the figures, a typical curve has three separate
+zones. In the first zone, corresponding to small values 2a,
+the eigenvalues are real and distinct and their evolution with
+respect to 2a is given by two separate lines. As the eigenval-
+ues become complex conjugates, these two lines merge and
+begin the second zone. At the end of the second zone, the
+lines separate out, reflecting that the eigenvalues have again
+become real and distinct. This is the third zone. The relative
+sizes of the zones depend on the parameters it and ~9.
+Recalling that the determinant of a matrix is equal to the
+product of its eigenvalues, we can immediately notice the
+phase-fluid contraction caused by H(a) by reading from the
+plots the moduli of the two eigenvalues for any given 2a. One
+curious thing happens for small values of ~6; as the value of a
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 9 ---
+1290
+Fig. 4. The moduli of the eigenvalues of the transition matrix
+H (a) are shown as functions of the parameters {3 (a) and
+J-L (b). In both the figures, the vertical axis represents the
+eigenvalue moduli, and the horizontal axis is the interleg angle
+2a. The volume contraction of phase fluid is proportional to
+the determinant of H(a), which is equal to the product of
+its two eigenvalues. For any 2a, we can visually infer the
+contraction by reading the moduli of the two eigenvalues from
+the plots.
+is increased, the modulus of the larger of the two eigenvalues
+increases rapidly. When fl = 0.8 and 2a = 80, the larger
+eigenvalue modulus reaches 1.2, and continues to increase if
+we go on decreasing ~6; for instance, when fJ 
+= 0.01 and
+2a = 80, it reaches 97.69. However, the determinant of the
+matrix is always less than unity, thereby guaranteeing volume
+contraction.
+4. The Influence of Robot Parameters on the Gait
+This section presents the effects of continuous change of the
+parameters 0, g, and P on the gait of our compass-like biped
+robot. First, we discuss the limitations of a linear model in
+predicting the robot’s long-term behavior. Next, we point out
+the general features of the symmetric gaits of the robot-this
+section mainly consists of a graphical presentation. When one
+of the parameters exceeds a certain limiting value, we observe
+bifurcation of the dynamics, which we discuss subsequently.
+Finally, we focus on the features of chaotic behavior of the
+robot gait, and calculate the fractal dimension of the strange
+attractor to which the phase-space trajectory collapses. Since,
+to our knowledge, there is no analytical method of studying
+the long-term global behavior of such full-fledged nonlinear
+and hybrid systems, we adopt numerical techniques for this
+purpose.
+Let us provide certain specifications for the numerical
+tools that we use. All the simulations presented in this ar-
+ticle have been performed using the software Scilab 2.2 de-
+veloped by INRIA (1997). We have used the routine ode,
+the initial-value problem solver with a dedicated stopping-
+time algorithm. In the background, ode uses the routine
+lsodar, the well-known Livermore solver for ordinary dif-
+ferential equations, with automatic method switching for stiff
+and nonstiff problems, and with root finding. The algorithm
+is guided by two error-threshold parameters called rtol and
+atol, the relative and absolute estimated error parameters,
+respectively. The estimated error in each state is bounded by
+rtol xabs(state variable (i))+0.01 xatol. For our simula-
+tions, we set rtol = 1. d-5 and atol = 1. d-7. The
+particular advantage of this algorithm is that the user is not
+required to determine if the problem is stiff or nonstiff, as the
+algorithm decides it automatically and switches to the correct
+mode. The arithmetic precision of the algorithm is 1. d-18.
+The stopping-time algorithm plays an important role in our
+simulation. It is employed to precisely detect the contact of
+the swing leg with the ground. The algorithm is a nonlinear
+root finder that finds only those roots for which some func-
+tion, which in our case is the distance between the robot leg
+and the ground, changes sign in the interval of integration.
+When a root is found, it is located only to within an error
+ofhmin = 100*uround*max(abs(x0) ,abs(x1) ),
+where uround is the unit roundoff of the machine, and xO
+and xl are the endpoints of the interval where roots are sought.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 10 ---
+1291
+The contact between the robot and the ground is detected with
+a typical precision of 1. d-17 m.
+4.1. Limitations of the Linear Model
+One of the most important pieces of information necessary for
+such numerical techniques is the size of the basin of attraction
+of the stable limit cycle. If the initial states of the robot are
+within the basin of attraction, they will eventually converge to
+the limit cycle. To guess such initial conditions, we have tried
+using the initial states calculated from the analytical solution
+of the linearized robot model (Goswami, Thuilot, and Espiau
+1996). Similar to the method proposed by McGeer (1990), we
+linearized the swing-stage equations around the equilibrium
+q = 0, which represents a motionless vertical configuration
+of the robot. The transition equations were added and a pe-
+riodicity condition of the gait was employed to analytically
+obtain initial states that lie precisely on a periodic solution of
+the linear model.
+If nonlinearities in the equations are not too influential,
+these initial states will perhaps belong to the attraction basin of
+the limit cycle of the actual nonlinear model, and the solution
+will eventually converge to it after the transients die down.
+Our simulations showed that this approach is successful for
+small 0 and small fB. Specifically, for any JL E [0.1, 10], this
+method leads us to a limit cycle
+Interestingly enough, g does not affect the success or fail-
+ure of this method.
+In situations where prediction based on the linear model
+failed, we chose as the initial states a state vector q on the
+known nonlinear limit cycle of a robot whose parameters
+(0, g, P) were close to those of the robot under study. Given
+the relatively small dimension of the state space, this method
+worked satisfactorily.
+4.2. Symmetric Gaits
+This section is an album of plots (Figs. 5, 6, and 7) present-
+ing the evolution of pertinent gait descriptors as functions of
+the three parameters during the symmetric gait regime of the
+robot. As opposed to a parameter that can be directly altered,
+a gait descriptor is an observed (measurable or computable)
+quantity that cannot be modified directly, but is indirectly in-
+fluenced by the parameters. The gait descriptors that appear
+the most meaningful to us for this study are the state variables
+q, the half-interleg angle at touchdown a, the step period T,
+the average speed of progression v, the total mechanical en-
+ergy of the robot E, and the loss of mechanical energy A E
+due to impact.
+The evolution of the gait descriptors is presented in the
+form of so-called bifurcation diagrams (Guckenheimer and
+Fig. 5. Bifurcation diagrams showing the variation of the gait
+descriptors, with respect to ground slope 0: (a) step period T;
+(b) half-interleg angle a ; (c) angular velocity of the support leg
+6,; (d) average speed of progression v ; (e) mechanical energy
+E ; (f) ratio ~~-E; (g) phase-plane limit cycles for 0 = 0.25°,
+1.5°, 3°, and 4°.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 11 ---
+1292
+Fig. 6. Bifurcation diagrams showing the variation of the gait
+descriptors with respect to mass ratio it: (a) step period T ; (b)
+half-interleg angle a; (c) angular velocity of the support leg
+9s; (d) average speed of progression v ; (e) mechanical energy
+E; (f) ratio A-E-; (g) phase-plane limit cycles for > =10, 1,
+and 0.1 1 (p 
+= 1, <~ 
+= 3°). For (a) through (f), fJ = 1, 0 =
+0.25°, 1.5°, 3°, and 4°.
+Fig. 7. Bifurcation diagrams showing the variation of the gait
+descriptors with respect to the length ratio P: (a) step pe-
+riod T; (b) half-interleg angle a; (c) angular velocity of the
+support leg 6,; (d) average speed of progression v; (e) me-
+chanical energy E; (f) ratio °-EE ; (g) phase-plane limit cycles
+for 0 =0.1, 0.7, and 1.6 (A = 2, (p = 3°). For (a) through to
+(f), ~3= 1, ~ = 0.25°, 1.5°, 3°, and 4°.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 12 ---
+1293
+Holmes 1983; Berge, Pomeau, and Vidal 1984; Hilbom
+1994).2 Figures 5a-5f, 6a-6f, and 7a-7f present the evolution
+of the gait descriptors T, a, 6, (at the beginning of a step),
+v, E, and E as functions, respectively, of the parameters
+ol tt, and ~6. The results show that both the step period and
+the step length of the robot increase with an increase in any
+of the three parameters. The robot’s translational velocity,
+however, increases with 0 and tt, but decreases with fB. The
+overall behavior of the robot can be summarized qualitatively
+as follows:
+Some interpretations are in order here. Let us consider
+the evolution of total mechanical energy E of the robot in
+response to parameter changes. As the ground slope 0 in-
+creases, the potential energy P E of the robot that is available
+per step slightly increases. The kinetic energy K E, being
+roughly proportional to 119112, also increases; see Figure 5c.
+As a consequence, the total energy E increases, as shown in
+Figure 5e. An increase in 0, however, causes a net decrease
+in E-see Figure 7e-and can be explained as follows. An
+increase in fJ results in a lowering of the center of mass of
+the robot, which lowers P E available per step and increases
+the step period. The latter results in a decrease in the average
+velocity of the robot (Fig. 7d). The increase in K E caused by
+the small increase in 6S cannot compensate for the decrease
+in PE, and consequently lowers E. Conversely, an increase
+in jn, which results in raising the center of mass of the robot,
+increases E.
+It is interesting to look at the effect of a parameter change
+on the evolution of entire limit cycles, as shown in Figures
+5g, 6g, and 7g. In response to an increase in 0, the limit
+cycle expands along both the axes (see Fig. 5g), implying
+an increase in the range of joint angle and joint velocity. The
+limit cycles are compressed along the joint-velocity axis for an
+increase in the parameters A and 0 (Figs. 6g and 7g). A shorter
+reach of the limit cycle along the joint-velocity axis means
+a smaller maximum-joint velocity, but does not necessarily
+mean a slower robot. We see in Figure 6d that an increase
+in A is associated with an increase in the average speed of
+progression v.
+It is also interesting to note that for a given triplet (0, tt, ~3),
+we have never identified more than one stable steady gait.
+Moreover, except in Figures 6c and 6f, all the gait descrip-
+tors evolve monotonically in the symmetric gait regime. This
+reinforces our suspicion that for a given robot with specified
+parameters > and f3, the ground slope 0 uniquely defines all
+gait variables. Although we cannot claim this as a proof, the
+property of monotonic evolution of the variables is neverthe-
+less exploited by Goswami, Espiau, and Keramane (Espiau
+and Goswami 1994; Goswami, Espiau, and Keramane 1996,
+1997) in formulating control strategies for the compass. It
+was observed that a scalar control law that seeks to converge
+the mechanical energy of the &dquo;actively controlled&dquo; compass
+to that corresponding to a known passive gait ensures, in fact,
+the convergence of all the state variables of the robot.
+For our nominal robot model, we have found symmetric
+gaits until 0 = 4.37°, at which point the gait bifurcates to a
+two-period gait. The model studied by Garcia et al. (1998)
+exhibited symmetric gaits until 0 = 0.865°.
+4.3. Period-Doubling Bifurcation
+We noticed in Figures 5 and 6 that for the range of variations
+of the parameters considered in this study, an increase in 0 and
+f3 cause a bifurcation in all the gait descriptors. Bifurcation
+was also observed for higher values of it, especially when
+coupled with higher values of 0 (Fig. 7).
+The occurrence of period-doubling bifurcation can be stud-
+ied by means of the Poincare first-return map (Berge, Pomeau,
+and Vidal 1984; Hilborn 1994) constructed in the neighbor-
+hood of a stable limit cycle. The eigenvalues of the Jacobian
+matrix of this map are indicators of the bifurcation. For a
+stable symmetric gait, the eigenvalues are within the unit cir-
+cle. Modification of a parameter alters the eigenvalues, and
+at the bifurcation point, at least one crosses the unit circle.
+Recalling that the unit-circle crossing of the eigenvalues is
+also an indication of instability in the symmetric gait, we may
+say that at the bifurcation point the symmetric gait becomes
+unstable. In fact, the eigenvalues of the first return map of the
+stable post-bifurcation gait, which correspond to those of the
+&dquo;second&dquo; return map of the pre-bifurcation symmetric gait,
+will remain inside the unit circle.
+The particular fashion in which an eigenvalue crosses the
+unit circle determines the type of structural instability that
+the system undergoes. Flip bifurcation (Troger and Steindl
+1991), which is the case here, corresponds to an eigenvalue
+leaving the unit circle along the real axis, with a negative real
+part. Figure 8 presents the evolution of the eigenvalues of the
+Jacobian of the biped’s Poincare map as a function of 0. All
+are real, and one of them actually reaches the value -1 when
+the first bifurcation point is reached at 0 = 4.37°.
+As a consequence of the period-doubling bifurcation, the
+limit cycle becomes two-periodic and the robot gait becomes
+asymmetric with a shorter step and a longer step. The oc-
+currence of bifurcation is shown in Figures 5, 6, and 7 by
+the emergence of two branches in the curves, each associated
+with one of the two dissimilar steps and describing its charac-
+teristic variables. Since bifurcation involves the state of the
+system and since all the gait descriptors, in turn, depend on the
+2. Discussion of bifurcation and asymmetric gaits, represented by the regions
+beyond the branched sections in the bifurcation diagrams of Figures 5, 6, and
+7, is postponed until the next section.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 13 ---
+1294
+Fig. 8. Transition from a one-period to a two-period steady
+gait: behavior of the eigenvalues of the Jacobian matrix of the
+robot’s Poincare map.
+robot states, the occurrence of bifurcation is simultaneously
+manifested in all the gait descriptors.3
+On further increasing the parameters, the robot gait may ex-
+perience further period doubling, giving rise to a four-period
+limit cycle. This phenomenon, repeated ad infinitum, is called
+a period-doubling cascade, and is recognized as one of the
+possible routes leading to chaos. Regardless of the parameter
+considered, we observe that the successive period doublings
+occur after progressively smaller intervals of parameter vari-
+ation. This is expected in view of general results on period-
+doubling cascades (Berge, Pomeau, and Vidal 1984).
+Period-doubling cascades leading to chaotic behavior have
+already been observed for passive, planar, hopping robots that
+possess a smaller dimension than that of the compass. &dquo;Limp-
+ing gaits&dquo; (the term given to 2n-period gaits) were observed
+and analyzed for hopping robots (Raibert 1986; Vakakis and
+Burdick 1990; Koditschek and Biihler 1991; McCloskey and
+Burdick 1991; Ostrowski and Burdick 1993; Frangois 1996).
+In Figure 9, we introduce a novel way of capturing the be-
+havior of the biped during a period-doubling cascade ensuing
+from the parameter ¢ (other parameters are kept constant at
+J1, = 2, ~ = 1). The figure plots the first return map of 8ns .
+For a one-period robot gait, On, is the same in every step. This
+gait is therefore represented by a point on the 45° line. As
+we change the ground slope, this point moves along the 45°
+line from the right-hand top comer of Figure 9, as indicated
+by the arrow.
+The first-period doubling occurs at ~ = 4.37° when the
+gait turns two-periodic, and is therefore represented by two
+points. Just after the first bifurcation, the two representative
+Fig. 9. First-return map of 2&dquo;-period steady gaits, where
+n E {0, 1, 2, 3}. In response to a variation of the ground
+slope from 0 = 4.37° to 5.03°, the robot gait undergoes three
+successive bifurcations. Here we show the Poincare map of
+the nonsupport leg angle ens. Until the first bifurcation occurs
+at 4.37°, the map is a point on the 45° line.
+points differ only slightly from that of the one-period gait from
+which they originate. The two steps are therefore very similar
+to the steps of the symmetric gait. On further changes in the
+parameter, the two representative points move away from the
+45° line along the two branches shown by dotted lines in
+Figure 9. It follows that one step length is slightly longer and
+the other is slightly shorter than those of the corresponding
+symmetric gait. As we increase the slope, the longer step is
+further elongated and the shorter step is further shortened.
+This continues until a second period doubling occurs at
+~ = 4.9°, when each branch gives rise to two subbranches.
+In this four-period gait, the four different steps are visited in
+the same order with a long step always followed by a short
+step. The last clearly identifiable bifurcation occurs when
+~ = 5.01 °, as the robot gait becomes eight-periodic.
+The period-doubling cascade may also be observed using
+phase-plane diagrams. The phase-plane diagram for a sym-
+metric gait is shown in Figure 2, which is a single-loop closed
+trajectory repeated after two robot steps. During one step, the
+considered leg is in the swing stage, and during the following
+step, it is in the support stage. Since the gait is symmetric, the
+robot legs are indistinguishable and the phase-plane cycles of
+the two legs are identical.
+In the case of a two-period gait, since all state variables
+are identical after every two steps, the phase-plane limit cycle
+associated with one leg is still a single-loop closed trajectory
+repeated after two robot steps (see Fig. l0a). However, since
+the gait is asymmetric, the limit cycles associated with the
+legs are no longer identical.
+In the case of 2&dquo;-period gaits, all the state variables repeat
+themselves after every 21 steps. The phase-plane diagram as-
+3. The occurrence of bifurcation may not, however, be equally prominent in all
+the bifurcation diagrams, because of the effect of scaling. Thus, whereas we
+can clearly see a bifurcation of the step period in Figure 5a, the corresponding
+bifurcation of the mechanical energy is much less prominent in Figure 5e.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 14 ---
+1295
+Fig. 10. Phase-plane limit cycles: (a) a two-period steady gait
+(o = 4.75°); (b) a four-period steady gait (o = 5°); (c) an
+eight-period steady gait (o = 5.02°); and (d) a chaotic gait
+associated with one leg, in 100 robot steps (~ = 5.2°). For
+all four plots, ti = 2 and ~B = 1.
+sociated with one leg is therefore a 2&dquo;-1-loop closed trajectory
+repeated every 2n steps, distinguishable from the phase-plane
+diagram of the other leg. A visual inspection of the phase-
+plane diagrams of the four-period and the eight-period gaits
+(Figs. lOb and 10c) correctly indicates that they result from
+the bifurcation of the preceding two-period and four-period
+gaits, respectively.
+4.4. Chaotic Gaits
+The chaotic gait is an extreme case of the asymmetric gait,
+and is characterized by a complete disappearance of gait or-
+der. During a chaotic gait on a given slope, the states, and
+consequently the gait descriptors, of the biped robot never
+completely repeat themselves. Chaotic gaits are represented
+in the bifurcation diagrams by a continuous distribution of
+points. We explicitly show them in Figures 5a and 5b, and
+omit them in the other bifurcation diagrams for the sake of
+clarity.
+For our compass-gait robot, the eight-period gait is exhib-
+ited until 0 
+= 5.03°. If 0 is further increased, several period
+doublings take place very quickly; starting from 0 = 5.04°,
+we are unable to detect any periodicity in the motion of the
+robot. What we mean becomes clearer from Figure 11 a,
+which shows 50 consecutive step periods. Although none of
+these periods are exactly equal, a histogram, that is, the fre-
+quency of occurrence of a small range of step periods versus
+the range, reveals four major clusters; see Figure 11 b. This
+indicates the remnants of some order in the system.
+Beyond 0 
+= 5.04°, all indicators of order continue to dis-
+appear. Figure l lc shows the step periods for 50 consecutive
+Fig. 11. The top two plots illustrate the 2n-period steady gait,
+where n large: (a) periods of 50 consecutive steps; and b) a
+histogram of the periods of 2,000 consecutive steps for 4> =
+5.04°. The bottom two plots show the chaotic gait: (c) periods
+of 50 consecutive steps; and (d) a histogram of the periods of
+2,000 consecutive steps for ~ = 5.2°. For all four plots,
+~.t,=2and~=1.
+steps, and Figure l ld shows a frequency histogram of 2,000
+steps for 0 
+= 5.2°, which is the steepest slope for which
+the nominal model showed a steady gait. No order in any of
+the gait descriptors can be detected at this slope. The latter
+figure shows the presence of &dquo;broad-band frequency,&dquo; a key
+feature of chaos. Figure l Od shows the associated phase-plane
+diagram. The robot does not exhibit limit-cycle behavior any-
+more, but the trajectories stay on a strange attractor, which is
+a manifold of a lower dimension in the phase space.
+Following Garcia et al. (1998), we show a Poincare section
+of the strange attractor in Figure 12. The hyperplane in the
+phase space on which the points of repeated crossings of the
+phase trajectory forms the Poincare map is described byes 
+=
+-20 - ens. Physically, this hyperplane corresponds to the
+beginning of the swing stage. Strange attractors of dynamic
+systems are generally known to possess a fractad or noninteger
+dimension. We can observe that the Poincare section consists
+of multiple closed packed lines separated by empty spaces.
+The attractor is therefore neither a line nor a surface, and
+should have a dimension between one and two.
+A numerical procedure (Berge, Pomeau, and Vidal 1984)
+was employed to compute the fractal (Hausdorff-Besicovitch)
+dimension of the strange attractor4 whose Poincare section is
+depicted in Figure 12. For the robot with a four-dimensional
+state space, the fractal dimension of the strange attractor was
+found to be 2.07. The attractor is thus dimensionally close to
+4. The fractal dimension calculated by this numerical algorithm provides a
+lower bound for the Hausdorff-Besicovitch dimension. It is an approximate,
+but close, estimation of it.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 15 ---
+1296
+Fig. 12. The 3-D Poincare section of the chaotic gait. This
+section was taken along 8ns + 8s = -20, that is, at the begin-
+ning of a swing stage (where 0 
+= 5.2’, it = 2, and P 
+= 1).
+a Euclidean plane. This is a consequence of the strong phase-
+space volume contraction, which is discussed in Section 3.4.
+The gradual progression of the robot gait to the chaotic
+regime is well depicted in the first return maps of 6ns,k+t 
+=
+.f (ens,k)~ shown in Figure 13. When 0 
+= 5.030, the gait is
+eight-periodic, and its first return map consists of eight points
+(as was shown in Fig. 13a). At 0 = 5.04°, the first return
+map still consists of eight distinguishable clusters of points
+(Fig. 13a). Through multiple period-doubling bifurcations,
+this eight-period gait gives rise to a 2&dquo;-period gait with a
+large n. This gait still preserves some similarity with the
+eight-period gait from which it originates. For example, step
+order is still preserved, and 8ns always visits the eight clusters,
+as shown in Figure 13a, in the same order. In this order, a large
+6ns (i.e., lens I > .4 rad) is always followed by a small 8ns (i.e.,
+l ens I < .4 rad).
+When 0 = 5.08°, the eight clusters of points merge into
+two larger packs; see Figure 13b. Some order is still pre-
+served, since a large 9ns is still always followed by a small one.
+The same property continues to hold for 0 = 5.12°, but in
+this case the first return map appears as a continuum of points
+(Fig. 13c). We are therefore very close to the broad-band
+frequency characteristic typical of chaotic behavior. Finally,
+when 0 = 5.2, we observe that predictability and periodic-
+ity have been completely destroyed, since a large 6ns can be
+followed by another large one. The layered structure of the
+strange attractor can also be guessed from the first return map.
+It is extremely interesting to note that the first return maps
+of all of the robot-gait descriptors look remarkably simi-
+lar. For instance, the first return map of the step period T
+(Fig. 14) looks like a scaled and rotated first return map of 8ns
+(Fig. 13d). With this we can suggest that all of the charac-
+teristics of the passive chaotic gait of our robot are somehow
+Fig. 13. The first return map of 8ns : (a) the 2&dquo;-period gait,
+where n is large (o = 5.04°); (b) 2&dquo;-period gait, where n
+is very large (~ = 5.08°); (c) the approaching chaotic gait
+(o = 5.12°); and (d) the chaotic gait (o = 5.2°). For all four
+plots, > 
+= 2 and f3 = 1.
+Fig. 14. The first return map of T : a steady chaotic gait where
+<~=5.2°,~=2,and/3 = 1.
+ensconced in the shape of its first return map, which can be
+viewed as a signature of the chaotic gait.
+An important characteristic of chaotic motion is the expo-
+nential divergence of nearby trajectories (Hilborn 1994). The
+phase-space trajectories of our biped robot exhibit this be-
+havior, and this section ends with a presentation of this fact.
+Figures 15a and 15b show the divergence of trajectories initi-
+ating from nearby phase-space points and continuing for 2 and
+12 steps, respectively. The initial states of the two trajectories
+are
+corresponding to the dashed line, and
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 16 ---
+1297
+corresponding to the solid line. After just 2 steps, the differ-
+ence in the trajectories is clearly identifiable; after 12 steps,
+the trajectories bear no semblance to each other although they
+lie on the same attractor.
+5. Dampers Improve Gait Stability
+Taking a cue from the connection between gait stability and
+energy dissipation, we studied the effect of placing passive
+damping elements in the robot’s hip joint. A significant im-
+provement of the gait stability and overall gait versatility was
+achieved by this without violating the &dquo;passive&dquo; status of the
+robot. The damper affects a continuous dissipation of energy
+in the robot in addition to the energy dissipated intermittently
+during ground impact. Although even a linear damper may
+increase the range of slopes on which steady gaits exist, we
+obtained more encouraging results with quadratic dampers.
+It is possible to consider the damper coefficient as another pa-
+rameter affecting the robot gait; however, we give it a special
+status here because of its obvious connection to control laws.
+Indeed, the passive quadratic damper placed in the robot’s
+hip joint can be easily replaced by a motor implementing the
+same physical law. The damper generates a hip-joint torque
+uH OC - 62 H sign(6H) = _(6n, _ 6,)2sign(6.., - 6,).
+The presence of a damper profoundly alters the passive
+gait of the robot on a given slope.5 In Figure 16 we show
+three different limit cycles of the robot on a 4° slope-one for
+the damperless gait (the solid line) and the other two corre-
+sponding to two different quadratic dampers (the dashed line
+for 0.08 Nm/(rad/sec)2, and the innermost dotted-line cycle
+for 0.15 Nm/(rad/sec)2).
+A robot equipped with a damper may exhibit steady gaits
+for a larger range of slopes. Fig 17 shows the steady stable
+gait (asymmetric) for a 10° slope obtained with a quadratic
+hip damper with a coefficient of 0.23 Nm/(rad/sec)2. For
+a damperless robot, no gait cycle was found beyond a 5.2°
+slope.
+Figure 18 plots the robot’s kinetic energy (KE) versus
+its potential energy (PE) during a few cycles on 4° slope;
+Figure 18a corresponds to the damperless motion, and Fig-
+ure 18b corresponds to the motion with a 0.15-Nm/rad/sec
+damper. Let us concentrate on the first figure. As reported by
+Goswami, Espiau, and Keramane (1996), the KE versus PE
+plot of a damperless compass robot consists of two straight
+lines: a constant-PE horizontal line representing the ground
+impact, and an inclined line representing the swing stage. The
+conservation of total mechanical energy of the robot during
+the swing stage ensures that the inclined line makes a 135°
+angle with the KE axis. In Figure 18a we see that the PE of
+the robot decreases by a constant amount at every step. For
+Fig. 15. The divergence of nearby trajectories in the phase
+plane of a biped robot, a phenomenon normally observed in
+a system with chaotic dynamics. The initial 9ns between the
+two trajectories differs by 0.00 1 rad, while the other three state
+variables are exactly identical. Even after only two steps (a),
+the difference between the trajectories (shown in solid and
+dotted lines) is clearly identifiable. After 12 steps (b), the
+trajectories bear no resemblance to each other although they
+lie on the same attractor.
+5. Dampers may increase the size of the limit cycle’s basin of attraction for
+a given slope, but a better tool for estimating the size of the basin is needed
+to prove it.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 17 ---
+1298
+Fig. 16. Three different limit cycles for gaits on a 4° slope. The
+largest (solid line) corresponds to damperless motion. The
+other two cycles are obtained by placing quadratic dampers
+of coefficients 0.08 Nm/(rad/sec)2 (dashed line) and 0.15
+Nm/(rad/sec)2 (innermost dotted line) in the hip joint of the
+robot.
+Fig. 17. The phase diagram of the compass robot with a passive
+quadratic hip damper (with a coefficient 0.23 Nm/(rad/sec)2)
+walking down a 10° slope with a steady gait.
+Fig. 18. The KE versus PE plots during steady robot gaits
+on a 4° slope: (a) a damperless motion; and (b) the motion
+of the robot having a 0.15-Nm/rad/sec quadratic hip damper.
+The swing-stage dissipation of energy modifies the robot’s
+behavior, as is visible from the second plot.
+a steady gait, precisely this amount of KE is absorbed during
+the ground impact.
+In the presence of a damper, the situation is different. Since
+the damper continuously dissipates energy during the swing
+stage, the latter is no longer Hamiltonian, and is therefore
+not represented by a single inclined line. It becomes a curve,
+the exact nature of which depends on the robot dynamics and
+the damper coefficient (see Fig. 18b). To exhibit a steady
+gait, the PE lost by the robot during a step must be exactly
+equal to the sum of the energy absorbed during the ground
+impact and the energy absorbed by the damper during the
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 18 ---
+1299
+Fig. 19. Three quantities are illustrated: KE, PE, and total me-
+chanical energy (KE + PE) of the robot during a steady cycle
+on a 4° slope. The straight line at the bottom corresponds to
+a damperless robot for which (KE + PE) is constant. Intro-
+ducing a damper causes a continuous dissipation of system
+energy during motion, which results in a more complicated
+energy diagram, given by the loop. The straight line joining
+the extreme right-hand corner of the loop to its upper por-
+tion represents the instantaneous energy absorption due to the
+ground impact coupled with a simultaneous shift of the coor-
+dinate frame to reinitialize potential energy.
+swing stage. The ground-impact phase remains unchanged,
+and is represented by a horizontal line.
+In Figure 19, we visualize the differences in the energy
+dynamics for the gaits of a robot with and without a damper.
+The figure plots KE versus PE versus (KE + PE) during one
+gait cycle. The value of the PE in this case is reinitialized at
+each touchdown such that for a steady gait it is a cyclic quan-
+tity and is not monotonically decreasing. For a robot without
+any damper, the total energy (KE + PE) is constant during
+the swing stage and is thus represented by the horizontal line
+shown at the bottom of this figure. In a cyclic gait, the robot
+repeatedly traces this line. With a damper dissipating energy,
+the quantity (KE + PE) continuously changes during the mo-
+tion of the robot, and is shown by the superposed closed curve.
+The straight line joining the extreme right-hand corner of the
+curve to its upper portion represents the instantaneous kinetic
+energy absorption due to the ground impact coupled with a
+simultaneous shift of the coordinate frame to reinitialize the
+potential energy. In fact, one cycle of each of the plots in Fig-
+ure 18 is the horizontal projection of Figure 19 (the straight
+line and the loop).
+We conclude this section with a few comments. It is useful
+to recall that the addition of linear or quadratic dampers does
+not alter the passive status of the robot. We can extend the
+repertoire of passive elements by adding passive springs to
+the robot’s joints. Compared to natural human locomotion,
+the passive elements may resemble the inherent damping and
+compliance of human joints.
+The passive elements can be easily imitated by a control
+law in an active robot. It will be interesting to incorporate
+control laws based on active physical elements (such as neg-
+ative dampers and negative springs) and see if the robot can
+climb uphill. A control law for the uphill walk of the robot
+was presented by Goswami, Espiau, and Keramane (1997).
+Our results apparently contradict the findings of McGeer
+(1990), which reported that even a small amount of friction
+(by which damping was meant) in the hip joint can destroy
+the cycle. We have found that the original cycle is modified
+to another cycle rather than being destroyed.
+Finally, let us mention that the addition of a quadratic
+damper a (Ons)2 dramatically influences the robot’s behav-
+ior. With this damper in action, the robot can possess ex-
+tremely large limit-cycle attraction basins and can deal with
+steep slopes (we have found steady gaits up to 20°) that are
+impossible otherwise. The implications of this are unclear,
+and the implementation of such a damper (either passively or
+actively) is, at least, not straightforward.
+6. Conclusions and Future Work
+We have made a systematic study of the passive gait of a planar
+biped robot with compass-like motion. We have shown that
+any of the three parameters, namely, the ground slope and the
+normalized mass and length of the robot, affect the robot gait
+in the same qualitative manner. As we gradually increase one
+of the parameters, the symmetric and steady stable gaits of
+the unpowered robot evolve through a regime of bifurcations
+characterized by progressively more complicated asymmetric
+gaits, eventually arriving at an apparently chaotic gait where
+no two steps are identical.
+Although it could not predict the long-term behavior of
+the robot, the linear model helped us make guesses about the
+initial states of the robot that lie in the basin of attraction
+of a limit cycle corresponding to the slope. We found that
+the linear model was valid for small P and small it. It was
+interesting to note that the validity of the linear solution was
+not a function of the third parameter, A.
+The asymptotic stability of a dynamic system must be ac-
+companied by a reduction of the phase-fluid volume, and the
+only source of volume contraction in this idealized friction-
+less robot was the transition equations. We have measured the
+phase-fluid volume contraction that quantifies the rate of con-
+vergence of nearby trajectories. A typical contraction ratio
+was calculated to be 0.1, showing strong contraction.
+Presence of a passive damper in the hip joint (the only real
+joint) of the robot significantly increases gait stability and
+versatility. Although even a linear damper has a beneficial
+influence, we chose to present the results based on quadratic
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 19 ---
+1300
+dampers for their better performance. With the other three
+parameters constant, different dampers produce different gait
+cycles. Note that our results apparently contradict the findings
+of McGeer (1990) who reported that a hip damper destroys a
+stable limit cycle.
+Before discussing the possible extensions of this work, let
+us mention two interesting facts regarding the behavior of the
+robot. First, we have found that the robot can accept, without
+falling down, a much larger perturbation of the velocity states
+than the position states. For example, for the gait on a 3° slope,
+the state 9ns could absorb a perturbation of more that 100°/sec,
+whereas a perturbation of even 2° of the state ens takes the
+states out of the attraction basin. The same phenomenon was
+noted by McGeer (1990). Interestingly, we have noticed sim-
+ilar behavior for a different system with impacting elements
+(Mata-Jimenez, Brogliato, and Goswami 1997) governed by
+hybrid equations. Is this behavior common to all systems,
+hybrid systems, and/or those involving impacts?
+A second fact is that there is a strong indication that all the
+motion descriptors of the gait of a given robot model are spec-
+ified by only one parameter; namely, the ground-slope angle.
+This hints toward a strong underlying organizing principle.
+For the future, it is possible to place passive biped robots
+in the larger perspective of passive machines, including not
+only massive links, but also the other passive elements such as
+springs and dampers. This will necessitate a systematic study
+of the effect of these other elements on the purely inertial
+dynamics of the robot. We can furnish three main reasons to
+support this study. First, as we have already seen in this article,
+additional passive elements are very promising in significantly
+improving the gait stability and gait versatility. Second, we
+obtain a rich source of simple active-control laws that may
+mimic the physical behavior of passive elements. Third, a
+better understanding of the gait itself may be obtained by
+analyzing the role played by the passive elements.
+The transition equations play a fundamental role in the
+global dynamics of the robot. Our transition equations are
+derived from the law of conservation of angular momentum,
+which models the effect of ground impact on the robot. There
+are other ways to address the issue. One can, for example,
+create a physical spring-damper model of the ground and add
+it to the robot model. In any case, the results will be reliable if
+the gait features are qualitatively preserved for small changes
+in the parameters of the model.
+The difficulties in studying the behavior of this apparently
+simple biped mechanism are, to a large part, due to its hybrid
+algebro-differential governing equations. Better analytical
+tools for dealing with such systems are needed. In particular,
+an estimation, even numerical, of the size of the basin of
+attraction of a limit cycle would be of immense value, both
+from the theoretical and practical points of view.
+Currently, it is difficult to extend the insights obtained with
+a simple robot model to even a slightly more complex one.
+Our final challenge lies in the judicious interpretation of the
+results obtained for this simple biped so that we can progress
+toward our objective of understanding human locomotion and
+extend the results to higher degrees-of-freedom robots.
+References
+Berg&eacute;, P., Pomeau, Y., and Vidal, C. 1984. Order within
+Chaos. New York: Wiley.
+Berkemeier, M. D., and Fearing, R. S. 1992 (Nice). Control
+of a two-link robot to achieve sliding and hopping gaits.
+Proc. of the IEEE Conf. on Robot. and Automat., vol. 1 .
+Los Alamitos, California: IEEE, pp. 286-291.
+Block, D. J., and Spong, M. W. 1995 (Peoria, IL). Mechanical
+design & control of the Pendubot. SAE Earthmoving Ind.
+Conf.
+Coleman, M., and Ruina, A. (1998). An uncontrolled walking
+toy that cannot stand still. Phys. Rev. Lett. 80(16):3658-
+3661.
+Espiau, B. 1997 (July, Monterey). Bip: A joint project for the
+development of an anthropomorphic biped robot. Proc. of
+the Int. Conf. on Adv. Robot.
+Espiau, B., and Goswami, A. 1994 (September, Capri). Com-
+pass gait revisited. Proc. of the IFAC Symp. on Robot Con-
+trol (SYROCO), pp. 839-846.
+Formal’sky, A. 1997. Ballistic locomotion of a biped. Design
+and control of two biped machines. In A. Morecki and K. J.
+Waldron, (eds.) Human and Machine Locomotion. Italy:
+Udine.
+Fran&ccedil;ois, C. 1996. Contribution &agrave; la locomotion articul&eacute;e
+dynamiquement stable. Ph.D. thesis, Ecole des Mines de
+Paris (in French).
+Garcia, M., Chatterjee, A., Ruina, A., and Coleman, M. 1998.
+The simplest walking model: Stability, complexity, and
+scaling. ASME J. Biomech. Eng. 120:281-288.
+Goswami, A., Espiau, B., and Keramane, A. 1996 (April,
+Minneapolis). Limit cycles and their stability in a pas-
+sive bipedal gait. Proc. of the IEEE Conf. on Robot. and
+Automat. Washington, DC: IEEE, pp. 246-251.
+Goswami, A., Espiau, B., and Keramane, A. 1997. Limit
+cycles in a passive compass-gait biped and passivity-
+mimicking control laws. J. Autonomous Robots 4:273-
+286.
+Goswami, A., Thuilot, B., and Espiau, B. 1996 (October).
+Compass-like biped robot Part I: Stability and bifurcation
+of passive gaits. Technical Report 2996, INRIA.
+Grishin, A. A., Formal’sky, A. M., Lensky, A. V., and Zhit-
+omirsky, S. V. 1994. Dynamic walking of a vehicle with
+two telescopic legs controlled by two drives. Int. J. Robot.
+Res. 13(2):137-147.
+Guckenheimer, J., and Holmes, P. 1983. Nonlinear Oscilla-
+tions, Dynamical Systems, and Bifurcations. New York:
+Springer-Verlag.
+Hayashi, C. 1985. Nonlinear Oscillations in Physical Sys-
+tems. Princeton, New Jersey: Princeton University Press.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 
+
+--- PAGE 20 ---
+1301
+Heckbert, P. S. (ed.) 1994. Graphics Gems IV. New York:
+Academic Press.
+Hilborn, R. C. 1994. Chaos & Nonlinear Dynamics. Oxford:
+Oxford University Press.
+Hurmuzlu, Y., and Chang, T. H. 1992. Rigid-body collisions
+of a special class of planar kinematic chains. IEEE Trans.
+on Sys. Man Cybernet. 22(5):964-971.
+Hurmuzlu, Y., and Moskowitz, G. D. 1986. The role of im-
+pact in the stability of bipedal locomotion. Dyn. Stability
+Sys. 1(3):217-234.
+Hurmuzlu, Y, and Moskowitz, G. D. 1987. Bipedal loco-
+motion stabilized by impact and switching: I and II. Dyn.
+Stability Sys. 2(2):73-112.
+INRIA 1997 (February). Scilab 2.2. INRIA Do-
+maine de Voluceau, Rocquencourt, France. elec-
+tronic mail scilab@inria.fr; World Wide Web
+http://www.rocq.inria.fr/scilab/; ftp ftp.inria.fr/.
+Katoh, R., and Mori, M. 1984. Control method of biped
+locomotion giving asymptotic stability of trajectory. Au-
+tomatica 20(4):405-411.
+Koditschek, D., and B&uuml;hler, M. 1991. Analysis of a simplified
+hopping robot. Int. J. Robot. Res. 10(6).
+Lanczos, C. 1986. The Variational Principles of Mechanics.
+New York: Dover.
+Mata-Jimenez, M., Brogliato, B., and Goswami, A. 1997. On
+the control of mechanical systems with dynamic backlash.
+Paper presented at the CDC Conference, San Diego, CA.
+McCloskey, R. T., and Burdick, J. W. 1991 (April, Sacra-
+mento, CA). An analytical study of simpl hopping robots
+with vertical and forward motion. Proc. of the IEEE Conf.
+on Robot. and Automat., vol. 2. Los Alamitos, CA: IEEE,
+pp. 1392-1397.
+McGeer, T. 1990. Passive dynamic walking. Int. J. Robot.
+Res. 9(2):62-82.
+McMahon, T. A. 1984. Muscles, Reflexes, and Locomotion.
+Princeton, New Jersey: Princeton University Press.
+Mochon, S., and McMahon, T. A. 1981. Ballistic walking:
+An improved model. Math. Biosci. 52:241-260.
+Ostrowski, J. P., and Burdick, J. W. 1993 (May, Atlanta, GA).
+Designing feedback algorithms for controlling the peri-
+odic motions of legged robots. Proc. of the IEEE Conf. on
+Robot. and Automat., vol. 2. Los Alamitos, CA: IEEE,
+pp. 260-266.
+Parker, T. S., and Chua, L. O. 1989. Practical Numerical
+Algorithms for Chaotic Systems. Berlin: Springer.
+Raibert, M. H. 1986. Legged Robots that Balance. Cam-
+bridge, Massachusetts: MIT Press.
+Rose, J., and Gamble, J. G. (eds.) 1994. Human Walking.
+Baltimore, Maryland: Williams & Wilkins.
+Spong, M. W. 1995. The swing-up control problem for the
+Acrobot. IEEE Control Sys. 15(1):49-55.
+Thuilot, B., Goswami, A., and Espiau, B. 1997 (April, Albu-
+querque, NM). Bifurcation and chaos in a simple passive
+bipedal gait. Proc. of the IEEE Conf. on Robot. and Au-
+tomat. Washington, DC: IEEE, pp. 792-798.
+Troger, H., and Steindl, A. 1991. Nonlinear Stability and
+Bifurcation Theory. Wien: Springer-Verlag.
+Vakakis, A. F., and Burdick, J. W. 1990 (May, Cincinnati,
+OH). Chaotic motions in the dynamics of a hopping robot.
+Proc. of the IEEE Conf. on Robot. and Automat., vol. 3.
+Los Alamitos, California: IEEE, pp. 1464-1469.
+Yang, J.-S. 1994. A control study of a kneeless biped loco-
+motion system. J. Frankilin Inst. 331B(2):125-143.
+ © 1998 SAGE Publications. All rights reserved. Not for commercial use or unauthorized distribution.
+ by ambarish goswami on November 26, 2007 http://ijr.sagepub.comDownloaded from 

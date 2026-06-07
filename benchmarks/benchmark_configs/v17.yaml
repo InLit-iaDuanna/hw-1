@@ -1,0 +1,14 @@
+# V17: 状态估计基准配置
+# 使用 V17 默认参数
+
+base_params: {}  # 使用 PassiveArmsParams 默认值
+
+# 电机参数
+motor_params:
+  preset: mx64ar
+
+# 开启摩擦补偿
+compensate_friction: true
+
+# 传感器噪声参数（使用默认值）
+sensor_noise: {}

@@ -1,0 +1,46 @@
+# V10 PD 增益调优
+# 目标：优化髋关节和膝关节的 PD 控制增益
+
+version: "v10_rolling_foot_biomimetic_gait"
+
+# 参数定义
+parameters:
+  - name: "hip_kp"
+    type: "continuous"
+    bounds: [10.0, 30.0]
+    default: 18.0
+    description: "髋关节比例增益"
+
+  - name: "hip_kd"
+    type: "continuous"
+    bounds: [2.0, 8.0]
+    default: 4.0
+    description: "髋关节微分增益"
+
+  - name: "knee_kp"
+    type: "continuous"
+    bounds: [5.0, 20.0]
+    default: 10.0
+    description: "膝关节比例增益"
+
+  - name: "knee_kd"
+    type: "continuous"
+    bounds: [0.5, 3.0]
+    default: 1.2
+    description: "膝关节微分增益"
+
+# 目标函数（组合目标：距离 + CoT）
+objective:
+  type: "combined"
+  distance_weight: 0.7
+  cot_weight: -0.3  # 负值表示最小化
+  mass: 10.0  # 机器人总质量 (kg)
+
+# 优化器配置
+optimizer: "bayesian"
+budget: 60
+n_initial_points: 12
+
+# 遗传算法配置
+population_size: 20
+n_generations: 25

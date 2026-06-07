@@ -1,0 +1,16 @@
+{
+  "slice": "F_kp_ratio",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "hip_kp",
+    15.0,
+    45.0
+  ],
+  "y": [
+    "hip_kd_ratio",
+    0.1,
+    0.3
+  ],
+  "title": "hip_kp vs hip_kd/hip_kp ratio"
+}

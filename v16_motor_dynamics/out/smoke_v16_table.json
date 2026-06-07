@@ -1,0 +1,145 @@
+{
+  "reference": "D:\\Dunna\\Documents\\hw-1\\v14c_arm_mass_lightening\\out\\v14c_critical_f042_l102_summary.json",
+  "rows": [
+    {
+      "tag": "ideal",
+      "motor_name": "ideal_v14c_degenerate",
+      "joint_J_eff": 0.0,
+      "joint_b_eff": 0.0,
+      "joint_tau_C_eff": 0.0,
+      "joint_tau_sat_peak": 1000000000.0,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 4.616822907034934,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 16.2363012042121,
+      "active_input_energy_elec_j": 16.2363012042121,
+      "coulomb_friction_dissipation_j": 0.0,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "completed"
+    },
+    {
+      "tag": "mx64ar_J_only",
+      "motor_name": "MX-64AR (J_only)",
+      "joint_J_eff": 0.0028000000000000004,
+      "joint_b_eff": 0.0,
+      "joint_tau_C_eff": 0.0,
+      "joint_tau_sat_peak": 1460600000.0,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 4.593750256677095,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 16.14519268427205,
+      "active_input_energy_elec_j": 16.14519268427205,
+      "coulomb_friction_dissipation_j": 0.0,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "completed"
+    },
+    {
+      "tag": "mx64ar_friction",
+      "motor_name": "MX-64AR (friction_only)",
+      "joint_J_eff": 0.0,
+      "joint_b_eff": 0.05,
+      "joint_tau_C_eff": 0.201,
+      "joint_tau_sat_peak": 1460600000.0,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.19024774678665943,
+      "simulated_time": 3.5460000000000003,
+      "active_input_energy_mech_j": 3.358173239285224,
+      "active_input_energy_elec_j": 45.90985552889902,
+      "coulomb_friction_dissipation_j": 1.67958024175922,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "fall_down"
+    },
+    {
+      "tag": "mx64ar_full",
+      "motor_name": "Dynamixel MX-64AR @12V",
+      "joint_J_eff": 0.0028000000000000004,
+      "joint_b_eff": 0.05,
+      "joint_tau_C_eff": 0.201,
+      "joint_tau_sat_peak": 5.988459999999999,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.188837715623241,
+      "simulated_time": 3.5460000000000003,
+      "active_input_energy_mech_j": 3.389770440825928,
+      "active_input_energy_elec_j": 45.30919033581135,
+      "coulomb_friction_dissipation_j": 1.660268567314141,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "fall_down"
+    },
+    {
+      "tag": "ec_i40_53_full",
+      "motor_name": "Maxon EC-i 40 70W + GP32 53:1",
+      "joint_J_eff": 0.00935397,
+      "joint_b_eff": 0.011236,
+      "joint_tau_C_eff": 0.07632,
+      "joint_tau_sat_peak": 13.462848,
+      "success": false,
+      "alt_touchdowns": 3,
+      "forward_distance": 0.19155948916871837,
+      "simulated_time": 3.996,
+      "active_input_energy_mech_j": 3.5713691848830216,
+      "active_input_energy_elec_j": 36.51577845925169,
+      "coulomb_friction_dissipation_j": 0.40849879260171423,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "stuck"
+    }
+  ],
+  "v14c_reference": {
+    "alt_touchdowns": 10,
+    "forward_distance": 4.616822907034934,
+    "active_input_energy_j": 16.2363012042121
+  },
+  "ideal_vs_v14c": {
+    "alt_td_match": true,
+    "forward_rel_diff": 0.0,
+    "energy_rel_diff": 0.0,
+    "passes_l0_threshold": true
+  },
+  "mx64ar_full_vs_v14c": {
+    "alt_td_match": false,
+    "forward_rel_diff": 0.9590979079280911,
+    "energy_rel_diff": 0.7912227422864921,
+    "passes_l1_threshold": false
+  },
+  "motor_effect_dev_vs_ideal": {
+    "mx64ar_J_only": 0.004997516868728571,
+    "mx64ar_friction": 0.9587924963513832,
+    "mx64ar_full": 0.9590979079280911,
+    "ec_i40_53_full": 0.9585083740429315
+  },
+  "motor_effect_visible": true,
+  "smoke_verdict": "health_check_failed"
+}

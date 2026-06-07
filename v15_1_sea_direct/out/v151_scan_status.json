@@ -1,0 +1,38 @@
+{
+  "k_sea_values": [
+    500.0,
+    1000.0,
+    5000.0,
+    10000.0
+  ],
+  "arm_mass": 0.01,
+  "grid": 36,
+  "scan_rows": 144,
+  "success_by_k": {
+    "500": {
+      "success_n": 3,
+      "n_total": 36,
+      "fall_down_n": 23,
+      "stuck_n": 10
+    },
+    "1000": {
+      "success_n": 4,
+      "n_total": 36,
+      "fall_down_n": 22,
+      "stuck_n": 10
+    },
+    "5000": {
+      "success_n": 5,
+      "n_total": 36,
+      "fall_down_n": 19,
+      "stuck_n": 12
+    },
+    "10000": {
+      "success_n": 5,
+      "n_total": 36,
+      "fall_down_n": 18,
+      "stuck_n": 13
+    }
+  },
+  "v14c_baseline_success_rate": "5/36 = 13.9%"
+}

@@ -1,0 +1,8 @@
+Version,CoT,Steps_Before_Failure,Floquet_Multiplier,Status
+V10,0.048,200,0.88,Stable
+V13,0.052,180,0.92,Stable
+V16 (no comp),0.055,8,1.15,Unstable
+V13.7 (comp),0.053,180,0.88,Stable
+V17 (noise 1x),0.054,175,0.90,Stable
+V17 (noise 5x),0.056,110,0.95,Marginal
+V18 (3D),N/A,0.5,1.35,Unstable

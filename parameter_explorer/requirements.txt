@@ -1,0 +1,21 @@
+# Parameter Explorer Dependencies
+
+# Core scientific computing
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Machine learning
+scikit-learn>=1.3.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Sensitivity analysis
+SALib>=1.4.7
+
+# Multi-objective optimization
+pymoo>=0.6.0
+
+# Parallelization
+joblib>=1.3.0

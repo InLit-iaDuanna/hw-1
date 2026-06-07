@@ -1,0 +1,39 @@
+{
+  "name": "compass-gait-remotion",
+  "version": "2.0.0",
+  "description": "Remotion animations for compass gait dynamics visualization (V01-V25)",
+  "scripts": {
+    "start": "remotion studio",
+    "build": "remotion render",
+    "upgrade": "remotion upgrade",
+    "test": "tsc --noEmit",
+    "render:fsm": "remotion render FSMStateTransition out/fsm_state_transition.mp4",
+    "render:rolling": "remotion render RollingFootAnimation out/rolling_foot_animation.mp4",
+    "render:phase": "remotion render PhaseVisualization out/phase_visualization.mp4",
+    "render:comparison": "remotion render GaitComparison out/gait_comparison.mp4",
+    "render:friction": "remotion render FrictionCompensation out/friction_compensation.mp4",
+    "render:roadmap": "remotion render TechnicalRoadmap out/technical_roadmap.mp4",
+    "render:motor": "remotion render MotorDynamics out/motor_dynamics.mp4"
+  },
+  "repository": {},
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@remotion/bundler": "^4.0.0",
+    "@remotion/cli": "^4.0.0",
+    "@remotion/eslint-config": "^4.0.0",
+    "@remotion/eslint-plugin": "^4.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "remotion": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.26",
+    "@types/web": "^0.0.86",
+    "@typescript-eslint/eslint-plugin": "^8.60.1",
+    "@typescript-eslint/parser": "^8.60.1",
+    "eslint": "^8.43.0",
+    "prettier": "^2.8.8",
+    "typescript": "^5.9.3"
+  },
+  "packageManager": "npm@10.1.0"
+}

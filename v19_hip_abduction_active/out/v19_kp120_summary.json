@@ -1,0 +1,16 @@
+{
+  "success": false,
+  "lateral_stable": false,
+  "forward_distance": 0.45945983103220134,
+  "simulated_time": 2.63,
+  "alternating_touchdowns": 4,
+  "failure": "lateral_drift",
+  "max_abs_roll_deg": 14.545500530866207,
+  "max_abs_hip_y_m": 0.5006373363159876,
+  "max_abs_abd_deg": 13.197321119688034,
+  "params": {
+    "abd_kp": 120.0,
+    "abd_kd": 8.0,
+    "init_hip_roll_deg": 3.0
+  }
+}

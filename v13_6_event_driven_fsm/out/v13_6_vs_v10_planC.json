@@ -1,0 +1,43 @@
+{
+  "slice": "C_foot_leg",
+  "grid": 6,
+  "n_total": 36,
+  "v10_baseline": {
+    "rate_pct": 16.7,
+    "succ_n": 6
+  },
+  "v13_5_planC": {
+    "rate_pct": 0.0,
+    "succ_n": 0
+  },
+  "v13_6_fsm": {
+    "rate_pct": 11.11111111111111,
+    "succ_n": 4,
+    "success_cells": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ]
+    ],
+    "failure_distribution": {
+      "stuck": 9,
+      "fall_down": 23,
+      "completed": 4
+    }
+  },
+  "delta_vs_v10_pp": -5.588888888888889,
+  "delta_vs_planC_pp": 11.11111111111111,
+  "verdict": "tier_B_partial"
+}

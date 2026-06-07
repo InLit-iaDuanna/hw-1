@@ -1,0 +1,69 @@
+# GitHub Actions 工作流 - 每周基准测试
+name: Weekly Benchmark
+
+on:
+  schedule:
+    # 每周日 02:00 UTC 运行
+    - cron: '0 2 * * 0'
+  workflow_dispatch:
+
+jobs:
+  weekly-benchmark:
+    runs-on: windows-latest
+    timeout-minutes: 180
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pyyaml matplotlib
+
+    - name: Run full benchmark suite
+      run: |
+        python benchmarks/benchmark_runner.py --output weekly_benchmark_${{ github.run_number }}.json
+
+    - name: Generate comparison report
+      run: |
+        # 查找上一次的基准结果
+        $previousBenchmarks = Get-ChildItem benchmarks/results -Filter "weekly_benchmark_*.json" -ErrorAction SilentlyContinue |
+                              Sort-Object LastWriteTime -Descending |
+                              Select-Object -Skip 1 -First 1
+
+        if ($previousBenchmarks) {
+          Write-Output "Comparing with previous benchmark: $($previousBenchmarks.Name)"
+          # 这里可以添加对比脚本
+        }
+
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v4
+      with:
+        name: weekly-benchmark-${{ github.run_number }}
+        path: |
+          benchmarks/results/*.json
+          benchmarks/results/*.png
+          benchmarks/results/*.txt
+
+    - name: Create issue if regression detected
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: '性能回归检测：Weekly Benchmark #${{ github.run_number }}',
+            body: '每周基准测试检测到性能回归。请查看 [workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) 了解详情。',
+            labels: ['performance', 'regression', 'automated']
+          });

@@ -1,0 +1,288 @@
+================================================================================
+HW-1 项目优化建议报告
+================================================================================
+
+总计: 7 个优化建议
+
+
+================================================================================
+优化 #1: 并行化参数扫描
+================================================================================
+ID: opt_001
+类别: parallel
+影响力: high
+难度: low
+优先级分数: 80.0
+预期加速: 4-8x
+
+描述:
+  使用 joblib 并行化 scan_*.py 中的参数扫描循环，充分利用多核 CPU
+
+实施步骤:
+  1. 安装 joblib: pip install joblib
+  2. 导入: from joblib import Parallel, delayed
+  3. 将单次仿真封装为独立函数
+  4. 使用 Parallel(n_jobs=-1) 替换 for 循环
+  5. 验证结果一致性
+
+代码示例:
+  from joblib import Parallel, delayed
+  
+  def run_single(params):
+      rows, summary = run_simulation(params, sample_hz=20.0)
+      return summary
+  
+  # 并行执行
+  results = Parallel(n_jobs=-1)(
+      delayed(run_single)(p) for p in candidate_params
+  )
+
+影响的文件:
+  - v10_rolling_foot_biomimetic_gait/scan_rolling_foot_params_v10.py
+  - v13_7_friction_compensation/scan_v13_7_tauC_verify.py
+  - v17_state_estimation/scan_v17_noise.py
+
+风险:
+  - 并行执行可能导致内存峰值增加
+  - 需要确保函数无副作用
+
+
+================================================================================
+优化 #2: 参数扫描早停策略
+================================================================================
+ID: opt_007
+类别: complexity
+影响力: medium
+难度: low
+优先级分数: 37.5
+预期加速: 1.3-2.0x
+
+描述:
+  在参数扫描中尽早终止失败的仿真，避免浪费时间
+
+实施步骤:
+  1. 在 run_simulation 中添加 early_stop_time 参数
+  2. 如果在早期检测到失败，立即返回
+  3. 在参数扫描中使用较短的 early_stop_time
+  4. 对候选参数进行快速筛选
+
+代码示例:
+  def run_simulation(params, early_stop_time=None):
+      for step in range(int(params.duration / params.timestep)):
+          t = step * params.timestep
+  
+          # 早停检查
+          if early_stop_time and t >= early_stop_time:
+              failure = classify_failure(...)
+              if failure:
+                  return [], {"failure": failure, "early_stopped": True}
+  
+          # ... 继续仿真 ...
+
+影响的文件:
+  - v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py
+  - v10_rolling_foot_biomimetic_gait/scan_rolling_foot_params_v10.py
+
+风险:
+  - 可能过早淘汰潜在的好参数
+
+
+================================================================================
+优化 #3: 降低数据采样率
+================================================================================
+ID: opt_002
+类别: hotspot
+影响力: medium
+难度: low
+优先级分数: 36.5
+预期加速: 1.2-1.5x
+
+描述:
+  减少 sample_hz 以降低数据记录开销，同时保持足够的分析精度
+
+实施步骤:
+  1. 分析当前 sample_hz 使用情况
+  2. 确定最小可接受采样率（基于 Nyquist 定理）
+  3. 更新默认 sample_hz 参数
+  4. 验证分析结果质量
+
+代码示例:
+  # V10: 120 Hz → 60 Hz (足够用于轨迹分析)
+  run_simulation(params, sample_hz=60.0)
+  
+  # V17: 160 Hz → 80 Hz (仍满足 Nyquist 要求)
+  run_simulation_v17(params, sample_hz=80.0)
+
+影响的文件:
+  - v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py
+  - v17_state_estimation/simulate_v17.py
+
+风险:
+  - 可能丢失高频细节
+  - 需要验证分析结果不受影响
+
+
+================================================================================
+优化 #4: 使用 numba JIT 加速控制器
+================================================================================
+ID: opt_005
+类别: hotspot
+影响力: medium
+难度: medium
+优先级分数: 27.5
+预期加速: 1.2-1.5x
+
+描述:
+  使用 numba 对热点函数进行 JIT 编译，加速数值计算
+
+实施步骤:
+  1. 安装 numba: pip install numba
+  2. 识别纯数值计算的热点函数
+  3. 添加 @jit(nopython=True) 装饰器
+  4. 调整函数以兼容 numba
+  5. 验证结果一致性和性能提升
+
+代码示例:
+  from numba import jit
+  
+  @jit(nopython=True)
+  def limited_pd(q, qd, target, kp, kd, limit):
+      tau = kp * (target - q) - kd * qd
+      if tau > limit:
+          return limit
+      elif tau < -limit:
+          return -limit
+      return tau
+  
+  @jit(nopython=True)
+  def smoothstep(u):
+      u = min(max(u, 0.0), 1.0)
+      return u * u * (3.0 - 2.0 * u)
+
+影响的文件:
+  - v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py
+  - v17_state_estimation/simulate_v17.py
+
+风险:
+  - numba 不支持所有 Python 特性
+  - 首次编译有开销
+
+
+================================================================================
+优化 #5: 使用 numpy 数组预分配
+================================================================================
+ID: opt_003
+类别: memory
+影响力: medium
+难度: medium
+优先级分数: 27.0
+预期加速: 1.1-1.3x
+
+描述:
+  预分配 numpy 数组存储仿真数据，减少内存分配开销和内存占用
+
+实施步骤:
+  1. 计算所需数组大小: n_samples = int(duration / timestep / sample_stride)
+  2. 预分配数组: data_array = np.zeros((n_samples, n_fields))
+  3. 在循环中直接写入数组
+  4. 结束后转换为 list[dict]
+  5. 对比性能和内存使用
+
+代码示例:
+  import numpy as np
+  
+  n_steps = int(params.duration / params.timestep)
+  n_samples = n_steps // sample_stride
+  n_fields = len(QPOS_KEYS) + len(QVEL_KEYS) + 20  # 预估字段数
+  
+  # 预分配
+  data_array = np.zeros((n_samples, n_fields), dtype=np.float64)
+  
+  for step in range(n_steps):
+      # ... 仿真步进 ...
+      if step % sample_stride == 0:
+          idx = step // sample_stride
+          data_array[idx, :] = [...] # 直接写入
+  
+  # 转换为 list[dict]
+  rows = [dict(zip(keys, data_array[i])) for i in range(n_samples)]
+
+影响的文件:
+  - v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py
+  - v13_7_friction_compensation/simulate_v13_7.py
+  - v17_state_estimation/simulate_v17.py
+
+风险:
+  - 增加代码复杂度
+  - 需要预先知道字段数量
+
+
+================================================================================
+优化 #6: 缓存重复的三角函数计算
+================================================================================
+ID: opt_004
+类别: hotspot
+影响力: low
+难度: low
+优先级分数: 15.5
+预期加速: 1.05-1.15x
+
+描述:
+  在循环外预计算不变的三角函数值，避免重复计算
+
+实施步骤:
+  1. 识别循环中的重复三角函数调用
+  2. 检查参数是否在循环中不变
+  3. 将计算移到循环外
+  4. 使用缓存的值
+
+代码示例:
+  # Before
+  for step in range(n_steps):
+      offset = params.gamma  # 不变
+      target = offset + math.radians(angle_deg)  # angle_deg 不变
+  
+  # After
+  gamma = params.gamma
+  angle_rad = math.radians(angle_deg)
+  for step in range(n_steps):
+      target = gamma + angle_rad
+
+影响的文件:
+  - v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py
+
+风险:
+  - 收益较小
+
+
+================================================================================
+优化 #7: 优化接触检测频率
+================================================================================
+ID: opt_006
+类别: hotspot
+影响力: low
+难度: low
+优先级分数: 15.2
+预期加速: 1.05-1.1x
+
+描述:
+  减少不必要的接触检测调用，只在需要时检测
+
+实施步骤:
+  1. 分析 foot_contact_detail() 调用频率
+  2. 识别可以复用结果的场景
+  3. 缓存接触状态
+  4. 只在状态可能改变时重新检测
+
+代码示例:
+  # 在 contact_flags 中已经检测过，不需要在 make_row 中再次检测
+  left_contact, right_contact = contact_flags(model, data)
+  
+  # make_row 中复用结果
+  row = make_row(..., left_contact, right_contact, cached_detail)
+
+影响的文件:
+  - v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py
+
+风险:
+  - 收益很小

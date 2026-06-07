@@ -1,0 +1,18 @@
+{
+  "success": false,
+  "lateral_stable": true,
+  "forward_distance": 1.3193578996527733,
+  "simulated_time": 3.201,
+  "alternating_touchdowns": 2,
+  "failure": "fall_down",
+  "max_abs_roll_deg": 1.5531213838637843,
+  "max_abs_hip_y_m": 0.04070635548554132,
+  "params": {
+    "hip_abd_stiffness": 160.0,
+    "hip_abd_damping": 2.0,
+    "foot_lateral_width": 0.06,
+    "init_hip_roll_deg": 0.0,
+    "hip_roll_damping": 0.5,
+    "hip_roll_stiffness": 200.0
+  }
+}

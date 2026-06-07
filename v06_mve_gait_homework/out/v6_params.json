@@ -1,0 +1,25 @@
+{
+  "params": {
+    "slope_deg": 5.0,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "foot_radius": 0.04,
+    "step_length": 0.34,
+    "steps": 16,
+    "step_time": 0.78,
+    "swing_clearance": 0.16,
+    "max_knee_flex_deg": 52.0,
+    "initial_speed_error": 0.18,
+    "speed_retention": 0.82,
+    "gravity_gain_scale": 0.42,
+    "sample_dt": 0.004166666666666667
+  },
+  "duration_s": 12.479999999999999,
+  "display_steps": 16,
+  "fixed_speed": 0.8650028728637142,
+  "final_poincare_error": 0.000515876471065102,
+  "no_actuators": true,
+  "no_reward_function": true,
+  "proof_source": "V5 hybrid compass Poincare convergence",
+  "display_role": "V6 kneed MVE visual explainer, not MuJoCo soft-contact proof"
+}

@@ -1,0 +1,105 @@
+{
+  "v14": {
+    "success": 5,
+    "total": 35,
+    "rate": 0.14285714285714285
+  },
+  "v14b": {
+    "success": 14,
+    "total": 35,
+    "rate": 0.4
+  },
+  "by_mass": [
+    {
+      "arm_mass": 0.001,
+      "v14_success": 5,
+      "v14_total": 5,
+      "v14b_success": 5,
+      "v14b_total": 5,
+      "delta_success": 0,
+      "v14_forward_mean": 4.553395775059366,
+      "v14b_forward_mean": 4.833234417635504,
+      "delta_forward_mean": 0.2798386425761379
+    },
+    {
+      "arm_mass": 0.05,
+      "v14_success": 0,
+      "v14_total": 5,
+      "v14b_success": 5,
+      "v14b_total": 5,
+      "delta_success": 5,
+      "v14_forward_mean": 1.35072175720211,
+      "v14b_forward_mean": 4.494864077510552,
+      "delta_forward_mean": 3.1441423203084424
+    },
+    {
+      "arm_mass": 0.1,
+      "v14_success": 0,
+      "v14_total": 5,
+      "v14b_success": 2,
+      "v14b_total": 5,
+      "delta_success": 2,
+      "v14_forward_mean": 1.3519011117485087,
+      "v14b_forward_mean": 2.822513251487451,
+      "delta_forward_mean": 1.4706121397389424
+    },
+    {
+      "arm_mass": 0.2,
+      "v14_success": 0,
+      "v14_total": 5,
+      "v14b_success": 2,
+      "v14b_total": 5,
+      "delta_success": 2,
+      "v14_forward_mean": 1.3968747290700143,
+      "v14b_forward_mean": 2.341112577721457,
+      "delta_forward_mean": 0.9442378486514429
+    },
+    {
+      "arm_mass": 0.3,
+      "v14_success": 0,
+      "v14_total": 5,
+      "v14b_success": 0,
+      "v14b_total": 5,
+      "delta_success": 0,
+      "v14_forward_mean": 0.16969570377250615,
+      "v14b_forward_mean": 1.3726777442172984,
+      "delta_forward_mean": 1.2029820404447922
+    },
+    {
+      "arm_mass": 0.45,
+      "v14_success": 0,
+      "v14_total": 5,
+      "v14b_success": 0,
+      "v14b_total": 5,
+      "delta_success": 0,
+      "v14_forward_mean": 0.14959955930303054,
+      "v14b_forward_mean": 1.377308419257495,
+      "delta_forward_mean": 1.2277088599544643
+    },
+    {
+      "arm_mass": 0.6,
+      "v14_success": 0,
+      "v14_total": 5,
+      "v14b_success": 0,
+      "v14b_total": 5,
+      "delta_success": 0,
+      "v14_forward_mean": 0.6490170821301591,
+      "v14b_forward_mean": 1.3787837876935765,
+      "delta_forward_mean": 0.7297667055634174
+    }
+  ],
+  "critical_arm_mass_0_05": {
+    "arm_mass": 0.05,
+    "v14_success": 0,
+    "v14_total": 5,
+    "v14b_success": 5,
+    "v14b_total": 5,
+    "delta_success": 5,
+    "v14_forward_mean": 1.35072175720211,
+    "v14b_forward_mean": 4.494864077510552,
+    "delta_forward_mean": 3.1441423203084424
+  },
+  "verdict": "pass",
+  "verdict_note": "V14b recovers part of the V10-failed arm_mass=0.05 row.",
+  "academic_note": "V14b remains quasi-passive: hip+knee active, arms passive; no claim of pure passive or 3D quasi-passive walking."
+}

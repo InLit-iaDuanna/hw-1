@@ -1,0 +1,14 @@
+{
+  "success": false,
+  "forward_distance": 0.11050803682290075,
+  "simulated_time": 2.892,
+  "alternating_touchdowns": 4,
+  "failure": "fall_down",
+  "active_input_energy_mech_j": 2.477474948459299,
+  "coulomb_friction_dissipation_j": 1.5896825564608332,
+  "compensate_friction": true,
+  "sensor_noise_scale": 3.0,
+  "estimation_rmse_vx": 0.1496548211276393,
+  "estimation_rmse_hip_x": 0.04238406476544231,
+  "controller": "v17_state_estimated_friction_comp_fsm"
+}

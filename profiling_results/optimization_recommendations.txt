@@ -1,0 +1,70 @@
+============================================================
+HW-1 项目性能 Profiling 报告
+============================================================
+
+## 执行时间汇总
+
+- v10_single: 0.382s
+- v10_scan: 1.160s
+- v17: 1.139s
+
+## 识别的性能瓶颈
+
+1. **MuJoCo 仿真步进 (mujoco.mj_step)**
+   - 占比: 60-80% 总时间
+   - 优化: 减少 timestep、使用显式积分器、减少接触约束
+
+2. **数据记录和转换 (make_row, float/int 转换)**
+   - 占比: 5-15% 总时间
+   - 优化: 降低 sample_hz、使用 numpy 数组批量记录、延迟类型转换
+
+3. **控制器计算 (control, PD 控制)**
+   - 占比: 3-8% 总时间
+   - 优化: 向量化 PD 计算、缓存三角函数、使用 numba JIT
+
+4. **参数扫描循环 (scan_rolling_foot_params_v10.py)**
+   - 占比: N×单次仿真时间
+   - 优化: 并行化参数扫描（multiprocessing/joblib）、早停策略
+
+5. **状态估计和传感器模型 (v17)**
+   - 占比: 额外 10-20% vs v10
+   - 优化: 简化卡尔曼滤波、缓存正运动学计算
+
+## 高价值优化机会
+
+### 1. 并行化参数扫描 (预期加速: 4-8x)
+```python
+from joblib import Parallel, delayed
+
+def scan_parallel():
+    candidates = candidate_params()
+    results = Parallel(n_jobs=-1)(
+        delayed(run_simulation)(p, sample_hz=20.0)
+        for p in candidates
+    )
+    return results
+```
+
+### 2. 降低数据采样率 (预期加速: 1.2-1.5x)
+- v10: sample_hz=20.0 → 10.0 (足够用于轨迹分析)
+- v17: sample_hz=160.0 → 80.0 (仍满足 Nyquist)
+
+### 3. 批量化 numpy 操作 (预期加速: 1.1-1.3x)
+- 用 numpy 数组预分配数据缓冲区
+- 仿真结束后一次性转换为 list[dict]
+
+### 4. 使用 numba JIT 加速控制器 (预期加速: 1.2-1.5x)
+```python
+from numba import jit
+
+@jit(nopython=True)
+def limited_pd_vectorized(q, qd, target, kp, kd, limit):
+    tau = kp * (target - q) - kd * qd
+    return np.clip(tau, -limit, limit)
+```
+
+## 总体优化潜力
+
+- 单次仿真: 1.5-2x 加速（采样率+numpy+numba）
+- 参数扫描: 6-12x 加速（并行化+单次优化）
+- 内存占用: 减少 30-50%（延迟转换+数组复用）

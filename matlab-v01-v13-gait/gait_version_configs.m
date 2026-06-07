@@ -1,0 +1,43 @@
+function cfgs = gait_version_configs()
+%GAIT_VERSION_CONFIGS Data source mapping for V1-V13 gait versions.
+
+thisDir = fileparts(mfilename('fullpath'));
+repoRoot = fileparts(thisDir);
+
+cfgs = makeCfg('v01', 'V1 MuJoCo compass gait', 'Initial MuJoCo compass gait contact exploration', 'timeseries', repoRoot, ...
+    'v01_mujoco_compass_gait', 'out/passive_compass_gait_data.csv', 'out/best_params.json');
+cfgs(end+1) = makeCfg('v02', 'V2 rimless wheel limit cycle', 'Passive rimless wheel reference for gravity input and collision loss', 'timeseries', repoRoot, ...
+    'v02_rugged_rimless_limit_cycle', 'out/rimless_limit_cycle_data.csv', 'out/rimless_params.json');
+cfgs(end+1) = makeCfg('v03', 'V3 compass limit cycle reference', 'Mathematical compass gait reference', 'timeseries', repoRoot, ...
+    'v03_compass_limit_cycle', 'out/compass_limit_cycle_data.csv', 'out/compass_params.json');
+cfgs(end+1) = makeCfg('v04', 'V4 kneed limit cycle reference', 'Kneed mechanism comparison', 'timeseries', repoRoot, ...
+    'v04_kneed_limit_cycle', 'out/kneed_limit_cycle_data.csv', 'out/kneed_limit_cycle_params.json');
+cfgs(end+1) = makeCfg('v05', 'V5 hybrid passive proof', 'Hybrid dynamics and Poincare convergence proof for the passive limit cycle', 'timeseries', repoRoot, ...
+    'v05_hybrid_compass_proof', 'out/hybrid_compass_data.csv', 'out/hybrid_compass_params.json');
+cfgs(end+1) = makeCfg('v06', 'V6 MVE homework expression', 'MVE structure and homework presentation version', 'timeseries', repoRoot, ...
+    'v06_mve_gait_homework', 'out/v6_mve_gait_data.csv', 'out/v6_params.json');
+cfgs(end+1) = makeCfg('v07', 'V7 true contact exploration', 'Pure contact passive exploration and failure sensitivity reference', 'timeseries', repoRoot, ...
+    'v07_true_contact_exploration', 'out/v7_best_attempt_data.csv', 'out/v7_best_params.json');
+cfgs(end+1) = makeCfg('v08', 'V8 quasi-passive assist exploration', 'Weak assisted quasi-passive exploration', 'timeseries', repoRoot, ...
+    'v08_quasi_passive_assisted', 'out/debug_v8_fast10_data.csv', 'out/debug_v8_fast10_summary.json');
+cfgs(end+1) = makeCfg('v09', 'V9 stable biomimetic contact gait', 'Stable quasi-passive real-contact walking', 'timeseries', repoRoot, ...
+    'v09_stable_biomimetic_gait', 'out/v9_stable_walk_data.csv', 'out/v9_best_params.json');
+cfgs(end+1) = makeCfg('v10', 'V10 rolling-foot biomimetic gait', 'Passive ankle and rolling foot extension on V9', 'timeseries', repoRoot, ...
+    'v10_rolling_foot_biomimetic_gait', 'out/v10_rolling_foot_walk_data.csv', 'out/v10_best_params.json');
+cfgs(end+1) = makeCfg('v11', 'V11 rugged terrain robustness', 'Rugged terrain and impulse robustness tests based on V10', 'timeseries', repoRoot, ...
+    'v11_rugged_terrain_robustness', 'out/v11_sanity_flat_data.csv', 'out/v11_sanity_flat_summary.json');
+cfgs(end+1) = makeCfg('v12', 'V12 energy and CoT analysis', 'Cross-version energy, CoT, collision loss, and Floquet analysis', 'energy', repoRoot, ...
+    'v12_energy_cot_analysis', 'out/v12_energy_cot_table.csv', 'out/v12_floquet_table.json');
+cfgs(end+1) = makeCfg('v13', 'V13 parameter sensitivity atlas', 'Parameter sensitivity atlas and feasible design region summary', 'atlas', repoRoot, ...
+    'v13_parameter_sensitivity_atlas', 'out/v13_atlas_summary.csv', 'out/v13_atlas_summary.json');
+end
+
+function cfg = makeCfg(id, titleText, note, kind, repoRoot, folder, csvRel, jsonRel)
+cfg.id = id;
+cfg.title = titleText;
+cfg.note = note;
+cfg.kind = kind;
+cfg.folder = folder;
+cfg.dataCsv = fullfile(repoRoot, folder, csvRel);
+cfg.paramsJson = fullfile(repoRoot, folder, jsonRel);
+end

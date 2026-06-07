@@ -1,0 +1,1590 @@
+
+
+--- PAGE 1 ---
+Tad McGeer 
+School of Engineering Science 
+Simon 
+Fraser 
+University 
+Bumaby, 
+British Columbia, Canada V5A 1 S6 
+Abstract 
+There exists a class of two-legged machines for which walking 
+is a natural dynamic mode. Once started on a shallow slope, 
+a machine of this class will settle 
+into 
+a steady gait quite 
+comparable to human walking, without active control or en- 
+ergy input. Interpretation and analysis of the physics are 
+straightforward; the walking cycle, its stability, and its sensi- 
+tivity to parameter variations are easily calculated. Experi- 
+merits with a test machine verify that the passive walking 
+effect 
+can be readily exploited in practice. The dynamics are 
+most clearly demonstrated by a machine powered only by 
+gravity, but they can be combined easily with active energy 
+input to produce 
+efficient 
+and dextrous walking over a broad 
+range of terrain. 
+1. Static vs. Dynamic Walking 
+Research on legged locomotion is motivated partly by 
+fundamental 
+curiousity 
+about its mechanics, and 
+partly by the practical utility of machines capable of 
+traversing uneven surfaces. Increasing general interest 
+in robotics over recent years has coincided with the 
+appearance of a wide variety of legged machines. A 
+brief classification will indicate where our own work 
+fits in. First one should distinguish between static and 
+dynamic machines. The former maintain static equi- 
+librium throughout their motion. This requires at least 
+four legs and, more commonly, six. It also imposes a 
+speed restriction, since cyclic accelerations must be 
+limited in order to minimize inertial effects. Outstand- 
+ing examples of static walkers are the Odex series 
+(Russell 1983) and the Adaptive Suspension Vehicle 
+(Waldron 
+1986). Dynamic machines, on the other 
+hand, are more like people; they can have fewer legs 
+than static machines, and are potentially faster. 
+The International Journal of Robotics Research, 
+Vol. 9, No. 2, April 
+@ 1990 Massachusetts Institute of Technology. 
+Passive Dynamic 
+Walking 
+2. Dynamics vs. Control 
+Our interest is in dynamic walking machines, which 
+for our purposes can be classified according to the role 
+of active control in generating the gait. At one end of 
+the spectrum is the biped of 
+Mita 
+et al. 
+(1984), 
+whose 
+motion is generated entirely by linear feedback con- 
+trol. At the end of one step, joint angles are com- 
+manded corresponding to the end of the next step, 
+and the controller attempts to null the errors. There is 
+no explicit 
+specification 
+of the trajectory between 
+these end conditions. Yamada, Funisho, and Sano 
+(1985) took an approach that also relies on feedback, 
+but in their machine it is used to track a fully specified 
+trajectory rather than just to close the gap between 
+start and end positions. Meanwhile the stance leg is left 
+free to rotate as an inverted pendulum, which, as we 
+shall discuss, is a key element of passive walking. Sim- 
+ilar techniques are used in biped walkers by 
+Takanishi 
+et al. 
+(1985), Lee and Liao (1988), and Zheng, Shen, 
+and 
+Sias 
+(1988). 
+By contrast the bipeds of 
+Miura 
+and Shimoyama 
+(1984) generate their gait by feedforward rather than 
+feedback; joint torque schedules are precalculated and 
+played back on command. Again the stance leg is left 
+free. However, the 
+"feedforward" 
+gait is unstable, so 
+small feedback corrections are added to maintain the 
+walking cycle. Most significantly, these are not applied 
+continuously 
+(i.e., 
+for 
+tracking 
+of the nominal trajec- 
+tory). Instead the 
+"feedforward" 
+step is treated as a 
+processor whose output (the end-of-step state) varies 
+with the input (the start-of-step state). Thus the feed- 
+back controller responds to an error in 
+tracking 
+by 
+modifying initial conditions for subsequent steps, and 
+so over several steps the error is eliminated. In this 
+paper you will see analysis of a similar process. Raibert 
+(1986) has developed comparable concepts but with a 
+more pure implementation, and applied them with 
+great success to running machines having from one to 
+four legs. - 
+AH of these machines use active control in some 
+form to generate the locomotion pattern. They can be 
+The International Journal of Robotics Research 
+
+--- PAGE 2 ---
+Fig. I. A bipedal toy that 
+walks passively down shal- 
+low inclines. 
+[Reprintedjiom 
+(McMahon 1984).] 
+Fig. 2. General arrangement 
+of a 2D biped. It includes 
+legs of arbitrary mass and 
+inertia, semicircular feet, 
+and a point mass at the hip. 
+Side 
+ordered according to the style of implementation, 
+ranging from continuous active feedback to 
+once-per- 
+step adjustment of an actively generated but neverthe- 
+less fixed cycle. This paper discusses a machine at the 
+extreme end of the spectrum: gravity and inertia alone 
+generate the locomotion pattern, which we therefore 
+call "passive walking." 
+3. Motivation for Passive Walking 
+The practical motivation for studying passive walking 
+is, first, that it makes for mechanical simplicity and 
+relatively high efficiency. (The specific resistance of 
+our test biped is "0.025 in a human-like walk.) Sec- 
+ond, control of speed and direction is simplified when 
+one doesn't have to worry about the details of generat- 
+ing a substrate motion. Moreover, the simplicity pro- 
+motes understanding. Consider an analogy with the 
+development ofpowered Bight. The 
+~rights~ut 
+their 
+initial efforts into studying 
+'gliders, 
+as did their prede- 
+cessors 
+Cayley 
+and Lilienthal. Once they had a reason- 
+able grasp of aerodynamics and control, adding a 
+po- 
+werplant 
+was only a small change. (In fact, their engine 
+wasn't very good even for its day, but their other 
+strengths ensured their success.) Adding power to a 
+passive walker involves a comparably minor modifica- 
+tion (McGeer 1988). 
+Actually passive walkers existed long before contem- 
+porary research machines. My interest was stimulated 
+by the bipedal toy shown in Figure 1; it walks all by 
+itself down shallow slopes, while 
+rocking 
+sideways to 
+lift its swing foot clear of the ground. A similar quad- 
+ruped toy walks on level ground while being pulled by 
+a dangling weight. I learned of such toys through a 
+paper by Mochon and 
+McMahon 
+(1980), 
+who showed 
+how 
+walking 
+could be generated, at least in large mea- 
+sure, by passive interaction of gravity and inertia. 
+Their 
+"ballistic 
+walking" model is especially helpful 
+for understanding knee flexion, which is discussed 
+toward the end of the paper. 
+Our discussion here is based on the model shown in 
+Figure 2, which is no more than two stiff legs pin- 
+jointed at the hip. It can be regarded as a two-dimen- 
+sional version of the toy; its dynamics in the longitu- 
+dinal plane are similar, but it doesn't rock sideways. 
+This simplifies the motion, 
+burit 
+left us with new 
+problems in building a test machine: how to keep the 
+McGeer 63 
+
+--- PAGE 3 ---
+Fig. 3. Biped used/or exper- 
+iments on twodimensional 
+gravity-powered walking. 
+The outer legs are connected 
+by a crossbar and alternate 
+like crutches with the center 
+leg. The feet are semicircular 
+and haw roughened rubber 
+treads. Toe-stubbing is pre- 
+vented by small motors that 
+fold the feet sideways during 
+the swing phase. Apart from 
+that, this machine, like the 
+toy, walks in a naturally 
+stable limit cycle requiring 
+no active control. Leg length 
+is 50 cm, and weight is 
+3.5 kg. 
+motion two-dimensional, and how to clear the swing 
+foot. Figure 3 is a photo of our solution. Two-dimen- 
+sionality 
+is enforced by building the outer leg as a pair 
+of crutches. Foot clearance is by either of two 
+methods. Occasionally we use a checkerboard pattern 
+of tiles, which in effect retract the ground beneath the 
+swing feet. However, usually it is more convenient to 
+shorten the Iegs; thus the machine can lift its feet via 
+small motors driving leadscrew. 
+The discussion here begins with two elementary 
+models to illustrate the 
+eneqetics 
+and dynamics of 
+passive 
+waking. 
+Next follow analyses of cyclic walking 
+and stability for the general model of Figure 2, and 
+comparison with experimental results. Then comes a 
+survey of parametric effects, and finally some com- 
+ments on extensions of the model. 
+4. Reinventing the Wheel 
+Imagine an ideal wagon wheel that can roll smoothly 
+and steadily along a level surface, maintaining any 
+speed without loss of energy. Its rolling seems quite 
+different from walking (and on the whole more sensi- 
+ble!), but in fact rolling can be transformed to walking 
+by a simple metamorphosis. 
+4.1. The Rimless Wheel 
+Following Margaria (1976), remove the rim from the 
+wagon wheel as in Figure 4, leaving, in effect, a set of 
+legs. Unlike the original wheel, this device cannot roll 
+steadily on a level surface; instead it loses some speed 
+each time a new leg hits the ground. We treat each of 
+these collisions as inelastic and impulsive. In that case 
+the wheel conserves angular momentum about the 
+impact point, and the loss in speed can be calculated 
+as follows. Immediately before the collision the angular 
+momentum is 
+(Note that the wheel's radius of gyration is normalized 
+by leg length /.) Immediately after the collision, the 
+angular momentum is simply 
+Equating these implies that 
+All of our analysis is cast in dimensionless terms, with 
+mass m, leg length 1, and time wg providing the base 
+The International Journal of Robotics Research 
+
+--- PAGE 4 ---
+units. To define what amounts to a dimensionless 
+pendulum frequency (71, 
+Then 
+?j = 1 - 0-^I - cos 2%). (5) 
+It follows from (3) that over a series of k steps 
+Hence on a level surface the 
+rimless 
+wheel will decel- 
+erate exponentially. However, on a downhill grade, 
+say with slope y, the wheel can recoup its losses and so 
+establish a steady rolling cycle. The equilibrium speed 
+can be calculated from the differential equation for 
+rotation about the stance foot. Over the range of angles 
+used in walking, linearization for small angles is en- 
+tirely justified, so the equation can be written as 
+Here 0 is measured from the surface normal: thus the 
+wheel has an unstable equilibrium at 0 = - y. 
+One "step" begins with 6 = - q,, and rolling is 
+cyclic if the initial speed, say Sly, repeats from one 
+step to the next. Repetition of i& implies that each 
+step must end with rotational speed Slo/q (6). Thus the 
+steady step has the following initial and final states: 
+Both Do and the steady step period in can be evaluated 
+by applying these boundary conditions to the equation 
+of motion (7). The results are 
+Fig. 4. Removing the rim what comparable to walking 
+from a wagon wheel allows a ofa passive biped (see Fig. 
+simple illustration of walk- 6). The speed, here in wits 
+ing energetics. On a level 61, is a function of the 
+surface a 
+rimless 
+wheel slope, the inter-leg angle 
+would grind to a halt; but on 2an, and the radius ofgyra- 
+an incline it can establish a tion rw about the hub, 
+steady rolling cycle 
+some- 
+SPIED 
+0.3 
+For small % the dimensionless forward speed is then 
+Figure 4 includes plots of this d as a function of 
+slope for various 
+rimless 
+wheels. These may be com- 
+pared with speed versus slope in passive walking of a 
+biped, which is plotted in Figure 6. The plots are qual- 
+itatively similar and quantitatively comparable. As an 
+example, take OQ = 0.3, which is typical of human 
+walking. Our test machine achieves this stride on a 
+slope of 2.596, and its forward speed is then 0.46 m/s, 
+or 0.2 1 in units of 'fgl. This speed would be matched 
+by a rimless wheel having r- sas 0.5. 
+Of course the wheel need not always roll at its steady 
+speed. However, it will converge to that speed follow- 
+ing a perturbation. In fact, small perturbations decay 
+according to 
+We call this decay the "speed mode," which also ap- 
+pears in bipedal walking. Incidentally, it is interesting 
+to observe that convergence 65 a downhill slope (12) 
+is twice as fast as deceleration on the level (6). 
+
+--- PAGE 5 ---
+Fig. 5. Walks like a biped; 
+rolls like a wheel. It's a 
+"synthetic wheel," made 
+with two legs, two semidrcu- 
+lar 
+feet, and a pin joint at 
+the hip. On each step the free 
+foot swings forward to syn- 
+thesize a continuous rim. If 
+supprt is transferred from 
+trailing to leading foot when 
+the leg angles are equal and 
+opposite, then the walking 
+cycle can continue without 
+loss of energy. The period of 
+the cycle (here normalized 
+by the pendulum frequency of 
+the swing leg) is independent 
+of the step length. 
+4.2. The Synthetic Wheel 
+In view of the poor energetics that result, it seems that 
+rim removal is not a veryprogressive modification of 
+an ordinary wheel. But perhaps improvement might 
+be realized by making cuts elsewhere. In particular, 
+imaging splitting the rim halfway between each spoke. 
+Then discard all but two of the spokes, leaving a pair 
+of legs with big semicircular feet as shown in Figure 5. 
+Put a pin joint at the hip, and ask the following ques- 
+tion: could the dynamics be such that while one leg is 
+rolling along the ground, the other swings forward in 
+just the right way to pick up the motion where the 
+first leg leaves off? 
+In fact, one can devise a solution quite easily. Figure 
+5 shows a cycle that will continue indefinitely on level 
+ground. The legs start with opposite angles k CQ, and 
+equal rotational speeds Go, as they did in the original 
+wagon wheel. The appropriate value for q depends on 
+Go, as we will show in a moment. Since the stance leg 
+(subscripted C for "contact") is a section of wheel, it 
+rolls along the ground at constant speed. (Here we 
+presume that the wheel has a large point mass at the 
+hip; otherwise motion of the swing leg would disturb 
+the steady rolling.) The hip (like the hub of an ordi- 
+nary wheel) therefore translates steadily parallel to the 
+ground, and so the second leg (8' for "free") swings as 
+an unforced pendulum. Then following the paths 
+shown in Figure 5 the legs will reach angles k % with 
+speeds again equal to Go. At that instant, support can 
+roll 
+seamlessly 
+from one rim to the next. Thus a con- 
+tinuous rim has been synthesized from two small pieces. 
+Of course something must be done to clear the free 
+leg as it swings forward, but we shall deal with that 
+problem later. Also the cycle works only if the step 
+angle (XQ is correct for the speed ftg; the relation is de- 
+rived by matching boundary conditions. First, by in- 
+spection of the stance trajectory in Figure 5, Do must 
+satisfy 
+r0 is determined by the swing leg, which behaves as a 
+pendulum and so follows a sinusoidal trajectory. Its 
+formula is 
+a0 A@R(T) = 0:0 cos c(^?T 4- - sin (U=T (14) cot 
+The sinusoid passes through = -cQ,, with speed 
+Sin, when 
+Thus the step period for a synthetic wheel is about \ of 
+the period for a full pendulum swing. Notice that this 
+period is independent of %. The speed (1 3) is then 
+Thus to change the speed of a synthetic wheel, change 
+q, (i.e., the length of the step), while zo remains constant 
+-determined 
+solely by the leg's inertial properties 
+and gravity g. 
+Of course the synthetic wheel is contrived for conve- 
+nient analysis, but the results have broader applica- 
+tion. Our test machine has similar behavior. Figure 6 
+shows that its step period is fairly insensitive to step 
+length; moreover rn - 2.8 in unite of ^/JJg and oc = 
+1.39, so (u~T~ = 3.9, which is quite close to the value 
+given by (1 5). However, (1 5) is not so accurate for 
+human walking; my 0% pendulum period, measured 
+by standing on a ledge and dangling one leg, is 1.4 s, 
+The International Journal of Robotics Research 
+
+--- PAGE 6 ---
+Fig. 6. Step period ro (in 
+units of 
+qg, 
+here 0.226 $1 
+and angle a@ in pasi~e 
+wdking 
+ofour 
+test 
+biped. 
+Bars 
+show 
+qe~mmtal 
+data 
+from trials 
+such 
+us that 
+plotted in Fig. 7q Continuous 
+curves 
+show 
+analyticd 
+re- 
+sults, with uncertainty 
+ban& 
+cam*edforwardfiom 
+meu- 
+surement 
+of the biped 3 
+parameters as listed on the 
+plot. 
+The analysis matches 
+experiment poorly 
+$no 
+ullowunce 
+is 
+made for rolling 
+friction PC), but remodle 
+consistency is realized 
+ifthe 
+f~ction 
+is 
+takm 
+to 
+be 
+O.QQ7 mgl. With this level of 
+>iction, 
+w~lung is calcu- 
+lated to be unstable on dopes 
+less than 0.8%. 
+and my step period varies from -0.55 s at low speed 
+to 4-50 s at high speed. Thus the ratio of step period 
+to pnddum pried is -0.36 to -0.39, as opposed to 
+0.65 for the wheel (1 5). I have siaifianQy more Me 
+in my stride than either the wheel or our test biped! 
+We 
+Figure 5 shows that a synthetic wheel is possi- 
+ble in theory, can its cycle actually be realized in pm- 
+tice? This boils down to an issue of stability7 and it 
+turns out that the synthetic wheel is just as stable as an 
+ordinary wheel. That 
+is7 
+both have neutrally stable 
+"sped 
+modes"; in the case of a synthetic wheel, a 
+change in speed leads to a new % according to { 16). In 
+addition, the synthetic wheel has two other 
+':stepto- 
+step" 
+modes that prove to be stable; these are discussed 
+in section 8. 
+5. Steady Waking of a General 2D Biped 
+The biped of Figure 2 is simh to the synthetic wheel 
+but allows for broader 
+v&ation 
+of parameters. Adjust- 
+able parameters include 
+1. Foot radius R 
+radius of gyration rw 
+3. kg mnter of mass height c 
+4. Fore/& center of mass offset w 
+5. Hip mass fraction mH 
+We will examine the effects of varying each parameter. 
+Our calculations of 
+@t 
+and stability rely on 
+stepto- 
+step (S-to-S) analysis, which is 
+explaided 
+as 
+follows. 
+At 
+the start of a step, say the k*, the legs have equal and 
+opposite angles k ah and rotational speeds Qa, Cia. 
+The motion proceeds roughly as for the synthetic 
+wheel, with appropriate arrangements to prevent toe- 
+stubbing at mid-stride. The step ends when leg angles 
+are again equal and opposite, but in 
+generd 
+different 
+(say ak+l) from ak. At that point the swing foot hits 
+the ground, and the leg speeds change 
+instantaneoudy 
+to their initial values for the following step Q,-k+l, 
+Qfi+l. We will formulate equations relating 
+(ak, aCk2 to {%+ 1 Y QCk+ 1, Q#k+ 1 1. we then 
+use these to find naturally repeating initial conditions 
+(i.e., 
+passive cycles) and to examine how 
+evolve 
+fiom 
+step to step. 
+5.1. Start- to End-of-Step Fquations 
+During the step the machine is suppdd on one foot, 
+and 
+its state is specified by the two Ieg angles aC2 OF, 
+and the speeds aCy a?. In general the equations of 
+motion are nonlinear UI these variables, but since in 
+walking the legs remain near the vertical and the 
+speeds remain 
+small ( -K @), linearization is justi- 
+fied. Thus the line equations are 
+The inertia 
+matrix Mo is derived in the appendix 
+(65). T lists the torques about the stance foot and hip. 
+It can include 
+fi&on 
+or 
+control 
+inputs, but for our 
+machine the principal torque is 
+gravitationat 
+The 
+stifkess 
+matrix K and eqabfium position A& 
+are also derived in the appenh [eqs. [52), {53), {54)]. 
+
+--- PAGE 7 ---
+A0 is the rotation from the surface normal. For small 
+y, A$= can be written as 
+By way of explanation you can imagine that if the feet 
+were points 
+(i.e., 
+zero foot radius) then the equilib- 
+rium position would be legs-vertical, which means that 
+both elements of b would be - 1. However with non- 
+zero 
+f6ot 
+radius the stance leg would have to rotate 
+past the vertical to put the overall masscenter over the 
+contact point, so b, < - I. Also moving the legs' mass 
+centers fore and aft from the leg axes (i.e., nonzero w, 
+Fig. 2) would make for nonvertical equilibrium even 
+on level ground, and this is handled by Affir. 
+Putting the gravitational torque (1 8) into the equa- 
+tions of motion (1 7) leaves a fourth-order linear sys- 
+tem. This can be solved to jump from the start-of-step 
+to any later time, via a 4 X 4 transition matrix D: 
+The elements of D for a given l&, K, and rk arc calcu- 
+lated by standard methods for linear systems. For 
+transition to the end-of-step, T,, must be chosen so that 
+the elements of Aftrn) are equal and opposite. Thus 
+define 
+Then 
+5.2. Support Transfer 
+When (23) is satisfied, foot strike occurs, which as for 
+the rimless wheel we treat as an inelastic collision. In 
+this case two conditions apply: 
+1. Conservation of angular momentum of the 
+whole machine about the point of collision, as 
+for the rimless wheel (3). 
+2. Conservation of angular momentum of the 
+trailing leg about the hip. 
+These are expressed mathematically as 
+where "-" and "+" respectively denote pre- and post- 
+support transfer. The inertia matrices M- and M+ 
+depend on the leg angles at foot strike, as discussed in 
+the appendix [eqs. (651, (6811. The ordering ofQ, may 
+be confusing, since the stance and swing legs exchange 
+roles at support transfer. We adopt the convention 
+that the first element of O refers to the post-transfer 
+stance leg. Hence the prc-transfer indexing must be 
+flipped: 
+From (24), then, the initial speeds for step k + 1 are 
+Qfc+i = Mi-'M-Fn(rk) = An(rk), (26) 
+5.3. "S-to-S" Equations 
+Combining the start- to end-of-step equation (20) with 
+the foot strike conditions [eqs. (221, (23), (26)] pro- 
+duces the S-to-S equations. It is convenient to break D 
+in (20) into 2 X 2 submatrices, so the system is written as 
+Bear in mind that while formulation of this set has. 
+been simple, evaluation is not quite so straightforward. 
+Given initial conditions (Qic, Qk), the time rk (which 
+determines D} at which the leg angles are next equal 
+and opposite must be determined. Then ai,+, (27) 
+The International Journal of Robotics Research 
+
+--- PAGE 8 ---
+Fig. 7. Step period and angle 
+measured at heel strike in 
+trials of the test biped. The 
+machine was started by 
+hand on a 5.5-m ramp in- 
+dined at 2.5% downhill, and 
+after a few steps settled into 
+a fairly steady gait. Dots 
+show the mean 
+value, 
+and 
+bars the scatter recorded 
+over six trials. Lengths are 
+normalized by 
+Ie 
+length I. 
+and periods by -f I,. "C" 
+denotes start-ofstance on the 
+center leg; "0" on the outer 
+legs. 
+determines A (26), which in turn allows evaluation of 
+Qk+i (28). 
+5.4. Solution for the Walking Cycle 
+For cyclic walking, initial conditions must repeat from 
+step to step: 
+Imposing these conditions on S-to-S equations (27) 
+and (28) leads to a compact solution . for . the walking 
+cycle. First solve for fro using (28): , 
+Then substitute for Sir, in (27); the end result can be 
+written as follows. Define 
+Then (27) can be written as 
+0 = [D' - F]& - [Dr - I]AOE 
+= [Df - F]Aoo - [Dr - l][AOW + by]. (33) 
+The last line follows from (19). This is the steady-cycle 
+condition, with two equations in three variables %, 
+T,, , and y. Usually we specify % and solve for the other 
+two. Equation (33) then has either two solutions or 
+none. If two, then one cycle has 4. E, and is in- 
+variably unstable. The other corresponds to a synthetic- 
+wheel-like cycle with coFrO between TI and 3n/2. This 
+is the solution of interest. Thus we use the synthetic- 
+wheel estimate (1 5) to start a Newton's method search 
+for ro, and if a solution exists, then convergence to 
+five significant figures requires about five iterations. 
+6. Steady Walking of the Test Machine 
+The analytical solution for steady walking is compared 
+with experiment in Figure 6. Experimental data were 
+obtained by multiple trials as shown in Figure 7; in 
+each trial our test biped was started by hand from the 
+top of a ramp, and after a few steps it settled into the 
+steady gait appropriate for the slope in use. (Notice, 
+incidentally, that the rate of convergence is a measure 
+of stability; we will pursue this analytically in the next 
+section.) Several trials were done on each slope, and 
+means and standard deviations for c&i and ro were 
+calculated over all data except those from the first few 
+steps of each trial. 
+Our predictive ability to compare with analysis was 
+limited by uncertainty in the machine's parameters. 
+Each leg's 
+center-of-mass 
+height c was measured to 
+about 1 mm by balancing each leg on a knife edge; w 
+to about 0.5 mm by hanging each leg freely from the 
+hip; and rm to about 2.5 mm by timing pendulum 
+swings. The center and outer legs were ballasted to 
+match within these tolerances and differed in mass by 
+only a few grains 
+(i.e., 
+~0.001 m). 
+When these parameters were put into (33) wi found 
+(as Figure 6 indicates) that the observed cadence was 
+slower than predicted. We suspected that the 
+discrep 
+ancy 
+was caused by rolling friction on the machine's 
+rubber-soled feet. Hence we added a constant to the 
+first element of T in (17), which modified AOnÃ in (19). 
+A value of -0.007 brought the analytical results into 
+line with observation. In 
+dimensional 
+terms this is 
+equivalent to 25 gm-force applied at the hip. We could 
+
+--- PAGE 9 ---
+not devise an independent measurement of rolling 
+friction, but this figure is credible. 
+However, after adjusting friction for a reasonable fit, 
+we still found a discrepancy in that the observed step 
+period is less sensitive to speed than the analysis indi- 
+cates. We therefore suspected that the inelastic model 
+for foot strike was imprecise, and in fact there was a 
+bit of bouncing at high speed. But in any case the 
+residual discrepancy is small, so our current S-to-S 
+equations (27) and (28) apparently form a sound basis 
+for further investigation, in particular of stability and 
+parametric variations. 
+Here the efficiency of biped walking should be 
+noted. For comparison with other modes of transport, 
+we measure efficiency by specific resistance: 
+resistive 
+force- 
+mechanical work done SR = - weight weight X distance travelled 
+For a vehicle powered by descending a slope, SR is 
+just equal to y, or about 2.5% for our machine using 
+tq, = 0.3, which is comfortable for humans. This fig& 
+would be terrible for a car, but it is very good in com- 
+parison with other rough-terrain vehicles such as mul- 
+d crawlers and bulldozers (Waldmn 1984). 
+7. Linearized Step-tostep Equations 
+A cyclic solution is a necessary but not quite sufficient 
+condition for practical passive walking. The walking 
+cycle must also be stable. Stability can be assessed by 
+linearizing 
+eqs. 
+(27) and (28) for small perturbations 
+on the steady gait. The transition matrix D and the 
+support transfer matrix A can be approximated for this 
+purpose as follows: 
+QA A(tÃˆk4-i - A(%) + - a,). (35) 
+After substituting these into (27) and (28) and mani- 
+Table 1. S-to-S Eienvectors of the Test Machine on a 
+2.5% Slope 
+Mode Speed Swing Totter 
+Eigenvalue, z 0.70 -0.05 -0.83 
+a-On 1 1 1 
+flc - "co 1.1 1.1 0.12 
+ft~-fti 0.30 7.3 -0.03 
+pulating 
+to collect terms, we are left with the following 
+approximate form of the 
+S-to-S 
+equations: 
+The formula for S is given in the appendix [eqs. (691, 
+(701, 
+and 
+(7211. 
+The important point here is that S is 
+the transition matrix of a standard linear difference 
+equation, so the eigenvalues of its upper 3 X 3 block 
+indicate stability [the equation for 
+(tk - is ancil- 
+lary]. If all have magnitude less than unity, then the 
+walking cycle is stable; the smaller the magnitude, the 
+faster the recovery from a disturbance. (If, however, 
+the walking cycle is unstable, then linearized S-to-S 
+equations are helpful for design of a stabilizing control 
+law. This was in essence the approach of Miura and 
+Shimoyama (1984). See also 
+McGeer 
+(1989) for active 
+stabilization of a passive cycle.) 
+8. S-to-S Modes of the Test Machine 
+/ 
+Results of stability analysis for our test biped are listed 
+in Table 1. Similar results are found over a wide range 
+of parameter variations, so the modes can be consid- 
+ered typical for passive walking. 
+The "speed mode" is analogous to the transient 
+behavior of a rimless wheel, with z corresponding to 
+q2 in (1 2). The eigenvalue is linked to energy dissipa- 
+tion at support 
+transfer.Thus 
+for the synthetic wheel, 
+z = 1 in this mode (i.e., stability is neutral with respect ! 
+to speed change), as we noted earlier. 
+70 The International Journal of Robotics Research 
+
+--- PAGE 10 ---
+The "swing mode" is so named because the eigen- 
+vector is dominated by Sip. The eigenvalue of this 
+mode is usually small, and in fact reduces to zero in 
+the synthetic wheel, which means that a 
+"swing" 
+per- 
+turbation is eliminated immediately at the first sup- 
+port transfer. Physically this occurs because the post- 
+transfer speed of the synthetic wheel's legs is 
+determined entirely by the momentum of the large hip 
+mass; the pretransfer Dp is irrelevant. 
+Finally, the "totter mode" is distinguished by a 
+negative eigenvalue, which means that perturbations 
+alternate in sign from one step to the next. Again the 
+synthetic wheel offers an easily understood special 
+case. Since the wheel cannot dissipate energy, it retains 
+its initial rolling speed for all time. If the initial step 
+angle is not appropriate to the initial speed as specified 
+by (1 3), then the angle must accommodate through 
+some sort of transient, which turns out to be the totter 
+mode. The eigenvalue can be found analytically by 
+generalizing the swing trajectory formula (14) for a,, # 
+Of,: 
+Qo - cii,,. , = a,, cos m=rk + - sin cofrk. (37) (0s 
+Meanwhile the generalized stance trajectory [cf. (13)] is 
+Now differentiate eqs. (37) and (38) with respect to a,,: 
+Solving for the derivatives and evaluating at ro gives 
+da,,+1- - -- 4 ks uF~o - upto sin myto =-0.20, (41) da,. 2 + 2 cos mFTo - wfio sin COPTo 
+It follows from (41) that perturbations converge expo- 
+nentially according to 
+a,^ - ~Â¥ - - 0.2 in the totter mode (43) 
+In summary then, and with some oversimplification 
+for clarity, the "speed" mode in passive walking is a 
+monotonic convergence to the speed appropriate for 
+the slope in use. The "swing" mode is a rapid adjust- 
+ment of the swing motion to a normal walking pattern. 
+The "totter" mode is an oscillatory attempt to match 
+step length with forward speed. An arbitrary perturba- 
+tion will excite all three modes simultaneously. Of the 
+three, the totter mode differs most between the syn- 
+thetic wheel and our test biped (z = -0.2 vs. -0.83), 
+and our parametric surveys indicate that it bears 
+watching. We will show examples of parameter choices 
+that make the totter mode unstable. 
+9. Larger Perturbations 
+The preceding analysis applies only for small perturba- 
+tions, but an obvious question is, "How small is 
+small?" There is a limit: if the machine were started 
+just by standing the legs upright and letting go, it 
+would fall over rather than walk! Thus starting requires 
+a bit more care. In general, the machine could be re- 
+leased with arbitrary leg angles and speeds, and it 
+would be nice to know the "convergence zone" in the 
+four-dimensional state space. Unfortunately the 
+boundary of a 4D volume is rather difficult to map, so 
+we have restricted attention to finding the maximum 
+tolerable perturbation in the initial Or or OF. This is 
+done by serial evaluation of the nonlinear S-to-S equa- 
+tions (27) and (28). The results show that Qp can vary 
+over wide limits 
+(e.g., 
+<0 
+to > + 150% of the cyclic 
+value). However, Qc is sensitive; many passive walkers 
+can only tolerate an error of a few percent in the start- 
+ing speed. Still this is not so exacting as it sounds; 
+manual starting (by various techniques) is quite natu- 
+ral, and success is achievable with little or no practice. 
+Furthermore, the boundaries 
+ofthe 
+convergence zone 
+are sharp, and if the machine starts even barely inside 
+
+--- PAGE 11 ---
+the edge it settles to the steady cycle very nearly as 
+suggested by the small-perturbation analysis. 
+An alternative to the convergence-zone measure of 
+robustness is resistance to jostling. Thus we calculated 
+transients produced by disrupting the steady gait with 
+a horizontal impulse, applied at the hip just as the legs 
+passed through A0 = 0. As an intuitive standard of 
+reference, we compared the walker with a similar ma- 
+chine resting with legs locked at Â±% It turns out that 
+a passive walker can tolerate a useful fraction of the 
+impulse required to topple the locked machine; the 
+level varies widely with choice of machine parameters, 
+but 25% (forward or backward) is representative. The 
+calculation has to be done carefully, since bands of 
+tolerable and intolerable impulse magnitudes are in- 
+terspersed. Twenty-five percent is a typical upper 
+bound for the first tolerable band. More aggressive 
+jostling would have to be countered by active control. 
+The jostling calculation was particularly helpful in 
+dispelling the inclination to associate 
+robustness'with 
+rapid convergence from small perturbations. In fact, a 
+biped with a slowly convergent or even slightly unsta- 
+ble totter mode may well tolerate a stronger midstride 
+jostle than a machine with better totter stability. Thus 
+a practical biped designer might be willing to accept a 
+requirement for "weak" active stabilization of the 
+steady cycle in return for better resistance to knock- 
+downs. 
+Fig. 8. Step period and slope mass center and inertia are 
+for passive 
+walking 
+of bipeds held constant while R is 
+having various foot sizes. varied. The slope (and so the 
+The step angle is specified to resistance) is zero with R = 
+be 0.3, which is typical inI. as for the synthetic wheel. 
+human walking, and the 
+m, I, or g). Quite simply, changing m scales the forces 
+but doesn't change the gait. Chan g 2 scales the step 
+r period by l/d, and the speed by l Changing g scales 
+both period and speed by 4. A noteworthy conse- 
+quence was experienced by the lunar astronauts in 
+l/6th 
+Earth's gravity. Apparently they had a sensation 
+of being in slow motion, and indeed walking could 
+achieve only 40% of normal d. Rather than accept 
+that, they hopped instead 
+(McMahon 
+1984). 
+10.2. Foot Radius 
+10. Effect of Parameter Variations 
+We now embark on a brief survey of the effect of de- 
+sign variables on walking performance. Our purpose is 
+twofold: first, to outline the designer's options, and 
+second, to illustrate that 
+walking 
+cycles can be found 
+over a wide range of variations on the 2D biped theme. 
+10.1. Scale 
+Before discussing variation of dimensionless parame- 
+ters we should note the effect of scale (i.e., changing 
+Figure 8 shows an example of the effect of foot radius 
+on steady walking. Most notable is the improvement 
+in efficiency as the foot changes from a point to a 
+section of wheel. Thus with R = 0 we have a biped 
+that, like the 
+rimless 
+wheel, needs a relatively steep 
+slope, and with R = 1 we have a synthetic wheel rolling 
+on the level. 
+Figure 9 shows the locus of S-to-S eigenvalues as a 
+function of R. The speed eigenvalue increases from 
+z = 0.2 with a point foot to z = 1 (i.e., neutral speed 
+stability) with a wheel; this is associated with the im- 
+provement in efficiency and is consistent with (12). 
+Meanwhile the totter and swing modes are well sepa- 
+rated with a point foot, but coupled with 
+mid-sized 
+The International Journal of Robotics Research 
+
+--- PAGE 12 ---
+Fig. 9. Locus of the three the unit circle ifthe feet are 
+step-to-step eigenvalues for very small; this indicates 
+the walking cycles plotted in that passive walking is un- 
+Fig. 8, with foot radius as stable. However, with other 
+the parameter. In this 
+exam- 
+choices for c and 
+rmr, 
+walk- 
+pie 
+one eigenvalue (for the ing is stable even on point 
+"totter mode") lies outside feet. 
+Fig. 10. Variation of the 
+walking cycle with 
+c, 
+the 
+height of the leg's mass 
+center. \z\ is the magnitude of 
+the totter mode eigenvalue; 
+here it indicates that passive 
+walking is unstable for 
+bipeds with c too low or too 
+high. (The kinks appear 
+complex plane, as in Fig. 9.) 
+The high-c problem arises 
+because of excessively long 
+swing-pendulum periods, 
+while the 
+low-c 
+problem is 
+caused by 
+inefficient 
+support 
+transfer. The latter can be 
+remedied by adding mass at 
+the hip. In this example, 
+mH 
+feet so that the two eigenvalues form a complex pair. 
+Then with larger foot radius they separate again, and 
+R = 1 puts the totter eigenvalue near z = - 1. [A true 
+synthetic wheel has z = - 0.2 (43), but its hip mass is 
+much larger than specified in this example.] The 
+big- 
+footed bipeds in this example thus have relatively 
+weak totter stability, but it still turns out that their 
+resistance to jostling is better than with small feet. 
+We should mention that the semicircular foot is a 
+mathematical convenience rather than a physical ne- 
+cessity; doubtless other arrangements are feasible. For 
+example, a flat foot could be used on which support 
+would transfer impulsively from heel to toe at 
+mid- 
+stride. Walking would be less efficient than with a 
+curved foot, but apart from that we would expect a 
+similar passive gait. For comparison with a circular 
+foot, the key feature is translation of the support point 
+during stance, which is 2 q,R. Thus a human, with 
+heel-to-ball distance of = 0.2 1 and a typical stride 
+angle of q, = 0.3, has an "equivalent radius" of =O.3. 
+10.3. Leg Inertia and Height of 
+the~ass 
+Center 
+Leg radius of gyration and center-of-mass height have 
+similar effects, as illustrated in Figures 10 and 1 1. 
+Increasing 
+rW, 
+or raising c with rW held constant, 
+lengths the pendulum period and so slows the cadence 
+(15). If the mass center is too close to the hip, then the 
+where z branches into the is zero. 
+swing leg can't come forward in time to break the fall 
+of the stance leg, and the walking cycle vanishes. On 
+the other hand, lowering 
+rw 
+or c causes a different 
+problem: support transfer becomes inefficient accord- 
+ing to (5). [Note that % in (5) is the angle subtended 
+by the feet, at the overall mass center.] If the efficiency 
+is too poor, then the cycle becomes unstable or even 
+vanishes entirely, as in the example of Figure 1 1. 
+However, the situation can be retrieved by adding 
+mass at the hip, which raises the overall mass center 
+and thus improves efficiency. A human has about 70% 
+of body mass above the hip; this is sufficient to make 
+support transfer efficient regardless of leg properties. 
+10.4. Hip Mass 
+Figure 12 illustrates the effect of adding point mass at 
+the hip. Efficiency improves, and it turns out that 
+jostling resistance improves as well. Still more advan- 
+tage can be gained if the mass is in the form of an 
+extended torso. For example, the torso can be held in 
+a backward recline, reacting against the stance leg; the 
+reaction provides a braking torque that allows a steep 
+descent. Analysis of this scheme and other roles of the 
+torso is reported by 
+McGeer 
+(1988). 
+
+--- PAGE 13 ---
+Fig. 11. Leg inertia and c Fig. 12. Our test biped is 
+have 
+similar 
+effects 
+on the just a pair of legs, but passive 
+walking 
+cycle, as indicated walking also works while 
+by comparing this plot with carrying a "payload" at the 
+Fig. 10. The effects here are hip. Actuallv the added mass 
+a60 
+mediatedby the swing 
+improves 
+efficiency of the 
+pendulum frequency and by walking cycle. 
+the 
+efficiency 
+of support 
+transfer. 
+-\ 
+TOTOI IzI 
+I I I I I I 
+0 0.2 0.4 0.6 0.8 1 
+HIP MOSS nMCTION 
+10.5. Hip Damping and Mass Offset 
+The last few examples have indicated that passive 
+walking is robust with respect to parametric variations. 
+However, it is not universally tolerant, and the hip 
+joint is particularly sensitive. As shown in Figure 13, 
+introducing only a small amount of friction makes the 
+cyclic solution vanish. Consequently, in our test biped 
+we use ball bearings on the hip axle, and these keep 
+the friction acceptably low. However, alternative 
+me- 
+Fig. 13. Passive walking is 
+forgiving of most parameter 
+variations, but even a small 
+amount 
+offnetion 
+in the hip 
+joint can destroy the cycle. 
+However, walking can be 
+restored by moving the legs' 
+mass centers backward from 
+the leg axes 
+(w < 0, Fig. 181 
+as long as the friction is only 
+moderate. For this example 
+we have 
+wed 
+a viscous 
+model for friction, which is 
+measured by the damping 
+ratio for pendulum oscilla- 
+tions of the swing leg. 
+0 0.0s 0.1 0.13 
+SUMS MHriHC IOTIO 
+chanical arrangements, for instance those made by 
+bone and cartilage, may not be quite as good. Fortu- 
+nately, compensation can be made by lateral offset (w) 
+of the legs' mass centers from the axes. Thus, as Figure 
+13 indicates, if the joint has significant friction, then 
+the designer should shift the leg mass backward from 
+the line between hip and foot center of curvature (i.e., 
+w < 0). 
+Actually w is a powerful remedy for a variety of 
+similar ailments (McGeer 1988; 1989). But like any 
+powerful medicine it must be treated with some care. 
+Figure 14 shows that for any given set of machine 
+eters, w must be set within narrow limits if pas- 
+sive walking is to work. Experiments bring the point 
+home; changing w by only a few millimeters has a 
+very noticeable effect on the feel of manual starting. 
+The power of w makes it attractive not only as a design 
+parameter but also as a dynamically adjusfable control 
+variable; it might be used, for example, to modulate 
+the gait from one step to the next. 
+10.6. Leg Mismatch 
+To close this section on parametric effects, we present 
+a curiosity that may have some implication for the 
+study of gait pathology. Since our biped's legs could 
+not be matched precisely, we were concerned about the 
+1 
+sensitivity to differences between them. By way of 
+The International Journal of Robotics Research 1 
+
+--- PAGE 14 ---
+Fig. 14. Experiments con- fact sustained for the full 
+firm 
+the powerful 
+effect 
+of length of three 
+six-foot 
+tables 
+mass offset w on the walking are calculated to be unstable. 
+cycle. (w was adjusted by Taking Tc to be zero gives a 
+shifting the feet relative to better match to the observed 
+the legs.) With each setting stability, but leaves relatively 
+we did a series of trials as in large discrepancies in a<i and 
+Fig. 7. q and Â¥t are well T~. We suspect that our 
+matched by 
+calcdations if support transfer model is 
+Tc is taken to be - 0.007, imprecise, but in any case 
+but 
+then walks that were in the sensitivity to w is clear. 
+investigation we calculated walking cycles with legs of 
+different mass. The steady-walking solution (33) 
+doesn't apply with mismatched legs, so instead we did 
+serial calculations with S-to-S equations (27) and (28) 
+until a steady gait emerged. With a small mismatch, 
+the cycle repeats in two steps (as would be expected). 
+But with larger mismatch, the stable cycle repeats in 
+four steps, as plotted in Figure 15. Here, then, is an 
+example of frequency jumping, which is not uncom- 
+mon in nonlinear systems. 
+11. Fully Passive Walking 
+We mentioned earlier that our 2D, stiff-legged model 
+allows simple analytical treatment of walking, but it 
+forces resort to inelegant methods of clearing the swing 
+foot. Fully passive foot clearance would be preferable; 
+we will discuss two options. 
+1 1.1. Rocking 
+The toy of Figure 1, and its quadrupedal cousins, clear 
+swing feet by lateral rocking. The frontal view shows 
+Fig. 15. The stable cycle similar to that of a synthetic 
+calcutated 
+for a biped having wheel, but the cycle repeats 
+legs with a 10% mass mis- , over four steps rather than 
+match. is the mass of the one. (With smaller mismatch 
+stance leg. Each step is the cycle repeats in two steps.) 
+the key design feature, which is that the feet are ap 
+proximately circular in lateral as well as longitudinal 
+section, and have approximately coincidental centers 
+of curvature. The center of curvature is above the 
+center of gravity, which makes lateral rocking a pen- 
+dulum oscillation. 
+We have analyzed the combination of rocking with 
+2D synthetic wheel dynamics, under the approxima- 
+tion of zero yaw 
+(Le., 
+that the hip axle remains normal 
+to the direction of motion). This is exactly true for 
+quadrupedal toys and seems fairly accurate for the 
+biped. The rocking frequency must be tuned to the 
+swing frequency, such that half a rocking cycle is com- 
+pleted in one step. Hence the ratio of swing to rocking 
+frequencies, from (1 5), should be 
+If this condition is satisfied, then rocking and swinging 
+naturally phase-lock at the first support transfer, and 
+thereafter walking is non-dissipative. However, if the 
+condition is not satisfied, then the phasing must be 
+"reset" on each step; this entails an energy loss. If the 
+mistuning is too large, then there is no cycle at all. 
+An additional problem arises if the feet have non- 
+zero lateral separation. Then support transfer bleeds 
+energy out of the rocking 
+motion via the rimless-wheel 
+mechanism (3). But it turns out that, at least in the 
+
+--- PAGE 15 ---
+zero yaw approximation, only a small amount of en- 
+ergy can be regained from forward motion (i.e., by 
+descending a steeper hill). Hence passive walking can- 
+not be sustained unless the foot spacing is quite small. 
+These constraints of frequency tuning and lateral 
+foot spacing 
+mluce 
+the designer's options, and more- 
+over produce a machine that is inevitably rather tippy 
+from side to side. Hence rocking is unattractive for a 
+practical biped, but it remains a wonderful device for 
+the toy. 
+11.2. Knees 
+Of course we humans rock as we walk, but only for 
+lateral balance; for foot clearance we rely on knee 
+flexion. 
+Mochon 
+and 
+McMahm 
+(1980) demonstrated 
+that this motion might well be passive. The key result 
+of the study is that if a stance leg and knee- 
+jointed swing leg are given initial conditions in an 
+appropriate range, then they will shift ballistically from 
+start- to end-of-step angles. Recently we have found 
+that support transfer can then regenerate the start-of- 
+step conditions, thus producing a closed passive cycle. 
+A full discussion of passive walking with knees must 
+be left for a future report, but here we will review one 
+example as shown in Figure 16. The model is still a 
+2D biped, but with pin-jointed knees and mechanical 
+stops, as in the human knee, to prevent hyperexten- 
+sion. 
+As in ballistic walking, the stance knee is specified 
+to remain locked against the stop throughout the step, 
+while the swing knee is initially free and flexes pas- 
+sively as plotted in Figure 16. Then it re-extends and 
+hits the stop. (As always we treat the collision as im- 
+pulsive and inelastic.) Thereafter both knees remain 
+locked until foot strike. 
+Parametric studies of this 
+knee-jointed 
+model have 
+produced these results: 
+1. Passive cycles are found over parameter ranges 
+more limited than those in 
+stiff-legged 
+walking, 
+but still quite broad. 
+2. With proper choice of parameters, naturally 
+arising torques keep the stance and swing knees 
+locked through the appropriate phases of the 
+cycle. 
+Fig. 16. Our test biped has 
+rigid legs, but passive walk- 
+ing also works with knees. 
+The parameters here are 
+quoted according to the con- 
+vention of Fig. 18 and are 
+similar to those of a human 
+(including ma = 0.676). 
+(A) Flexure of the swing 
+knee takes care of foot clear- 
+ance (although just barely). 
+Meanwhile a naturally gen- 
+erated torque holds the 
+stance knee locked 
+agawt 
+a 
+mechanical stop. (eK is the 
+angle from the locked knee to 
+the foot's center 
+ofcurva- 
+ture.) (B) The motion is 
+obviously similar to human 
+walking, 
+but it is slower; the 
+period of this cycle would be 
+= 0.85 sfor a biped with I'm 
+leg length. There is also a 
+faster cycle, but we prefer the 
+slower because it turns out to 
+be stable and more 
+efficient. 
+3.6 
+0 0.5 1 1.5 2 2.3 
+Dlimisimiss Tin tm 
+A 
+A passive cycle with knee joints is possible 
+only if the foot is displaced forward relative to 
+the leg, as shown in Figure 16. The implication 
+is that humans might have difficulty if their 
+feet didn't stick out in front of their legs. 
+A large fraction 
+ofthe 
+swing leg's kinetic en- 
+ergy is dissipated at knee lock, and therefore 
+The International Journal ofRobotics Research 
+
+--- PAGE 16 ---
+Icnee-jointed walking is less efficient than stiff- 
+legged 
+walking. 
+To keep the penalty small, the 
+swing leg's energy must be small compared 
+with the total enemy of motion. This implies 
+that most of the mass should be above the hip. 
+On the last point it might be argued that foot clear- 
+ance with knees seems inefficient, whereas active re- 
+traction can in principle consume no enemy at all. 
+However, in practice economical food retraction may 
+be hard to achieve. Our test biped has a 
+"fundamen- 
+tat" dissipation {from Figure 6) of -0.2 J per step, 
+while the tiny motors that lift its feet waste "3 J per 
+step! Some goes into friction in the 
+leadscrews, 
+and 
+some into switching transistors. At this rate, passive 
+knee flexion is a bargain, and moreover a small active 
+intervention at the right time may reduce the knee- 
+lockingloss substantially. 
+12. Action on Passive Walking 
+Having surveyed the physics of passive walking, our 
+next objective must be exploitation of the effect to 
+make machines with some practical capability. We see 
+developments proceeding as follows: 
+1. "Powered" passive walking on shallow up- 
+and downhill slopes in 2D 
+2. Step-to-step gait modulation over unevenly- 
+spaced footholds in 2D 
+3. Walking on steep slopes, stairs, and 2D rough 
+terrain 
+4. Lateral balance and steering 
+We are presently building a machine to test the first 
+two developments. It will be similar to the first biped, 
+but with 1-m leg length and a 
+tomo. 
+Power will be 
+provided by 
+pushing with the trailing leg as it leaves 
+the ground. (This is analogous to plantar flexion in 
+humans, but the implementation is quite different.) 
+Gait modulation is to be done by applying torques 
+between the legs and torso. McGeer (1988) presents 
+the analytical basis for this machine, as well as alterna- 
+tive options for applying power and control. S-to-S 
+treatment is a key principle; thus control laws look at 
+the state of the machine only once per step. This ap- 
+proach proves attractively simple, both mathematically 
+and mechanically. 
+We have yet to proceed to the next problem of 
+walking with steep changes in elevation. One promis- 
+ing strategy is to seek passive forelaft leg swinging that 
+can proceed in synchrony with actively cycled varia- 
+tion in leg length. This approach works on shallow 
+slopes, with the length adjustments serving as a source 
+of energy (McGeer 1988). However, further results 
+await reformulation of equations of motion (1 7) and 
+(18), 
+since the linearization used here is invalid on 
+steep slopes. 
+Finally, we expect that lateral balance will have to 
+be done actively. One possibility is to control as when 
+standing still (i.e., by leaning in appropriate direc- 
+tions). Another scheme more in line with the "S-to-S 
+principle" is once-per-step adjustment of lateral foot 
+placement; this has been analyzed by Townsend 
+(1985). Turning, at least at low rates, can be done by 
+the same mechanism. 
+Much of this discussion and development strategy 
+can also apply to running. Running is of practical 
+interest because walking has a fundamental speed limit 
+of order Â¥fs at higher speeds centrifugal effect would 
+lift the stance leg off the ground. It turns out that by 
+adding a torsional spring at the hip and translational 
+springs in each leg, the model of Figure 2 becomes a 
+passive runner, with the same features of simplicity, 
+efficiency, and ease of control that make 
+passive 
+walk- 
+ing attractive. Passive running has been described by 
+McGeer (19891, and Thompson and Raibert (1989) 
+have independently found similar behavior with both 
+monoped and biped models. Investigation thus far has 
+been limited to shallow slopes; as in walking, we have 
+yet to do the steep-terrain and 3D investigations. 
+We hope 
+that'passive 
+models will provide much 
+insight into the dynamics and control of legged ma- 
+chines, but ultimately we must admit that this is only 
+the easy part of the design problem. Legged locomo- 
+tion is not competitive on smooth terrain, therefore 
+practical machines must be capable of finding foot- 
+holds and planning paths through difficult surround- 
+ings. Yet contemporary robots are hard pressed even to 
+pick their way along paved highways and across flat 
+floors! Thus it appears that 
+the 
+demands of a legged 
+automaton must stimulate research for some years to 
+come. 
+McGeer 
+
+--- PAGE 17 ---
+Fig. 1 7. Notation for an 
+N-link, two-dimensional 
+open chain with rolling sup 
+port. 
+N-LINK 2-D CHAIN 
+WITH ROLLING SUPPORT 
+Appendix A. Dynamics of an N-Link Cham 
+Although we are interested in a machine with only 
+two rigid links, there is little extra effort involved in 
+generalizing to N links, and the more general result is 
+needed for a knee-jointed machine like that in Figure 
+16. The dynamics can be expressed in N second-order 
+equations of the form 
+where H. is the angular momentum and T,, the torque 
+about the nth joint. In the case of n = 1, the "joint" is 
+the instantaneous point of contact. Simplification will 
+be afforded by subtracting equations for successive 
+joints, so that (45) becomes 
+The torque is produced by gravity, and amounts to 
+Figures 17 and 18 provide the necessary notation. Then 
+where grin is the vector from joint n to the mass center 
+of link n, and /Ã the vector from joint n to joint n + 1. 
+For link 1 
+4 and & are unit vectors fixed in link 1, as illustrated 
+by Figure 18. 
+For walking analysis we linearize the torque for 
+small Aff, y. Thus from (18) and (19) we have 
+where (KAOw), is the value of (48) at A0 = 0, y = 0; 
+(Kb)- is the derivative of (48) with respect to y, evalu- 
+ated at A& = 0, y = 0; and Knm is the derivative of (48) 
+with respect to Qm, evaluated at A& = 0, y = 0. For a 
+two-link chain with a point hip mass % the results 
+are as follows: 
+Note that according to the convention of Figure 17, a 
+biped with matched legs has 
+mpm,, - 
+cc ll - cn 
+w,=-w,. 
+The International Journal of Robotics Research 
+
+--- PAGE 18 ---
+Fig. 18. Notation for individ- 
+ual links of the chain. 
+Now to work on the angular momentum terms in the 
+equations of motion (46). Hn is 
+Therefore 
+Equation (58) should be recognized as the angular 
+momentum about a stationary point that is instanta- 
+neously coincident with joint n. Therefore, for the 
+equations of motion (46) only Sl, and are differen- 
+tiated: 
+The kinematics of the chain are such that 
+where the 32. vector is directed into the page of Figure 
+17. This is differentiated for (60) as follows: 
+The last term comes from differentiating F, (491, and 
+accounts for rolling of the contact point. Substituting 
+into (60) leaves (after ntial but straightforward 
+simplification) 
+
+--- PAGE 19 ---
+In matrix terms, as in (17), this can be expressed as For our machine, in matrix form, this is 
+In stiff-leffied walking the rotational speeds arc small, 
+so the Q2 term (centrifugal effect) can be neglected. 
+(This approximation, however, is not valid for knee- 
+jointed walking as in Figure 16). M is the inertia ma- 
+trix; for a two-link biped 
+Appendix B. Step-to-Step Transition Matrix 
+The S-to-S transition (36) has been derived by 
+McGeer (1988); here we present only the final formula. 
+In equation of motion (1 7), M is linearized, thus Mn 
+is found by evaluating (65) with A0 = 0. However, for 
+support transfer M+ (24) is evaluated with Ai? = h (22). 
+Support transfer also involves the pre-transfer inertia 
+matrix M-, which is calculated as follows. Equation 
+(59) still holds for the angular momentum, but (61) is 
+no longer correct for the velocity, since prior to 
+transfer the chain is rolling about link N rather than 
+link 1. Thus recasting (6 1) gives 
+where 
+-- aDw Ma, 3i 
+Inserting this into (59) and collecting terms leaves 
+With the torque given by (1 8), the time derivative of 
+Dis 
+The International Journal ofRobotics Research 
+
+--- PAGE 20 ---
+Appendix C. Explanation of Symbols 
+Roman 
+b derivative of static equilibrium w.r.t. slop 
+Greek 
+c Figs. 2, 18 
+D start- to end-of-step transition matrix (20) 
+DM, subma~m of start- to 
+Dm, end-of-step transition matrix 
+Dm, (271, (28) 
+F index exchanger (25) 
+g gravitational acceleration, Fig. 2 
+H angular momentum 
+I 2 X 2 identity matrix 
+K stance stiffness matrix (54) 
+Z leg length, Figs. 2, 18 
+I joint-to-joint vector (50), Fig. 18 
+M inertia matrix (65), (68) 
+Mn M for A8 = 0 (1 7), (65) 
+m mass, Figs. 2,17 
+mH hip mass fraction 
+R foot radius. Fig. 2 
+F joint-to-mass center vector (49, Fig. 17 
+re radius of gyration 
+S step-to-step transition matrix (36), (69) 
+T torque 
+V linear velocity 
+w offset from leg axis to leg mass center (Fig. 2) 
+2, f unit vectors, ~igs. 17, 1 8 
+z eigenvalue of step-to-step equations (36) 
+ie (19), (53) a leg angle at support transfer (22), Rgs. 4, 5 
+References 
+Lee, T-T., and Liao, J-H. 1988 (Philadelphia). Trajectory 
+planning and control of a 3-link biped robot Proc. 1988 
+IEEE Int. Cod Robot. Automat. New York IEEE, pp. 
+820-823. 
+Margaria, R. 1976. Biomechanics andfiergftics ofMuscu- 
+lur 
+Exercise. Oxford, U.K.: Clarendon Press. 
+McGeer, T. 1988. Stability and control of two-dimensional 
+biped walking. Technical report CSS-IS TR 88-01. Simon 
+Fraser University, Centre for Systems Science, Burnaby, 
+B.C. 
+McGeer, T. 1989. Passive running. Technical report 
+CSS-IS TR 89-02. Simon Fraser University, Centre for 
+Systems Science, Burnaby, B.C. 
+y slope, Fig. 2 
+A@ angle from surface normal, Fig. 2 
+q coefficient of restitution (5) 
+At?= static equilibrium position (19) 
+Affw static equilibrium on level ground (52) 
+A support transfer matrix (26) 
+A support transfer vector (2 1) 
+a pendulum frequency (4) 
+T dimensionless time t @Z 
+(2 angular speed 
+wf swing pendulum frequency 
+co,, lateral rocking frequency 
+Sub- and superscripts 
++ immediately after support transfer 
+- immediately before support transfer 
+0 steady cycle conditions 
+C stance 
+F swing leg 
+g gravitational effect 
+k step index 
+McMahon, T. 1984. Mechanics of locomotion. Int. J. Robot. 
+Res. 3(2):4-28. 
+Mita, T., Yamaguchi, T., Kashiwase, T., and Kawase, T. 
+1984. Realisation of a high speed biped using modem 
+control theory. Int. J. Control 40(1):107- 119. 
+Miura, H., and Shimoyama, 1.1984. Dynamic walking of a 
+biped. Int. J. Robot. Res. 3(2):60-74. 
+Mochon, S., and McMahon, T. 1980. Ballistic walking: An 
+improved model. Math. Biosci. 52241 -260. 
+Raibert, M. 1986. Legged Robots That Balance. Cambridge, 
+Mass.: MIT Press. 
+Russell, 
+M. 1983. Odex 1: The first fandonoid. Robot. Age 
+5:12- 18. 
+Takanishi, A., Ishida, M., Yam&, Y., and Kato, I. The 
+realisation of dynamic 
+walking-by 
+the biped walking robot 
+WL-10RD. Proc. Int. Con$ Adv. Robot. Tokyo: Robotics 
+Society of Japan, pp. 459-466. 
+
+--- PAGE 21 ---
+Thompson, C. and Raibert, M. (in press). Passive dynamic 
+running. In Hayward, V., and Khatib, 0. (eds.): Int. Sym- 
+posium of Expen.mental Robotics. New York: Springer- 
+Verlag . 
+Townsend, M. 1985. Biped gait stabilisation via foot place- 
+ment. J. Biomech. 18(1):21-38. 
+Waldron, K., Vohnout, V., Perry, A., and McGhee, R. 1984. 
+Configuration design of the adaptive suspension vehicle. 
+Int. J. Robot. Res. 3(2):37-48. 
+Waldron, K. 1986. Force and motion management in legged 
+locomotion. IEEE J. Robot. Automat. 2(4):2 14-220. 
+Yamada, M., Furusho, J., and Sano, A. 1985. Dynamic con- 
+trol of a walking robot with kick action. Proc. Int. Con$ 
+Adv. Robot. Tokyo: Robotics Society of Japan, pp. 405- 
+412. 
+Zheng, Y-F., Shen, J., and Sias, F. 1988 (Philadelphia). A 
+motion control scheme for a biped robot to climb sloping 
+surfaces. Proc. 1988 IEEE Int. Conf. Robot. Automat. 
+New Yo* IEEE, pp. 8 14-816. 
+The International Journal of Robotics Research 

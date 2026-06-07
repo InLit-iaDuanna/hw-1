@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-06-04T12:52:06.095607",
+  "summary": {
+    "total": 4,
+    "passed": 3,
+    "failed": 0,
+    "warnings": 1
+  },
+  "checks": [
+    {
+      "name": "environment",
+      "description": "Python 环境和依赖检查",
+      "status": "PASS",
+      "message": "环境检查通过",
+      "details": {
+        "python_version": "3.10.11",
+        "installed_packages": {
+          "mujoco": "3.8.1",
+          "numpy": "2.2.6",
+          "matplotlib": "3.10.9",
+          "pytest": "9.0.3"
+        },
+        "missing_packages": []
+      }
+    },
+    {
+      "name": "code_health",
+      "description": "代码语法和导入检查",
+      "status": "PASS",
+      "message": "代码检查通过",
+      "details": {
+        "missing_critical_files": [],
+        "missing_critical_directories": [],
+        "ruff_output": "5\tF841\t[ ] unused-variable\n1\tB007\t[ ] unused-loop-control-variable\n1\tI001\t[*] unsorted-imports\nFound 7 errors.\n[*] 1 fixable with the `--fix` option (6 hidden fixes can be enabled with the `--unsafe-fixes` option).\n",
+        "ruff_violations": 5
+      }
+    },
+    {
+      "name": "test_health",
+      "description": "测试通过率和覆盖率检查",
+      "status": "WARNING",
+      "message": "测试通过率低于 95%",
+      "details": {
+        "test_exit_code": 0,
+        "tests_passed": 0,
+        "tests_failed": 0,
+        "test_pass_rate": 0,
+        "coverage_percentage": 29.91
+      }
+    },
+    {
+      "name": "data_integrity",
+      "description": "关键数据文件完整性检查",
+      "status": "PASS",
+      "message": "数据完整性检查通过",
+      "details": {
+        "out_directory_exists": true,
+        "test_data_files_count": 0,
+        "version_directories_count": 37
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+version,purpose,path
+V5,passive_limit_cycle_proof,v05_hybrid_compass_proof/out/hybrid_compass_poincare_report.png
+V5,hybrid_data,v05_hybrid_compass_proof/out/hybrid_compass_data.csv
+V6,mve_homework_report,v06_mve_gait_homework/out/v6_mve_report.png
+V6,mve_explainer_video,v06_mve_gait_homework/out/v6_mve_gait_explainer.mp4
+V10,rolling_foot_video,v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_walk.mp4
+V10,rolling_foot_report,v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_report.png
+V10,rolling_foot_data,v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_walk_data.csv
+V11,robustness_report,v11_rugged_terrain_robustness/out/v11_robustness_report.png
+V11,flat_summary,v11_rugged_terrain_robustness/out/v11_sanity_flat_summary.json
+V11,terrain_summary,v11_rugged_terrain_robustness/out/v11_smoke_terrain_summary.json
+V11,hard_failure_summary,v11_rugged_terrain_robustness/out/v11_smoke_hard_summary.json
+V12,energy_report,v12_energy_cot_analysis/out/v12_report.png
+V12,cot_table,v12_energy_cot_analysis/out/v12_energy_cot_table.csv
+V13,atlas_report,v13_parameter_sensitivity_atlas/out/v13_atlas_report.png
+V13,atlas_summary,v13_parameter_sensitivity_atlas/out/v13_atlas_summary.csv
+MATLAB,summary,matlab-v01-v13-gait/out/v01_v13_matlab_summary.csv

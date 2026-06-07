@@ -1,0 +1,220 @@
+{
+  "params": {
+    "base": "PassiveArmsParams",
+    "hip_motor": "Dynamixel MX-64AR @12V",
+    "knee_motor": "Dynamixel MX-64AR @12V"
+  },
+  "motor_specs": {
+    "hip": {
+      "name": "Dynamixel MX-64AR @12V",
+      "Kt": 0.0109,
+      "J_rotor": 7e-08,
+      "N": 200.0,
+      "eta": 0.67,
+      "I_max": 4.1,
+      "I_cont": 1.2,
+      "R_arm": 1.0,
+      "tau_C_motor": 0.0015,
+      "b_visc_motor": 1.25e-06,
+      "joint_J_eff": 0.0028000000000000004,
+      "joint_b_eff": 0.05,
+      "joint_tau_C_eff": 0.201,
+      "joint_tau_sat_peak": 5.988459999999999,
+      "joint_tau_sat_cont": 1.7527199999999998
+    },
+    "knee": {
+      "name": "Dynamixel MX-64AR @12V",
+      "Kt": 0.0109,
+      "J_rotor": 7e-08,
+      "N": 200.0,
+      "eta": 0.67,
+      "I_max": 4.1,
+      "I_cont": 1.2,
+      "R_arm": 1.0,
+      "tau_C_motor": 0.0015,
+      "b_visc_motor": 1.25e-06,
+      "joint_J_eff": 0.0028000000000000004,
+      "joint_b_eff": 0.05,
+      "joint_tau_C_eff": 0.201,
+      "joint_tau_sat_peak": 5.988459999999999,
+      "joint_tau_sat_cont": 1.7527199999999998
+    }
+  },
+  "phase_durations_s": {
+    "stance_early": 1.8629999999999056,
+    "stance_late": 1.8549999999999065,
+    "swing_thrust": 1.8079999999999117,
+    "swing_retract": 1.9099999999999004
+  },
+  "phase_torque_integral_Nms": {
+    "stance_early": 6.089032964059024,
+    "stance_late": 6.805682552782809,
+    "swing_thrust": 7.1354051552694635,
+    "swing_retract": 2.716662921610938
+  },
+  "phase_saturation_steps": {
+    "stance_early": 0,
+    "stance_late": 0,
+    "swing_thrust": 0,
+    "swing_retract": 0
+  },
+  "phase_total_steps": {
+    "stance_early": 1863,
+    "stance_late": 1855,
+    "swing_thrust": 1808,
+    "swing_retract": 1910
+  },
+  "phase_saturation_rate": {
+    "stance_early": 0.0,
+    "stance_late": 0.0,
+    "swing_thrust": 0.0,
+    "swing_retract": 0.0
+  },
+  "phase_timeline_head": [
+    [
+      0.0,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      0.151,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      0.372,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      0.759,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      1.159,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      1.248,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      1.6480000000000001,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      2.944,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      3.344,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      3.6630000000000003,
+      "stance_early",
+      "swing_retract"
+    ]
+  ],
+  "phase_timeline_tail": [
+    [
+      0.0,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      0.151,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      0.372,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      0.759,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      1.159,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      1.248,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      1.6480000000000001,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      2.944,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      3.344,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      3.6630000000000003,
+      "stance_early",
+      "swing_retract"
+    ]
+  ],
+  "phase_transitions": 10,
+  "score": 800.215091021912,
+  "success": false,
+  "alternating_touchdowns": 4,
+  "contact_events": [
+    {
+      "time": 0.15,
+      "foot": "left",
+      "E": 51.0382874815029
+    },
+    {
+      "time": 0.371,
+      "foot": "right",
+      "E": 50.585770231344696
+    },
+    {
+      "time": 0.758,
+      "foot": "left",
+      "E": 50.85388504812082
+    },
+    {
+      "time": 1.247,
+      "foot": "right",
+      "E": 50.78274811155818
+    },
+    {
+      "time": 2.943,
+      "foot": "left",
+      "E": 51.16724262943608
+    }
+  ],
+  "forward_distance": 0.23117499019785742,
+  "simulated_time": 3.718,
+  "failure": "fall_down",
+  "active_input_energy_j": 3.698469463319772,
+  "net_actuator_work_j": -7.985501883261314,
+  "positive_input_energy_elec_j": 51.474844030114355,
+  "coulomb_dissipation_j": 1.7232326586983213,
+  "energy_per_alternation_j": 0.924617365829943,
+  "quasi_passive": true,
+  "pure_passive": false,
+  "controller": "v16_motor_dynamics_refactored",
+  "framework_version": "simulation_framework_v1"
+}

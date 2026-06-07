@@ -1,0 +1,8 @@
+init_roll_deg,alternations,simulated_time_s,forward_distance_m,max_roll_deg,max_hip_y_m,failure,success
+0.0,3,1.495,0.1668,13.04,0.5001,lateral_drift,0
+1.0,3,1.629,0.1669,12.27,0.5009,lateral_drift,0
+-1.0,2,1.418,0.1645,13.43,0.5002,lateral_drift,0
+2.0,4,2.032,0.1922,12.75,0.5009,lateral_drift,0
+-2.0,2,1.352,0.1559,14.43,0.5009,lateral_drift,0
+3.0,5,2.306,0.2444,11.54,0.5008,lateral_drift,0
+-3.0,3,1.309,0.1458,15.09,0.5003,lateral_drift,0

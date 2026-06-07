@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>步态分析报告</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        table { border-collapse: collapse; width: 100%; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #4CAF50; color: white; }
+        img { max-width: 100%; height: auto; }
+        h1 { color: #333; border-bottom: 2px solid #4CAF50; }
+        h2 { color: #666; border-bottom: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+<h1>步态分析报告</h1>
+<p></p>
+<h2>数据概览</h2>
+<p></p>
+<p>**分析时间**: 2026-06-04 12:51:14</p>
+<p></p>
+<p>**数据版本数**: 3</p>
+<p></p>
+<tr><td>版本</td><td>标签</td><td>时长 (s)</td><td>采样数</td><td>采样率 (Hz)</td></tr>
+<tr><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td></tr>
+<tr><td>v09</td><td>V09 仿生稳定</td><td>11.99</td><td>2000</td><td>166.7</td></tr>
+<tr><td>v10</td><td>V10 滚动足</td><td>11.99</td><td>2000</td><td>166.7</td></tr>
+<tr><td>v11</td><td>V11 平地</td><td>11.99</td><td>1500</td><td>125.0</td></tr>
+<p></p>
+<h2>特征汇总</h2>
+<p></p>
+<tr><td>指标</td><td>V09 仿生稳定</td><td>V10 滚动足</td><td>V11 平地</td></tr>
+<tr><td>---</td><td>---</td><td>---</td><td>---</td></tr>
+<tr><td>步态周期 (s)</td><td>0.7148</td><td>1.2247</td><td>1.2249</td></tr>
+<tr><td>步长 (m)</td><td>0.2592</td><td>0.4646</td><td>0.4646</td></tr>
+<tr><td>步频 (Hz)</td><td>1.3990</td><td>0.8165</td><td>0.8164</td></tr>
+<tr><td>CoT</td><td>0.0842</td><td>0.0726</td><td>0.0726</td></tr>
+<tr><td>接触比例</td><td>0.5607</td><td>0.5133</td><td>0.5131</td></tr>
+<tr><td>左右对称性</td><td>0.9465</td><td>0.4737</td><td>0.6429</td></tr>
+<tr><td>收敛率</td><td>-0.1337</td><td>-0.1744</td><td>-0.1741</td></tr>
+<tr><td>平均功率 (W)</td><td>1.1993</td><td>1.1036</td><td>1.0995</td></tr>
+<p></p>
+<h2>步态周期分析</h2>
+<p></p>
+<h2>能量效率分析</h2>
+<p></p>
+<h3>Cost of Transport (CoT)</h3>
+<p></p>
+<tr><td>版本</td><td>CoT</td></tr>
+<tr><td>---</td><td>---</td></tr>
+<tr><td>V09 仿生稳定</td><td>0.0842</td></tr>
+<tr><td>V10 滚动足</td><td>0.0726</td></tr>
+<tr><td>V11 平地</td><td>0.0726</td></tr>
+<p></p>
+<h2>版本对比</h2>
+<p></p>
+<tr><td>指标</td><td>版本1</td><td>值1</td><td>版本2</td><td>值2</td><td>差异</td><td>变化率 (%)</td></tr>
+<tr><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td></tr>
+<tr><td>Period Length</td><td>v09</td><td>0.7148</td><td>v10</td><td>1.2247</td><td>+0.5099</td><td>+71.33</td></tr>
+<tr><td>Stride Length</td><td>v09</td><td>0.2592</td><td>v10</td><td>0.4646</td><td>+0.2054</td><td>+79.23</td></tr>
+<tr><td>Stride Frequency</td><td>v09</td><td>1.3990</td><td>v10</td><td>0.8165</td><td>-0.5824</td><td>-41.63</td></tr>
+<tr><td>Duty Factor</td><td>v09</td><td>0.5607</td><td>v10</td><td>0.5133</td><td>-0.0474</td><td>-8.45</td></tr>
+<tr><td>Double Support Ratio</td><td>v09</td><td>0.1770</td><td>v10</td><td>0.1635</td><td>-0.0135</td><td>-7.63</td></tr>
+<tr><td>Single Support Ratio</td><td>v09</td><td>0.8175</td><td>v10</td><td>0.8290</td><td>+0.0115</td><td>+1.41</td></tr>
+<tr><td>Left Right Symmetry</td><td>v09</td><td>0.9465</td><td>v10</td><td>0.4737</td><td>-0.4729</td><td>-49.96</td></tr>
+<tr><td>Num Strides</td><td>v09</td><td>15.0000</td><td>v10</td><td>9.0000</td><td>-6.0000</td><td>-40.00</td></tr>
+<tr><td>Cost Of Transport</td><td>v09</td><td>0.0842</td><td>v10</td><td>0.0726</td><td>-0.0116</td><td>-13.81</td></tr>
+<tr><td>Mechanical Work</td><td>v09</td><td>41.0614</td><td>v10</td><td>31.3268</td><td>-9.7346</td><td>-23.71</td></tr>
+<tr><td>Input Energy</td><td>v09</td><td>18.2800</td><td>v10</td><td>16.2094</td><td>-2.0705</td><td>-11.33</td></tr>
+<tr><td>Actuator Work</td><td>v09</td><td>41.0614</td><td>v10</td><td>31.3268</td><td>-9.7346</td><td>-23.71</td></tr>
+<tr><td>Power Mean</td><td>v09</td><td>1.1993</td><td>v10</td><td>1.1036</td><td>-0.0957</td><td>-7.98</td></tr>
+<tr><td>Power Peak</td><td>v09</td><td>8.4175</td><td>v10</td><td>6.7904</td><td>-1.6271</td><td>-19.33</td></tr>
+<tr><td>Power Std</td><td>v09</td><td>1.9153</td><td>v10</td><td>1.3874</td><td>-0.5278</td><td>-27.56</td></tr>
+<tr><td>Convergence Rate</td><td>v09</td><td>-0.1337</td><td>v10</td><td>-0.1744</td><td>-0.0407</td><td>+30.47</td></tr>
+<tr><td>Limit Cycle Radius</td><td>v09</td><td>0.2068</td><td>v10</td><td>0.3967</td><td>+0.1899</td><td>+91.82</td></tr>
+<tr><td>Left Contact Duration</td><td>v09</td><td>0.4008</td><td>v10</td><td>0.6287</td><td>+0.2279</td><td>+56.85</td></tr>
+<tr><td>Ground Clearance Mean</td><td>v09</td><td>0.0288</td><td>v10</td><td>0.0376</td><td>+0.0088</td><td>+30.42</td></tr>
+<tr><td>Ground Clearance Min</td><td>v09</td><td>-0.0010</td><td>v10</td><td>-0.0013</td><td>-0.0004</td><td>+40.33</td></tr>
+<tr><td>Hip Excursion</td><td>v09</td><td>4.4271</td><td>v10</td><td>4.5545</td><td>+0.1274</td><td>+2.88</td></tr>
+<tr><td>Knee Flexion Max Left</td><td>v09</td><td>0.4029</td><td>v10</td><td>0.5103</td><td>+0.1073</td><td>+26.63</td></tr>
+<tr><td>Knee Flexion Max Right</td><td>v09</td><td>1.1403</td><td>v10</td><td>0.9746</td><td>-0.1657</td><td>-14.53</td></tr>
+<tr><td>Hip Velocity Peak</td><td>v09</td><td>3.9012</td><td>v10</td><td>2.1283</td><td>-1.7729</td><td>-45.44</td></tr>
+<tr><td>Knee Velocity Peak</td><td>v09</td><td>4.8434</td><td>v10</td><td>22.6922</td><td>+17.8487</td><td>+368.51</td></tr>
+<p></p>
+<h2>参数敏感性</h2>
+<p></p>
+<tr><td>指标</td><td>均值</td><td>标准差</td><td>范围</td><td>变异系数</td></tr>
+<tr><td>---</td><td>---</td><td>---</td><td>---</td><td>---</td></tr>
+<tr><td>Period Length</td><td>1.0548</td><td>0.2404</td><td>[0.7148, 1.2249]</td><td>22.79%</td></tr>
+<tr><td>Stride Length</td><td>0.3962</td><td>0.0968</td><td>[0.2592, 0.4646]</td><td>24.44%</td></tr>
+<tr><td>Stride Frequency</td><td>1.0106</td><td>0.2746</td><td>[0.8164, 1.3990]</td><td>27.17%</td></tr>
+<tr><td>Duty Factor</td><td>0.5290</td><td>0.0224</td><td>[0.5131, 0.5607]</td><td>4.23%</td></tr>
+<tr><td>Double Support Ratio</td><td>0.1677</td><td>0.0066</td><td>[0.1627, 0.1770]</td><td>3.92%</td></tr>
+<tr><td>Single Support Ratio</td><td>0.8255</td><td>0.0057</td><td>[0.8175, 0.8300]</td><td>0.69%</td></tr>
+<tr><td>Left Right Symmetry</td><td>0.6877</td><td>0.1956</td><td>[0.4737, 0.9465]</td><td>28.45%</td></tr>
+<tr><td>Num Strides</td><td>11.0000</td><td>2.8284</td><td>[9.0000, 15.0000]</td><td>25.71%</td></tr>
+<tr><td>Cost Of Transport</td><td>0.0764</td><td>0.0055</td><td>[0.0726, 0.0842]</td><td>7.17%</td></tr>
+<tr><td>Mechanical Work</td><td>34.2823</td><td>4.8067</td><td>[30.4585, 41.0614]</td><td>14.02%</td></tr>
+<tr><td>Input Energy</td><td>16.8989</td><td>0.9766</td><td>[16.2073, 18.2800]</td><td>5.78%</td></tr>
+<tr><td>Actuator Work</td><td>34.2823</td><td>4.8067</td><td>[30.4585, 41.0614]</td><td>14.02%</td></tr>
+<tr><td>Power Mean</td><td>1.1341</td><td>0.0461</td><td>[1.0995, 1.1993]</td><td>4.07%</td></tr>
+<tr><td>Power Peak</td><td>6.8042</td><td>1.3117</td><td>[5.2047, 8.4175]</td><td>19.28%</td></tr>
+<tr><td>Power Std</td><td>1.5453</td><td>0.2626</td><td>[1.3332, 1.9153]</td><td>16.99%</td></tr>
+<tr><td>Convergence Rate</td><td>-0.1607</td><td>0.0191</td><td>[-0.1744, -0.1337]</td><td>-11.90%</td></tr>
+<tr><td>Limit Cycle Radius</td><td>0.3335</td><td>0.0896</td><td>[0.2068, 0.3969]</td><td>26.86%</td></tr>
+<tr><td>Left Contact Duration</td><td>0.5526</td><td>0.1074</td><td>[0.4008, 0.6287]</td><td>19.43%</td></tr>
+<tr><td>Ground Clearance Mean</td><td>0.0347</td><td>0.0041</td><td>[0.0288, 0.0376]</td><td>11.92%</td></tr>
+<tr><td>Ground Clearance Min</td><td>-0.0012</td><td>0.0002</td><td>[-0.0013, -0.0010]</td><td>-14.98%</td></tr>
+<tr><td>Hip Excursion</td><td>4.5117</td><td>0.0598</td><td>[4.4271, 4.5545]</td><td>1.33%</td></tr>
+<tr><td>Knee Flexion Max Left</td><td>0.4745</td><td>0.0506</td><td>[0.4029, 0.5103]</td><td>10.66%</td></tr>
+<tr><td>Knee Flexion Max Right</td><td>1.0139</td><td>0.0914</td><td>[0.9269, 1.1403]</td><td>9.02%</td></tr>
+<tr><td>Hip Velocity Peak</td><td>2.6826</td><td>0.8628</td><td>[2.0182, 3.9012]</td><td>32.16%</td></tr>
+<tr><td>Knee Velocity Peak</td><td>15.4855</td><td>7.6810</td><td>[4.8434, 22.6922]</td><td>49.60%</td></tr>
+<p></p>
+<img src='![特征相关性热图](correlation_heatmap.png)' />
+<p></p>
+<p>*特征相关性热图*</p>
+<p></p>
+<h2>结论</h2>
+<p></p>
+<p>- **能量效率最优版本**: V10 滚动足 (CoT = 0.0726)</p>
+<p>- **稳定性最优版本**: V09 仿生稳定 (收敛率 = -0.1337)</p>
+<p>- **对称性最优版本**: V09 仿生稳定 (对称性 = 0.947)</p>
+<p></p>
+<p></p>
+
+</body>
+</html>

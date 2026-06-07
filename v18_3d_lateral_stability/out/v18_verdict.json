@@ -1,0 +1,14 @@
+{
+  "version": "V18",
+  "verdict": "lateral_stability_requires_active_control",
+  "findings": {
+    "min_roll_stiffness_for_walking": 500,
+    "unit": "N*m/rad",
+    "note": "roll_k>=500 effectively eliminates lateral DOF (same as 2D constraint)",
+    "foot_width_effect": "minimal (4.4 deg max roll with w=0.15 vs 6.3 with w=0.04, both fail)",
+    "failure_mode": "sagittal fall_down caused by lateral oscillation coupling",
+    "lateral_perturbation_tested": "3 deg initial roll"
+  },
+  "recommendation": "V19 must add active hip abduction control for lateral stability",
+  "v21_decision_gate": "passive_lateral_stability_does_not_exist_active_coronal_control_required"
+}

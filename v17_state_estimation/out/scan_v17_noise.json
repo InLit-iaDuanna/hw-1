@@ -1,0 +1,108 @@
+{
+  "grid": [
+    0.0,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    5.0,
+    8.0,
+    12.0,
+    20.0
+  ],
+  "rows": [
+    {
+      "noise_scale": 0.0,
+      "success": true,
+      "forward_distance": 4.5191696412974345,
+      "alt_touchdowns": 10,
+      "simulated_time": 11.994,
+      "rmse_vx": 0.07625745028556369,
+      "rmse_hip_x": 0.04504248735587355,
+      "failure": "completed"
+    },
+    {
+      "noise_scale": 0.5,
+      "success": true,
+      "forward_distance": 4.692217063310257,
+      "alt_touchdowns": 10,
+      "simulated_time": 11.994,
+      "rmse_vx": 0.08025659909602163,
+      "rmse_hip_x": 0.04476306915724023,
+      "failure": "completed"
+    },
+    {
+      "noise_scale": 1.0,
+      "success": true,
+      "forward_distance": 4.666659908869651,
+      "alt_touchdowns": 10,
+      "simulated_time": 11.994,
+      "rmse_vx": 0.07883925992623757,
+      "rmse_hip_x": 0.04490273235056184,
+      "failure": "completed"
+    },
+    {
+      "noise_scale": 2.0,
+      "success": true,
+      "forward_distance": 4.539995323653446,
+      "alt_touchdowns": 10,
+      "simulated_time": 11.994,
+      "rmse_vx": 0.07568447529589149,
+      "rmse_hip_x": 0.049083900232825745,
+      "failure": "completed"
+    },
+    {
+      "noise_scale": 3.0,
+      "success": false,
+      "forward_distance": 0.11050803682290075,
+      "alt_touchdowns": 4,
+      "simulated_time": 2.892,
+      "rmse_vx": 0.1496548211276393,
+      "rmse_hip_x": 0.04238406476544231,
+      "failure": "fall_down"
+    },
+    {
+      "noise_scale": 5.0,
+      "success": false,
+      "forward_distance": 0.11050803682290075,
+      "alt_touchdowns": 4,
+      "simulated_time": 2.91,
+      "rmse_vx": 0.1494671497338773,
+      "rmse_hip_x": 0.04282671572694147,
+      "failure": "fall_down"
+    },
+    {
+      "noise_scale": 8.0,
+      "success": false,
+      "forward_distance": 0.11050803682290075,
+      "alt_touchdowns": 4,
+      "simulated_time": 2.946,
+      "rmse_vx": 0.1495602243759676,
+      "rmse_hip_x": 0.04223098586379394,
+      "failure": "fall_down"
+    },
+    {
+      "noise_scale": 12.0,
+      "success": false,
+      "forward_distance": 0.11050803682290075,
+      "alt_touchdowns": 4,
+      "simulated_time": 2.988,
+      "rmse_vx": 0.1679722682590506,
+      "rmse_hip_x": 0.04384392711849271,
+      "failure": "fall_down"
+    },
+    {
+      "noise_scale": 20.0,
+      "success": false,
+      "forward_distance": 0.1319122582438003,
+      "alt_touchdowns": 1,
+      "simulated_time": 3.222,
+      "rmse_vx": 0.17006637403662547,
+      "rmse_hip_x": 0.03951603223876495,
+      "failure": "fall_down"
+    }
+  ],
+  "critical_noise_scale": 3.0,
+  "last_pass_noise_scale": 2.0,
+  "verdict": "mx64ar_within_tolerance"
+}

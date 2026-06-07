@@ -1,0 +1,83 @@
+[
+  {
+    "version": "V10",
+    "success": false,
+    "forward_distance": 0.11822720979652274,
+    "alternations": 2,
+    "simulation_time": 0.25554919242858887,
+    "realtime_factor": 46.95769094771568,
+    "cot": 0.0,
+    "mechanical_work": 0.5448625928476306,
+    "positive_input_energy": 2.047053284169435,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "stuck",
+    "extra_metrics": {}
+  },
+  {
+    "version": "V13.6",
+    "success": false,
+    "forward_distance": 1.3500016218181872,
+    "alternations": 2,
+    "simulation_time": 0.14029645919799805,
+    "realtime_factor": 85.53316362079103,
+    "cot": 0.0,
+    "mechanical_work": -8.236937343356738,
+    "positive_input_energy": 1.402270547226236,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "fall_down",
+    "extra_metrics": {
+      "phase_durations": {}
+    }
+  },
+  {
+    "version": "V13.7",
+    "success": false,
+    "forward_distance": 0.3807112338790281,
+    "alternations": 2,
+    "simulation_time": 0.9766330718994141,
+    "realtime_factor": 12.287112064167237,
+    "cot": 0.0,
+    "mechanical_work": -3.535069194076722,
+    "positive_input_energy": 0.0,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "completed",
+    "extra_metrics": {
+      "coulomb_dissipation": 0.0
+    }
+  },
+  {
+    "version": "V14c",
+    "success": false,
+    "forward_distance": 0.3779906176734235,
+    "alternations": 2,
+    "simulation_time": 0.8375155925750732,
+    "realtime_factor": 14.328091448547381,
+    "cot": 0.0,
+    "mechanical_work": -3.9483888735708734,
+    "positive_input_energy": 1.272558290611708,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "completed",
+    "extra_metrics": {}
+  },
+  {
+    "version": "V16",
+    "success": false,
+    "forward_distance": 0.3827519982100372,
+    "alternations": 2,
+    "simulation_time": 1.0383434295654297,
+    "realtime_factor": 11.556869970297084,
+    "cot": 0.0,
+    "mechanical_work": -4.046194160774895,
+    "positive_input_energy": 0.0,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "completed",
+    "extra_metrics": {
+      "motor_saturation_rate": 0.0
+    }
+  }
+]

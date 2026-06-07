@@ -1,0 +1,11 @@
+# V13.7: FSM + 摩擦补偿基准配置
+# 使用 V13.7/V14c 默认参数
+
+base_params: {}  # 使用 PassiveArmsParams 默认值
+
+# 电机参数（使用 MX-64AR 预设）
+motor_params:
+  preset: mx64ar
+
+# 开启摩擦补偿
+compensate_friction: true

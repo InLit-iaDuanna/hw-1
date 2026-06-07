@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-06-04T12:49:33.923046",
+  "summary": {
+    "valid": 43,
+    "corrupted": 0,
+    "missing": 0,
+    "valid_pct": 100.0
+  },
+  "corrupted": [],
+  "missing": [],
+  "snapshots": [
+    {
+      "snapshot_id": "snap_20260604_124835",
+      "name": "initial_baseline",
+      "verification": {
+        "total": 43,
+        "valid": 43,
+        "corrupted": 0,
+        "missing": 0
+      }
+    }
+  ]
+}

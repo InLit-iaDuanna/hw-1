@@ -1,0 +1,22 @@
+{
+  "version": "hw-1-v1.0",
+  "timestamp": "2026-06-04T12:11:19.239239",
+  "csv_file": "integrated_example_data.csv",
+  "n_rows": 84,
+  "columns": [
+    "time",
+    "torso_x",
+    "torso_z",
+    "pitch",
+    "hip",
+    "knee",
+    "vx",
+    "ctrl_hip",
+    "ctrl_knee"
+  ],
+  "metadata": {
+    "controller": "simple_pd",
+    "model": "simple_hopper",
+    "total_mass_kg": 3.9
+  }
+}

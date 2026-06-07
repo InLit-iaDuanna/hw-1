@@ -1,0 +1,81 @@
+<mujoco model="motor_dyn_walker_v16">
+  <compiler angle="degree" coordinate="local"/>
+  <option timestep="0.001" integrator="implicitfast" gravity="0 0 -9.81"/>
+  <visual><global offwidth="1280" offheight="720"/></visual>
+  <default>
+    <joint armature="0.004" damping="0.01"/>
+    <geom condim="3" friction="1.35 0.04 0.004" solref="0.006 1" solimp="0.90 0.98 0.002"/>
+  </default>
+  <asset>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.80 0.87 0.84" rgb2="0.96 0.94 0.88" width="512" height="512"/>
+    <material name="ramp_mat" texture="grid" texrepeat="12 1" rgba="0.76 0.82 0.78 1"/>
+    <material name="left_mat" rgba="0.05 0.47 0.57 1"/>
+    <material name="right_mat" rgba="0.86 0.29 0.21 1"/>
+    <material name="hip_mat" rgba="0.08 0.12 0.20 1"/>
+    <material name="knee_mat" rgba="0.95 0.74 0.36 1"/>
+    <material name="foot_mat" rgba="0.08 0.08 0.08 1"/>
+    <material name="arm_left_mat" rgba="0.20 0.55 0.65 1"/>
+    <material name="arm_right_mat" rgba="0.85 0.45 0.35 1"/>
+  </asset>
+  <worldbody>
+    <light name="key" pos="-2 -3 5" dir="0.3 0.5 -1" diffuse="0.85 0.85 0.85"/>
+    <geom name="ramp" type="plane" pos="0 0 0" euler="0 0.0 0" size="45 1.8 0.08" material="ramp_mat" contype="1" conaffinity="1"/>
+    <body name="hip" pos="0 0 0">
+      <joint name="hip_x" type="slide" axis="1 0 0" damping="0.001"/>
+      <joint name="hip_z" type="slide" axis="0 0 1" damping="0.001"/>
+      <geom name="hip_mass" type="sphere" size="0.08" mass="5.0" material="hip_mat" contype="0" conaffinity="0"/>
+      <geom name="torso_mass" type="capsule" fromto="0 0 0.02 0 0 0.3" size="0.04" mass="0.05" material="hip_mat" contype="0" conaffinity="0"/>
+      <geom name="hip_axis" type="cylinder" fromto="0 -0.13 0 0 0.13 0" size="0.018" mass="0.05" material="hip_mat" contype="0" conaffinity="0"/>
+      <body name="left_thigh" pos="0 -0.055 0">
+        <joint name="left_hip" type="hinge" axis="0 1 0" range="-95 95" limited="true" damping="0.020000" armature="0.004000"/>
+        <geom name="left_upper" type="capsule" fromto="0 0 0 0 0 -0.4896" size="0.026" mass="0.18" material="left_mat" contype="0" conaffinity="0"/>
+        <body name="left_shank" pos="0 0 -0.4896">
+          <joint name="left_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.080000" armature="0.004000" stiffness="0.8" springref="0"/>
+          <geom name="left_knee_marker" type="sphere" pos="0 0 0" size="0.04" mass="0.03" material="knee_mat" contype="0" conaffinity="0"/>
+          <geom name="left_lower" type="capsule" fromto="0 0 0 0 0 -0.5304" size="0.023" mass="0.16" material="left_mat" contype="0" conaffinity="0"/>
+          <body name="left_foot_body" pos="0 0 -0.5304">
+            <joint name="left_ankle" type="hinge" axis="0 1 0" range="-25.0 25.0" limited="true" damping="0.08" stiffness="10.0" springref="0"/>
+            <geom name="left_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.023100000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="left_heel" type="sphere" pos="-0.06 0 -0.015" size="0.042" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="left_toe" type="sphere" pos="0.0576 0 -0.018" size="0.028" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <site name="left_foot_site" pos="0 0 -0.015" size="0.01"/>
+            <site name="left_heel_site" pos="-0.06 0 -0.015" size="0.01"/>
+            <site name="left_toe_site" pos="0.0576 0 -0.018" size="0.01"/>
+          </body>
+        </body>
+      </body>
+      <body name="right_thigh" pos="0 0.055 0">
+        <joint name="right_hip" type="hinge" axis="0 1 0" range="-95 95" limited="true" damping="0.020000" armature="0.004000"/>
+        <geom name="right_upper" type="capsule" fromto="0 0 0 0 0 -0.4896" size="0.026" mass="0.18" material="right_mat" contype="0" conaffinity="0"/>
+        <body name="right_shank" pos="0 0 -0.4896">
+          <joint name="right_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.080000" armature="0.004000" stiffness="0.8" springref="0"/>
+          <geom name="right_knee_marker" type="sphere" pos="0 0 0" size="0.04" mass="0.03" material="knee_mat" contype="0" conaffinity="0"/>
+          <geom name="right_lower" type="capsule" fromto="0 0 0 0 0 -0.5304" size="0.023" mass="0.16" material="right_mat" contype="0" conaffinity="0"/>
+          <body name="right_foot_body" pos="0 0 -0.5304">
+            <joint name="right_ankle" type="hinge" axis="0 1 0" range="-25.0 25.0" limited="true" damping="0.08" stiffness="10.0" springref="0"/>
+            <geom name="right_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.023100000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="right_heel" type="sphere" pos="-0.06 0 -0.015" size="0.042" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="right_toe" type="sphere" pos="0.0576 0 -0.018" size="0.028" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <site name="right_foot_site" pos="0 0 -0.015" size="0.01"/>
+            <site name="right_heel_site" pos="-0.06 0 -0.015" size="0.01"/>
+            <site name="right_toe_site" pos="0.0576 0 -0.018" size="0.01"/>
+          </body>
+        </body>
+      </body>
+      <body name="left_arm" pos="0 -0.13 0.2">
+        <joint name="left_arm" type="hinge" axis="0 1 0" range="-70.0 70.0" limited="true" damping="0.02" stiffness="0.0" springref="0"/>
+        <geom name="left_arm_geom" type="capsule" fromto="0 0 0 0 0 -0.4" size="0.022" mass="0.01" material="arm_left_mat" contype="0" conaffinity="0"/>
+      </body>
+      <body name="right_arm" pos="0 0.13 0.2">
+        <joint name="right_arm" type="hinge" axis="0 1 0" range="-70.0 70.0" limited="true" damping="0.02" stiffness="0.0" springref="0"/>
+        <geom name="right_arm_geom" type="capsule" fromto="0 0 0 0 0 -0.4" size="0.022" mass="0.01" material="arm_right_mat" contype="0" conaffinity="0"/>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <motor name="left_hip_muscle" joint="left_hip" gear="1" ctrllimited="true" ctrlrange="-4.0 4.0"/>
+    <motor name="left_knee_stabilizer" joint="left_knee" gear="1" ctrllimited="true" ctrlrange="-4.0 4.0"/>
+    <motor name="right_hip_muscle" joint="right_hip" gear="1" ctrllimited="true" ctrlrange="-4.0 4.0"/>
+    <motor name="right_knee_stabilizer" joint="right_knee" gear="1" ctrllimited="true" ctrlrange="-4.0 4.0"/>
+  </actuator>
+</mujoco>

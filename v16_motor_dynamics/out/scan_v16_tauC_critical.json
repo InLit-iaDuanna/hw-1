@@ -1,0 +1,146 @@
+{
+  "reference": "D:\\Dunna\\Documents\\hw-1\\v14c_arm_mass_lightening\\out\\v14c_critical_f042_l102_summary.json",
+  "v14c_reference": {
+    "alt_touchdowns": 10,
+    "forward_distance": 4.616822907034934,
+    "active_input_energy_j": 16.2363012042121
+  },
+  "fixed_motor_baseline": {
+    "Kt": 0.0109,
+    "J_rotor": 7e-08,
+    "N": 200.0,
+    "eta": 0.67,
+    "I_max": 4.1,
+    "joint_J_eff": 0.0028000000000000004,
+    "joint_b_eff": 0.05,
+    "joint_tau_sat_peak": 5.988459999999999,
+    "joint_tau_C_eff_at_baseline_tauC": 0.201
+  },
+  "rows": [
+    {
+      "tau_C_motor_Nm": 0.0,
+      "tau_C_eff_joint_Nm": 0.0,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 4.630269442630024,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 16.833678771649275,
+      "active_input_energy_elec_j": 106.74306194683385,
+      "coulomb_friction_dissipation_j": 0.0,
+      "failure": "completed"
+    },
+    {
+      "tau_C_motor_Nm": 0.0001,
+      "tau_C_eff_joint_Nm": 0.0134,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.1630573351423558,
+      "simulated_time": 3.714,
+      "active_input_energy_mech_j": 3.5852093589871976,
+      "active_input_energy_elec_j": 47.202814570176,
+      "coulomb_friction_dissipation_j": 0.11412005793007085,
+      "failure": "fall_down"
+    },
+    {
+      "tau_C_motor_Nm": 0.00025,
+      "tau_C_eff_joint_Nm": 0.0335,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 4.451427922833388,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 15.862840477697684,
+      "active_input_energy_elec_j": 105.7825244464523,
+      "coulomb_friction_dissipation_j": 0.7054724544698779,
+      "failure": "completed"
+    },
+    {
+      "tau_C_motor_Nm": 0.0005,
+      "tau_C_eff_joint_Nm": 0.067,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.17412424607188356,
+      "simulated_time": 3.996,
+      "active_input_energy_mech_j": 3.4768175126179885,
+      "active_input_energy_elec_j": 47.29653433639786,
+      "coulomb_friction_dissipation_j": 0.4402075275739364,
+      "failure": "stuck"
+    },
+    {
+      "tau_C_motor_Nm": 0.00075,
+      "tau_C_eff_joint_Nm": 0.1005,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.1737965147146047,
+      "simulated_time": 3.504,
+      "active_input_energy_mech_j": 3.4732828933501967,
+      "active_input_energy_elec_j": 44.42213164007681,
+      "coulomb_friction_dissipation_j": 0.8431568241932786,
+      "failure": "fall_down"
+    },
+    {
+      "tau_C_motor_Nm": 0.001,
+      "tau_C_eff_joint_Nm": 0.134,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.18601741553524756,
+      "simulated_time": 3.948,
+      "active_input_energy_mech_j": 3.4507021133277886,
+      "active_input_energy_elec_j": 49.58601146783588,
+      "coulomb_friction_dissipation_j": 1.1285667045392822,
+      "failure": "fall_down"
+    },
+    {
+      "tau_C_motor_Nm": 0.00125,
+      "tau_C_eff_joint_Nm": 0.1675,
+      "success": false,
+      "alt_touchdowns": 6,
+      "forward_distance": 0.18101786864531552,
+      "simulated_time": 3.5460000000000003,
+      "active_input_energy_mech_j": 3.449110063990323,
+      "active_input_energy_elec_j": 47.7532427809132,
+      "coulomb_friction_dissipation_j": 1.495729189137961,
+      "failure": "fall_down"
+    },
+    {
+      "tau_C_motor_Nm": 0.0015,
+      "tau_C_eff_joint_Nm": 0.201,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.188837715623241,
+      "simulated_time": 3.5460000000000003,
+      "active_input_energy_mech_j": 3.389770440825928,
+      "active_input_energy_elec_j": 45.30919033581135,
+      "coulomb_friction_dissipation_j": 1.660268567314141,
+      "failure": "fall_down"
+    },
+    {
+      "tau_C_motor_Nm": 0.002,
+      "tau_C_eff_joint_Nm": 0.268,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 3.7322287944932246,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 13.814474072105655,
+      "active_input_energy_elec_j": 108.61123955880362,
+      "coulomb_friction_dissipation_j": 5.23649062937351,
+      "failure": "completed"
+    },
+    {
+      "tau_C_motor_Nm": 0.003,
+      "tau_C_eff_joint_Nm": 0.402,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 3.890232014939551,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 13.566643039339786,
+      "active_input_energy_elec_j": 109.87081604240896,
+      "coulomb_friction_dissipation_j": 7.846403089127082,
+      "failure": "completed"
+    }
+  ],
+  "critical_band_joint_tau_C_Nm": [
+    0.402,
+    Infinity
+  ],
+  "verdict": "all_succeeded_extend_grid"
+}

@@ -1,0 +1,16 @@
+{
+  "slice": "A_slope_foot",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "slope_deg",
+    -1.0,
+    1.0
+  ],
+  "y": [
+    "foot_radius",
+    0.03,
+    0.05
+  ],
+  "title": "slope_deg vs foot_radius"
+}

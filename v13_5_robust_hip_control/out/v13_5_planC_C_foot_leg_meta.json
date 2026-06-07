@@ -1,0 +1,18 @@
+{
+  "slice": "planC_C_foot_leg",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "foot_radius",
+    0.03,
+    0.05
+  ],
+  "y": [
+    "leg_scale",
+    0.9,
+    1.1
+  ],
+  "E_star": 52.66,
+  "k_E": 7.5,
+  "title": "[plan C] foot_radius vs leg_scale (energy-shaping bang-bang hip)"
+}

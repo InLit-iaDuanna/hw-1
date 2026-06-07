@@ -1,0 +1,40 @@
+Total execution time: 1.160s
+============================================================
+         1848749 function calls (1848577 primitive calls) in 1.160 seconds
+
+   Ordered by: cumulative time
+   List reduced from 94 to 30 due to restriction <30>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.001    0.001    1.160    1.160 D:\Dunna\Documents\hw-1\profile_simulations.py:89(simplified_scan)
+        4    0.086    0.021    1.158    0.290 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:365(run_simulation)
+    12000    0.073    0.000    0.375    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:290(classify_failure)
+    12000    0.078    0.000    0.333    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:255(control)
+    48000    0.031    0.000    0.229    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:251(limited_pd)
+    12000    0.008    0.000    0.223    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:234(contact_flags)
+    12240    0.140    0.000    0.220    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:220(foot_contact_detail)
+    48012    0.030    0.000    0.193    0.000 D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\numpy\_core\fromnumeric.py:2241(clip)
+    49440    0.048    0.000    0.168    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:241(site_margin)
+    48012    0.031    0.000    0.164    0.000 D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\numpy\_core\fromnumeric.py:51(_wrapfunc)
+    48012    0.044    0.000    0.130    0.000 D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\numpy\_core\fromnumeric.py:41(_wrapit)
+    12000    0.109    0.000    0.109    0.000 {built-in method mujoco._functions.mj_step}
+   135120    0.090    0.000    0.090    0.000 {built-in method mujoco._functions.mj_name2id}
+    49448    0.031    0.000    0.084    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:84(foot_center_z_on_ramp)
+    24000    0.013    0.000    0.075    0.000 D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\numpy\_core\fromnumeric.py:2589(all)
+    48012    0.014    0.000    0.070    0.000 {method 'clip' of 'numpy.ndarray' objects}
+    24000    0.020    0.000    0.062    0.000 D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\numpy\_core\fromnumeric.py:89(_wrapreduction_any_all)
+    12240    0.018    0.000    0.060    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:223(<dictcomp>)
+    48012    0.056    0.000    0.056    0.000 D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\numpy\_core\_methods.py:99(_clip)
+    73688    0.026    0.000    0.050    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:80(ramp_height)
+    12000    0.027    0.000    0.046    0.000 D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\numpy\linalg\_linalg.py:2575(norm)
+    24000    0.034    0.000    0.034    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+   135144    0.022    0.000    0.030    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:71(gamma)
+   109464    0.015    0.000    0.015    0.000 {built-in method builtins.max}
+      240    0.003    0.000    0.012    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:314(make_row)
+   183148    0.010    0.000    0.010    0.000 {built-in method math.radians}
+    12000    0.010    0.000    0.010    0.000 {method 'dot' of 'numpy.ndarray' objects}
+        4    0.009    0.002    0.009    0.002 {built-in method mujoco._structs.from_xml_path}
+    73692    0.007    0.000    0.007    0.000 {built-in method math.tan}
+    12004    0.005    0.000    0.007    0.000 D:\Dunna\Documents\hw-1\v10_rolling_foot_biomimetic_gait\simulate_rolling_foot_gait_v10.py:88(smoothstep)
+
+

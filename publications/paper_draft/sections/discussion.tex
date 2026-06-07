@@ -1,0 +1,140 @@
+% Discussion Section
+
+\subsection{Negative Results and Their Value (V18-V20)}
+
+V18-V20 的三次 3D 化尝试均未达标，但这些\textbf{否定结果}（negative results）提供重要理论贡献：
+
+\subsubsection{Fundamental Limits of Passive Lateral Stability}
+
+\textbf{发现 1}：矢状面被动稳定与冠状面被动稳定\textit{无法同时实现}。
+
+证据：V18 被动弹簧实验表明，低刚度（$k_{\text{roll}} < 200$ N·m/rad）导致躯干滚转发散，通过矢状面耦合最终导致跌倒；高刚度（$\geq 500$ N·m/rad）等效于刚性 2D 约束，侧向自由度名存实亡。
+
+\textbf{物理解释}：矢状面准被动步态依赖能量周期性交换（重力势能 $\leftrightarrow$ 动能），要求躯干有一定自由度。冠状面被动稳定需要高刚度约束防止滚转，但高刚度破坏矢状面的自然摆动。这种\textit{自由度耦合矛盾}是内在的物理限制，不能通过参数调优解决。
+
+\subsubsection{Actuation Authority Gap}
+
+\textbf{发现 2}：单一髋外展执行器的修正能力（$<0.01$ m/step）远低于侧向漂移率（0.05-0.10 m/step），存在 5-10× 的\textbf{执行能力缺口}（actuation authority gap）。
+
+V19 测试了 6 种反馈策略（PD、hip\_y 反馈、hip\_roll 反馈等），最佳结果仅 7 次触地（目标 10）。根因分析：
+\begin{itemize}
+    \item 髋外展扭矩产生躯干倾斜，但不直接产生侧向地面反力（GRF）
+    \item 侧向 GRF 需要脚底位移（步宽调制）或足部侧向力矩
+    \item 单一髋外展关节缺乏足够的因果链路
+\end{itemize}
+
+\textbf{设计启示}：3D 准被动行走需要\textit{多执行器协同}（hip abduction + step width planning + ankle roll）或\textit{主动步宽控制}，复杂度远超 2D。
+
+\subsubsection{Control Complexity Underestimation}
+
+\textbf{发现 3}：步宽控制（V20）需要 3D 逆运动学（IK）、轨迹规划器和时序同步，控制复杂度被\textit{系统性低估}。
+
+V20 实现了基础架构（LIPM 规划器 + 3D IK），但控制律集成未完成。即使完成，基线不稳定（V19 仅 7 次触地）意味着在脆弱基础上堆叠复杂控制，失败风险高。
+
+\textbf{方法论反思}：渐进式验证（incremental validation）要求每层基础稳固后再添加新功能。V18-V20 的快速失败避免了后续版本的资源浪费，体现了决策门方法的价值。
+
+\subsection{Design Methodology: Decision Gates}
+
+本研究的 24 版本开发采用\textbf{决策门}方法论，每个关键节点设置明确的通过/失败标准：
+
+\textbf{V14c 决策门}（摆臂质量根因验证）：
+\begin{itemize}
+    \item \textbf{健康检查}：m=0.05 kg 成功率 3/36，与 V14b 一致 → 通过
+    \item \textbf{单调性检验}：m=0.01 kg 成功率 5/36 $>$ 3/36 → 通过
+    \item \textbf{子集验证}：m=0.01 成功格 $\subset$ V13.6.1 无摆臂域 → 通过
+    \item \textbf{判定}：摆臂质量为根因，V15 SEA 解封
+\end{itemize}
+
+\textbf{V16 决策门}（电机动力学破坏性）：
+\begin{itemize}
+    \item \textbf{L0 退化对照}：理想配置复现 V14c → 通过
+    \item \textbf{L1 健康检查}：mx64ar\_full 失败（0.19 m vs 4.62 m）→ 失败
+    \item \textbf{根因诊断}：$\tau_C$ 扫描揭示非单调共振失败带 → 发现新现象
+    \item \textbf{判定}：需 V13.7 摩擦补偿或更换电机
+\end{itemize}
+
+\textbf{V18-V20 决策门}（3D 化路线判定）：
+\begin{itemize}
+    \item V18：被动侧向稳定不存在 → 需主动控制
+    \item V19：髋外展单独不足（5-10× 缺口）→ 需步宽控制
+    \item V20：步宽控制未验证 + 基线不稳定 → 复杂度过高
+    \item \textbf{综合判定}：跳过 V21，直接进入 V22 硬件设计（2D），3D 作为未来工作
+\end{itemize}
+
+这种方法避免了"盲目堆功能"的陷阱，确保每层技术积累经过验证。
+
+\subsection{Floquet Analysis Discrepancy}
+
+V13.7 Floquet 分析出现理论与实际的矛盾：max$|\lambda| = 1.0008 > 1.0$（理论不稳定），但 20 s 仿真稳定运行（17 次触地）。
+
+\textbf{假设 1：极慢发散}
+
+收敛时间常数：
+\begin{equation}
+    \tau_{\text{diverge}} \approx \frac{T_{\text{gait}}}{\ln|\lambda|} = \frac{0.8}{\ln(1.0008)} \approx 1000 \text{ 步}
+\end{equation}
+
+20 s 仿真仅 $\sim$17 步，发散未显现。\textbf{验证方法}：运行 100 s（$\sim$125 步）长时程仿真，观察步态漂移。
+
+\textbf{假设 2：非线性稳定化}
+
+FSM 事件切换、能量反馈等非线性效应可能提供隐式稳定。Floquet 线性化假设（小扰动）在 FSM 的离散相位切换下可能不精确。
+
+\textbf{假设 3：中性稳定环}
+
+系统可能处于\textit{中性稳定}（neutrally stable）状态：有限时间内看似稳定，但长期存在无界漂移（如极限环半径缓慢增大）。
+
+\textbf{工程影响}：实际机器人可能在运行数百步后发散。建议：(1) 长时程实验验证（100 s+），(2) 监控极限环漂移，(3) 优化 FSM 参数使 max$|\lambda| < 0.95$。
+
+\subsection{Sim-to-Real Gap and Mitigation}
+
+从仿真到硬件的主要差距：
+
+\textbf{接触模型}：MuJoCo 使用弹性接触（soft contact），真实地面为刚性。V22 通过橡胶足垫（durometer 60A）减小冲击，匹配仿真的柔性接触。
+
+\textbf{摩擦不确定性}：V16/V13.7 假设 $\tau_C = 0.20$ N·m（MX-64AR datasheet），但实际值可能因磨损、润滑变化。V23 系统辨识提供测量方法，V24 域随机化（$\tau_C \in [0.15, 0.25]$ N·m）训练鲁棒控制器。
+
+\textbf{传感器延迟}：V17 假设确定性延迟 $\Delta t_{\text{contact}}$，实际延迟可能随机波动。硬件使用机械微动开关（响应时间 $<10$ ms）+ 时间戳同步降低不确定性。
+
+\textbf{控制频率抖动}：Raspberry Pi 在 Linux（非实时内核）下控制周期可能波动 $\pm 2$ ms。使用 PREEMPT\_RT 补丁或升级到 STM32（实时微控制器）。
+
+\subsection{Comparison with Literature}
+
+表 \ref{tab:comparison} 对比本研究与现有准被动行走机器人：
+
+\begin{table}[h]
+\centering
+\caption{准被动行走机器人对比}
+\label{tab:comparison}
+\small
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+研究 & CoT & 步数 & 摩擦补偿 & 3D 验证 \\
+\midrule
+Collins et al. \cite{Collins2005} & 0.20 & $\infty$ & SEA & 是 \\
+Wisse et al. \cite{Wisse2007} & 0.15 & $\sim$20 & 无 & 是 \\
+Hobbelen \& Wisse \cite{Hobbelen2008} & 0.18 & $\sim$50 & 无 & 是 \\
+\textbf{本研究（V13.7）} & \textbf{0.066} & \textbf{10} & \textbf{前馈} & \textbf{否}* \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+*V18-V20 探索 3D 但未达标，提供否定结果。
+
+\textbf{优势}：CoT 最低（0.066），前馈补偿简单且有效。
+
+\textbf{劣势}：步数较少（10 vs 文献 20-50），3D 未实现。
+
+\textbf{未来方向}：(1) 优化 FSM 参数提升长期稳定性（max$|\lambda| < 0.95$），(2) 硬件验证（V25），(3) 基于硬件数据重启 3D 探索。
+
+\subsection{Limitations}
+
+\textbf{L1. 仿真验证为主}：V01-V24 均为仿真实验，硬件验证需 V25（需 2-3 个月制造周期）。
+
+\textbf{L2. 2D 约束}：V22 使用侧向导轨，限制实际应用场景。3D 自由行走需解决 V18-V20 揭示的物理限制。
+
+\textbf{L3. Floquet 理论矛盾}：max$|\lambda| > 1.0$ 但实际稳定的现象未完全解释，需长时程实验和理论深化。
+
+\textbf{L4. 单一电机型号}：V16/V13.7 仅测试 Dynamixel MX-64AR，其他电机（如 EC-i 40, AX-12A）的 $\tau_C$ 共振特性未充分探索。
+
+\textbf{L5. 步数较少}：V13.7 仅 10 次触地（$\sim$4.6 m），文献中准被动机器人可行走 $\sim$10-20 m。优化 FSM 参数或增加能量反馈可能提升。

@@ -1,0 +1,57 @@
+{
+  "primary_verdict": "friction_compensation_validated",
+  "smoke_verdict": "friction_compensation_full_recovery",
+  "compensated_mx64ar": {
+    "success": true,
+    "alt_touchdowns": 10,
+    "forward_distance": 4.630269442622014,
+    "failure": "completed"
+  },
+  "no_comp_mx64ar": {
+    "success": false,
+    "failure": "fall_down"
+  },
+  "v16_verdict_upgrade": true,
+  "v16_original_verdict": "motor_dynamics_breaks_fsm_revisit_control",
+  "v16_new_verdict": "motor_dynamics_compatible_with_friction_compensation",
+  "cot_table_mass_eff_5.6kg": [
+    {
+      "tag": "compensated_mx64ar",
+      "success": true,
+      "forward_m": 4.630269442622014,
+      "CoT_mech": 0.06617831986367273,
+      "CoT_elec": 0.4459902848649815,
+      "coulomb_dissipation_j": 4.430537159243476
+    },
+    {
+      "tag": "no_comp_mx64ar",
+      "success": false,
+      "forward_m": 0.188837715623241,
+      "CoT_mech": 0.3267567108459995,
+      "CoT_elec": 4.367576584807837,
+      "coulomb_dissipation_j": 1.660268567314141
+    },
+    {
+      "tag": "compensated_ideal",
+      "success": true,
+      "forward_m": 4.616822907034934,
+      "CoT_mech": 0.06401575161254965,
+      "CoT_elec": 0.06401575161254965,
+      "coulomb_dissipation_j": 0.0
+    },
+    {
+      "tag": "compensated_ec_i40",
+      "success": true,
+      "forward_m": 4.654310919049164,
+      "CoT_mech": 0.06480506155769568,
+      "CoT_elec": 0.3492790032936075,
+      "coulomb_dissipation_j": 1.693565153412416
+    }
+  ],
+  "v22_implication": "mx64ar 可用（需前馈摩擦补偿），V17 状态估计前提恢复",
+  "next_steps": [
+    "V16 verdict 升级为 motor_dynamics_compatible_with_friction_compensation",
+    "V17 状态估计前提恢复，可启动 V17",
+    "V15.2 strict SEA + V13.7 补偿协同版可考虑"
+  ]
+}

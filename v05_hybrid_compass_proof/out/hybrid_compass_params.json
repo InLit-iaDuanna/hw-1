@@ -1,0 +1,27 @@
+{
+  "params": {
+    "slope_deg": 5.0,
+    "leg_length": 1.0,
+    "foot_radius": 0.035,
+    "step_angle_deg": 10.0,
+    "gravity": 9.81,
+    "stance_damping": 0.012,
+    "swing_damping": 0.035,
+    "passive_hip_stiffness": 0.42,
+    "collision_retention": 0.82,
+    "energy_gain_scale": 0.42,
+    "initial_speed": 0.28,
+    "initial_error": 0.34,
+    "steps": 18,
+    "dt": 0.002,
+    "samples_per_step": 80
+  },
+  "fixed_speed": 0.7155074656299915,
+  "steps": 18,
+  "valid_touchdowns": 18,
+  "final_speed_error": 0.000332090157235565,
+  "no_actuators": true,
+  "no_reward_function": true,
+  "proof_role": "hybrid dynamics plus Poincare return map",
+  "scipy_note": "scipy unavailable during implementation; numpy RK4 + event bisection used"
+}

@@ -1,0 +1,16 @@
+{
+  "slice": "B_slope_leg",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "slope_deg",
+    -1.0,
+    1.0
+  ],
+  "y": [
+    "leg_scale",
+    0.9,
+    1.1
+  ],
+  "title": "slope_deg vs leg_scale"
+}

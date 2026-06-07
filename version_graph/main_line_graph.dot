@@ -1,0 +1,210 @@
+digraph hw1_mainline {
+    rankdir=TB;
+    node [fontname="Microsoft YaHei", fontsize=11, style="filled,rounded"];
+    edge [fontname="Microsoft YaHei", fontsize=9];
+    bgcolor="#FAFAFA";
+
+    "V05" [
+        label="V05: 混合动力学证明版\n纯被动极限环证明主证据\n纯被动: 是\n证明: 混合动力学\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V06" [
+        label="V06: MVE 作业表达版\n机制转译为最小机械结构\n纯被动: 展示层\n用途: PPT 主图\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V10" [
+        label="V10: 足踝滚动仿生步态\n加入被动踝关节和滚动足，PD baseline\n成功率: 16.7% (切片C)\nCoT: ~0.08\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V11" [
+        label="V11: 地形与扰动鲁棒性\n小幅地形成功，强扰动失败边界\n鲁棒性: 小幅通过\n扰动: 强扰动失败\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V12" [
+        label="V12: 能量与 CoT 分析\n能量输入、CoT、碰撞损耗和收敛指标\n分析: 能量/Floquet\n用途: 附录\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V13" [
+        label="V13: 参数敏感性图谱\n设计容差、成功率和失败模式边界\n分析: 参数容差\n用途: 附录\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V13.6" [
+        label="V13.6: 事件驱动 FSM hip 控制律\n4 phase FSM 显式时序，解构 V10 bang-bang\n成功率: 11.1% (切片C)\nforward: 4.86m\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V13.6.1" [
+        label="V13.6.1: FSM phase 参数精调\n独立搜索每 phase 参数，部分恢复\n成功率: 13.9% (切片C)\n切片A: 11.1%\n",
+        shape=box,
+        fillcolor="#E3F2FD",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V14c" [
+        label="V14c: arm_mass 减重扫描\n确认 arm_mass 为根因，V15 解封\nm=0.05: 3/36\nm=0.01: 5/36\n",
+        shape=box,
+        fillcolor="#FFF3E0",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V16" [
+        label="V16: L1 电机动力学\n发现 τ_C 与 FSM 非单调共振\nmx64ar: 失败 (0.19m)\nτ_C_spec: 0.20 (失败带)\n",
+        shape=box,
+        fillcolor="#FFF3E0",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V13.7" [
+        label="V13.7: 前馈摩擦补偿\nτ_comp 精确对消库仑摩擦，完全恢复\nmx64ar: 4.63m PASS\nτ_C扫描: 10/10 全通过\n",
+        shape=box,
+        fillcolor="#FFF3E0",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V17" [
+        label="V17: 传感器闭环状态估计\n编码器量化+Kalman+FK，阶段2闭环\nnoise=1.0: 4.67m PASS\nrmse_vx: 0.079\n",
+        shape=box,
+        fillcolor="#FFF3E0",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V22" [
+        label="V22: 硬件设计 v1\n基于 V13.7+V17 的 2D 样机完整设计\n电机: MX-64AR×4\n预算: 6500-8000元\n",
+        shape=box,
+        fillcolor="#E8F5E9",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V23" [
+        label="V23: 系统辨识\n从硬件数据反推物理参数\n辨识: 摩擦/惯量/弹簧\n误差: <10%\n",
+        shape=box,
+        fillcolor="#E8F5E9",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V24" [
+        label="V24: Sim-to-real 迁移\n域随机化和鲁棒控制器设计\n随机化: 质量±10%/摩擦1.0-1.6\n目标: 成功率>50%\n",
+        shape=box,
+        fillcolor="#E8F5E9",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+    "V25" [
+        label="V25: 实地行走\n真实硬件地面行走测试\n状态: 等待硬件制作\n周期: 2-3个月\n",
+        shape=box,
+        fillcolor="#E8F5E9",
+        color="#D32F2F",
+        penwidth=2.5
+    ];
+
+    "V05" -> "V06" [
+        label="转译：理论到机械结构",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V10" -> "V11" [
+        label="分析：地形扰动鲁棒性",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V10" -> "V12" [
+        label="分析：能量 CoT Floquet",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V10" -> "V13" [
+        label="分析：参数敏感性图谱",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V13.6" -> "V13.6.1" [
+        label="优化：phase参数精调",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V13.6.1" -> "V14c" [
+        label="探索：arm_mass减重扫描",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V14c" -> "V16" [
+        label="并行：L1电机动力学 (不依赖V15)",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V16" -> "V13.7" [
+        label="修复：前馈摩擦补偿",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V13.6.1" -> "V13.7" [
+        label="合并：FSM + 摩擦补偿",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V13.7" -> "V17" [
+        label="扩展：传感器闭环估计",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V17" -> "V22" [
+        label="应用：2D主线硬件设计",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V13.7" -> "V22" [
+        label="应用：摩擦补偿控制律",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V22" -> "V23" [
+        label="支持：系统辨识方法",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V23" -> "V24" [
+        label="支持：Sim-to-real策略",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+    "V24" -> "V25" [
+        label="实施：实地行走",
+        style=solid,
+        penwidth=2.0,
+        color="#1976D2"
+    ];
+}

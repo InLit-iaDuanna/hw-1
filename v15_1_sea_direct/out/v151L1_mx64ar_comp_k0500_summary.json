@@ -1,0 +1,19 @@
+{
+  "motor_preset": "mx64ar",
+  "compensate_friction": true,
+  "k_sea": 500.0,
+  "success": true,
+  "alternating_touchdowns": 11,
+  "forward_distance": 4.895667186471873,
+  "simulated_time": 11.999,
+  "failure": "completed",
+  "active_input_energy_j": 53.6164795576959,
+  "spring_pe_max_J": 0.21593757781190928,
+  "q_link_max_left_deg": 1.6502232528095924,
+  "q_link_max_right_deg": 1.6021777289496313,
+  "hip_saturation_count": 0,
+  "knee_saturation_count": 0,
+  "coulomb_dissipation_J": 6.9390145950451645,
+  "tau_C_hip_Nm": 0.201,
+  "tau_sat_hip_Nm": 5.988459999999999
+}

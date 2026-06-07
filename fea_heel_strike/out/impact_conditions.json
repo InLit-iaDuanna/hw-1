@@ -1,0 +1,44 @@
+{
+  "source": "V10 rolling_foot_biomimetic_gait steady-state heel-strikes",
+  "effective_mass_kg": 2.5,
+  "heel_radius_m": 0.04,
+  "ground_friction": 1.35,
+  "impacts": [
+    {
+      "time": 6.264,
+      "foot": "left",
+      "v_heel_x": 1.09056,
+      "v_heel_z": -0.76271,
+      "hip_angle_rad": -0.33982,
+      "knee_angle_rad": 0.04802
+    },
+    {
+      "time": 7.494,
+      "foot": "right",
+      "v_heel_x": 1.09328,
+      "v_heel_z": -0.76458,
+      "hip_angle_rad": -0.33976,
+      "knee_angle_rad": 0.04778
+    },
+    {
+      "time": 8.718,
+      "foot": "left",
+      "v_heel_x": 1.09022,
+      "v_heel_z": -0.75703,
+      "hip_angle_rad": -0.33992,
+      "knee_angle_rad": 0.04621
+    },
+    {
+      "time": 9.942,
+      "foot": "right",
+      "v_heel_x": 1.09141,
+      "v_heel_z": -0.7515,
+      "hip_angle_rad": -0.34021,
+      "knee_angle_rad": 0.04467
+    }
+  ],
+  "average_v_heel_z_m_s": -0.75896,
+  "average_v_heel_x_m_s": 1.09137,
+  "kinetic_energy_J": 0.72,
+  "peak_force_estimate_N": 379.5
+}

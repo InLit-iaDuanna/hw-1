@@ -1,0 +1,158 @@
+{
+  "v10_reference": {
+    "config": "V10_PD_baseline",
+    "max_abs_floquet": 0.944,
+    "alternations": 19,
+    "forward_distance": 8.6,
+    "E_star_J": 52.66,
+    "E_std_J": 0.53
+  },
+  "v13_7_results": [
+    {
+      "config": "v13_7_fsm_ideal",
+      "duration": 20.0,
+      "success": true,
+      "alternations": 17,
+      "forward_distance": 8.645206322386459,
+      "n_section_points": 17,
+      "fixed_point": [
+        -0.030240865096653625,
+        0.5542260023364843,
+        0.03091090448534319,
+        0.35101762465397185
+      ],
+      "eigvals_real": [
+        -1.0007657666464524,
+        0.28394533254201415,
+        0.1444795647246033,
+        -0.06050295565492762
+      ],
+      "eigvals_imag": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "eigvals_abs": [
+        1.0007657666464524,
+        0.28394533254201415,
+        0.1444795647246033,
+        0.06050295565492762
+      ],
+      "max_abs_floquet": 1.0007657666464524,
+      "n_pairs_used": 14,
+      "E_star_J": 53.70297416618242,
+      "E_std_J": 0.5622846095796393,
+      "mass_kg": 5.1,
+      "motor_hip": "ideal_v14c_degenerate",
+      "motor_knee": "ideal_v14c_degenerate",
+      "friction_compensation": false,
+      "state_keys": [
+        "right_hip",
+        "right_hip_vel",
+        "right_knee",
+        "right_knee_vel"
+      ]
+    },
+    {
+      "config": "v13_7_fsm_mx64ar_comp",
+      "duration": 20.0,
+      "success": true,
+      "alternations": 17,
+      "forward_distance": 8.610307293323721,
+      "n_section_points": 17,
+      "fixed_point": [
+        -0.02905205323372087,
+        0.6048854039401251,
+        0.03146347874769224,
+        0.258009665920059
+      ],
+      "eigvals_real": [
+        -1.000778355273725,
+        0.624270155788264,
+        0.3645109656773812,
+        -0.02025596309725037
+      ],
+      "eigvals_imag": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "eigvals_abs": [
+        1.000778355273725,
+        0.624270155788264,
+        0.3645109656773812,
+        0.02025596309725037
+      ],
+      "max_abs_floquet": 1.000778355273725,
+      "n_pairs_used": 14,
+      "E_star_J": 53.70026241933078,
+      "E_std_J": 0.5568718030399871,
+      "mass_kg": 5.1,
+      "motor_hip": "Dynamixel MX-64AR @12V",
+      "motor_knee": "Dynamixel MX-64AR @12V",
+      "friction_compensation": true,
+      "state_keys": [
+        "right_hip",
+        "right_hip_vel",
+        "right_knee",
+        "right_knee_vel"
+      ]
+    },
+    {
+      "config": "v13_7_fsm_mx64ar_nocomp",
+      "duration": 20.0,
+      "success": false,
+      "alternations": 4,
+      "forward_distance": 0.188837715623241,
+      "n_section_points": 4,
+      "fixed_point": [
+        -0.2650566747487998,
+        0.1981856644650719,
+        0.15786958471631737,
+        -0.2231743739314947
+      ],
+      "eigvals_real": [
+        1.1102230246251565e-16,
+        -0.9999999999999996,
+        1.039596522643443e-18,
+        -3.3753610876299817e-17
+      ],
+      "eigvals_imag": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "eigvals_abs": [
+        1.1102230246251565e-16,
+        0.9999999999999996,
+        1.039596522643443e-18,
+        3.3753610876299817e-17
+      ],
+      "max_abs_floquet": 0.9999999999999996,
+      "n_pairs_used": 1,
+      "E_star_J": 51.38745134798075,
+      "E_std_J": 2.093785812925066,
+      "mass_kg": 5.1,
+      "motor_hip": "Dynamixel MX-64AR @12V",
+      "motor_knee": "Dynamixel MX-64AR @12V",
+      "friction_compensation": false,
+      "state_keys": [
+        "right_hip",
+        "right_hip_vel",
+        "right_knee",
+        "right_knee_vel"
+      ]
+    }
+  ],
+  "comparison": {
+    "v10_pd_max_lambda": 0.944,
+    "v13_7_ideal_max_lambda": 1.0007657666464524,
+    "v13_7_comp_max_lambda": 1.000778355273725,
+    "v13_7_nocomp_max_lambda": 0.9999999999999996,
+    "delta_ideal_vs_v10": 0.0567657666464525,
+    "delta_comp_vs_ideal": 1.2588627272602793e-05
+  }
+}

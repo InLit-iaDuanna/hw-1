@@ -1,0 +1,11 @@
+{
+  "verdict": "lateral_instability_quantified",
+  "summary": "V19 在无扰动下仅 7 alternations，任何小扰动都会显著缩短存活时间",
+  "findings": {
+    "init_roll_tolerance_deg": "< 1.0",
+    "baseline_alternations": 3,
+    "critical_impulse_n": "< 5.0",
+    "wind_tolerance_std_n": "< 1.0"
+  },
+  "conclusion": "V19 的侧向稳定裕度极小，初始条件容差 < 2°，任何实际环境中的小扰动都会导致快速失败。证据支持'放弃 3D 化'的决策。"
+}

@@ -1,0 +1,7 @@
+# 与 V10 / V13.5 / V14 同档，直接复用主 venv 的包
+mujoco>=3.1
+numpy
+matplotlib
+Pillow
+imageio
+imageio-ffmpeg

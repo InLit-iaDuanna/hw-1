@@ -1,0 +1,20 @@
+{
+  "version": "V19",
+  "verdict": "hip_abd_insufficient_for_lateral_stabilization",
+  "findings": {
+    "drift_origin": "systematic +Y accumulation from alternating swing-leg lateral impulses (left-stance pushes CoM right, right-stance pushes left, but not symmetric due to initial phase asymmetry)",
+    "abd_control_limitation": "hip abd torques create body tilt moment but negligible net lateral GRF when both feet near vertical -- lateral CoM force requires foot displacement, not joint torque",
+    "strategies_tested": [
+      "simple PD to 0",
+      "hip_y feedback (both signs)",
+      "hip_roll feedback",
+      "combined hip_y+roll",
+      "symmetric bilateral",
+      "lean-into-swing-side"
+    ],
+    "best_result": "7 alternations / 2.97s with corrected hip_y sign -- insufficient for 12s/10-alt target",
+    "critical_finding": "lateral drift rate ~0.05-0.10 m/step, abd torque creates at most ~0.01m/step lateral correction -- 5-10x insufficient"
+  },
+  "recommendation": "V20 step-width control required: place swing foot LATERALLY to shift support polygon under CoM each step",
+  "v21_decision_gate": "active_coronal_stabilization_confirmed_required -- hip_abd_alone_insufficient -- need_step_placement_control"
+}

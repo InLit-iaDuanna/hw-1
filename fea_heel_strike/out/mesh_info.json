@@ -1,0 +1,20 @@
+{
+  "model": "HeelStrike_V10_Axisymmetric",
+  "elements": {
+    "CAX4R": 760,
+    "CAX3": 40
+  },
+  "nodes": 861,
+  "parameters": {
+    "R_heel_m": 0.04,
+    "V_impact_m_s": 0.759,
+    "M_eff_kg": 2.5,
+    "material": "PLA",
+    "E_Pa": 3500000000.0,
+    "nu": 0.36,
+    "yield_Pa": 60000000.0,
+    "density_kg_m3": 1240.0,
+    "friction": 1.35,
+    "t_analysis_s": 0.01
+  }
+}

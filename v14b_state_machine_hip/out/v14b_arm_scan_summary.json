@@ -1,0 +1,40 @@
+{
+  "n_total": 35,
+  "n_success": 14,
+  "success_rate": 0.4,
+  "best_arm_mass": 0.001,
+  "best_arm_length": 0.5,
+  "best_score": 5394.114505717091,
+  "scan_axes": {
+    "arm_mass": [
+      0.001,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.45,
+      0.6
+    ],
+    "arm_length": [
+      0.2,
+      0.3,
+      0.4,
+      0.5,
+      0.6
+    ]
+  },
+  "controller": "v13_6_fsm_on_v14_passive_arms",
+  "fixed_arm_damping": 0.02,
+  "fixed_arm_stiffness": 0.0,
+  "critical_row_arm_mass_0_05": {
+    "success": 5,
+    "total": 5,
+    "verdict": "pass"
+  },
+  "v13_6_prereq": {
+    "slice_C_success": "4/36",
+    "slice_C_rate_pct": 11.11111111111111,
+    "verdict": "tier_B_partial",
+    "note": "Exploratory V14b回流; not a strong pass over V10."
+  }
+}

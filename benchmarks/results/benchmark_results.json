@@ -1,0 +1,101 @@
+[
+  {
+    "version": "V10",
+    "success": false,
+    "forward_distance": 0.11822720979652274,
+    "alternations": 2,
+    "simulation_time": 0.25551295280456543,
+    "realtime_factor": 46.964350997808154,
+    "cot": 0.0,
+    "mechanical_work": 0.5448625928476306,
+    "positive_input_energy": 2.047053284169435,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "stuck",
+    "extra_metrics": {}
+  },
+  {
+    "version": "V13.6",
+    "success": false,
+    "forward_distance": 1.3500016218181872,
+    "alternations": 2,
+    "simulation_time": 0.1475064754486084,
+    "realtime_factor": 81.35236072521323,
+    "cot": 0.0,
+    "mechanical_work": -8.236937343356738,
+    "positive_input_energy": 1.402270547226236,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "fall_down",
+    "extra_metrics": {
+      "phase_durations": {}
+    }
+  },
+  {
+    "version": "V13.7",
+    "success": false,
+    "forward_distance": 1.389746522267594,
+    "alternations": 2,
+    "simulation_time": 0.26401281356811523,
+    "realtime_factor": 45.45233936876326,
+    "cot": 0.0,
+    "mechanical_work": -10.977446169179318,
+    "positive_input_energy": 0.0,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "fall_down",
+    "extra_metrics": {
+      "coulomb_dissipation": 0.0
+    }
+  },
+  {
+    "version": "V14c",
+    "success": false,
+    "forward_distance": 1.3864756813020647,
+    "alternations": 2,
+    "simulation_time": 0.2092726230621338,
+    "realtime_factor": 57.34147077822576,
+    "cot": 0.0,
+    "mechanical_work": -10.794203778788885,
+    "positive_input_energy": 1.925989776167311,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "fall_down",
+    "extra_metrics": {}
+  },
+  {
+    "version": "V16",
+    "success": false,
+    "forward_distance": 1.3837510430550022,
+    "alternations": 2,
+    "simulation_time": 0.23901152610778809,
+    "realtime_factor": 50.20678372886631,
+    "cot": 0.0,
+    "mechanical_work": -11.453589728129886,
+    "positive_input_energy": 0.0,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "fall_down",
+    "extra_metrics": {
+      "motor_saturation_rate": 0.0
+    }
+  },
+  {
+    "version": "V17",
+    "success": false,
+    "forward_distance": 1.3858676000820884,
+    "alternations": 2,
+    "simulation_time": 0.5066449642181396,
+    "realtime_factor": 23.68522505403471,
+    "cot": 0.0,
+    "mechanical_work": 0.0,
+    "positive_input_energy": 0.0,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "fall_down",
+    "extra_metrics": {
+      "estimation_error_vx": 0.0,
+      "estimation_error_hip_x": 0.0
+    }
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "slice": "planC_kE_Estar",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "k_E",
+    3.0,
+    15.0
+  ],
+  "y": [
+    "E_star",
+    50.0,
+    56.0
+  ],
+  "title": "[plan C] k_E vs E_star (baseline geometry)"
+}

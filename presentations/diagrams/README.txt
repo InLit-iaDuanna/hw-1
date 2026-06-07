@@ -1,0 +1,4 @@
+diagrams
+========
+
+Editable diagrams (SVG)

@@ -1,0 +1,20 @@
+{
+  "analysis": "HeelStrike_V10_Axisymmetric_Explicit",
+  "status": "COMPLETED",
+  "material": "PLA",
+  "peak_contact_force_N": 7804.67,
+  "peak_force_time_ms": 0.925,
+  "peak_von_mises_Pa": 60419020.0,
+  "peak_von_mises_MPa": 60.42,
+  "safety_factor_yield": 0.99,
+  "peak_PEEQ": 0.017526,
+  "plastic_deformation": true,
+  "energy_balance": {
+    "ALLKE": 0.6318930983543396,
+    "ALLIE": 0.18225570023059845,
+    "ALLPD": 0.14095091819763184,
+    "ALLSE": 0.017463142052292824,
+    "ETOTAL": 0.8157070279121399
+  },
+  "v22_design_verdict": "PLA FAILS (SF=0.99) - use AL6061 or redesign"
+}

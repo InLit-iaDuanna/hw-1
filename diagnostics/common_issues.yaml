@@ -1,0 +1,365 @@
+# hw-1 常见问题知识库
+# 用于智能错误诊断系统
+
+simulation_errors:
+  - error_type: "simulation_nan"
+    symptoms:
+      - "NaN in joint positions"
+      - "NaN in joint velocities"
+      - "integration error"
+      - "qpos contains NaN"
+      - "qvel contains NaN"
+    causes:
+      - "timestep too large (dt > 0.002)"
+      - "initial conditions unstable (hip height < 0.8 m)"
+      - "contact stiffness too low"
+      - "excessive control torque causing instability"
+      - "collision penetration"
+    solutions:
+      - action: "Reduce timestep"
+        details: "降低 dt 从 0.002 到 0.001 或 0.0005"
+        code: "model.opt.timestep = 0.001"
+      - action: "Check initial hip height"
+        details: "确保初始髋关节高度 > 0.8 m"
+        code: "data.qpos[hip_y_idx] = 0.95"
+      - action: "Increase contact stiffness"
+        details: "提高地面刚度到 1e7 或更高"
+        code: "<geom name='floor' solimp='0.9 0.95 0.001' solref='0.002 1'/>"
+      - action: "Limit control torque"
+        details: "检查控制器输出是否超限"
+        code: "ctrl = np.clip(ctrl, -tau_max, tau_max)"
+    references:
+      - "V10 README section 3.2"
+      - "common/model_loader.py validate_model()"
+    severity: "critical"
+
+  - error_type: "fall_down"
+    symptoms:
+      - "hip height < 0.5 m"
+      - "trunk pitch > 45 degrees"
+      - "robot falls to ground"
+      - "failure = 'fall_down'"
+    causes:
+      - "insufficient hip torque during stance"
+      - "phase detection timing error"
+      - "FSM parameters not tuned"
+      - "arm mass too heavy (> 0.05 kg)"
+      - "motor friction in failure band (0.013-0.20 N·m)"
+    solutions:
+      - action: "Increase hip stance torque"
+        details: "提高 stance_late_tau_max 从 3.0 到 4.0 N·m"
+        code: "stance_late_tau_max = 4.0"
+      - action: "Check FSM phase transitions"
+        details: "验证触地检测延迟 < 15 ms"
+        code: "sensor_lag = 0.005  # 5 ms"
+      - action: "Reduce arm mass"
+        details: "将 arm_mass 从 0.05 降至 0.01 kg (V14c)"
+        code: "<body name='left_arm'><inertial mass='0.01' .../></body>"
+      - action: "Apply friction compensation"
+        details: "添加前馈库仑摩擦补偿 (V13.7)"
+        code: "tau_comp = tau_C_eff * sign_smooth(qd_joint, eps=0.01)"
+    references:
+      - "V14c arm mass reduction"
+      - "V13.7 friction compensation"
+      - "V16 motor dynamics failure analysis"
+    severity: "high"
+
+  - error_type: "fly_away"
+    symptoms:
+      - "hip height > 3.0 m"
+      - "robot flies away"
+      - "qpos values explode"
+      - "failure = 'fly_away'"
+    causes:
+      - "penetration causing explosive contact force"
+      - "contact parameters misconfigured"
+      - "integrator instability"
+      - "excessive swing thrust torque"
+    solutions:
+      - action: "Fix contact penetration"
+        details: "增加地面刚度和阻尼"
+        code: "solimp='0.95 0.99 0.001' solref='0.001 1'"
+      - action: "Reduce swing thrust"
+        details: "降低 swing_thrust_tau_max"
+        code: "swing_thrust_tau_max = 3.0  # from 5.0"
+      - action: "Enable soft contacts"
+        details: "使用更柔和的接触模型"
+        code: "model.opt.integrator = mujoco.mjtIntegrator.mjINT_IMPLICITFAST"
+    references:
+      - "V10 contact parameter tuning"
+    severity: "critical"
+
+  - error_type: "penetration"
+    symptoms:
+      - "excessive contact force"
+      - "geom overlap detected"
+      - "foot sinks into ground"
+      - "failure = 'penetration'"
+    causes:
+      - "contact stiffness too low"
+      - "timestep too large for contact"
+      - "collision geometry overlap"
+    solutions:
+      - action: "Increase contact stiffness"
+        details: "提高 solimp 第一个参数"
+        code: "solimp='0.98 0.99 0.001'"
+      - action: "Reduce timestep"
+        details: "对于硬接触使用更小 dt"
+        code: "dt = 0.0005"
+      - action: "Check collision geometry"
+        details: "确保几何体没有初始重叠"
+        code: "mujoco.mj_forward(model, data); check data.contact"
+    references:
+      - "MuJoCo contact documentation"
+    severity: "medium"
+
+  - error_type: "no_alternation"
+    symptoms:
+      - "only one foot touches ground"
+      - "robot stuck in stance"
+      - "alternation count = 0 or 1"
+      - "failure = 'insufficient_alternations'"
+    causes:
+      - "swing retraction timing wrong"
+      - "knee joint locked"
+      - "insufficient swing thrust"
+      - "FSM stuck in one phase"
+    solutions:
+      - action: "Increase swing thrust energy"
+        details: "提高 swing_thrust_k_E 参数"
+        code: "swing_thrust_k_E = 7.5  # V13.6.1 best"
+      - action: "Check knee joint freedom"
+        details: "确保膝关节没有被约束"
+        code: "knee_range = '0 180'  # degrees"
+      - action: "Verify phase detection"
+        details: "打印 FSM phase transitions"
+        code: "print(f't={t:.3f} phase={current_phase} contact={left_contact, right_contact}')"
+    references:
+      - "V13.6 FSM phase tuning"
+    severity: "high"
+
+parameter_errors:
+  - error_type: "invalid_timestep"
+    symptoms:
+      - "ValueError: invalid timestep"
+      - "dt <= 0 or dt > 0.01"
+    causes:
+      - "timestep set to negative or too large value"
+    solutions:
+      - action: "Set valid timestep range"
+        details: "MuJoCo 推荐 dt ∈ [0.0001, 0.005]"
+        code: "model.opt.timestep = 0.002"
+    references:
+      - "common/model_loader.py validate_model()"
+    severity: "critical"
+
+  - error_type: "invalid_initial_height"
+    symptoms:
+      - "robot spawns underground"
+      - "immediate collision"
+      - "hip_height < 0.5"
+    causes:
+      - "initial qpos hip_y too low"
+    solutions:
+      - action: "Set proper initial height"
+        details: "髋关节高度应为腿长 * 1.0"
+        code: "data.qpos[1] = 0.95  # hip_y for leg_length=1.0"
+    references:
+      - "V10 initial conditions"
+    severity: "high"
+
+  - error_type: "motor_friction_failure_band"
+    symptoms:
+      - "motor with friction fails but ideal motor works"
+      - "tau_C in range [0.013, 0.20] N·m"
+      - "non-monotonic behavior"
+    causes:
+      - "FSM-motor resonant coupling"
+      - "Coulomb friction in critical range"
+    solutions:
+      - action: "Apply friction compensation"
+        details: "使用 V13.7 前馈补偿"
+        code: "tau_out = tau_fsm + tau_C_eff * sign_smooth(qd, eps=0.01)"
+      - action: "Select motor outside failure band"
+        details: "选择 tau_C < 0.013 或 tau_C >= 0.27 的电机"
+        code: "# Use low-friction joint bearings"
+    references:
+      - "V16 motor dynamics analysis"
+      - "V13.7 friction compensation"
+    severity: "high"
+
+  - error_type: "arm_mass_too_heavy"
+    symptoms:
+      - "passive arms cause instability"
+      - "arm_mass >= 0.05 kg fails"
+      - "V14 passive arms only work at 0.001 kg"
+    causes:
+      - "arm inertia couples with hip FSM"
+      - "control law not designed for arm dynamics"
+    solutions:
+      - action: "Reduce arm mass"
+        details: "降至 0.01 kg 或更轻"
+        code: "<inertial mass='0.01' .../>"
+      - action: "Use FSM control"
+        details: "使用 V14b FSM 而非 V10 PD"
+        code: "# V13.6.1 FSM handles arm dynamics better"
+    references:
+      - "V14 passive arms failure"
+      - "V14c arm mass reduction"
+    severity: "medium"
+
+environment_errors:
+  - error_type: "mujoco_not_found"
+    symptoms:
+      - "ModuleNotFoundError: No module named 'mujoco'"
+      - "import mujoco fails"
+    causes:
+      - "mujoco package not installed"
+      - "wrong virtual environment"
+    solutions:
+      - action: "Activate venv and install"
+        details: "使用 .venv-mujoco 环境"
+        code: ".venv-mujoco\\Scripts\\Activate.ps1; pip install mujoco"
+      - action: "Verify installation"
+        details: "检查 mujoco 版本"
+        code: "python -c 'import mujoco; print(mujoco.__version__)'"
+    references:
+      - "项目 README 环境配置"
+    severity: "critical"
+
+  - error_type: "model_file_not_found"
+    symptoms:
+      - "FileNotFoundError: model XML not found"
+      - "path does not exist"
+    causes:
+      - "incorrect file path"
+      - "model file not generated"
+    solutions:
+      - action: "Check file path"
+        details: "使用绝对路径"
+        code: "xml_path = Path(__file__).parent / 'model.xml'"
+      - action: "Generate model first"
+        details: "运行模型生成脚本"
+        code: "python generate_model.py"
+    references:
+      - "common/model_loader.py"
+    severity: "high"
+
+  - error_type: "common_import_error"
+    symptoms:
+      - "ModuleNotFoundError: No module named 'common'"
+      - "import common.* fails"
+    causes:
+      - "common/ not in PYTHONPATH"
+      - "running from wrong directory"
+    solutions:
+      - action: "Add project root to path"
+        details: "将项目根目录添加到 sys.path"
+        code: "import sys; sys.path.insert(0, str(Path(__file__).parent.parent))"
+      - action: "Run from project root"
+        details: "从 hw-1/ 目录运行"
+        code: "cd D:\\Dunna\\Documents\\hw-1"
+    references:
+      - "common/README.md"
+    severity: "medium"
+
+data_errors:
+  - error_type: "csv_corrupted"
+    symptoms:
+      - "pandas read_csv fails"
+      - "CSV file corrupted"
+      - "ValueError: could not convert string to float"
+    causes:
+      - "incomplete file write"
+      - "simulation interrupted"
+    solutions:
+      - action: "Re-run simulation"
+        details: "删除损坏文件并重新生成"
+        code: "rm corrupted.csv; python simulate.py"
+      - action: "Check file integrity"
+        details: "验证最后一行完整"
+        code: "tail -n 1 output.csv"
+    references:
+      - "common/data_io.py"
+    severity: "low"
+
+  - error_type: "json_schema_mismatch"
+    symptoms:
+      - "KeyError: expected field missing"
+      - "JSON structure changed"
+    causes:
+      - "version mismatch"
+      - "incomplete migration"
+    solutions:
+      - action: "Check JSON schema version"
+        details: "验证 JSON 格式版本"
+        code: "with open('data.json') as f: data = json.load(f); print(data.get('schema_version'))"
+      - action: "Migrate data format"
+        details: "运行迁移脚本"
+        code: "python migrate_data_format.py"
+    references:
+      - "common/data_io.py"
+    severity: "medium"
+
+performance_errors:
+  - error_type: "simulation_too_slow"
+    symptoms:
+      - "simulation runs slower than real-time"
+      - "frame rate < 30 Hz"
+    causes:
+      - "timestep too small"
+      - "too many contacts"
+      - "complex terrain"
+    solutions:
+      - action: "Increase timestep"
+        details: "在稳定范围内增大 dt"
+        code: "dt = 0.002  # from 0.001"
+      - action: "Simplify terrain"
+        details: "减少地形复杂度"
+        code: "num_terrain_points = 128  # from 512"
+      - action: "Disable rendering"
+        details: "关闭可视化加速计算"
+        code: "render = False"
+    references:
+      - "benchmarks/"
+    severity: "low"
+
+topology_errors:
+  - error_type: "pea_breaks_fsm"
+    symptoms:
+      - "parallel elastic actuator (PEA) causes all simulations to fail"
+      - "k > 0 leads to fall_down"
+      - "k = 0 works but k = 10 fails"
+    causes:
+      - "PEA parallel stiffness couples with FSM control"
+      - "unmodeled spring torque τ = -k·q interferes with control law"
+    solutions:
+      - action: "Use SEA instead of PEA"
+        details: "切换到串联弹性执行器拓扑"
+        code: "# See V15.1 SEA direct-drive implementation"
+      - action: "Remove parallel spring"
+        details: "设置 k = 0 或移除 tendon"
+        code: "# Remove <tendon> or set stiffness='0'"
+    references:
+      - "V15.0 PEA failure analysis"
+      - "v15_1_sea_direct/"
+    severity: "critical"
+
+  - error_type: "sea_pratt_loop_conflict"
+    symptoms:
+      - "SEA with Pratt inner loop fails"
+      - "FSM receives wrong joint angles"
+      - "spring deflection very small (~0.05 deg)"
+    causes:
+      - "Pratt position inner loop conflicts with FSM torque control"
+      - "FSM fed relative angle instead of absolute angle"
+    solutions:
+      - action: "Use direct-drive SEA"
+        details: "移除 Pratt 内环，FSM 直接控制电机"
+        code: "# V15.1 direct-drive: FSM -> motor joint"
+      - action: "Feed absolute angle to FSM"
+        details: "修正 FSM 输入为 q_motor + q_link"
+        code: "q_abs = data.qpos[motor_addr] + data.qpos[link_addr]"
+    references:
+      - "V15.2 failure → V15.1 success"
+    severity: "high"

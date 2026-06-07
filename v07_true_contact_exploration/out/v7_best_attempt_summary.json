@@ -1,0 +1,42 @@
+{
+  "params": {
+    "slope_deg": 3.5,
+    "foot_radius": 0.04,
+    "friction": 0.9,
+    "hip_mass": 4.5,
+    "initial_vx": 0.15,
+    "knee_limit_deg": 45.0,
+    "duration": 8.0,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.018,
+    "joint_damping": 0.012,
+    "release_phase": 0.04,
+    "swing_foot_x": -0.22,
+    "swing_foot_clearance": 0.1,
+    "swing_hip_vel": 0.25,
+    "swing_knee_vel": -0.2
+  },
+  "score": 287.3362130008311,
+  "alternating_touchdowns": 2,
+  "contact_events": [
+    {
+      "time": 0.035,
+      "foot": "left"
+    },
+    {
+      "time": 0.269,
+      "foot": "right"
+    },
+    {
+      "time": 1.5090000000000001,
+      "foot": "left"
+    }
+  ],
+  "forward_distance": 1.2075673889350607,
+  "simulated_time": 1.824,
+  "failure": "fall_down",
+  "no_actuators": true
+}

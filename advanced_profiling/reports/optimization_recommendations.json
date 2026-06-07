@@ -1,0 +1,219 @@
+{
+  "total_optimizations": 7,
+  "by_category": {
+    "parallel": 1,
+    "hotspot": 4,
+    "memory": 1,
+    "complexity": 1
+  },
+  "by_impact": {
+    "high": 1,
+    "medium": 4,
+    "low": 2
+  },
+  "by_effort": {
+    "low": 5,
+    "medium": 2
+  },
+  "recommended_order": [
+    "opt_001",
+    "opt_007",
+    "opt_002",
+    "opt_005",
+    "opt_003",
+    "opt_004",
+    "opt_006"
+  ],
+  "quick_wins": [
+    "opt_001",
+    "opt_002",
+    "opt_007"
+  ],
+  "high_impact": [
+    "opt_001"
+  ],
+  "optimization_details": [
+    {
+      "id": "opt_001",
+      "title": "并行化参数扫描",
+      "category": "parallel",
+      "impact": "high",
+      "effort": "low",
+      "priority_score": 80.0,
+      "expected_speedup": "4-8x",
+      "description": "使用 joblib 并行化 scan_*.py 中的参数扫描循环，充分利用多核 CPU",
+      "implementation_steps": [
+        "1. 安装 joblib: pip install joblib",
+        "2. 导入: from joblib import Parallel, delayed",
+        "3. 将单次仿真封装为独立函数",
+        "4. 使用 Parallel(n_jobs=-1) 替换 for 循环",
+        "5. 验证结果一致性"
+      ],
+      "code_example": "from joblib import Parallel, delayed\n\ndef run_single(params):\n    rows, summary = run_simulation(params, sample_hz=20.0)\n    return summary\n\n# 并行执行\nresults = Parallel(n_jobs=-1)(\n    delayed(run_single)(p) for p in candidate_params\n)",
+      "affected_files": [
+        "v10_rolling_foot_biomimetic_gait/scan_rolling_foot_params_v10.py",
+        "v13_7_friction_compensation/scan_v13_7_tauC_verify.py",
+        "v17_state_estimation/scan_v17_noise.py"
+      ],
+      "dependencies": [],
+      "risks": [
+        "并行执行可能导致内存峰值增加",
+        "需要确保函数无副作用"
+      ]
+    },
+    {
+      "id": "opt_007",
+      "title": "参数扫描早停策略",
+      "category": "complexity",
+      "impact": "medium",
+      "effort": "low",
+      "priority_score": 37.5,
+      "expected_speedup": "1.3-2.0x",
+      "description": "在参数扫描中尽早终止失败的仿真，避免浪费时间",
+      "implementation_steps": [
+        "1. 在 run_simulation 中添加 early_stop_time 参数",
+        "2. 如果在早期检测到失败，立即返回",
+        "3. 在参数扫描中使用较短的 early_stop_time",
+        "4. 对候选参数进行快速筛选"
+      ],
+      "code_example": "def run_simulation(params, early_stop_time=None):\n    for step in range(int(params.duration / params.timestep)):\n        t = step * params.timestep\n\n        # 早停检查\n        if early_stop_time and t >= early_stop_time:\n            failure = classify_failure(...)\n            if failure:\n                return [], {\"failure\": failure, \"early_stopped\": True}\n\n        # ... 继续仿真 ...",
+      "affected_files": [
+        "v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py",
+        "v10_rolling_foot_biomimetic_gait/scan_rolling_foot_params_v10.py"
+      ],
+      "dependencies": [],
+      "risks": [
+        "可能过早淘汰潜在的好参数"
+      ]
+    },
+    {
+      "id": "opt_002",
+      "title": "降低数据采样率",
+      "category": "hotspot",
+      "impact": "medium",
+      "effort": "low",
+      "priority_score": 36.5,
+      "expected_speedup": "1.2-1.5x",
+      "description": "减少 sample_hz 以降低数据记录开销，同时保持足够的分析精度",
+      "implementation_steps": [
+        "1. 分析当前 sample_hz 使用情况",
+        "2. 确定最小可接受采样率（基于 Nyquist 定理）",
+        "3. 更新默认 sample_hz 参数",
+        "4. 验证分析结果质量"
+      ],
+      "code_example": "# V10: 120 Hz → 60 Hz (足够用于轨迹分析)\nrun_simulation(params, sample_hz=60.0)\n\n# V17: 160 Hz → 80 Hz (仍满足 Nyquist 要求)\nrun_simulation_v17(params, sample_hz=80.0)",
+      "affected_files": [
+        "v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py",
+        "v17_state_estimation/simulate_v17.py"
+      ],
+      "dependencies": [],
+      "risks": [
+        "可能丢失高频细节",
+        "需要验证分析结果不受影响"
+      ]
+    },
+    {
+      "id": "opt_005",
+      "title": "使用 numba JIT 加速控制器",
+      "category": "hotspot",
+      "impact": "medium",
+      "effort": "medium",
+      "priority_score": 27.5,
+      "expected_speedup": "1.2-1.5x",
+      "description": "使用 numba 对热点函数进行 JIT 编译，加速数值计算",
+      "implementation_steps": [
+        "1. 安装 numba: pip install numba",
+        "2. 识别纯数值计算的热点函数",
+        "3. 添加 @jit(nopython=True) 装饰器",
+        "4. 调整函数以兼容 numba",
+        "5. 验证结果一致性和性能提升"
+      ],
+      "code_example": "from numba import jit\n\n@jit(nopython=True)\ndef limited_pd(q, qd, target, kp, kd, limit):\n    tau = kp * (target - q) - kd * qd\n    if tau > limit:\n        return limit\n    elif tau < -limit:\n        return -limit\n    return tau\n\n@jit(nopython=True)\ndef smoothstep(u):\n    u = min(max(u, 0.0), 1.0)\n    return u * u * (3.0 - 2.0 * u)",
+      "affected_files": [
+        "v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py",
+        "v17_state_estimation/simulate_v17.py"
+      ],
+      "dependencies": [],
+      "risks": [
+        "numba 不支持所有 Python 特性",
+        "首次编译有开销"
+      ]
+    },
+    {
+      "id": "opt_003",
+      "title": "使用 numpy 数组预分配",
+      "category": "memory",
+      "impact": "medium",
+      "effort": "medium",
+      "priority_score": 27.0,
+      "expected_speedup": "1.1-1.3x",
+      "description": "预分配 numpy 数组存储仿真数据，减少内存分配开销和内存占用",
+      "implementation_steps": [
+        "1. 计算所需数组大小: n_samples = int(duration / timestep / sample_stride)",
+        "2. 预分配数组: data_array = np.zeros((n_samples, n_fields))",
+        "3. 在循环中直接写入数组",
+        "4. 结束后转换为 list[dict]",
+        "5. 对比性能和内存使用"
+      ],
+      "code_example": "import numpy as np\n\nn_steps = int(params.duration / params.timestep)\nn_samples = n_steps // sample_stride\nn_fields = len(QPOS_KEYS) + len(QVEL_KEYS) + 20  # 预估字段数\n\n# 预分配\ndata_array = np.zeros((n_samples, n_fields), dtype=np.float64)\n\nfor step in range(n_steps):\n    # ... 仿真步进 ...\n    if step % sample_stride == 0:\n        idx = step // sample_stride\n        data_array[idx, :] = [...] # 直接写入\n\n# 转换为 list[dict]\nrows = [dict(zip(keys, data_array[i])) for i in range(n_samples)]",
+      "affected_files": [
+        "v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py",
+        "v13_7_friction_compensation/simulate_v13_7.py",
+        "v17_state_estimation/simulate_v17.py"
+      ],
+      "dependencies": [],
+      "risks": [
+        "增加代码复杂度",
+        "需要预先知道字段数量"
+      ]
+    },
+    {
+      "id": "opt_004",
+      "title": "缓存重复的三角函数计算",
+      "category": "hotspot",
+      "impact": "low",
+      "effort": "low",
+      "priority_score": 15.5,
+      "expected_speedup": "1.05-1.15x",
+      "description": "在循环外预计算不变的三角函数值，避免重复计算",
+      "implementation_steps": [
+        "1. 识别循环中的重复三角函数调用",
+        "2. 检查参数是否在循环中不变",
+        "3. 将计算移到循环外",
+        "4. 使用缓存的值"
+      ],
+      "code_example": "# Before\nfor step in range(n_steps):\n    offset = params.gamma  # 不变\n    target = offset + math.radians(angle_deg)  # angle_deg 不变\n\n# After\ngamma = params.gamma\nangle_rad = math.radians(angle_deg)\nfor step in range(n_steps):\n    target = gamma + angle_rad",
+      "affected_files": [
+        "v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py"
+      ],
+      "dependencies": [],
+      "risks": [
+        "收益较小"
+      ]
+    },
+    {
+      "id": "opt_006",
+      "title": "优化接触检测频率",
+      "category": "hotspot",
+      "impact": "low",
+      "effort": "low",
+      "priority_score": 15.25,
+      "expected_speedup": "1.05-1.1x",
+      "description": "减少不必要的接触检测调用，只在需要时检测",
+      "implementation_steps": [
+        "1. 分析 foot_contact_detail() 调用频率",
+        "2. 识别可以复用结果的场景",
+        "3. 缓存接触状态",
+        "4. 只在状态可能改变时重新检测"
+      ],
+      "code_example": "# 在 contact_flags 中已经检测过，不需要在 make_row 中再次检测\nleft_contact, right_contact = contact_flags(model, data)\n\n# make_row 中复用结果\nrow = make_row(..., left_contact, right_contact, cached_detail)",
+      "affected_files": [
+        "v10_rolling_foot_biomimetic_gait/simulate_rolling_foot_gait_v10.py"
+      ],
+      "dependencies": [],
+      "risks": [
+        "收益很小"
+      ]
+    }
+  ]
+}

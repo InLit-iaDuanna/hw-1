@@ -1,0 +1,123 @@
+# hw-1 项目监控配置
+
+# 健康检查项配置
+checks:
+  # 测试覆盖率检查
+  - name: "test_coverage"
+    threshold: 80
+    severity: "warning"
+    description: "测试覆盖率应保持在 80% 以上"
+
+  # 性能退化检查
+  - name: "performance_regression"
+    threshold: 10  # percent
+    severity: "critical"
+    description: "性能退化不应超过 10%"
+
+  # 测试通过率检查
+  - name: "test_pass_rate"
+    threshold: 95
+    severity: "critical"
+    description: "测试通过率应保持在 95% 以上"
+
+  # 代码质量检查
+  - name: "code_quality"
+    max_violations: 50
+    severity: "warning"
+    description: "Ruff 代码检查违规数不应超过 50"
+
+  # 数据完整性检查
+  - name: "data_integrity"
+    severity: "critical"
+    description: "关键数据文件必须存在且完整"
+
+# 监控指标配置
+metrics:
+  # 代码度量
+  code:
+    - lines_of_code
+    - file_count
+    - python_version
+    - dependency_versions
+
+  # 测试度量
+  testing:
+    - test_count
+    - coverage_percentage
+    - test_pass_rate
+    - test_duration
+
+  # 性能度量
+  performance:
+    - simulation_speed  # steps/sec
+    - memory_usage
+    - benchmark_results
+
+  # 存储度量
+  storage:
+    - output_directory_size
+    - cache_directory_size
+    - total_project_size
+
+# 告警配置
+alerting:
+  # 告警方式
+  methods:
+    - console  # 控制台输出
+    - log_file  # 日志文件
+    # - email  # 邮件（可选）
+
+  # 日志文件路径
+  log_file: "monitoring/alerts.log"
+
+  # 告警级别
+  levels:
+    - critical  # 严重问题，必须立即处理
+    - warning   # 警告，需要关注
+    - info      # 信息，仅记录
+
+# 调度配置
+schedule:
+  # 健康检查频率
+  health_check: "daily"  # daily, hourly, on_commit
+
+  # 指标收集频率
+  metrics_collection: "hourly"  # hourly, daily
+
+  # 报告生成频率
+  report_generation: "daily"
+
+# 关键文件路径（相对于项目根目录）
+critical_files:
+  - "pyproject.toml"
+  - "requirements.txt"
+  - "pytest.ini"
+  - "common/__init__.py"
+  - "tests/__init__.py"
+  - ".pre-commit-config.yaml"
+
+# 关键目录
+critical_directories:
+  - "common"
+  - "tests"
+  - "v01_mujoco_compass_gait"
+  - "v17_refactored"
+  - "v19_hip_abduction_active"
+
+# 基准性能数据（用于比较）
+baseline_performance:
+  v01_simulation_speed: 1000  # steps/sec (示例值)
+  v10_simulation_speed: 800
+  v17_simulation_speed: 700
+
+# 历史数据存储
+history:
+  file: "monitoring/metrics_history.json"
+  max_records: 1000  # 最多保存 1000 条历史记录
+
+# 报告配置
+reports:
+  output_dir: "monitoring/reports"
+  format: "markdown"  # markdown, html, json
+  include_charts: true
+  charts_format: "png"

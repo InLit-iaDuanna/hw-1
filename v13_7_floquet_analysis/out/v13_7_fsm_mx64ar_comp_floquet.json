@@ -1,0 +1,46 @@
+{
+  "config": "v13_7_fsm_mx64ar_comp",
+  "duration": 20.0,
+  "success": true,
+  "alternations": 17,
+  "forward_distance": 8.610307293323721,
+  "n_section_points": 17,
+  "fixed_point": [
+    -0.02905205323372087,
+    0.6048854039401251,
+    0.03146347874769224,
+    0.258009665920059
+  ],
+  "eigvals_real": [
+    -1.000778355273725,
+    0.624270155788264,
+    0.3645109656773812,
+    -0.02025596309725037
+  ],
+  "eigvals_imag": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "eigvals_abs": [
+    1.000778355273725,
+    0.624270155788264,
+    0.3645109656773812,
+    0.02025596309725037
+  ],
+  "max_abs_floquet": 1.000778355273725,
+  "n_pairs_used": 14,
+  "E_star_J": 53.70026241933078,
+  "E_std_J": 0.5568718030399871,
+  "mass_kg": 5.1,
+  "motor_hip": "Dynamixel MX-64AR @12V",
+  "motor_knee": "Dynamixel MX-64AR @12V",
+  "friction_compensation": true,
+  "state_keys": [
+    "right_hip",
+    "right_hip_vel",
+    "right_knee",
+    "right_knee_vel"
+  ]
+}

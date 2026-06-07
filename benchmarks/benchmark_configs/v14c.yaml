@@ -1,0 +1,4 @@
+# V14c: 摆臂减重基准配置
+# 使用 V14c 默认参数（PassiveArmsParams + V13.6.1 best FSM）
+
+base_params: {}  # 使用所有 PassiveArmsParams 默认值

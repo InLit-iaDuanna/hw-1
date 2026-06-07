@@ -1,0 +1,135 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# 虚拟环境
+.venv-mujoco/
+.venv-codex/
+.venv/
+venv/
+env/
+ENV/
+
+# 离线轮子包
+wheelhouse/
+
+# Node / Remotion
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+compass-gait-remotion/out/
+compass-gait-remotion/.remotion/
+
+# 汇报构建缓存与重复导出
+outputs/**/node_modules/
+outputs/**/preview/
+outputs/**/output/v*_videos/
+outputs/**/*.tmp
+outputs/**/~$*
+
+# IDE
+.idea/
+# .vscode/ 目录现在包含共享配置，已入库
+*.swp
+*.swo
+
+# Claude Code 本地权限配置（个人设备生效，不应入库）
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 渲染中间产物（已跟踪的旧产物保留，仅阻止新增）
+*.log
+*.tmp
+~$*
+
+# MATLAB
+*.asv
+*.autosave
+slprj/
+
+# ABAQUS 仿真输出（FEA 分析产物）
+*.odb
+*.prt
+*.sim
+*.stt
+*.mdl
+*.pac
+*.res
+*.msg
+*.dat
+*.sta
+*.com
+*.023
+fea_heel_strike/out/*.env
+
+# 归档目录（可选：如果不想跟踪归档内容）
+# archives/
+
+# 覆盖率报告
+.coverage
+htmlcov/
+coverage.xml
+.coverage.*
+
+# 临时索引文件
+*_index.csv
+final_evidence_index.csv
+
+# 编辑器临时文件
+*.bak
+*~
+
+# 清理和维护脚本产物
+CLEANUP_REPORT.md
+GIT_OPTIMIZATION_REPORT.md
+DISK_ANALYSIS_REPORT.md
+
+# 分析导出文件
+version_analysis.csv
+large_files.csv
+duplicate_files.csv
+
+# 环境报告（由脚本生成）
+ENVIRONMENT_REPORT.txt
+
+# 本地环境变量配置（不应入库，使用 .env.example 作为模板）
+.env
+
+# 依赖冻结文件（可选生成）
+requirements-freeze.txt
+
+# Jupyter Notebook 检查点
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# 数据文件（大型输出数据）
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+
+# 构建和分发
+build/
+dist/
+*.egg
+*.whl
+
+# Pytest 和测试缓存
+.pytest_cache/
+.tox/
+.nox/
+
+# 性能分析
+*.prof
+*.lprof
+*.pyprof

@@ -1,0 +1,57 @@
+# GitHub Actions 工作流 - 文档生成
+name: Documentation
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.10"
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pdoc sphinx sphinx-rtd-theme
+
+    - name: Generate API documentation
+      run: |
+        pdoc common --output-dir docs/api --html --force
+
+    - name: Generate coverage badge
+      if: always()
+      run: |
+        if (Test-Path coverage.json) {
+          $coverage = (Get-Content coverage.json | ConvertFrom-Json).totals.percent_covered
+          $color = if ($coverage -ge 80) { "brightgreen" } elseif ($coverage -ge 60) { "yellow" } else { "red" }
+          Write-Output "COVERAGE=$coverage" >> $env:GITHUB_ENV
+          Write-Output "COVERAGE_COLOR=$color" >> $env:GITHUB_ENV
+        }
+
+    - name: Deploy documentation to GitHub Pages
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./docs
+        force_orphan: true
+
+    - name: Archive documentation
+      uses: actions/upload-artifact@v4
+      with:
+        name: documentation
+        path: |
+          docs/
+          htmlcov/

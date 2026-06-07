@@ -1,0 +1,83 @@
+\documentclass[10pt,twocolumn]{article}
+
+% 包引用
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{xcolor}
+
+% 图表路径
+\graphicspath{{figures/}}
+
+% 超链接设置
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+% 标题信息
+\title{\textbf{Event-Driven Finite State Machine Control for Quasi-Passive Biped Walking with Friction Compensation}}
+
+\author{
+    Zeqi Duan$^{1}$ \\
+    \small $^{1}$School of Mechanical Engineering, [University Name] \\
+    \small Email: \texttt{[email]}
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% ==================== ABSTRACT ====================
+\input{sections/abstract}
+
+% ==================== INTRODUCTION ====================
+\section{Introduction}
+\label{sec:introduction}
+\input{sections/introduction}
+
+% ==================== RELATED WORK ====================
+\section{Related Work}
+\label{sec:related_work}
+\input{sections/related_work}
+
+% ==================== METHODOLOGY ====================
+\section{Methodology}
+\label{sec:methodology}
+\input{sections/methodology}
+
+% ==================== RESULTS ====================
+\section{Results}
+\label{sec:results}
+\input{sections/results}
+
+% ==================== DISCUSSION ====================
+\section{Discussion}
+\label{sec:discussion}
+\input{sections/discussion}
+
+% ==================== CONCLUSION ====================
+\section{Conclusion}
+\label{sec:conclusion}
+\input{sections/conclusion}
+
+% ==================== ACKNOWLEDGMENTS ====================
+\section*{Acknowledgments}
+This work was supported by [Funding Source]. The author thanks [Advisors/Colleagues] for valuable discussions and feedback.
+
+% ==================== REFERENCES ====================
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

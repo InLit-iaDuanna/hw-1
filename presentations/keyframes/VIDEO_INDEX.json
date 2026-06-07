@@ -1,0 +1,26 @@
+{
+  "V05_limit_cycle": {
+    "video": "v05_hybrid_compass_proof/out/hybrid_compass_mujoco.mp4",
+    "preview": "v05_hybrid_compass_proof/out/hybrid_compass_preview.png",
+    "duration": "10s",
+    "description": "Pure passive limit cycle proof - Poincaré convergence"
+  },
+  "V10_rolling_foot": {
+    "video": "v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_walk.mp4",
+    "preview": "v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_walk_preview.png",
+    "duration": "8s",
+    "description": "Quasi-passive rolling foot gait with minimal actuation"
+  },
+  "V13.7_friction_comp": {
+    "video": "v13_7_friction_compensation/out/v13_7_tauC_scan_comp_tc3000.mp4",
+    "preview": "v13_7_friction_compensation/out/v13_7_tauC_scan_comp_tc3000_preview.png",
+    "duration": "8s",
+    "description": "Friction compensation restores stability (MX-64AR motor)"
+  },
+  "V17_state_estimation": {
+    "video": "v17_state_estimation/out/v17_mx64ar_noise1.mp4",
+    "preview": "v17_state_estimation/out/v17_mx64ar_noise1_preview.png",
+    "duration": "8s",
+    "description": "State estimation with encoder quantization noise"
+  }
+}

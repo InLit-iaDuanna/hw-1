@@ -1,0 +1,16 @@
+{
+  "version": "example-v1.0",
+  "timestamp": "2026-06-04T12:09:45.991870",
+  "csv_file": "example_timeseries.csv",
+  "n_rows": 1000,
+  "columns": [
+    "time",
+    "position",
+    "velocity"
+  ],
+  "metadata": {
+    "experiment": "oscillator_test",
+    "damping": 0.1,
+    "frequency": 1.0
+  }
+}

@@ -1,0 +1,27 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.Model(modelType=STANDARD_EXPLICIT, name='HeelStrike_V10')
+del mdb.models['Model-1']
+mdb.models['HeelStrike_V10'].ConstrainedSketch(name='heel_profile', sheetSize=
+    0.2)
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].ArcByCenterEnds(center=(
+    0.0, 0.0), direction=CLOCKWISE, point1=(0.0, 0.04), point2=(0.0, -0.04))
+mdb.models['HeelStrike_V10'].sketches['heel_profile'].Line(point1=(0.0, -0.04), 
+    point2=(0.0, 0.04))
+mdb.models['HeelStrike_V10'].Part(dimensionality=THREE_D, name='Heel', type=
+    DEFORMABLE_BODY)
+mdb.models['HeelStrike_V10'].parts['Heel'].BaseSolidRevolve(angle=360.0, 
+    sketch=mdb.models['HeelStrike_V10'].sketches['heel_profile'])
+#* 实体旋转特征创建失败

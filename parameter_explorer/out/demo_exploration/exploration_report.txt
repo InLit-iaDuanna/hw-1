@@ -1,0 +1,20 @@
+================================================================================
+PARAMETER SPACE EXPLORATION REPORT
+================================================================================
+
+Parameters:
+  - stance_early_duration: [0.1200, 0.2800]
+  - stance_late_duration: [0.1700, 0.3300]
+  - hip_kp: [15.0000, 45.0000]
+  - hip_kd: [2.0000, 8.0000]
+
+Samples: 50
+Objective range: [0.0000, 7.8631]
+Mean: 4.7962, Std: 2.0771
+
+Best Parameters:
+  stance_early_duration: 0.189581
+  stance_late_duration: 0.237405
+  hip_kp: 32.301235
+  hip_kd: 5.114611
+Best Objective: 7.8631

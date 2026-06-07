@@ -1,0 +1,26 @@
+# -*- coding: mbcs -*-
+from part import *
+from material import *
+from section import *
+from assembly import *
+from step import *
+from interaction import *
+from load import *
+from mesh import *
+from optimization import *
+from job import *
+from sketch import *
+from visualization import *
+from connectorBehavior import *
+mdb.Model(modelType=STANDARD_EXPLICIT, name='HeelStrike')
+del mdb.models['Model-1']
+mdb.models['HeelStrike'].ConstrainedSketch(name='heelSketch', sheetSize=0.2)
+mdb.models['HeelStrike'].sketches['heelSketch'].ArcByCenterEnds(center=(0.0, 
+    0.0), direction=CLOCKWISE, point1=(0.0, 0.04), point2=(0.0, -0.04))
+mdb.models['HeelStrike'].sketches['heelSketch'].Line(point1=(0.0, -0.04), 
+    point2=(0.0, 0.04))
+mdb.models['HeelStrike'].Part(dimensionality=AXISYMMETRIC, name='Heel', type=
+    DEFORMABLE_BODY)
+mdb.models['HeelStrike'].parts['Heel'].BaseShell(sketch=
+    mdb.models['HeelStrike'].sketches['heelSketch'])
+#* 创建壳的拉伸特征失败

@@ -1,0 +1,230 @@
+# CI/CD 配置文件
+# hw-1 项目持续集成配置
+
+# 测试配置
+testing:
+  # 覆盖率阈值
+  coverage:
+    minimum: 80  # 最低覆盖率要求（百分比）
+    warning: 70  # 警告阈值
+
+  # 超时设置（秒）
+  timeout:
+    unit: 10
+    integration: 30
+    regression: 60
+    slow: 300
+
+  # 并行测试
+  parallel:
+    enabled: true
+    workers: auto  # 自动检测 CPU 核心数
+
+  # 测试标记过滤
+  markers:
+    quick: "unit"  # 快速模式只运行单元测试
+    full: ""       # 完整模式运行所有测试
+
+# 代码质量配置
+quality:
+  # 工具启用状态
+  tools:
+    black: true
+    ruff: true
+    mypy: true
+    radon: true
+
+  # 严格模式设置
+  strict:
+    black: true   # Black 格式必须通过
+    ruff: true    # Ruff linting 必须通过
+    mypy: false   # Mypy 允许警告（研究代码类型注解不完整）
+    radon: false  # Radon 复杂度允许超标
+
+  # Radon 圈复杂度阈值
+  complexity:
+    max_grade: B  # 最高允许等级（A-F，B 对应复杂度 11-20）
+    warning_threshold: 10
+
+# 性能基准配置
+benchmarks:
+  # 回归检测阈值（百分比）
+  regression_threshold:
+    cot: 10           # CoT 增加 >10% 报警
+    simulation_time: 15  # 仿真时间增加 >15% 警告
+    memory: 20        # 内存使用增加 >20% 警告
+
+  # 默认测试版本（快速模式）
+  quick_versions:
+    - v10  # 滚动足生物力学步态
+    - v13_7_refactored  # 事件驱动 FSM
+    - v17  # 状态估计
+
+  # 完整测试版本（空列表表示全部）
+  full_versions: []
+
+  # 报告生成
+  reports:
+    generate_plots: true
+    plot_formats: ["png", "svg"]
+    include_history: true
+    history_limit: 10  # 最多显示最近 10 次结果
+
+# 文档配置
+documentation:
+  # 输出目录
+  output_dir: "docs"
+
+  # 生成格式
+  formats:
+    html: true
+    markdown: false
+    pdf: false
+
+  # API 文档工具
+  api_doc_tool: "pdoc"  # pdoc 或 sphinx
+
+  # README 徽章
+  badges:
+    enabled: true
+    coverage: true
+    tests: true
+    python_version: true
+    license: false
+
+  # 文档包含内容
+  include:
+    coverage_report: true
+    api_docs: false  # 研究项目默认关闭 API 文档
+    benchmark_report: true
+
+# 报告路径配置
+paths:
+  # 测试报告
+  test_reports:
+    html: "htmlcov"
+    json: "coverage.json"
+    xml: "coverage.xml"
+
+  # 基准测试结果
+  benchmark_results: "benchmarks/results"
+
+  # 文档输出
+  docs_output: "docs"
+  api_docs: "docs/api"
+
+  # 临时文件
+  temp: ".ci_temp"
+
+# CI 流程配置
+pipeline:
+  # 步骤顺序
+  steps:
+    - quality_check
+    - test_suite
+    - benchmarks
+    - documentation
+
+  # 失败策略
+  fail_fast: false  # 继续运行所有步骤，即使某些失败
+
+  # 步骤依赖
+  dependencies:
+    documentation:
+      requires: ["test_suite"]  # 文档生成依赖测试覆盖率数据
+
+  # 可选步骤（失败不影响整体流程）
+  optional_steps:
+    - documentation
+    - benchmarks  # 基准测试失败不影响其他步骤
+
+# 通知配置（暂未实现，预留）
+notifications:
+  enabled: false
+  channels:
+    email: false
+    slack: false
+    teams: false
+
+# GitHub Actions 配置
+github_actions:
+  # 触发条件
+  triggers:
+    push_branches: ["main", "develop"]
+    pull_request: true
+    schedule: "0 0 * * 0"  # 每周日 00:00
+
+  # 运行器配置
+  runner:
+    os: "windows-latest"
+    python_version: "3.11"
+
+  # 缓存配置
+  cache:
+    pip: true
+    pytest: true
+
+# 环境变量
+environment:
+  # Python 路径
+  python_executable: ".venv-mujoco/Scripts/python.exe"
+
+  # MuJoCo 配置
+  mujoco_enabled: true
+
+  # 日志级别
+  log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+
+  # 调试模式
+  debug: false
+
+# 性能优化
+optimization:
+  # 并行化
+  parallel_tests: true
+  parallel_quality_checks: false  # 质量检查串行执行
+
+  # 缓存
+  cache_dependencies: true
+  cache_test_results: false  # 每次都重新运行测试
+
+  # 增量测试
+  incremental_tests: false  # 研究项目建议全量测试
+
+# 版本兼容性
+compatibility:
+  python_min_version: "3.9"
+  python_max_version: "3.12"
+
+  # 依赖版本锁定
+  lock_dependencies: true
+  requirements_file: "requirements.txt"
+
+# 安全配置
+security:
+  # 代码扫描
+  code_scanning: false  # 暂未集成
+  dependency_scanning: false
+
+  # 敏感数据检测
+  secrets_detection: false
+
+# 自定义钩子（预留）
+hooks:
+  pre_test: null
+  post_test: null
+  pre_quality: null
+  post_quality: null
+  pre_benchmark: null
+  post_benchmark: null
+  pre_docs: null
+  post_docs: null
+
+# 元数据
+metadata:
+  project_name: "hw-1"
+  description: "步态训练辅助设备仿真与控制"
+  version: "1.0.0"
+  author: "段泽琪"
+  created: "2026-06-04"
+  updated: "2026-06-04"

@@ -1,0 +1,635 @@
+
+
+--- PAGE 1 ---
+Steven H. Collins
+Mechanical and Aerospace Engineering
+Cornell University
+Ithaca, NY 14853, USA
+shc17@cornell.edu
+Martijn Wisse
+Man-Machine Systems and Control
+Delft University of Technology
+Mekelweg 2, NL-2628 CD Delft, the Netherlands
+m.wisse@wbmt.tudelft.nl
+Andy Ruina
+Theoretical and Applied Mechanics
+Mechanical and Aerospace Engineering
+Cornell University
+Ithaca, NY 14853, USA
+ruina@cornell.edu
+A Three-Dimensional
+Passive-Dynamic
+Walking Robot with
+Two Legs and Knees
+Abstract
+The authors have built the ﬁrst three-dimensional, kneed, two-legged,
+passive-dynamic walking machine. Since the work of Tad McGeer
+in the late 1980s, the concept of passive dynamics has added insight
+into animal locomotion and the design of anthropomorphic robots.
+V arious analyses and machines that demonstrate efﬁcient human-
+like walking have been developed using this strategy. Human-like
+passive machines, however , have only operated in two dimensions
+(i.e., within the fore-aft or sagittal plane). Three-dimensional pas-
+sive walking devices, mostly toys, have not had human-like motions
+but instead a stiff legged waddle. In the present three-dimensional
+device, the authors preserve features of McGeer’s two-dimensional
+models, including mechanical simplicity, human-like knee ﬂexure,
+and passive gravitational power from descending a shallow slope.
+They then add specially curved feet, a compliant heel, and mechani-
+cally constrained arms to achieve a harmonious and stable gait. The
+device stands 85 cm tall. It weighs 4.8 kg, walks at about 0.51 m/s
+down a 3.1-degree slope, and consumes 1.3 W. This robot further
+implicates passive dynamics in human walking and may help point
+the way toward simple and efﬁcient robots with human-like motions.
+KEY WORDS—biped, passive dynamics, McGeer, robot, an-
+thropomorphic, 3-D
+The International Journal of Robotics Research
+V ol. 20, No. 7, July 2001, pp. 607-615,
+©2001 Sage Publications
+1. Introduction
+It is natural to characterize an animal or a human’s motion
+by the positions of its parts in time. Perhaps this is why
+the most common approach to building robotic walking ma-
+chines, from 19th-century windup toys to the famous Honda
+Humanoid, is to control joint angles so as to mimic those
+of animals or humans. This trajectory-control approach to
+robotics has been called a “kinematic obsession” (R. Q. van
+der Linde, personal communication, 1999), and it often has
+a kind of rigor mortis as its negative consequence. Joints en-
+cumbered by motors and high-reduction gear trains, or their
+hydraulic equivalents, make joint movement inefﬁcient when
+the actuators are on and nearly impossible when they are off.
+From trajectory control, robotics has evolved to a more
+ﬂuid and dynamic view by incorporating ideas such as “un-
+deractuation,” “impedance control,” and “equilibrium point”
+control. Nonetheless, many modern robots are kinematic (i.e.,
+displacement controlled) at their core. The Honda Humanoid
+is the most familiar and successful of these and demonstrates
+that reﬁnement of such an approach can yield smooth, ver-
+satile motions (Hirai et al. 1998). However, the Honda Hu-
+manoid does not move quite like people do and is energeti-
+cally inefﬁcient. For example, the 130-kg Honda P3 moves
+with a nonpendular appearance and uses about 2 kW during
+walking (Honda 2000), more than 20 times the muscle work
+rate of a walking human of the same size. Some part of this
+high energy consumption is due to friction, but a large part
+607
+
+--- PAGE 2 ---
+608 THE INTERNA TIONAL JOURNAL OF ROBOTICS RESEARCH / July 2001
+is the consequence of a trajectory-based approach, especially
+when that trajectory is mostly limited to a sequence of static
+equilibrium postures.
+Departing further from position-based control strategies
+are controllers that smoothly vary joint torque, allowing dy-
+namics to control the details of the motion. For example, Jerry
+Pratt’s two-dimensional walking robot, the Spring Flamingo,
+is a pleasing departure from the motion control paradigm. Al-
+though the Spring Flamingo’s actuation is through computer-
+controlled, gear-reduced motors, it uses fast active force feed-
+back to control torque rather than joint angles. This torque
+control allows the natural dynamics of the system to gener-
+ate ﬂuid-looking motions (J. Pratt and G. Pratt 1999; J. Pratt
+2000).
+A different approach to the imitation of animal and human
+motions focuses on minimizing actuation and control. Evo-
+lution may have favored efﬁciency and low demands on the
+neural system. A test of this concept is to see how well one
+can make a robot function with little actuation and no con-
+trol. Obviously, humans and animals have some actuation
+and control, and so must all functional robots. Our approach
+to assessing the need for control is to see what is possible
+without it.
+This control-free approach to robot design has its roots not
+in sophisticated path-following robots but in children’s toys.
+1.1. Ramp-Walking T oys
+Simple two-legged ramp-walking toys have been around for
+at least a century (Bechstein 1912; Fallis 1888; Mahon 1914;
+Wilson 1938). Such passive toys (e.g., Fig. 1) should not be
+confused with locomotion toys that have windup or electric
+motors. V ersions of the these toys, with either four legs or
+two legs and a training wheel, can be purchased for about $1
+in many toy stores, but truly two-legged versions are available
+only as antiques. These biped “ramp walkers” travel down a
+shallow slope or are pulled by a string, and they walk in a
+somewhat stable, passive, three-dimensional gait. They are
+straight legged, so they must rock from side to side in order
+to lift their feet clear of the ground. They rely heavily on the
+static stability provided by large feet or a large mass hung
+below the walking surface. The devices we have seen take
+short steps that look unlike human motion and more like the
+waddling of penguins or ducks, which they are often designed
+to look like (see Extension 1
+1).
+More recently, Coleman and Ruina (1998) and Mombaur,
+Coleman, and Ruina (2001) have demonstrated a variant that
+would rather walk than stand still. Their Tinkertoy walker
+has the apparently unique feature of being stable only when
+in motion. The Tinkertoy walker fails to imitate humans in
+that it has straight legs, depends on rocking for foot clearance,
+has a ridiculous mass distribution, and waddles much like the
+passive toys above (see Extension 2).
+1. Please see the Index to Multimedia Extensions at the end of this article.
+Fig. 1. Fallis’s (1888) clever implementation of counter-
+swinging arms. The entire toy is made from two pieces of
+wire. Each wire makes up a leg, a bearing, an axle, and an
+arm. One wire also has a head and the other a body of sorts.
+Adelin Totilca made us a reproduction that takes rocking steps
+something like those described in the Fallis patent.
+The waddling gait of these toys is a superﬁcial inferior-
+ity that has obscured their dynamical similarity to dexterous
+animals until recently.
+1.2. Passive-Dynamic Robots
+Ramp-walking toys operate with principles described by
+centuries-old concepts, but their analysis and reﬁnement has
+only been possible recently. This is because Newton’s laws,
+as applied to such walking machines, are expressed as compli-
+cated nonlinear differential equations that can only be solved
+numerically using modern computers. Despite these compli-
+cations, the passive-dynamic concept is quite simple: loco-
+motion is mostly a natural motion of legged mechanisms, just
+as swinging is a natural motion of pendulums. Stiff-legged
+walking toys naturally generate their comical walking mo-
+tions. This suggests that human-like motions might come
+naturally to human-like mechanisms.
+A device operating passive dynamically can be efﬁcient
+because it needs no energy for stabilization or control, only
+
+--- PAGE 3 ---
+Collins, Wisse, and Ruina / Passive-Dynamic Walking Robot 609
+power to recover small losses. The most fundamental cause
+of this energetic loss is impact, primarily between the feet
+and ground. In most passive-dynamic studies, power comes
+from the potential energy gained by moving down a ramp.
+Gravitational power is an easy-to-implement proxy for other
+simple low-power sources. In a sense, the passive-dynamic
+approach is the opposite of the trajectory control approach,
+which tends to constantly control actuation to force a system
+against its natural dynamic tendencies.
+The modern incarnation of the passive-dynamic approach
+to locomotion was effectively invented by Tad McGeer.
+McGeer used the development of airplanes as inspiration. He
+noted that the Wright brothers mastered gliding ﬁrst, then
+added a small amount of power to make successful powered
+airplanes. Passive-dynamic ramp walkers are the gliders of
+walking robots.
+McGeer developed these free-motion designs using a non-
+linear stability analysis based on numerical simulation of the
+Newton-Euler equations of motion. These studies led to
+his completely passive designs, implemented both in simu-
+lation and as walking machines built of bars and hinges. The
+McGeer machines have remarkably human-looking gaits, are
+more energy efﬁcient than other walking robots, and are in-
+herently stable with respect to small disturbances (see Exten-
+sion 3).
+However, McGeer’s machines are impressively human-
+like only when viewed from the side. From the front, they
+look more like a person walking on crutches because they
+were built with four legs to keep the motion two-dimensional
+(Fig. 2).
+McGeer (1991) also found an unstable, two-legged, three-
+dimensional, passive-dynamic biped in simulation. The peri-
+odic motions in these simulations had abnormally high yaw,
+and the numerically predicted instability presumably pre-
+cludes physical realizability.
+A logical next step was to make a three-dimensional ma-
+chine with only two legs while maintaining the favorable traits
+of McGeer’s four-legged versions. We describe such a ma-
+chine here.
+2. The Present Device
+Our device (Fig. 3) is conceptually similar to McGeer’s (1990)
+original machine (see Garcia, Chatterjee, and Ruina’s 2000
+working imitation in Fig. 2). To preserve fore-aft (pitch) sta-
+bility, the basic design is close to what one would get by
+cutting the four-legged machine in half. The resulting device
+is no longer as constrained as the former device, creating an
+important difference: new degrees of freedom and new ways
+to fall down. Thus, we had to change our design to keep it
+stable in three dimensions.
+The new problems are unstable side-to-side lean and yaw.
+By “side-to-side lean,” we mean rotation about an axis in
+Fig. 2. An imitation of McGeer’s (1990) design made by Y an
+Y evmenenko in our lab. It is a sturdier version of the one
+shown in Garcia, Chatterjee, and Ruina (2000) made by John
+Camp. The motion is constrained to two dimensions by the
+four legs.
+Fig. 3. Our two-legged, kneed, passive-dynamic walking
+robot. The counter-swinging arms are attached rigidly to their
+opposing legs. Note that the right arm swings forward and
+out as the left leg swings forward.
+
+--- PAGE 4 ---
+610 THE INTERNA TIONAL JOURNAL OF ROBOTICS RESEARCH / July 2001
+the direction of travel, called “roll” in aeronautics. “Y aw”
+is rotation about a vertical axis and is also called “steer” or
+“heading.”
+The four most important ideas that distinguish our two-
+legged, three-dimensional, kneed, passive-dynamic robot
+from its four-legged, two-dimensional, kneed ancestors are
+as follows:
+1. Foot bottoms shaped to guide lateral motion;
+2. Soft heels to reduce instability at heel strike;
+3. Counter-swinging arms to negate yaw induced by leg
+swinging;
+4. Lateral-swinging arms to stabilize side-to-side lean.
+These ideas were developed through physical insight, experi-
+mentation, and lessons learned from previous passive walkers,
+as described below.
+2.1. Foot Shaping to Guide Side-to-Side Lean
+Because one foot is off the ground some of the time and the
+feet are not planted on a central line, the robot will fall from
+side to side if the center of mass is not moved left and right
+over the feet. One way or another, all two-legged walkers
+must have side-to-side motion of some kind.
+Some walking devices have a rather free side-to-side rock-
+ing motion, including the spherical-foot Wilson Walkie (Wil-
+son 1938) and the disk-foot Tinkertoy (Coleman and Ruina
+1998). In contrast, Bechstein’s (1912) patent (Fig. 4a), as
+well as Fallis’s (1888) patent (Fig. 4b), has foot bottoms that
+guide the side-to-side lean as the foot rolls along the ground.
+Because these toys do not have knees, they depend on their
+side-to-side motion for ground clearance. Even though our
+device has knees that provide ground clearance, we use feet
+that guide the side-to-side motion in an attempt to enhance
+lean and yaw stability.
+To minimize yawing motions, we wanted to have the
+largest possible frictional torques with a given foot size. Thus,
+we designed the foot with two side-by-side rubber-coated rails
+(Fig. 5). The intent is for the foot to maintain contact with
+the ground at two points, one on each rail. Each rail is ap-
+proximately elliptical, and the inner rail has a smaller radius
+of curvature and protrudes below the outer rail. As the foot
+rolls along the ground, the shape of the rails causes the robot
+to sway from side to side; as the left foot rolls, the machine
+sways from vertical, to left leaning, and back to vertical.
+Theoretically, these rails can be shaped such that the center
+of pressure is near the centerline of the foot during most of the
+time of foot contact. This would give the device a quasi-static
+lean stability. Furthermore, keeping the center of pressure
+in the middle of the foot maximizes the available frictional
+torque from the rails to resist yaw.
+Interestingly, the simulations of Adolfsson, Dankowicz,
+and Nordmark (2000) predict that a device with feet that are
+only short overlapping line segments oriented orthogonal to
+the direction of travel might also work. This would roughly
+correspond to replacing each of our rails with a point contact.
+2.2. A Soft Heel to Remove Collisional Indeterminacy
+If stride length were known and remained constant, the feet
+could be designed so that the two rails of a striking heel hit the
+ground simultaneously. However, the heel-strike angle is nei-
+ther exactly known nor exactly repeatable. Even if these were
+known, nearly simultaneous collisions of multiple points on
+a rigid body is a geometric singularity that causes indetermi-
+nacy in motion. That is, the result of the net collision for a
+rigid foot would be different depending on which point makes
+contact ﬁrst, even if just barely ﬁrst.
+An example of this indeterminacy can be seen by dropping
+dice onto a ﬂat surface. The outcome of the collisions is
+radically sensitive to the orientation of the cubes when they
+hit.
+The collisional indeterminacy can be removed by making
+the contact compliant enough so that the collisional impact
+is not absorbed by just one rail. To prevent adding unneces-
+sary degrees of freedom, we did not want to add compliance
+about the vertical axis or to up-and-down motions, so we used
+hinged foot arcs as shown in Figure 5f. Each arc is hinged at
+the toe with a pin orthogonal to the direction of travel. These
+arcs are connected together at their heels by a bar. The bar
+is hinged midway between the heels and is in contact with a
+stiff, damped spring. This foot design adds no vertical or yaw
+compliance.
+As the foot rolls forward, the stiffness against sideways
+lean increases because the contact points move toward the
+pinned toes of the rails. We call this foot design a “soft heel.”
+A machine built of real materials may have enough compli-
+ance without an explicit soft heel if the rail collisions are sufﬁ-
+ciently close to simultaneous for the impulse to be distributed
+evenly.
+2.3. Counter-Swinging Arms
+The asymmetry of a two-legged design induces yaw. The
+straight-ahead walking of two side-by-side legs has angular
+momentum ﬂuctuations about a vertical axis, which encour-
+ages a pirouetting motion of the robot. We did not want free
+yaw, so we countered yawing with friction at the foot rails
+(above). In our experiments, we found that these scrubbing
+torques were not sufﬁcient to inhibit yaw. Therefore, we at-
+tempted to reduce the need for scrubbing torques by reducing
+the angular momentum ﬂuctuations.
+Elftman (1939) showed that arm swinging in human walk-
+ing reduces the overall rotation of the body. Although proba-
+bly more for appearance than mechanics, one of Fallis’s toys
+
+--- PAGE 5 ---
+Collins, Wisse, and Ruina / Passive-Dynamic Walking Robot 611
+a) b)
+Fig. 4. (a) Bechstein’s (1912) walking toy patent. The polyhedral feet are intended to guide the machine’s side-to-side lean
+so that the center of pressure stays inside the footprint. (b) The Fallis (1888) patent that seems to use the same idea.
+Midstance Kneestrike Heelstrike
+(a) (b) (c) (d) (e) (f)
+Intended
+path of 
+center of 
+pressure
+Foot print
+Side view
+Frontal view
+Top view
+Fig. 5. (a-d) Side-to-side lean as guided by foot shaping. (e) Schematic of intended center of pressure path as a result of the
+side-to-side lean. (f) Schematic of the soft heel (left foot). The pivoting springs are at the heel. The asymmetric rubber-coated
+rails couple sideways lean to foot roll. The pivot and springs eliminate indeterminacies at the simultaneous impact of the two
+foot rails while maintaining stiffness against yaw and in the up-and-down direction.
+also uses counter-swinging arms rigidly attached to their op-
+posing legs (Fig. 1). Together, these ideas suggest that arms
+constrained to move fore and aft with the opposite leg might
+produce favorable changes in angular momentum ﬂuctuation.
+In our implementation, the arms are single rigid links with
+a large mass at their ends (see Fig. 3). They are pinned to
+always move within the same lateral plane as the thigh of the
+opposite leg. With counter-swinging arms and feet capable of
+providing frictional torque, the robot had a functionally stable
+heading.
+2.4. Lateral-Swinging Arms
+As shown in the unstable simulations of Kuo (1999), uncon-
+strained side-to-side rocking can lead to instability. In fact,
+Kuo could not ﬁnd a passive strategy for stabilization in his
+simulations. Moreover, early testing of our machine showed
+that it was either marginally stable or unstable in its leaning
+motions.
+Lateral arm motion is one possible stabilizing compensa-
+tion. Wisse, Schwab, and van der Linde (2000) suggested a
+free-swinging mass to balance the side-to-side sway of the
+legs. We chose to couple a lateral arm motion directly to
+the leg motion to keep the design simple (i.e., to not add any
+degrees of freedom).
+The arms of the walker are attached to the legs such
+that they move in and out depending on relative thigh an-
+gle (Fig. 6). The left arm swings out as the right leg moves
+forward relative to the left. That is, both arms move left as
+the right leg moves forward and vice versa. Together with the
+counter swinging, the net motion of each “hand” is one from
+back and in to forward and out.
+3. Simulation Was Not Used as a Design Tool
+The four ideas above were implemented bit by bit with phys-
+ical tinkering and little calculation.
+Experience has given us strong lessons about the utility
+and futility of design using simulation. McGeer (1990, 1991)
+used simulation to ﬁnd mass and geometry parameters for his
+
+--- PAGE 6 ---
+612 THE INTERNA TIONAL JOURNAL OF ROBOTICS RESEARCH / July 2001
+Arm and
+Counter-Mass Right leg with
+Pulley
+Left leg with
+Arm Support
+Bearing
+String
+Bearing
+Fig. 6. Lateral arm swinging is coupled to the relative thigh angle using strings wrapped around the hip axle. The right arm
+swings forward and out as the left thigh swings forward relative to the right thigh. This is a schematic, not a design drawing.
+two-dimensional walker. Similarly, Garcia, Chatterjee, and
+Ruina (2000) found simulation essential in order to duplicate
+that machine. On the other hand, months of simulation were
+not fruitful in ﬁnding the stable Tinkertoy design, which was
+ultimately found by tinkering. In fact, it was the successful
+physical model that motivated a more careful search for a
+stable simulation.
+Because of the many effects in three-dimensional analy-
+sis that are difﬁcult to characterize, whose importance we
+could not determine, and whose simulation is difﬁcult (e.g.,
+collisions, rolling, and scrubbing torques), we decided to
+forgo three-dimensional analytic modeling of this robot. We
+speculated that the mass properties of the four-legged design
+should work reasonably well in our two-legged device, and
+that we would use trial, error, and correction to minimize
+three-dimensional effects.
+4. Evolution of the Physical Model
+We present a brief outline of the design’s progression.
+4.1. Initial Design
+We built a two-legged device with feet based on the guided
+rail and soft heel ideas described above and with mass and
+length parameters predicted to be stable by a two-dimensional
+analysis.
+With a few weeks of tinkering, the device walked the full
+length of a 5-m ramp (see Extension 4 ). Inspection of the
+videos of this device showed substantial yaw and sideways
+leaning that were not intended. For instance, the device would
+sometimes pivot on one stance rail. The gait had a visually
+appealing swing but was not robust; it only walked the full
+length of the ramp twice.
+4.2. Development of Yaw Compensation
+As implemented at ﬁrst, our walker depended solely on
+scrubbing friction to oppose yaw. Unfortunately, this was
+insufﬁcient.
+Moving the legs inward to reduce the moment arm was
+not sufﬁcient to decrease the hip torque to a level controllable
+with friction. Instead, it signiﬁcantly increased side-to-side
+lean instabilities, so the legs were returned to their original
+positions.
+We attempted to add lean ﬂexibility to the ankles to achieve
+better contact with the ground and, hence, more torque to resist
+yaw. The feet were then too ﬂoppy, and the device did not
+walk in a stable manner. Additionally, we found that even
+with this better ground contact, friction could not fully inhibit
+yaw.
+We gained intuition for this yaw problem by suspending a
+crude model of the walker (with locked knees) from a point
+between its hip hinges. An attempt to counter swing the legs
+of such model induces extreme yaw as the legs pass through
+bottom center, as is expected from conservation of angular
+momentum about a vertical axis. When appropriate counter-
+swinging arms were added to this model, yaw was essentially
+eliminated. Counter-swinging arms added to our two-legged
+robot also successfully reduced yaw in its walking motions.
+
+--- PAGE 7 ---
+Collins, Wisse, and Ruina / Passive-Dynamic Walking Robot 613
+A schematic of the counter-swinging mechanism is shown in
+Figure 6 (see Extension 5).
+At this stage, side-to-side rocking increased from step to
+step, leading to topple after several steps.
+4.3. Development of Side-to-Side Lean Compensation
+We removed the intentional soft heel because it was overly
+compliant with the added mass of the arms (arms account
+for 30% of the total mass) and seemed to cause instability.
+Changing to solid foot arcs regained some side-to-side lean
+stability, and even without the soft heel there seemed to be
+enough compliance in the foot to prevent collision indetermi-
+nacy of the type described earlier.
+We then allowed the arms to swing freely laterally. In
+our implementation, the joints had very high friction, which
+made their lateral motions heavily damped. This seemed to
+allow useful dissipation of side-to-side rocking energy and
+improved the lean stability sporadically, but it was not robust.
+We observed that human arms move in and forward simul-
+taneously while walking naturally, so we added a mechanism
+to imitate this in-and-out arm motion. Amusingly, this conﬁg-
+uration led to immediate toppling. Y et, it showed that lateral
+arm movement could inﬂuence lean stability. We reversed the
+mechanism to move the arms outward as they moved forward
+and adjusted the arms’ constraints slightly until the design
+ﬁnally walked in a stable manner. A schematic of the string-
+wrapping mechanism is shown in Figure 6 (see Extension 5).
+5. Results
+A robust steady-state motion was found in the physical
+model. On a good day and with a practiced hand, the present
+two-legged passive walker walks steadily in about 80% of
+launches. Inappropriate initial conditions seem to be the pri-
+mary cause of failed launches. The device walks the full
+length of a 5-m ramp without walking off the side in about
+15% of launches.
+The best slope seems to be about 3.1 degrees. The device
+weighs 4.8 kg and stands 85 cm tall. The center of mass is
+about 61 cm above the ground. Although the feet are not cir-
+cular, they have a representative radius of about 12 cm, so the
+device is far from being statically stable either with one foot
+on the ground or when standing with parallel legs. The stride
+length is about 30 cm, the period of one full oscillation is about
+1.2 seconds, and the walking speed is about 0.51 m/s. The
+gravitational power consumption is about 1.3 W. This extrap-
+olates to about 34 W for a 130-kg device of the same size. In
+these trials, the nondimensionalized speed of v/√
+gℓ = .18
+is a somewhat slow ramble compared to a person with a 1-m
+leg walking at 1 m/s with v/√
+gℓ = .32. The stance angle is
+about 2 arcsin(.15/.85) = 20 degrees.
+The walking motion is more pleasing to watch than that of
+any other walking robots we have seen (see Fig. 7, as well as
+Extensions 6 and 7).
+However, the robot is obviously not human-like in a num-
+ber of ways. It is missing upper body parts and degrees of
+freedom. The shoulders are coincident with the hips. The
+leg swinging is planar, which keeps the foot falls unnaturally
+wide. The wide feet and stiff ankle are obviously unnatu-
+ral. Power comes from gravity, with no ankle extension or
+torques to accelerate leg swinging, which affects the device’s
+motion. Even within our limited design parameters, the best-
+functioning arm motions are backward compared to anthropo-
+morphic motions (out and forward instead of in and forward)
+for reasons we do not know in detail. With all of these short-
+comings, it is surprising that the motion still looks so natural
+by today’s robotics standards.
+5.1. Remaining Problems
+The walker needs a better mechanism to prevent bounce af-
+ter knee collision. The current suction-cup method (McGeer
+1990) has worked, but occasionally there is bounce and oc-
+casionally the knee lock still holds at the start of swing. The
+present string-wrapping method of regulating the lateral arm
+motion is not sufﬁciently adjustable for the evolution of a
+better linkage between leg and arm.
+The device often does not hold its heading well. We do not
+know whether this is due to imprecision in construction or per-
+haps a heading instability of the type discussed in Adolfsson,
+Dankowicz, and Nordmark (2000).
+Our three-dimensional design represents the results of trial
+and error starting with a well-understood two-dimensional
+design. As in natural evolution, it is possible that some useless
+traits have been maintained or that the design is non-optimal
+in various regards.
+5.2. Future Work
+Most obviously, an internally powered device that could walk
+on level ground, based on passive dynamics and thus mini-
+mally controlled and actuated, would add further credibility
+to passive-dynamic design concepts.
+6. Conclusion
+We have built the ﬁrst two-legged passive walking machine
+with human-like motions, thus demonstrating that such a ma-
+chine is possible. The primary challenges in moving from
+two-dimensional to three-dimensional walking were stabi-
+lization of yaw and side-to-side lean.
+Although this robot has surprisingly human-like motions,
+we cannot claim that these all come from human-like me-
+chanical design. Nor can we claim that our design is the only
+
+--- PAGE 8 ---
+614 THE INTERNA TIONAL JOURNAL OF ROBOTICS RESEARCH / July 2001
+Fig. 7. A sequence of photos of our machine walking. The images were taken at a rate of about 7.5 frames per second (every
+fourth image from a video camera).
+or even the best design for these motions. Rather, the suc-
+cess of this passive-dynamics design at achieving human-like
+motions shows the range of possibilities of passive-dynamic
+principles. We think of this success as an advertisement for
+passive-dynamics principles in general, not for the speciﬁcs
+of the design. Similarly, the success of this design helps show
+how useful such general principles might be in nature.
+Acknowledgments
+This work was supported by a grant from the National Science
+Foundation (BES-9806612). The authors thank Mariano Gar-
+cia for the two-dimensional simulations used in the initial de-
+sign; Stephen Keast for his design advice; Mark Muenchinger
+for construction help; Art Kuo, Jerry Pratt, and Tad McGeer
+for useful editorial advice; Tad McGeer for pushing us to
+write this up; David Cabrera and Mario Gomes for various
+helpful insights and encouragement; and Michael Coleman
+for his scientiﬁc intuitions, grammatical advice, and video
+production.
+References
+Adolfsson, J., Dankowicz, H., and Nordmark, A. 2001. 3D
+passive walkers: Finding periodic gaits in the presence of
+discontinuities. Nonlinear Dynamics, forthcoming.
+Bechstein, B. U. 1912. Improvements in and relating to toys.
+U.K. Patent No. 7453.
+Coleman, M. J., and Ruina, A. 1998. An uncontrolled walk-
+ing toy that cannot stand still. Physical Review Letters
+80:3658–3661.
+Elftman, H. 1939. The function of arms in walking. Human
+Biology 11:529–535.
+Fallis, G. T. 1888. Walking toy. U.S. Patent No. 376588.
+Garcia, M. S., Chatterjee, A., and Ruina, A. 2000. Efﬁciency,
+scaling, and speed in two dimensional passive-dynamic
+walking. Dynamics and Stability of Systems 15(2):75–99.
+Hirai, K., Hirose, M., Haikawa, Y ., and Takenaka, T. 1998.
+The development of the Honda Humanoid robot. IEEE In-
+ternational Conference on Robotics and Automation Pro-
+ceedings, Leuven, Belgium, May, pp. 1321–1326.
+Honda. 2000. Honda Humanoid robot speciﬁcations. Avail-
+able at: http://world.honda.com/robot.
+Kuo, A. D. 1999. Stabilization of lateral motion in passive
+dynamic walking. International Journal of Robotics Re-
+search 18:917.
+Mahon, J. J. 1914. Walking toy. U.S. Patent No. 1007316,
+Serial Nos. 541801 and 796095.
+McGeer, T. 1990. Passive dynamic walking. International
+Journal of Robotics Research 9(2):62–82.
+McGeer, T. 1991. Passive dynamic biped catalogue. In Pro-
+ceedings of the 2nd International Symposium of Experi-
+mental Robotics. New Y ork: Springer-V erlag.
+Mombaur, K., Coleman, M. J., Garcia, M., and Ruina, A.
+2001. Prediction of stable walking for a toy that cannot
+stand still. Physical Review E 64(2), forthcoming.
+Pratt, J. 2000. Exploiting inherent robustness and natural dy-
+namics in the control of bipedal walking robots. Ph.D. the-
+sis, Massachusetts Institute of Technology.
+Pratt, J., and Pratt, G. 1999. Exploiting natural dynam-
+ics in the control of a 3D bipedal walking simulation.
+Proceedings of the International Conference on Climb-
+ing and Walking Robots. Portsmouth, United Kingdom,
+September.
+Wilson, J. E. 1938. Walking toy. U.S. Patent No. 2140275.
+Wisse, M., Schwab, A. L., and van der Linde, R. Q. 2001. A
+3D passive dynamic biped with yaw and roll compensa-
+tion. Robotica, 19:275–284.
+
+--- PAGE 9 ---
+Collins, Wisse, and Ruina / Passive-Dynamic Walking Robot 615
+Index to Multimedia Extensions
+Extension Media Type Description
+1VideoPenguinwalkingtoy(Wilson1938).Thepenguintoywaddlesdownaslight
+decline. The gait is typical of toys of this genre.
+2VideoColeman’sTinkertoywalker(ColemanandRuina1998).Twoversionswalk
+with tiny steps down a small slope. The ﬁrst version shown is able to walk on
+a wide ﬂat surface, and the second is the original Tinkertoy walker. Neither
+can stand stably in any conﬁguration.
+3VideoGarcia,Chatterjee,andRuina’s(2000)imitationofMcGeer’sfour-legged
+passive walker. The device is shown walking down a ramp in Cornell’s Human
+Power Lab under the supervision of Michael Coleman.
+4VideoOurﬁrsttwo-leggedkneedwalkerbeforearmswereadded.Thisisoneoftwo
+times that the armless version walked the entire ramp.
+5VideoDemonstrationofthearmtolegmovementcoupling.Theleftarmmoves
+backward and forward with the right leg and vice versa, and the arms move
+outward as they move forward.
+6VideoOurﬁnishedwalkingmachine.Thedevicewalkstheramptwice,viewedfrom
+the front, under the supervision of Steve Collins.
+7VideoOurdevicewalkingtheramptwomoretimes,asviewedfrombehind.
+NOTE: The multimedia extensions can be found online by following the hyperlinks from www.ijrr.org.

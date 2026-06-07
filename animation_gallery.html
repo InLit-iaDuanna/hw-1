@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hw-1 步态研究动画画廊</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+            color: #F1F5F9;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #334155;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #FBBF24, #F59E0B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #94A3B8;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #FBBF24;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #94A3B8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stage-section {
+            margin-bottom: 80px;
+        }
+
+        .stage-header {
+            background: linear-gradient(90deg, #1E293B, transparent);
+            padding: 20px 30px;
+            border-left: 5px solid #FBBF24;
+            margin-bottom: 40px;
+        }
+
+        .stage-title {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .stage-description {
+            color: #94A3B8;
+            font-size: 1rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+        }
+
+        .video-card {
+            background: #1E293B;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #334155;
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(251, 191, 36, 0.2);
+            border-color: #FBBF24;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 214px;
+            background: #0F172A;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-thumbnail video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-info {
+            padding: 20px;
+        }
+
+        .video-version {
+            font-size: 0.85rem;
+            color: #FBBF24;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .video-title {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: #F1F5F9;
+        }
+
+        .video-description {
+            font-size: 0.95rem;
+            color: #94A3B8;
+            margin-bottom: 15px;
+            min-height: 60px;
+        }
+
+        .video-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+
+        .meta-badge {
+            background: #334155;
+            padding: 4px 12px;
+            border-radius: 20px;
+            color: #94A3B8;
+        }
+
+        .meta-badge.milestone {
+            background: #FBBF24;
+            color: #0F172A;
+            font-weight: 600;
+        }
+
+        .video-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+        }
+
+        .btn-secondary {
+            background: #334155;
+            color: #F1F5F9;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            background: #1E293B;
+            color: #94A3B8;
+            border: 1px solid #334155;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #FBBF24;
+            color: #0F172A;
+            border-color: #FBBF24;
+            font-weight: 600;
+        }
+
+        .no-video {
+            text-align: center;
+            padding: 40px;
+            color: #64748B;
+            font-style: italic;
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(251, 191, 36, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .play-icon:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: rgba(251, 191, 36, 1);
+        }
+
+        .play-icon::after {
+            content: '';
+            width: 0;
+            height: 0;
+            border-left: 20px solid #0F172A;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            margin-left: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748B;
+            border-top: 1px solid #334155;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                gap: 20px;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>hw-1 步态研究动画画廊</h1>
+            <p class="subtitle">被动动力学到准被动控制的完整演化历程</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-value">35</div>
+                    <div class="stat-label">版本</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">28+</div>
+                    <div class="stat-label">视频</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">研究阶段</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">V01-V24</div>
+                    <div class="stat-label">版本范围</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterStage('all')">全部</button>
+            <button class="filter-btn" onclick="filterStage(1)">阶段1: 理论验证</button>
+            <button class="filter-btn" onclick="filterStage(2)">阶段2: 机械升级</button>
+            <button class="filter-btn" onclick="filterStage(3)">阶段3: 3D探索</button>
+            <button class="filter-btn" onclick="filterStage(4)">阶段4: 硬件转译</button>
+            <button class="filter-btn" onclick="filterStage('milestone')">⭐ 关键里程碑</button>
+        </div>
+
+        <!-- 阶段1: 理论验证 -->
+        <div class="stage-section" data-stage="1">
+            <div class="stage-header">
+                <h2 class="stage-title">阶段一: 理论验证与被动极限环 (V01-V05)</h2>
+                <p class="stage-description">证明指南针式机器人的被动动力学极限环存在性</p>
+            </div>
+            <div class="video-grid">
+                <div class="video-card" data-milestone="false">
+                    <div class="video-thumbnail">
+                        <video src="v01_mujoco_compass_gait/out/passive_compass_gait.mp4" preload="metadata"></video>
+                        <div class="play-icon" onclick="playVideo(this)"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-version">V01</div>
+                        <h3 class="video-title">MuJoCo 被动指南针步态</h3>
+                        <p class="video-description">首次MuJoCo被动动力学尝试，无驱动器，斜坡重力驱动</p>
+                        <div class="video-meta">
+                            <span class="meta-badge">前进: 1.27m</span>
+                            <span class="meta-badge">触地: 6次</span>
+                            <span class="meta-badge">参数敏感</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="v01_mujoco_compass_gait/README.md" class="btn btn-secondary">README</a>
+                            <button class="btn btn-primary" onclick="openVideo('v01_mujoco_compass_gait/out/passive_compass_gait.mp4')">查看视频</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" data-milestone="true">
+                    <div class="video-thumbnail">
+                        <video src="v05_hybrid_compass_proof/out/hybrid_compass_mujoco.mp4" preload="metadata"></video>
+                        <div class="play-icon" onclick="playVideo(this)"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-version">V05</div>
+                        <h3 class="video-title">混合动力学极限环证明 ⭐</h3>
+                        <p class="video-description">纯被动极限环理论证明基准，Poincaré收敛与Floquet稳定性</p>
+                        <div class="video-meta">
+                            <span class="meta-badge milestone">理论基础</span>
+                            <span class="meta-badge">Floquet: 0.89</span>
+                            <span class="meta-badge">学术引用</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="v05_hybrid_compass_proof/README.md" class="btn btn-secondary">README</a>
+                            <button class="btn btn-primary" onclick="openVideo('v05_hybrid_compass_proof/out/hybrid_compass_mujoco.mp4')">查看视频</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 阶段2: 机械升级 -->
+        <div class="stage-section" data-stage="2">
+            <div class="stage-header">
+                <h2 class="stage-title">阶段二: 机械升级与控制律探索 (V06-V17)</h2>
+                <p class="stage-description">从理论被动转向准被动控制，提升稳定性与鲁棒性</p>
+            </div>
+            <div class="video-grid">
+                <div class="video-card" data-milestone="true">
+                    <div class="video-thumbnail">
+                        <video src="v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_walk.mp4" preload="metadata"></video>
+                        <div class="play-icon" onclick="playVideo(this)"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-version">V10</div>
+                        <h3 class="video-title">足踝滚动仿生步态 ⭐</h3>
+                        <p class="video-description">脚跟-足底-脚趾三段式滚动接触，仿生机械转译里程碑</p>
+                        <div class="video-meta">
+                            <span class="meta-badge milestone">仿生基准</span>
+                            <span class="meta-badge">CoT: 0.065</span>
+                            <span class="meta-badge">成功率: 16.7%</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="v10_rolling_foot_biomimetic_gait/README.md" class="btn btn-secondary">README</a>
+                            <button class="btn btn-primary" onclick="openVideo('v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_walk.mp4')">查看视频</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" data-milestone="true">
+                    <div class="video-thumbnail">
+                        <video src="v13_6_event_driven_fsm/out/v13_6_baseline_walk.mp4" preload="metadata"></video>
+                        <div class="play-icon" onclick="playVideo(this)"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-version">V13.6</div>
+                        <h3 class="video-title">事件驱动FSM控制 ⭐</h3>
+                        <p class="video-description">四相位有限状态机，显式相位切换与时序锁定</p>
+                        <div class="video-meta">
+                            <span class="meta-badge milestone">控制策略</span>
+                            <span class="meta-badge">CoT: 0.072</span>
+                            <span class="meta-badge">4相位FSM</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="v13_6_event_driven_fsm/README.md" class="btn btn-secondary">README</a>
+                            <button class="btn btn-primary" onclick="openVideo('v13_6_event_driven_fsm/out/v13_6_baseline_walk.mp4')">查看视频</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" data-milestone="false">
+                    <div class="video-thumbnail">
+                        <video src="v14_passive_arms/out/v14_baseline.mp4" preload="metadata"></video>
+                        <div class="play-icon" onclick="playVideo(this)"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-version">V14</div>
+                        <h3 class="video-title">被动摆臂版</h3>
+                        <p class="video-description">引入上肢被动摆动，自然耦合步态</p>
+                        <div class="video-meta">
+                            <span class="meta-badge">CoT改善: -2%</span>
+                            <span class="meta-badge">双臂被动</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="v14_passive_arms/README.md" class="btn btn-secondary">README</a>
+                            <button class="btn btn-primary" onclick="openVideo('v14_passive_arms/out/v14_baseline.mp4')">查看视频</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card" data-milestone="false">
+                    <div class="video-thumbnail">
+                        <video src="v16_motor_dynamics/out/v16_smoke_mx64ar_full.mp4" preload="metadata"></video>
+                        <div class="play-icon" onclick="playVideo(this)"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-version">V16</div>
+                        <h3 class="video-title">电机动力学建模</h3>
+                        <p class="video-description">MX-64AR真实带宽与延迟建模</p>
+                        <div class="video-meta">
+                            <span class="meta-badge">带宽: ~30Hz</span>
+                            <span class="meta-badge">时间常数: 10ms</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="v16_motor_dynamics/README.md" class="btn btn-secondary">README</a>
+                            <button class="btn btn-primary" onclick="openVideo('v16_motor_dynamics/out/v16_smoke_mx64ar_full.mp4')">查看视频</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 阶段3: 3D探索 -->
+        <div class="stage-section" data-stage="3">
+            <div class="stage-header">
+                <h2 class="stage-title">阶段三: 3D化探索 (V18-V21)</h2>
+                <p class="stage-description">从2D矢状面扩展到3D空间，探索侧向稳定机制</p>
+            </div>
+            <div class="video-grid">
+                <div class="video-card" data-milestone="true">
+                    <div class="video-thumbnail">
+                        <video src="v18_3d_lateral_stability/out/v18_baseline.mp4" preload="metadata"></video>
+                        <div class="play-icon" onclick="playVideo(this)"></div>
+                    </div>
+                    <div class="video-info">
+                        <div class="video-version">V18</div>
+                        <h3 class="video-title">3D侧向稳定探索 ⭐</h3>
+                        <p class="video-description">被动侧向稳定不可能性证明，3D化理论边界</p>
+                        <div class="video-meta">
+                            <span class="meta-badge milestone">理论边界</span>
+                            <span class="meta-badge">否定结果</span>
+                            <span class="meta-badge">决策门</span>
+                        </div>
+                        <div class="video-actions">
+                            <a href="v18_3d_lateral_stability/README.md" class="btn btn-secondary">README</a>
+                            <button class="btn btn-primary" onclick="openVideo('v18_3d_lateral_stability/out/v18_baseline.mp4')">查看视频</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="video-card no-video">
+                    <div class="video-info">
+                        <div class="video-version">V19-V21</div>
+                        <h3 class="video-title">主动侧向控制探索</h3>
+                        <p class="video-description">基于V18结论的主动控制方案验证（待补充视频）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 阶段4: 硬件 -->
+        <div class="stage-section" data-stage="4">
+            <div class="stage-header">
+                <h2 class="stage-title">阶段四: 硬件转译与实物验证 (V22-V24)</h2>
+                <p class="stage-description">从仿真到实物硬件的sim-to-real转译</p>
+            </div>
+            <div class="video-grid">
+                <div class="video-card no-video">
+                    <div class="video-info">
+                        <div class="video-version">V22-V24</div>
+                        <h3 class="video-title">硬件实现阶段</h3>
+                        <p class="video-description">机械设计、系统辨识、sim-to-real迁移（进行中）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>hw-1 步态研究项目 | V01-V24 完整版本 | 维护日期: 2026-06-05</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">
+                <a href="ANIMATIONS.md" style="color: #FBBF24; text-decoration: none;">完整索引文档</a> |
+                <a href="render_all.py" style="color: #FBBF24; text-decoration: none; margin-left: 15px;">批量渲染脚本</a> |
+                <a href="create_showcase.py" style="color: #FBBF24; text-decoration: none; margin-left: 15px;">精选合集生成器</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        function filterStage(stage) {
+            const sections = document.querySelectorAll('.stage-section');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            // 更新按钮状态
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (stage === 'all') {
+                sections.forEach(section => section.style.display = 'block');
+            } else if (stage === 'milestone') {
+                // 显示所有里程碑卡片
+                sections.forEach(section => {
+                    const cards = section.querySelectorAll('.video-card');
+                    let hasVisibleCard = false;
+                    cards.forEach(card => {
+                        if (card.dataset.milestone === 'true') {
+                            card.style.display = 'block';
+                            hasVisibleCard = true;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    section.style.display = hasVisibleCard ? 'block' : 'none';
+                });
+            } else {
+                sections.forEach(section => {
+                    if (section.dataset.stage == stage) {
+                        section.style.display = 'block';
+                        // 显示该阶段的所有卡片
+                        section.querySelectorAll('.video-card').forEach(card => {
+                            card.style.display = 'block';
+                        });
+                    } else {
+                        section.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        function playVideo(iconElement) {
+            const video = iconElement.previousElementSibling;
+            if (video.paused) {
+                video.play();
+                iconElement.style.display = 'none';
+                video.setAttribute('controls', 'controls');
+            }
+        }
+
+        function openVideo(path) {
+            window.open(path, '_blank');
+        }
+
+        // 视频加载完成后显示第一帧
+        document.querySelectorAll('video').forEach(video => {
+            video.addEventListener('loadeddata', function() {
+                this.currentTime = 1; // 跳到第1秒作为缩略图
+            });
+        });
+    </script>
+</body>
+</html>

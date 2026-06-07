@@ -1,0 +1,114 @@
+{
+  "reference": "D:\\Dunna\\Documents\\hw-1\\v14c_arm_mass_lightening\\out\\v14c_critical_f042_l102_summary.json",
+  "rows": [
+    {
+      "tag": "compensated_mx64ar",
+      "motor_preset": "mx64ar",
+      "compensate_friction": true,
+      "motor_name": "Dynamixel MX-64AR @12V",
+      "joint_tau_C_eff": 0.201,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 4.630269442622014,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 16.833678771642965,
+      "active_input_energy_elec_j": 113.44587179239974,
+      "coulomb_friction_dissipation_j": 4.430537159243476,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "completed"
+    },
+    {
+      "tag": "no_comp_mx64ar",
+      "motor_preset": "mx64ar",
+      "compensate_friction": false,
+      "motor_name": "Dynamixel MX-64AR @12V",
+      "joint_tau_C_eff": 0.201,
+      "success": false,
+      "alt_touchdowns": 4,
+      "forward_distance": 0.188837715623241,
+      "simulated_time": 3.5460000000000003,
+      "active_input_energy_mech_j": 3.389770440825928,
+      "active_input_energy_elec_j": 45.30919033581135,
+      "coulomb_friction_dissipation_j": 1.660268567314141,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "fall_down"
+    },
+    {
+      "tag": "compensated_ideal",
+      "motor_preset": "ideal",
+      "compensate_friction": true,
+      "motor_name": "ideal_v14c_degenerate",
+      "joint_tau_C_eff": 0.0,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 4.616822907034934,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 16.2363012042121,
+      "active_input_energy_elec_j": 16.2363012042121,
+      "coulomb_friction_dissipation_j": 0.0,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "completed"
+    },
+    {
+      "tag": "compensated_ec_i40",
+      "motor_preset": "ec_i40_53",
+      "compensate_friction": true,
+      "motor_name": "Maxon EC-i 40 70W + GP32 53:1",
+      "joint_tau_C_eff": 0.07632,
+      "success": true,
+      "alt_touchdowns": 10,
+      "forward_distance": 4.654310919049164,
+      "simulated_time": 11.994,
+      "active_input_energy_mech_j": 16.569955943010463,
+      "active_input_energy_elec_j": 89.3068775382778,
+      "coulomb_friction_dissipation_j": 1.693565153412416,
+      "motor_saturation_count_total": 0,
+      "phase_saturation_rate": {
+        "stance_early": 0.0,
+        "stance_late": 0.0,
+        "swing_thrust": 0.0,
+        "swing_retract": 0.0
+      },
+      "failure": "completed"
+    }
+  ],
+  "v14c_reference": {
+    "alt_touchdowns": 10,
+    "forward_distance": 4.616822907034934,
+    "active_input_energy_j": 16.2363012042121
+  },
+  "ideal_vs_v14c": {
+    "alt_td_match": true,
+    "forward_rel_diff": 0.0,
+    "energy_rel_diff": 0.0,
+    "passes_l0_threshold": true
+  },
+  "core_test": {
+    "compensated_mx64ar_success": true,
+    "compensated_mx64ar_alt_td": 10,
+    "compensated_mx64ar_forward": 4.630269442622014,
+    "no_comp_mx64ar_success": false,
+    "no_comp_mx64ar_failure": "fall_down",
+    "v16_regression_confirmed": true,
+    "recovery_vs_v14c_fwd_diff": 0.002912508419283386
+  },
+  "smoke_verdict": "friction_compensation_full_recovery"
+}

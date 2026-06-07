@@ -1,0 +1,5 @@
+# V13.6: 事件驱动 FSM 基准配置
+# 使用 V13.6 默认参数
+
+base_params: {}  # 使用 V10 默认参数作为 base
+fsm_params: {}   # 使用 V13.6 默认 FSM 参数

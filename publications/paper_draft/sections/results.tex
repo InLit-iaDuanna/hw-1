@@ -1,0 +1,222 @@
+% Results Section
+
+\subsection{Parameter Sensitivity Analysis (V11-V13)}
+
+\subsubsection{Stability Domain Mapping}
+
+V13 在 6 个参数维度上扫描稳定域（图 \ref{fig:stability_domain}）：
+
+\begin{itemize}
+    \item \textbf{Slice A（坡度 vs 足长）}：36 格，成功率 19.4\%
+    \item \textbf{Slice B（坡度 vs 腿长）}：36 格，成功率 8.3\%
+    \item \textbf{Slice C（足长 vs 腿长）}：36 格，成功率 16.7\%（V10 PD 基线）
+    \item \textbf{Slice E（髋部增益）}：36 格，成功率 13.9\%
+\end{itemize}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{fig2_stability_domain.pdf}
+    \caption{参数敏感性热图（Slice C）。红色区域为失败（跌倒/卡住），绿色为成功。白色圆点标注 V10 baseline 参数。}
+    \label{fig:stability_domain}
+\end{figure}
+
+关键发现：
+\begin{itemize}
+    \item \textbf{足长 - 腿长耦合}：足长过短（$<0.2$ m）或腿长过短（$<0.9$ m）导致几何约束失败
+    \item \textbf{髋部增益非单调}：$k_P \in [50, 100]$ N·m/rad 稳定，低增益（$<50$）和高增益（$>150$）均失败
+    \item \textbf{设计容差窄}：成功区域仅占参数空间的 10-20\%，硬件制造需严格公差
+\end{itemize}
+
+\subsubsection{FSM vs PD Control Comparison}
+
+表 \ref{tab:fsm_vs_pd} 对比 V13.6/V13.7 FSM 与 V10 PD 在 Slice C 上的表现：
+
+\begin{table}[h]
+\centering
+\caption{FSM vs PD 控制律对比（Slice C，36 格扫描）}
+\label{tab:fsm_vs_pd}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+控制律 & 成功率 & 平均前向距离 (m) & 平均 CoT \\
+\midrule
+V10 PD & 16.7\% (6/36) & 4.52 & 0.082 \\
+V13.6 FSM & 11.1\% (4/36) & 4.38 & 0.071 \\
+V13.6.1 FSM (优化) & 13.9\% (5/36) & 4.61 & 0.068 \\
+V13.7 FSM (补偿) & 27.8\% (10/36) & 4.73 & 0.066 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+V13.7 摩擦补偿使成功率提升 +11.1 pp（percentage points），CoT 降低 19.5\%。
+
+\subsection{Energy Efficiency (V12)}
+
+\subsubsection{Cost of Transport (CoT)}
+
+图 \ref{fig:energy_analysis} 展示 V08-V12 的能量效率对比：
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{fig3_energy_analysis.pdf}
+    \caption{（上）CoT 对比：V10 准被动（0.082）优于 V08 主动（0.135）。（下）机械能分解：动能（KE）与势能（PE）周期性交换。}
+    \label{fig:energy_analysis}
+\end{figure}
+
+\textbf{机械 CoT 定义}：
+\begin{equation}
+    \text{CoT}_{\text{mech}} = \frac{\int_0^T |P_{\text{actuator}}(t)| dt}{m g d_{\text{forward}}}
+\end{equation}
+其中 $P_{\text{actuator}} = \tau \cdot \omega$ 为执行器功率。
+
+关键结果：
+\begin{itemize}
+    \item V10（准被动 PD）：CoT = 0.082
+    \item V13.7（FSM + 补偿）：CoT = 0.066（降低 19.5\%）
+    \item 对比：人类行走 CoT $\sim$ 0.05 \cite{Collins2005}，Boston Dynamics Spot $\sim$ 0.8
+\end{itemize}
+
+\subsubsection{Collision Loss Analysis}
+
+碰撞损失占总能量输入的 32\%（V10）和 28\%（V13.7）。每次触地平均损失：
+\begin{equation}
+    E_{\text{loss}} = \frac{1}{2} m (\|\dot{\mathbf{v}}^-\|^2 - \|\dot{\mathbf{v}}^+\|^2) \approx 1.2 \text{ J}
+\end{equation}
+
+使用圆弧足（V10）比点足（V05）降低碰撞损失 18\%。
+
+\subsection{Floquet Stability Analysis (V13.7)}
+
+\subsubsection{Poincaré Map and Floquet Multipliers}
+
+使用 Goswami et al. \cite{Goswami1996} 的方法计算 Floquet 乘子：
+
+\begin{enumerate}
+    \item 运行 20 s 仿真，收集 $\geq 16$ 次右脚触地事件
+    \item 提取 Poincaré 截面状态向量：$\mathbf{x}_k = [\theta_{\text{hip}}, \dot{\theta}_{\text{hip}}, \theta_{\text{knee}}, \dot{\theta}_{\text{knee}}]^T$
+    \item 线性化 return map：$\mathbf{x}_{k+1} \approx \mathbf{J} \mathbf{x}_k$
+    \item 计算 Jacobian $\mathbf{J}$ 的特征值 $\{\lambda_i\}$
+\end{enumerate}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{fig4_phase_portrait.pdf}
+    \caption{相位空间轨迹。（左）髋关节极限环收敛。（右）膝关节 Poincaré 截面。红点为触地事件，绿色箭头表示收敛方向。}
+    \label{fig:phase_portrait}
+\end{figure}
+
+表 \ref{tab:floquet} 总结 Floquet 结果：
+
+\begin{table}[h]
+\centering
+\caption{Floquet 稳定性分析}
+\label{tab:floquet}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+配置 & max$|\lambda|$ & 收敛时间 $\tau$ (步) & 稳定性 \\
+\midrule
+V10 PD & 0.944 & 12 & 稳定 \\
+V13.7 FSM (ideal) & 1.0008 & $\sim$1000 & 边界稳定 \\
+V13.7 FSM (mx64ar+comp) & 1.0008 & $\sim$1000 & 边界稳定 \\
+V13.7 FSM (mx64ar-no) & >1.0 & - & 不稳定 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{矛盾现象}：V13.7 FSM 的 max$|\lambda| = 1.0008 > 1.0$（理论不稳定），但 20 s 仿真（$\sim$17 步）表现稳定。可能解释：
+\begin{itemize}
+    \item 发散极慢（$\tau_{\text{diverge}} \approx 1000$ 步）
+    \item 非线性稳定化（FSM 事件切换提供隐式稳定）
+    \item Floquet 线性化假设局限性
+\end{itemize}
+
+长时程实验（100 s, $\sim$125 步）验证该现象（见 Discussion）。
+
+\subsection{Motor Dynamics Impact (V16, V13.7)}
+
+\subsubsection{Coulomb Friction Resonance}
+
+V16 单因素扫描 $\tau_C \in [0, 3.0]$ N·m，结果（图 \ref{fig:friction_scan}）显示\textbf{非单调性}：
+
+\begin{itemize}
+    \item \textbf{成功带}：$\tau_C \in \{0, 0.034, \geq 0.27\}$ N·m
+    \item \textbf{失败带}：$\tau_C \in [0.013, 0.20]$ N·m
+    \item \textbf{MX-64AR 规格}：$\tau_C = 0.20$ N·m（落入失败带中央）
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{friction_scan_placeholder.pdf}
+    \caption{库仑摩擦扫描。横轴为 $\tau_C$，纵轴为前向距离。红色阴影为失败带（0.013-0.20 N·m），MX-64AR 标注为红叉。}
+    \label{fig:friction_scan}
+\end{figure}
+
+\subsubsection{Compensation Effectiveness}
+
+V13.7 补偿后，失败带 6 个测试点全部恢复（10/10 通过）。补偿误差分析：
+\begin{equation}
+    \tau_{\text{residual}} = \tau_C - \tau_C \cdot \tanh(\omega / \epsilon) \approx 0.01 \text{ N·m}
+\end{equation}
+残余误差 $<5\%$，不影响稳定性。
+
+\subsection{State Estimation Validation (V17)}
+
+\subsubsection{Noise Robustness}
+
+噪声容限实验结果（详见表 \ref{tab:state_est}）：
+
+\textbf{编码器量化误差}：
+\begin{equation}
+    \sigma_{\theta} = \frac{2\pi}{4096 \times 2} \approx 0.77 \text{ mrad}
+\end{equation}
+
+\textbf{速度估计 RMSE}（相对真值）：
+\begin{itemize}
+    \item noise\_scale=1.0: RMSE$_{\omega} = 0.082$ rad/s（$<10\%$ 相对误差）
+    \item noise\_scale=3.0: RMSE$_{\omega} = 0.24$ rad/s（临界通过）
+\end{itemize}
+
+\textbf{躯干位置估计 RMSE}：
+\begin{itemize}
+    \item noise\_scale=1.0: RMSE$_{x_{\text{hip}}} = 0.045$ m（$<5\%$ 腿长）
+\end{itemize}
+
+\subsubsection{Contact Delay Sensitivity}
+
+接触延迟扫描 $\Delta t_{\text{contact}} \in [0, 30]$ ms：
+\begin{itemize}
+    \item $\leq 15$ ms：成功（10 次触地）
+    \item $\geq 20$ ms：失败（FSM phase 切换错误）
+\end{itemize}
+
+硬件约束：V22 使用机械微动开关（响应时间 $<10$ ms），满足要求。
+
+\subsection{Hardware Specifications (V22)}
+
+图 \ref{fig:hardware_specs} 展示 V22 硬件设计：
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{fig5_hardware_specs.pdf}
+    \caption{V22 硬件设计。（左）机械结构示意图。（右上）质量分布饼图。（右下）参数对照表（仿真 vs 硬件）。}
+    \label{fig:hardware_specs}
+\end{figure}
+
+\textbf{关键规格}：
+\begin{itemize}
+    \item 腿长：1.00 m（仿真 1.00 m，误差 0\%）
+    \item 总质量：5.5 kg（仿真 5.0 kg，误差 +10\%）
+    \item 电机扭矩：6.0 N·m（仿真需求 4.5 N·m，裕度 +33\%）
+    \item 控制频率：1000 Hz（仿真 1000 Hz）
+\end{itemize}
+
+\textbf{物料成本}：
+\begin{itemize}
+    \item Dynamixel MX-64AR × 4：4800 元
+    \item Raspberry Pi 4B：500 元
+    \item 机械结构（铝型材、滑块、连接件）：800 元
+    \item 传感器（IMU、接触开关）：300 元
+    \item 电池（LiPo 4S 5000mAh）：400 元
+    \item \textbf{总计}：6800 元
+\end{itemize}
+
+V22 设计文档包含 CAD 模型、装配说明、加工工艺、系统辨识流程和 sim-to-real 迁移策略（V23, V24）。

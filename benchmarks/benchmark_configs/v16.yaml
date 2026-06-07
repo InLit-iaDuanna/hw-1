@@ -1,0 +1,8 @@
+# V16: 电机动力学基准配置
+# 使用 V16 默认参数
+
+base_params: {}  # 使用 PassiveArmsParams 默认值
+
+# 电机参数（使用 MX-64AR 预设）
+motor_params:
+  preset: mx64ar

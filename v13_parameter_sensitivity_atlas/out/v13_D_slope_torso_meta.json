@@ -1,0 +1,16 @@
+{
+  "slice": "D_slope_torso",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "slope_deg",
+    -1.0,
+    1.0
+  ],
+  "y": [
+    "torso_ratio",
+    0.005,
+    0.05
+  ],
+  "title": "slope_deg vs torso_ratio (m_torso / m_hip)"
+}

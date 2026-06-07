@@ -1,0 +1,90 @@
+{
+  "params": {
+    "slope_deg": 5,
+    "foot_radius": 0.055,
+    "friction": 1.25,
+    "hip_mass": 5.0,
+    "initial_vx": 0.05,
+    "knee_limit_deg": 58.0,
+    "duration": 12,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.12,
+    "knee_stiffness": 1.0,
+    "hip_joint_damping": 0.04,
+    "hip_joint_stiffness": 0.0,
+    "joint_damping": 0.014,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.42,
+    "swing_foot_clearance": 0.1,
+    "swing_hip_vel": 0.18,
+    "swing_knee_vel": -0.08,
+    "assist_torque": 1.5,
+    "assist_duration": 0.12,
+    "assist_target_deg": -16.0,
+    "support_assist_torque": 0.2,
+    "support_target_deg": 18.0,
+    "assist_kp": 2.2,
+    "assist_kd": 0.18,
+    "phase_assist": true,
+    "gait_period": 1.1,
+    "hip_amplitude_deg": 24,
+    "hip_offset_deg": 0.0
+  },
+  "score": 1366.2589202013269,
+  "alternating_touchdowns": 8,
+  "contact_events": [
+    {
+      "time": 0.039,
+      "foot": "left"
+    },
+    {
+      "time": 0.228,
+      "foot": "right"
+    },
+    {
+      "time": 1.066,
+      "foot": "left"
+    },
+    {
+      "time": 1.572,
+      "foot": "right"
+    },
+    {
+      "time": 2.132,
+      "foot": "left"
+    },
+    {
+      "time": 2.677,
+      "foot": "right"
+    },
+    {
+      "time": 3.2,
+      "foot": "left"
+    },
+    {
+      "time": 3.4370000000000003,
+      "foot": "right"
+    },
+    {
+      "time": 3.618,
+      "foot": "left"
+    }
+  ],
+  "forward_distance": 2.397565452462657,
+  "simulated_time": 4.056,
+  "failure": "fall_down",
+  "actuator_count": 2,
+  "actuator_names": [
+    "left_hip_assist",
+    "right_hip_assist"
+  ],
+  "knee_actuators": [],
+  "active_input_energy_j": 1.5832628971500484,
+  "net_actuator_work_j": -1.2733501868862607,
+  "energy_per_alternation_j": 0.19790786214375605,
+  "quasi_passive": true,
+  "uses_reward_function": false
+}

@@ -1,0 +1,20 @@
+{
+  "version": "hw-1-v1.0",
+  "timestamp": "2026-06-04T12:09:45.994868",
+  "params": {
+    "slope_deg": 2.5,
+    "duration": 12.0,
+    "hip_mass": 5.0
+  },
+  "results": {
+    "success": true,
+    "simulated_time": 12.0,
+    "forward_distance": 3.45,
+    "alternations": 14
+  },
+  "score": 2345.6,
+  "metadata": {
+    "git_hash": "a1b2c3d",
+    "notes": "baseline test"
+  }
+}

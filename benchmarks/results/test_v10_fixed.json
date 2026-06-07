@@ -1,0 +1,17 @@
+[
+  {
+    "version": "V10",
+    "success": false,
+    "forward_distance": 0.11822720979652274,
+    "alternations": 2,
+    "simulation_time": 0.25500941276550293,
+    "realtime_factor": 47.05708652031111,
+    "cot": 0.0,
+    "mechanical_work": 0.5448625928476306,
+    "positive_input_energy": 2.047053284169435,
+    "collision_loss": 0.0,
+    "convergence_time": -1.0,
+    "failure_mode": "stuck",
+    "extra_metrics": {}
+  }
+]

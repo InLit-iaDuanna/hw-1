@@ -1,0 +1,8 @@
+version,label,mass_kg,distance_m,active_input_energy_j,net_actuator_work_j,CoT,failure,alternating_touchdowns,quasi_passive,pure_passive
+V07,V07 纯被动失败,4.5,1.1046,,,,fall_down,0,False,False
+V08,V08 准被动髋助力,5.0,0.2576,0.07161848589270678,-0.05212963759844344,0.005668806947883645,completed,2,True,False
+V09,V09 仿生稳定,5.05,4.4292,18.298151944026525,12.85686280572731,0.08339228146912489,completed,21,True,False
+V10,V10 滚动足,5.05,4.5565,16.215377446606034,12.529835737269865,0.07183480896797877,completed,12,True,False
+V11_flat,V11 平地,5.05,4.5565,16.215377446606034,12.529835737269865,0.07183480896797877,completed,12,True,False
+V11_terrain,V11 小幅地形,5.05,4.4382,15.940471649065588,12.43090049431171,0.07249939006819765,completed,12,True,False
+V11_hard,V11 大扰动失败,5.05,2.1274,,,,fall_down,7,True,False

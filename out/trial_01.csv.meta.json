@@ -1,0 +1,14 @@
+{
+  "version": "hw-1-v1.0",
+  "timestamp": "2026-06-04T12:09:45.999868",
+  "csv_file": "trial_01.csv",
+  "n_rows": 500,
+  "columns": [
+    "time",
+    "signal"
+  ],
+  "metadata": {
+    "trial_id": 1,
+    "noise_level": 0.1
+  }
+}

@@ -1,0 +1,196 @@
+{
+  "slice": "C_foot_leg",
+  "grid": 6,
+  "official_comparison_grid": true,
+  "v10_baseline": {
+    "succ_n": 6,
+    "rate_pct": 16.7
+  },
+  "v13_5_planC": {
+    "succ_n": 0,
+    "rate_pct": 0.0
+  },
+  "v13_6_fsm": {
+    "succ_n": 4,
+    "rate_pct": 11.11111111111111,
+    "success_cells": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ]
+    ]
+  },
+  "v13_6_1_best": {
+    "candidate_id": 6,
+    "success_n": 5,
+    "n_total": 36,
+    "rate_pct": 13.88888888888889,
+    "success_cells": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ],
+    "failure_distribution": {
+      "stuck": 13,
+      "fall_down": 18,
+      "completed": 5
+    },
+    "cell_class_success": {
+      "v13_6_success": {
+        "n": 4,
+        "success_n": 3
+      },
+      "v10_success_v13_6_fail": {
+        "n": 6,
+        "success_n": 2
+      },
+      "shared_fail": {
+        "n": 26,
+        "success_n": 0
+      }
+    },
+    "swing_thrust_k_E": 7.5,
+    "swing_thrust_k_PD": 10.0,
+    "swing_thrust_tau_max": 4.0,
+    "swing_retract_tau_max": 3.0,
+    "stance_late_tau_max": 4.0
+  },
+  "delta_best_vs_v10_pp": -2.81111111111111,
+  "delta_best_vs_v13_6_pp": 2.7777777777777786,
+  "verdict": "partial_recovery_continue_search",
+  "candidates": [
+    {
+      "candidate_id": 6,
+      "success_n": 5,
+      "n_total": 36,
+      "rate_pct": 13.88888888888889,
+      "success_cells": [
+        [
+          0.042,
+          0.98
+        ],
+        [
+          0.042,
+          1.02
+        ],
+        [
+          0.042,
+          1.06
+        ],
+        [
+          0.046,
+          1.06
+        ],
+        [
+          0.046,
+          1.1
+        ]
+      ],
+      "failure_distribution": {
+        "stuck": 13,
+        "fall_down": 18,
+        "completed": 5
+      },
+      "cell_class_success": {
+        "v13_6_success": {
+          "n": 4,
+          "success_n": 3
+        },
+        "v10_success_v13_6_fail": {
+          "n": 6,
+          "success_n": 2
+        },
+        "shared_fail": {
+          "n": 26,
+          "success_n": 0
+        }
+      },
+      "swing_thrust_k_E": 7.5,
+      "swing_thrust_k_PD": 10.0,
+      "swing_thrust_tau_max": 4.0,
+      "swing_retract_tau_max": 3.0,
+      "stance_late_tau_max": 4.0
+    },
+    {
+      "candidate_id": 23,
+      "success_n": 5,
+      "n_total": 36,
+      "rate_pct": 13.88888888888889,
+      "success_cells": [
+        [
+          0.038,
+          1.02
+        ],
+        [
+          0.042,
+          0.98
+        ],
+        [
+          0.042,
+          1.06
+        ],
+        [
+          0.046,
+          1.06
+        ],
+        [
+          0.046,
+          1.1
+        ]
+      ],
+      "failure_distribution": {
+        "stuck": 12,
+        "fall_down": 19,
+        "completed": 5
+      },
+      "cell_class_success": {
+        "v13_6_success": {
+          "n": 4,
+          "success_n": 3
+        },
+        "v10_success_v13_6_fail": {
+          "n": 6,
+          "success_n": 2
+        },
+        "shared_fail": {
+          "n": 26,
+          "success_n": 0
+        }
+      },
+      "swing_thrust_k_E": 4.0,
+      "swing_thrust_k_PD": 0.0,
+      "swing_thrust_tau_max": 4.0,
+      "swing_retract_tau_max": 3.0,
+      "stance_late_tau_max": 4.0
+    }
+  ]
+}

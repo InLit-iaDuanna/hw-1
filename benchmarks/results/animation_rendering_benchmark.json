@@ -1,0 +1,127 @@
+{
+  "timestamp": "2026-06-05 11:54:32",
+  "render_results": [
+    {
+      "version": "V10",
+      "resolution": "720p",
+      "success": true,
+      "wall_time": 12.124033212661743,
+      "simulation_duration": 4.0,
+      "frame_count": 240,
+      "fps": 60,
+      "file_size_mb": 0.6943998336791992,
+      "render_fps": 19.79539281939246,
+      "realtime_factor": 0.32992321365654104,
+      "error_message": "",
+      "extra_metrics": {
+        "output_file": "v10_rolling_foot_biomimetic_gait\\out\\v10_rolling_foot_walk.mp4"
+      }
+    },
+    {
+      "version": "V13.6",
+      "resolution": "720p",
+      "success": true,
+      "wall_time": 12.619050025939941,
+      "simulation_duration": 11.994,
+      "frame_count": 719,
+      "fps": 60,
+      "file_size_mb": 0.7896413803100586,
+      "render_fps": 56.97734762299943,
+      "realtime_factor": 0.9504677432409668,
+      "error_message": "",
+      "extra_metrics": {
+        "output_file": "v13_6_event_driven_fsm\\out\\v13_6_baseline_walk.mp4"
+      }
+    },
+    {
+      "version": "V13.7",
+      "resolution": "720p",
+      "success": true,
+      "wall_time": 12.247686624526978,
+      "simulation_duration": 11.994,
+      "frame_count": 719,
+      "fps": 60,
+      "file_size_mb": 0.8388595581054688,
+      "render_fps": 58.70496380599293,
+      "realtime_factor": 0.9792869762017792,
+      "error_message": "",
+      "extra_metrics": {
+        "output_file": "v13_7_friction_compensation\\out\\v13_7_smoke_compensated_mx64ar.mp4"
+      }
+    },
+    {
+      "version": "V14",
+      "resolution": "720p",
+      "success": true,
+      "wall_time": 12.64718770980835,
+      "simulation_duration": 4.0,
+      "frame_count": 240,
+      "fps": 60,
+      "file_size_mb": 0.7146625518798828,
+      "render_fps": 18.976550795863602,
+      "realtime_factor": 0.3162758465977267,
+      "error_message": "",
+      "extra_metrics": {
+        "output_file": "v14_passive_arms\\out\\v14_baseline.mp4"
+      }
+    },
+    {
+      "version": "V16",
+      "resolution": "720p",
+      "success": true,
+      "wall_time": 12.142269611358643,
+      "simulation_duration": 3.5460000000000003,
+      "frame_count": 212,
+      "fps": 60,
+      "file_size_mb": 0.8327722549438477,
+      "render_fps": 17.45966831453667,
+      "realtime_factor": 0.2920376596384294,
+      "error_message": "",
+      "extra_metrics": {
+        "output_file": "v16_motor_dynamics\\out\\v16_smoke_ideal.mp4"
+      }
+    },
+    {
+      "version": "V17",
+      "resolution": "720p",
+      "success": true,
+      "wall_time": 12.095848560333252,
+      "simulation_duration": 11.994,
+      "frame_count": 719,
+      "fps": 60,
+      "file_size_mb": 0.7144603729248047,
+      "render_fps": 59.44188176742441,
+      "realtime_factor": 0.9915798747127794,
+      "error_message": "",
+      "extra_metrics": {
+        "output_file": "v17_state_estimation\\out\\v17_mx64ar_noise1.mp4"
+      }
+    }
+  ],
+  "parallel_results": [
+    {
+      "thread_count": 1,
+      "total_tasks": 6,
+      "wall_time": 73.94978928565979,
+      "speedup": 1.0,
+      "efficiency": 1.0,
+      "tasks_completed": 6
+    },
+    {
+      "thread_count": 2,
+      "total_tasks": 6,
+      "wall_time": 42.67594003677368,
+      "speedup": 1.7328215669517195,
+      "efficiency": 0.8664107834758598,
+      "tasks_completed": 6
+    },
+    {
+      "thread_count": 4,
+      "total_tasks": 6,
+      "wall_time": 31.639240980148315,
+      "speedup": 2.3372807625839935,
+      "efficiency": 0.5843201906459984,
+      "tasks_completed": 6
+    }
+  ]
+}

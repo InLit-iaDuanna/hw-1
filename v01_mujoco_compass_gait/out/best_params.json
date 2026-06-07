@@ -1,0 +1,38 @@
+{
+  "best_params": {
+    "slope_deg": 4.5,
+    "hip_mass": 4.5,
+    "foot_radius": 0.05,
+    "friction": 0.9,
+    "joint_damping": 0.012,
+    "hip_vx": 0.26,
+    "hip_vz": -0.02,
+    "stance_angle_deg": 9.0,
+    "swing_angle_deg": -26.0,
+    "swing_omega": 0.65
+  },
+  "scan_score": {
+    "contacts": 7,
+    "alternating_contacts": 6,
+    "forward_distance": 1.2717441763367554,
+    "duration": 7.000000000000672,
+    "min_hip_clearance": 0.42431881045446906,
+    "fell": false,
+    "nan_or_blowup": false
+  },
+  "final_score": {
+    "contacts": 7,
+    "alternating_contacts": 6,
+    "forward_distance": 1.273160575444312,
+    "duration": 8.000000000001005,
+    "min_hip_clearance": 0.42431881045446906,
+    "fell": false,
+    "nan_or_blowup": false
+  },
+  "acceptance": {
+    "no_actuators": true,
+    "alternating_contacts_target": 4,
+    "alternating_contacts_observed": 6,
+    "continuous_multistep": true
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "params": {
+    "slope_deg": 2.0,
+    "foot_radius": 0.055,
+    "friction": 1.25,
+    "hip_mass": 5.0,
+    "initial_vx": 0.18,
+    "knee_limit_deg": 58.0,
+    "duration": 12,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.035,
+    "knee_stiffness": 0.12,
+    "joint_damping": 0.014,
+    "release_phase": 0.08,
+    "swing_foot_x": -0.22,
+    "swing_foot_clearance": 0.1,
+    "swing_hip_vel": 0.18,
+    "swing_knee_vel": -0.08,
+    "assist_torque": 0.45,
+    "assist_duration": 0.16,
+    "assist_sign": 1.0
+  },
+  "score": 40.77130991257235,
+  "alternating_touchdowns": 0,
+  "contact_events": [
+    {
+      "time": 0.035,
+      "foot": "left"
+    }
+  ],
+  "forward_distance": 1.1531930910533554,
+  "simulated_time": 1.696,
+  "failure": "fall_down",
+  "actuator_count": 2,
+  "actuator_names": [
+    "left_hip_assist",
+    "right_hip_assist"
+  ],
+  "knee_actuators": [],
+  "active_input_energy_j": 0.06370828631940229,
+  "net_actuator_work_j": 0.05501710942662505,
+  "energy_per_alternation_j": 0.06370828631940229,
+  "quasi_passive": true,
+  "uses_reward_function": false
+}

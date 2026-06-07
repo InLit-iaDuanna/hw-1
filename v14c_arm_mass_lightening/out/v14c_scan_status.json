@@ -1,0 +1,52 @@
+{
+  "smoke_checks": [
+    {
+      "name": "baseline_light_arm",
+      "arm_mass": 0.01,
+      "foot_radius": 0.04,
+      "leg_scale": 1.0,
+      "requires_success": true,
+      "min_touchdowns": 10,
+      "min_forward": 4.0,
+      "passed": true,
+      "success": true,
+      "alternating_touchdowns": 11,
+      "forward_distance": 4.875310010498358,
+      "failure": "completed"
+    },
+    {
+      "name": "v14b_known_success_cell",
+      "arm_mass": 0.05,
+      "foot_radius": 0.042,
+      "leg_scale": 1.02,
+      "requires_success": true,
+      "min_touchdowns": 0,
+      "min_forward": 0.0,
+      "passed": true,
+      "success": true,
+      "alternating_touchdowns": 10,
+      "forward_distance": 4.222279836743121,
+      "failure": "completed"
+    }
+  ],
+  "scan_rows": 144,
+  "success_by_mass": {
+    "0.01": {
+      "success_n": 5,
+      "n_total": 36
+    },
+    "0.02": {
+      "success_n": 4,
+      "n_total": 36
+    },
+    "0.03": {
+      "success_n": 4,
+      "n_total": 36
+    },
+    "0.05": {
+      "success_n": 3,
+      "n_total": 36
+    }
+  },
+  "health_check_verdict": "v14b_reproduction_passed"
+}

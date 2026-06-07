@@ -1,0 +1,14 @@
+{
+  "fail_case": {
+    "roll_stiffness": 100.0,
+    "final_steps": 4,
+    "final_roll_deg": 6.477216748336816,
+    "final_hip_y": -0.10951581826277568
+  },
+  "stable_case": {
+    "roll_stiffness": 500.0,
+    "final_steps": 4,
+    "final_roll_deg": -0.017731103182903916,
+    "final_hip_y": -0.03230883102632756
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "slice": "v13_6_C_foot_leg",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "foot_radius",
+    0.03,
+    0.05
+  ],
+  "y": [
+    "leg_scale",
+    0.9,
+    1.1
+  ],
+  "title": "[V13.6 FSM] foot_radius vs leg_scale"
+}

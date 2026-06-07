@@ -1,0 +1,314 @@
+{
+  "scan_csv": "D:\\Dunna\\Documents\\hw-1\\v14c_arm_mass_lightening\\out\\v14c_C_foot_leg.csv",
+  "heatmap_png": "D:\\Dunna\\Documents\\hw-1\\v14c_arm_mass_lightening\\out\\v14c_C_heatmaps.png",
+  "comparison_rows": [
+    {
+      "arm_mass": 0.01,
+      "v14c_success_n": 5,
+      "v14c_total_n": 36,
+      "v14c_rate_pct": 13.88888888888889,
+      "v14b_reference_success_n": 3,
+      "delta_vs_v14b_success_n": 2,
+      "v13_6_1_best_no_arms_success_n": 5,
+      "delta_vs_v13_6_1_best_success_n": 0
+    },
+    {
+      "arm_mass": 0.02,
+      "v14c_success_n": 4,
+      "v14c_total_n": 36,
+      "v14c_rate_pct": 11.11111111111111,
+      "v14b_reference_success_n": 3,
+      "delta_vs_v14b_success_n": 1,
+      "v13_6_1_best_no_arms_success_n": 5,
+      "delta_vs_v13_6_1_best_success_n": -1
+    },
+    {
+      "arm_mass": 0.03,
+      "v14c_success_n": 4,
+      "v14c_total_n": 36,
+      "v14c_rate_pct": 11.11111111111111,
+      "v14b_reference_success_n": 3,
+      "delta_vs_v14b_success_n": 1,
+      "v13_6_1_best_no_arms_success_n": 5,
+      "delta_vs_v13_6_1_best_success_n": -1
+    },
+    {
+      "arm_mass": 0.05,
+      "v14c_success_n": 3,
+      "v14c_total_n": 36,
+      "v14c_rate_pct": 8.333333333333334,
+      "v14b_reference_success_n": 3,
+      "delta_vs_v14b_success_n": 0,
+      "v13_6_1_best_no_arms_success_n": 5,
+      "delta_vs_v13_6_1_best_success_n": -2
+    }
+  ],
+  "success_cells_by_mass": {
+    "0.01": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ],
+    "0.02": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ],
+    "0.03": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ]
+    ],
+    "0.05": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.046,
+        1.06
+      ]
+    ]
+  },
+  "failure_distributions_by_mass": {
+    "0.01": {
+      "completed": 5,
+      "fall_down": 18,
+      "stuck": 13
+    },
+    "0.02": {
+      "completed": 4,
+      "fall_down": 19,
+      "stuck": 13
+    },
+    "0.03": {
+      "completed": 4,
+      "fall_down": 20,
+      "stuck": 12
+    },
+    "0.05": {
+      "completed": 3,
+      "fall_down": 22,
+      "stuck": 11
+    }
+  },
+  "m001_vs_v13_6_1_best_no_arms": {
+    "overlap": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ],
+    "overlap_n": 5,
+    "retained": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ],
+    "retained_n": 5,
+    "lost": [],
+    "lost_n": 0,
+    "new": [],
+    "new_n": 0,
+    "is_subset_of_reference": true,
+    "contains_reference": true
+  },
+  "m001_vs_v14b": {
+    "overlap": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ]
+    ],
+    "overlap_n": 2,
+    "retained": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ]
+    ],
+    "retained_n": 2,
+    "lost": [
+      [
+        0.038,
+        1.02
+      ]
+    ],
+    "lost_n": 1,
+    "new": [
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ],
+    "new_n": 3,
+    "is_subset_of_reference": false,
+    "contains_reference": false
+  },
+  "mass_success_monotonicity": {
+    "masses": [
+      0.01,
+      0.02,
+      0.03,
+      0.05
+    ],
+    "success_counts": [
+      5,
+      4,
+      4,
+      3
+    ],
+    "nonincreasing_with_mass": true,
+    "nondecreasing_with_mass": false,
+    "strictly_decreases_anywhere": true,
+    "note": "Expected lightening trend is nonincreasing success as arm_mass increases."
+  },
+  "health_check_verdict": "v14b_reproduction_passed",
+  "primary_verdict": "arm_mass_is_root_cause_v15_unblocked",
+  "verdict_metadata": {
+    "health_check_arm_mass": 0.05,
+    "health_check_success_n": 3,
+    "health_check_rule": "pass iff m=0.05 success_n in {2,3,4}",
+    "primary_arm_mass": 0.01,
+    "primary_success_n": 5,
+    "primary_rule": "only evaluated when health_check_verdict passes; m=0.01 success_n >=5, ==4, ==3, <3"
+  },
+  "references": {
+    "v13_6_1_best_no_arms_cells": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ],
+    "v14b_cells": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ]
+    ]
+  },
+  "notes": [
+    "Cells are rounded to 3 decimals for stable set comparison.",
+    "Primary verdict is intentionally null unless the m=0.05 health check passes."
+  ]
+}

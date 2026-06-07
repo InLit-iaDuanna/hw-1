@@ -1,0 +1,19 @@
+{
+  "params": {
+    "slope_deg": 5.0,
+    "leg_length": 1.0,
+    "foot_radius": 0.04,
+    "step_length": 0.34,
+    "initial_speed": 0.24,
+    "fixed_speed": 0.47,
+    "convergence": 0.58,
+    "steps": 32,
+    "sample_per_step": 120
+  },
+  "alpha_deg": 9.787819056713978,
+  "steps": 32,
+  "forward_distance_m": 10.88,
+  "final_error": 1.0665854088820481e-08,
+  "no_actuators": true,
+  "model_role": "two-leg compass gait Poincare limit-cycle playback"
+}

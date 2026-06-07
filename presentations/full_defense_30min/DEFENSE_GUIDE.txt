@@ -1,0 +1,38 @@
+30-MINUTE FULL DEFENSE GUIDE
+============================
+
+Slide structure (18 slides, 30 minutes total):
+
+INTRODUCTION (5 minutes, 3 slides)
+1. Title slide (30s)
+2. Research background + motivation (2 min)
+3. Research objectives + contributions (2.5 min)
+
+METHODOLOGY (10 minutes, 6 slides)
+4. Version evolution timeline - fig1 (2 min)
+5. V05 Limit cycle proof - fig9 (2 min)
+6. V10 Rolling foot gait - fig3, fig4 (2 min)
+7. V13 FSM control + parameter sensitivity - fig2 (2 min)
+8. V16 Motor friction problem - fig6(A) (1 min)
+9. V13.7 Friction compensation solution - fig6(B-E) (1 min)
+
+RESULTS (10 minutes, 6 slides)
+10. State estimation robustness - fig7 (2 min)
+11. V18 Passive lateral stability failed - fig8(A) (1.5 min)
+12. V19 Active control insufficient - fig8(B-D) (1.5 min)
+13. V20 Root cause analysis - fig8(E) (1.5 min)
+14. Hardware design - fig5 (2 min)
+15. Performance summary table (1.5 min)
+
+CONCLUSION (5 minutes, 3 slides)
+16. Main contributions (2 min)
+17. Limitations + future work (2 min)
+18. Thank you + Q&A (1 min)
+
+Key defense strategies:
+- Emphasize methodology innovation (iterative + decision gates)
+- Frame negative results as valuable scientific contribution
+- Highlight reproducibility (all code + data available)
+- Show cost-effectiveness (<8000 RMB hardware)
+
+All figures (9) included in this directory.

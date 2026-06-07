@@ -1,0 +1,14 @@
+version,title,kind,rows,columns,hasTime,hasHipX,hasContacts,matFile,reportFile
+v01,V1 MuJoCo compass gait,timeseries,481,15,1,1,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v01\v01_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v01\v01_report.png
+v02,V2 rimless wheel limit cycle,timeseries,3601,11,1,0,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v02\v02_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v02\v02_report.png
+v03,V3 compass limit cycle reference,timeseries,3841,17,1,1,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v03\v03_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v03\v03_report.png
+v04,V4 kneed limit cycle reference,timeseries,2137,17,1,1,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v04\v04_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v04\v04_report.png
+v05,V5 hybrid passive proof,timeseries,415,18,1,1,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v05\v05_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v05\v05_report.png
+v06,V6 MVE homework expression,timeseries,3009,22,1,1,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v06\v06_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v06\v06_report.png
+v07,V7 true contact exploration,timeseries,229,18,1,1,1,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v07\v07_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v07\v07_report.png
+v08,V8 quasi-passive assist exploration,timeseries,464,24,1,1,1,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v08\v08_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v08\v08_report.png
+v09,V9 stable biomimetic contact gait,timeseries,2000,26,1,1,1,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v09\v09_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v09\v09_report.png
+v10,V10 rolling-foot biomimetic gait,timeseries,2000,42,1,1,1,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v10\v10_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v10\v10_report.png
+v11,V11 rugged terrain robustness,timeseries,1500,34,1,1,1,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v11\v11_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v11\v11_report.png
+v12,V12 energy and CoT analysis,energy,7,11,0,0,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v12\v12_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v12\v12_report.png
+v13,V13 parameter sensitivity atlas,atlas,6,9,0,0,0,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v13\v13_data.mat,D:\Dunna\Documents\hw-1\matlab-v01-v13-gait\out\v13\v13_report.png

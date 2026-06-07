@@ -1,0 +1,10 @@
+{
+  "topology": "sea_direct_drive_motor_rotor_series_spring",
+  "architecture_fix": "_FsmDataView_absolute_angles + no_inner_loop",
+  "degeneracy_test": "passed",
+  "best_k_sea": 5000.0,
+  "best_success_rate": "5/36",
+  "v14c_match": true,
+  "primary_finding": "v151_sea_direct_preserves_v14c_stability",
+  "note": "SEA direct-drive with k>=5000 matches V14c 5/36 exactly. k=500 at best cell gives 4.92m (vs V14c 4.62m) with 1.6 deg compliance. Non-monotonic: k=1000 has fewer successes than k=500 on smoke (resonance band)."
+}

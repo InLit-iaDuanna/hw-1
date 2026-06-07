@@ -1,0 +1,16 @@
+{
+  "slice": "E_hip_gains",
+  "grid": 6,
+  "duration": 12.0,
+  "x": [
+    "hip_kp",
+    15.0,
+    45.0
+  ],
+  "y": [
+    "hip_kd",
+    3.0,
+    9.0
+  ],
+  "title": "hip_kp vs hip_kd (slope=0, geometry=baseline)"
+}

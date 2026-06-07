@@ -1,0 +1,16 @@
+{
+  "timestamp": "20260604_125141",
+  "version": "V99_EXAMPLE",
+  "params": {
+    "slope_deg": 3.0,
+    "hip_stiffness": 50.0,
+    "damping": 2.0,
+    "mass": 12.0,
+    "simulation_time": 10.0
+  },
+  "results": {
+    "mean_position": 0.0006837994588647333,
+    "max_velocity": 1.1889604782615883,
+    "total_samples": 500
+  }
+}

@@ -1,0 +1,212 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "foot_radius": 0.042,
+    "foot_length": 0.12,
+    "toe_radius": 0.028,
+    "ankle_limit_deg": 25.0,
+    "ankle_damping": 0.08,
+    "ankle_stiffness": 10.0,
+    "friction": 1.35,
+    "hip_mass": 5.0,
+    "torso_mass": 0.05,
+    "torso_height": 0.3,
+    "initial_vx": 0.03,
+    "knee_limit_deg": 70.0,
+    "duration": 12.0,
+    "timestep": 0.001,
+    "thigh_length": 0.4896,
+    "shank_length": 0.5304,
+    "step_length": 0.34680000000000005,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "hip_torque_limit": 4.0,
+    "knee_torque_limit": 4.0,
+    "hip_kp": 30.0,
+    "hip_kd": 6.0,
+    "knee_kp": 16.0,
+    "knee_kd": 2.0,
+    "gait_period": 0.8,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "recovery_clearance": 0.38,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035,
+    "arm_length": 0.4,
+    "arm_mass": 0.01,
+    "arm_shoulder_z": 0.2,
+    "arm_lateral": 0.13,
+    "arm_limit_deg": 70.0,
+    "arm_damping": 0.02,
+    "arm_stiffness": 0.0,
+    "arm_radius": 0.022,
+    "arm_init_deg": 0.0
+  },
+  "v151_extra": {
+    "k_sea": 10000.0,
+    "c_sea": 1.264911064067352,
+    "motor_rotor_mass": 0.01,
+    "motor_rotor_iyy": 0.004,
+    "motor_bearing_damping": 0.001,
+    "timestep_used": 0.0005,
+    "spring_pe_max_J": 0.007099205105995999,
+    "spring_pe_mean_J": 0.0006532968829164732,
+    "q_link_max_left_deg": 0.06421753973273399,
+    "q_link_max_right_deg": 0.04613407943935949,
+    "energy_audit": {
+      "W_motor_input_J": 13.843526816562187,
+      "W_link_useful_J": -0.2000079538524186,
+      "W_damper_loss_J": 0.06719545460045048,
+      "dPE_spring_J": 5.899098089984593e-06,
+      "PE_spring_initial_J": 0.0,
+      "PE_spring_final_J": 5.899098089984593e-06
+    }
+  },
+  "v136_phase_params": {
+    "stance_early": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "stance_late": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "swing_thrust": {
+      "k_E": 7.5,
+      "k_PD": 10.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "swing_retract": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 3.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    }
+  },
+  "score": 5402.48134266298,
+  "success": true,
+  "success_criteria": {
+    "simulated_time_s": 10.0,
+    "alternating_touchdowns": 10,
+    "forward_distance_m": 0.8,
+    "must_complete_without_failure": true
+  },
+  "alternating_touchdowns": 11,
+  "contact_events": [
+    {
+      "time": 0.134,
+      "foot": "left",
+      "E": 52.1846890058381
+    },
+    {
+      "time": 0.3545,
+      "foot": "right",
+      "E": 51.658496414431156
+    },
+    {
+      "time": 0.791,
+      "foot": "left",
+      "E": 52.023886121604136
+    },
+    {
+      "time": 1.3035,
+      "foot": "right",
+      "E": 52.666138248332985
+    },
+    {
+      "time": 3.0125,
+      "foot": "left",
+      "E": 53.86547421050379
+    },
+    {
+      "time": 4.3545,
+      "foot": "right",
+      "E": 53.97837180884554
+    },
+    {
+      "time": 5.6325,
+      "foot": "left",
+      "E": 54.007751171967215
+    },
+    {
+      "time": 6.8925,
+      "foot": "right",
+      "E": 54.0167601697851
+    },
+    {
+      "time": 8.1485,
+      "foot": "left",
+      "E": 54.01998133443356
+    },
+    {
+      "time": 9.403500000000001,
+      "foot": "right",
+      "E": 54.018535180965024
+    },
+    {
+      "time": 10.6575,
+      "foot": "left",
+      "E": 54.01938199206565
+    },
+    {
+      "time": 11.911,
+      "foot": "right",
+      "E": 54.02141610284566
+    }
+  ],
+  "forward_distance": 4.873853283043756,
+  "simulated_time": 11.994,
+  "failure": "completed",
+  "actuator_count": 4,
+  "actuator_names": [
+    "left_hip_muscle",
+    "left_knee_stabilizer",
+    "right_hip_muscle",
+    "right_knee_stabilizer"
+  ],
+  "active_input_energy_j": 16.48995143988189,
+  "net_actuator_work_j": 12.977533440709594,
+  "energy_per_alternation_j": 1.499086494534717,
+  "total_mass_kg": 6.079999999999999,
+  "phase_transitions": 23,
+  "phase_durations_s": {
+    "stance_early": 4.306000000000333,
+    "stance_late": 7.693999999998455,
+    "swing_thrust": 4.306000000000333,
+    "swing_retract": 7.693999999998455
+  },
+  "phase_torque_integral_abs_Nms": {
+    "stance_early": 9.877163411829633,
+    "stance_late": 26.2406178257817,
+    "swing_thrust": 3.527933313244413,
+    "swing_retract": 7.561391244164943
+  },
+  "controller_energy_model": {
+    "mass_eff_kg": 5.1,
+    "note": "V15.1 SEA direct-drive: motor applies FSM torque directly; link couples through series hinge spring. Energy audit: W_motor_input - W_link_useful - W_damper_loss - dPE_spring ~ 0."
+  },
+  "quasi_passive": true,
+  "pure_passive": false,
+  "controller": "v13_6_1_best_fsm_via_FsmDataView_absolute_angles",
+  "topology": "sea_direct_drive_motor_rotor_series_spring"
+}

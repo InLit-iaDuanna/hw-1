@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hw-1 版本依赖关系可视化</title>
+    <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+            background: #f5f5f5;
+        }
+
+        #header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        #controls {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .control-group label {
+            font-weight: 600;
+            color: #333;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        button.primary {
+            background: #667eea;
+            color: white;
+        }
+
+        button.primary:hover {
+            background: #5568d3;
+        }
+
+        button.secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        button.secondary:hover {
+            background: #d0d0d0;
+        }
+
+        select {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        #network-container {
+            width: 100%;
+            height: calc(100vh - 180px);
+            border-top: 1px solid #ddd;
+        }
+
+        #info-panel {
+            position: fixed;
+            top: 180px;
+            right: 20px;
+            width: 350px;
+            max-height: calc(100vh - 200px);
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 20px;
+            display: none;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        #info-panel.active {
+            display: block;
+        }
+
+        #info-panel h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 8px;
+        }
+
+        .info-row {
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .info-value {
+            color: #333;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .metric-item {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 10px;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <h1>hw-1 版本依赖关系可视化系统</h1>
+        <div class="stats">
+            <span>📦 总版本数: <strong id="total-nodes">0</strong></span>
+            <span>🔗 依赖关系: <strong id="total-edges">0</strong></span>
+            <span>🎯 主线版本: <strong id="main-line-count">0</strong></span>
+            <span>⚠️ 否定结果: <strong id="negative-count">0</strong></span>
+        </div>
+    </div>
+
+    <div id="controls">
+        <div class="control-group">
+            <label>阶段筛选:</label>
+            <select id="stage-filter">
+                <option value="all">全部阶段</option>
+                <option value="1">阶段1: 理论证明 (V1-V13)</option>
+                <option value="2">阶段2: 2D机械升级 (V14-V17)</option>
+                <option value="3">阶段3: 3D化探索 (V18-V21)</option>
+                <option value="4">阶段4: 硬件落地 (V22-V25)</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>类型筛选:</label>
+            <select id="type-filter">
+                <option value="all">全部类型</option>
+                <option value="理论证明">理论证明</option>
+                <option value="机械转译">机械转译</option>
+                <option value="真实接触">真实接触</option>
+                <option value="准被动">准被动</option>
+                <option value="分析层">分析层</option>
+                <option value="硬件">硬件</option>
+                <option value="探索层">探索层</option>
+            </select>
+        </div>
+
+        <button class="primary" onclick="showMainLine()">🎯 显示主线路径</button>
+        <button class="primary" onclick="showDecisionGates()">🚪 显示决策门</button>
+        <button class="secondary" onclick="resetView()">🔄 重置视图</button>
+        <button class="secondary" onclick="fitNetwork()">📐 适应窗口</button>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #E3F2FD;"></div>
+                <span>阶段1</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FFF3E0;"></div>
+                <span>阶段2</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #FCE4EC;"></div>
+                <span>阶段3</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #E8F5E9;"></div>
+                <span>阶段4</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="network-container"></div>
+
+    <div id="info-panel">
+        <button class="close-btn" onclick="closeInfoPanel()">×</button>
+        <h3 id="info-title">版本信息</h3>
+        <div id="info-content"></div>
+    </div>
+
+    <script>
+        let network;
+        let allNodes, allEdges;
+        let graphData;
+        let nodesDataset, edgesDataset;
+
+        // 加载图数据
+        fetch('./graph_data.json')
+            .then(response => response.json())
+            .then(data => {
+                graphData = data;
+                initNetwork(data);
+                updateStats(data);
+            })
+            .catch(error => console.error('Error loading graph data:', error));
+
+        function initNetwork(data) {
+            allNodes = data.nodes;
+            allEdges = data.edges;
+
+            // 阶段颜色
+            const stageColors = {
+                1: '#E3F2FD',
+                2: '#FFF3E0',
+                3: '#FCE4EC',
+                4: '#E8F5E9'
+            };
+
+            // 转换节点
+            const nodes = allNodes.map(node => {
+                let shape = 'box';
+                let borderWidth = node.is_main_line ? 4 : 2;
+                let borderColor = node.is_main_line ? '#D32F2F' : '#666';
+
+                if (node.status.includes('否定') || node.status.includes('失败')) {
+                    borderColor = '#F44336';
+                    shape = 'box';
+                }
+
+                if (node.status === '纯被动') {
+                    shape = 'ellipse';
+                }
+
+                if (node.status.includes('文档')) {
+                    shape = 'diamond';
+                }
+
+                return {
+                    id: node.id,
+                    label: `${node.id}\n${node.name}`,
+                    title: createTooltip(node),
+                    color: {
+                        background: stageColors[node.stage],
+                        border: borderColor
+                    },
+                    shape: shape,
+                    borderWidth: borderWidth,
+                    font: {
+                        size: 14,
+                        face: 'Microsoft YaHei',
+                        multi: true
+                    },
+                    stage: node.stage,
+                    type: node.type,
+                    is_main_line: node.is_main_line,
+                    data: node
+                };
+            });
+
+            // 转换边
+            const edges = allEdges.map(edge => {
+                let style = 'solid';
+                let width = 2;
+                let color = '#999';
+
+                if (edge.type === '直接继承') {
+                    style = 'solid';
+                    width = 3;
+                    color = '#1976D2';
+                } else if (edge.type === '参考对照') {
+                    style = 'dashed';
+                    color = '#757575';
+                } else if (edge.type === '分支探索') {
+                    style = 'dotted';
+                    color = '#F57C00';
+                } else if (edge.type === '并行分支') {
+                    style = 'solid';
+                    color = '#388E3C';
+                }
+
+                return {
+                    from: edge.source,
+                    to: edge.target,
+                    label: edge.description,
+                    arrows: 'to',
+                    color: { color: color },
+                    width: width,
+                    dashes: style === 'dashed' ? [5, 5] : (style === 'dotted' ? [2, 2] : false),
+                    font: {
+                        size: 11,
+                        align: 'middle',
+                        face: 'Microsoft YaHei'
+                    },
+                    smooth: {
+                        type: 'cubicBezier',
+                        roundness: 0.4
+                    }
+                };
+            });
+
+            nodesDataset = new vis.DataSet(nodes);
+            edgesDataset = new vis.DataSet(edges);
+
+            const container = document.getElementById('network-container');
+            const networkData = {
+                nodes: nodesDataset,
+                edges: edgesDataset
+            };
+
+            const options = {
+                layout: {
+                    hierarchical: {
+                        direction: 'UD',
+                        sortMethod: 'directed',
+                        levelSeparation: 150,
+                        nodeSpacing: 200,
+                        treeSpacing: 250
+                    }
+                },
+                physics: {
+                    enabled: false
+                },
+                interaction: {
+                    hover: true,
+                    navigationButtons: true,
+                    keyboard: true
+                },
+                nodes: {
+                    margin: 10,
+                    widthConstraint: {
+                        maximum: 200
+                    }
+                },
+                edges: {
+                    smooth: {
+                        type: 'cubicBezier'
+                    }
+                }
+            };
+
+            network = new vis.Network(container, networkData, options);
+
+            // 点击节点显示详情
+            network.on('click', function(params) {
+                if (params.nodes.length > 0) {
+                    const nodeId = params.nodes[0];
+                    const node = nodesDataset.get(nodeId);
+                    showInfoPanel(node.data);
+                }
+            });
+        }
+
+        function createTooltip(node) {
+            let html = `<b>${node.id}: ${node.name}</b><br/>`;
+            html += `类型: ${node.type}<br/>`;
+            html += `状态: ${node.status}<br/>`;
+            html += `<br/>${node.description}<br/>`;
+
+            if (Object.keys(node.key_metrics).length > 0) {
+                html += `<br/><b>关键指标:</b><br/>`;
+                for (const [key, value] of Object.entries(node.key_metrics)) {
+                    html += `${key}: ${value}<br/>`;
+                }
+            }
+
+            return html;
+        }
+
+        function showInfoPanel(node) {
+            const panel = document.getElementById('info-panel');
+            const title = document.getElementById('info-title');
+            const content = document.getElementById('info-content');
+
+            title.textContent = `${node.id}: ${node.name}`;
+
+            let html = '';
+            html += `<div class="info-row"><div class="info-label">阶段</div><div class="info-value">阶段${node.stage}</div></div>`;
+            html += `<div class="info-row"><div class="info-label">类型</div><div class="info-value">${node.type}</div></div>`;
+            html += `<div class="info-row"><div class="info-label">状态</div><div class="info-value">${node.status}</div></div>`;
+            html += `<div class="info-row"><div class="info-label">描述</div><div class="info-value">${node.description}</div></div>`;
+
+            if (Object.keys(node.key_metrics).length > 0) {
+                html += `<div class="info-row"><div class="info-label">关键指标</div>`;
+                for (const [key, value] of Object.entries(node.key_metrics)) {
+                    html += `<div class="metric-item"><strong>${key}:</strong> ${value}</div>`;
+                }
+                html += `</div>`;
+            }
+
+            if (node.is_main_line) {
+                html += `<div class="info-row"><div class="info-label">主线版本</div><div class="info-value" style="color: #D32F2F; font-weight: bold;">✓ 是</div></div>`;
+            }
+
+            content.innerHTML = html;
+            panel.classList.add('active');
+        }
+
+        function closeInfoPanel() {
+            document.getElementById('info-panel').classList.remove('active');
+        }
+
+        function updateStats(data) {
+            document.getElementById('total-nodes').textContent = data.nodes.length;
+            document.getElementById('total-edges').textContent = data.edges.length;
+            document.getElementById('main-line-count').textContent = data.metadata.main_line.length;
+
+            const negativeCount = data.nodes.filter(n =>
+                n.status.includes('否定') || n.status.includes('失败')
+            ).length;
+            document.getElementById('negative-count').textContent = negativeCount;
+        }
+
+        function showMainLine() {
+            const mainLine = graphData.metadata.main_line;
+
+            // 高亮主线节点
+            nodesDataset.forEach(node => {
+                if (mainLine.includes(node.id)) {
+                    nodesDataset.update({
+                        id: node.id,
+                        borderWidth: 5,
+                        color: {
+                            background: node.color.background,
+                            border: '#D32F2F'
+                        }
+                    });
+                } else {
+                    nodesDataset.update({
+                        id: node.id,
+                        opacity: 0.3
+                    });
+                }
+            });
+
+            // 只显示主线边
+            edgesDataset.forEach(edge => {
+                const isMainLineEdge = mainLine.includes(edge.from) && mainLine.includes(edge.to);
+                edgesDataset.update({
+                    id: edge.id,
+                    hidden: !isMainLineEdge
+                });
+            });
+
+            network.fit({
+                nodes: mainLine,
+                animation: {
+                    duration: 1000,
+                    easingFunction: 'easeInOutQuad'
+                }
+            });
+        }
+
+        function showDecisionGates() {
+            const gates = graphData.metadata.decision_gates.map(g => g.version);
+
+            nodesDataset.forEach(node => {
+                if (gates.includes(node.id)) {
+                    nodesDataset.update({
+                        id: node.id,
+                        borderWidth: 6,
+                        color: {
+                            background: '#FFEB3B',
+                            border: '#F57C00'
+                        }
+                    });
+                } else {
+                    nodesDataset.update({
+                        id: node.id,
+                        opacity: 0.4
+                    });
+                }
+            });
+
+            network.fit({
+                nodes: gates,
+                animation: {
+                    duration: 1000,
+                    easingFunction: 'easeInOutQuad'
+                }
+            });
+        }
+
+        function resetView() {
+            // 重新初始化网络
+            initNetwork(graphData);
+            network.fit();
+        }
+
+        function fitNetwork() {
+            network.fit({
+                animation: {
+                    duration: 500,
+                    easingFunction: 'easeInOutQuad'
+                }
+            });
+        }
+
+        // 阶段筛选
+        document.getElementById('stage-filter').addEventListener('change', function(e) {
+            const stage = e.target.value;
+
+            nodesDataset.forEach(node => {
+                if (stage === 'all' || node.stage == stage) {
+                    nodesDataset.update({ id: node.id, hidden: false });
+                } else {
+                    nodesDataset.update({ id: node.id, hidden: true });
+                }
+            });
+
+            network.fit();
+        });
+
+        // 类型筛选
+        document.getElementById('type-filter').addEventListener('change', function(e) {
+            const type = e.target.value;
+
+            nodesDataset.forEach(node => {
+                if (type === 'all' || node.type === type) {
+                    nodesDataset.update({ id: node.id, hidden: false });
+                } else {
+                    nodesDataset.update({ id: node.id, hidden: true });
+                }
+            });
+
+            network.fit();
+        });
+    </script>
+</body>
+</html>

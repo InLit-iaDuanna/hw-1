@@ -1,0 +1,190 @@
+# Analysis Pipeline Configuration for hw-1 Gait Simulation Project
+
+# Data sources configuration
+data_sources:
+  v09_stable:
+    path: "D:/Dunna/Documents/hw-1/v09_stable_biomimetic_gait/out/v9_stable_walk_data.csv"
+    label: "V09 仿生稳定"
+    version: "v09"
+    type: "quasi_passive"
+
+  v10_rolling:
+    path: "D:/Dunna/Documents/hw-1/v10_rolling_foot_biomimetic_gait/out/v10_rolling_foot_walk_data.csv"
+    label: "V10 滚动足"
+    version: "v10"
+    type: "quasi_passive"
+
+  v11_flat:
+    path: "D:/Dunna/Documents/hw-1/v11_rugged_terrain_robustness/out/v11_sanity_flat_data.csv"
+    label: "V11 平地"
+    version: "v11"
+    type: "quasi_passive"
+
+  v11_terrain:
+    path: "D:/Dunna/Documents/hw-1/v11_rugged_terrain_robustness/out/v11_smoke_terrain_data.csv"
+    label: "V11 小幅地形"
+    version: "v11"
+    type: "quasi_passive"
+
+# Preprocessing configuration
+preprocessing:
+  outlier_detection:
+    method: "iqr"  # iqr, zscore, isolation_forest
+    iqr_factor: 1.5
+    zscore_threshold: 3.0
+
+  filtering:
+    enabled: true
+    method: "savgol"  # savgol, butterworth, median
+    window_length: 11
+    polyorder: 3
+
+  interpolation:
+    method: "cubic"  # linear, cubic, spline
+    fill_gaps: true
+
+  time_alignment:
+    enabled: false
+    resample_frequency: 1000  # Hz
+
+# Feature extraction configuration
+feature_extraction:
+  gait_cycle:
+    - period_length
+    - stride_length
+    - stride_frequency
+    - duty_factor
+    - double_support_ratio
+    - single_support_ratio
+    - left_right_symmetry
+
+  energy:
+    - cost_of_transport
+    - mechanical_work
+    - input_energy
+    - actuator_work
+    - collision_loss
+    - damping_loss
+    - power_peaks
+
+  stability:
+    - floquet_multipliers
+    - convergence_rate
+    - limit_cycle_radius
+    - poincare_stability
+    - phase_margin
+
+  contact:
+    - contact_duration
+    - force_peaks
+    - impulse_magnitude
+    - ground_clearance
+    - toe_off_velocity
+    - heel_strike_velocity
+
+  kinematics:
+    - hip_excursion
+    - knee_flexion_max
+    - ankle_angle_range
+    - joint_velocity_peaks
+    - center_of_mass_trajectory
+
+# Statistical analysis configuration
+statistical_analysis:
+  significance_tests:
+    - t_test
+    - anova
+    - mann_whitney
+
+  confidence_level: 0.95
+
+  sensitivity_analysis:
+    enabled: true
+    method: "correlation"  # correlation, regression, sobol
+
+  comparison_groups:
+    - ["v09_stable", "v10_rolling"]
+    - ["v11_flat", "v11_terrain"]
+
+# Visualization configuration
+visualization:
+  figure_format: "png"
+  figure_dpi: 300
+  figure_size: [10, 6]
+
+  standard_plots:
+    time_series:
+      - hip_position
+      - joint_angles
+      - joint_velocities
+      - contact_forces
+      - torques
+      - power
+
+    phase_plots:
+      - hip_angle_vs_velocity
+      - knee_angle_vs_velocity
+      - poincare_map
+
+    comparison_plots:
+      - bar_chart_metrics
+      - box_plot_distributions
+      - violin_plot_variability
+
+    statistical_plots:
+      - correlation_matrix
+      - sensitivity_heatmap
+      - significance_stars
+
+  color_scheme:
+    v09: "#1f77b4"
+    v10: "#ff7f0e"
+    v11: "#2ca02c"
+    v12: "#d62728"
+
+# Report generation configuration
+report:
+  output_formats:
+    - markdown
+    - html
+    - latex_table
+
+  output_directory: "D:/Dunna/Documents/hw-1/analysis_pipeline/reports"
+
+  sections:
+    - title: "数据概览"
+      content: ["data_summary", "preprocessing_summary"]
+
+    - title: "步态周期分析"
+      content: ["gait_metrics", "cycle_plots", "symmetry_analysis"]
+
+    - title: "能量效率分析"
+      content: ["cot_comparison", "energy_breakdown", "power_profiles"]
+
+    - title: "稳定性分析"
+      content: ["floquet_analysis", "convergence_metrics", "robustness_metrics"]
+
+    - title: "统计显著性"
+      content: ["significance_tests", "confidence_intervals", "effect_sizes"]
+
+    - title: "参数敏感性"
+      content: ["sensitivity_plots", "correlation_analysis", "recommendations"]
+
+  embed_figures: true
+  generate_latex_tables: true
+
+# Pipeline execution configuration
+execution:
+  parallel: true
+  max_workers: 4
+  cache_intermediate: true
+  cache_directory: "D:/Dunna/Documents/hw-1/analysis_pipeline/.cache"
+  log_level: "INFO"
+
+  steps:
+    - load_data
+    - preprocess
+    - extract_features
+    - statistical_analysis
+    - visualize
+    - generate_report

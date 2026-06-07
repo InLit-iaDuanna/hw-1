@@ -1,0 +1,8 @@
+﻿# Parameter Tuner 依赖包
+# 在 .venv-mujoco 环境中安装
+
+streamlit>=1.28.0
+plotly>=5.17.0
+pyyaml>=6.0
+pandas>=2.0.0
+numpy>=1.24.0

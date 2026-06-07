@@ -1,0 +1,97 @@
+{
+  "slice": "A_slope_step",
+  "actual_reused_v13_slice": "A_slope_foot",
+  "note": "Script name follows request; scan dimensions follow scan_atlas_v13.SLICES['A_slope_foot'].",
+  "grid": 6,
+  "duration": 12.0,
+  "sample_hz": 40.0,
+  "x": [
+    "slope_deg",
+    -1.0,
+    1.0
+  ],
+  "y": [
+    "foot_radius",
+    0.03,
+    0.05
+  ],
+  "v13_6_1_best_candidate": {
+    "candidate_id": 6,
+    "swing_thrust_k_E": 7.5,
+    "swing_thrust_k_PD": 10.0,
+    "swing_thrust_tau_max": 4.0,
+    "swing_retract_tau_max": 3.0,
+    "stance_late_tau_max": 4.0
+  },
+  "v13_6_1_best": {
+    "success_n": 4,
+    "n_total": 36,
+    "rate_pct": 11.11111111111111,
+    "success_cells": [
+      [
+        -1.0,
+        0.038
+      ],
+      [
+        -0.6,
+        0.046
+      ],
+      [
+        -0.2,
+        0.042
+      ],
+      [
+        -0.2,
+        0.046
+      ]
+    ],
+    "failure_distribution": {
+      "stuck": 10,
+      "completed": 5,
+      "fall_down": 21
+    }
+  },
+  "v13_6_original": {
+    "success_n": 2,
+    "n_total": 36,
+    "rate_pct": 5.555555555555555,
+    "success_cells": [
+      [
+        -0.2,
+        0.038
+      ],
+      [
+        -0.2,
+        0.042
+      ]
+    ],
+    "failure_distribution": {
+      "stuck": 5,
+      "fall_down": 28,
+      "completed": 3
+    }
+  },
+  "delta_vs_v13_6_pp": 5.555555555555555,
+  "v10_reference_from_v13_A": {
+    "success_n": 1,
+    "n_total": 36,
+    "rate_pct": 2.7777777777777777,
+    "success_cells": [
+      [
+        -0.6,
+        0.046
+      ]
+    ],
+    "failure_distribution": {
+      "stuck": 14,
+      "fall_down": 21,
+      "completed": 1
+    }
+  },
+  "delta_vs_v10_pp": 8.333333333333332,
+  "verdict": "partial",
+  "outputs": {
+    "csv": "v13_6_event_driven_fsm\\out\\v13_6_1_A_slope_step.csv",
+    "heatmap": "v13_6_event_driven_fsm\\out\\v13_6_1_A_heatmap.png"
+  }
+}

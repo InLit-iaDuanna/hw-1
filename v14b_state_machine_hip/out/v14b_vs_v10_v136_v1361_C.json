@@ -1,0 +1,284 @@
+{
+  "slice": "C_foot_leg",
+  "grid": 6,
+  "n_total": 36,
+  "arm_params_fixed": {
+    "arm_mass": 0.05,
+    "arm_length": 0.4
+  },
+  "phase_params": {
+    "source": "V13.6.1 best candidate 6",
+    "swing_thrust_k_E": 7.5,
+    "swing_thrust_k_PD": 10.0,
+    "swing_thrust_tau_max": 4.0,
+    "swing_retract_tau_max": 3.0,
+    "stance_late_tau_max": 4.0,
+    "only_difference_vs_v13_6": "swing_retract_tau_max 2.0 -> 3.0"
+  },
+  "v10_pd": {
+    "succ_n": 6,
+    "n_total": 36,
+    "rate_pct": 16.7,
+    "success_cells": [
+      [
+        0.034,
+        0.9
+      ],
+      [
+        0.038,
+        0.9
+      ],
+      [
+        0.038,
+        0.94
+      ],
+      [
+        0.038,
+        0.98
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ]
+  },
+  "v13_6_fsm": {
+    "succ_n": 4,
+    "n_total": 36,
+    "rate_pct": 11.1,
+    "success_cells": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ]
+    ]
+  },
+  "v13_6_1_best_no_arms": {
+    "candidate_id": 6,
+    "succ_n": 5,
+    "n_total": 36,
+    "rate_pct": 13.9,
+    "success_cells": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.042,
+        1.06
+      ],
+      [
+        0.046,
+        1.06
+      ],
+      [
+        0.046,
+        1.1
+      ]
+    ]
+  },
+  "v14b_v13_6_params": {
+    "succ_n": 3,
+    "n_total": 36,
+    "rate_pct": 8.333333333333332,
+    "success_cells": [
+      [
+        0.038,
+        1.02
+      ],
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ]
+    ]
+  },
+  "v14b_v13_6_1_best": {
+    "succ_n": 3,
+    "n_total": 36,
+    "rate_pct": 8.333333333333332,
+    "success_cells": [
+      [
+        0.042,
+        0.98
+      ],
+      [
+        0.042,
+        1.02
+      ],
+      [
+        0.046,
+        1.06
+      ]
+    ],
+    "failure_distribution": {
+      "stuck": 11,
+      "fall_down": 22,
+      "completed": 3
+    }
+  },
+  "overlap_and_containment": {
+    "vs_v10_pd": {
+      "overlap": [
+        [
+          0.046,
+          1.06
+        ]
+      ],
+      "overlap_n": 1,
+      "is_subset_of_reference": false,
+      "contains_reference": false,
+      "new_cells_vs_reference": [
+        [
+          0.042,
+          0.98
+        ],
+        [
+          0.042,
+          1.02
+        ]
+      ],
+      "lost_reference_cells": [
+        [
+          0.034,
+          0.9
+        ],
+        [
+          0.038,
+          0.9
+        ],
+        [
+          0.038,
+          0.94
+        ],
+        [
+          0.038,
+          0.98
+        ],
+        [
+          0.046,
+          1.1
+        ]
+      ]
+    },
+    "vs_v13_6_fsm": {
+      "overlap": [
+        [
+          0.042,
+          0.98
+        ],
+        [
+          0.042,
+          1.02
+        ]
+      ],
+      "overlap_n": 2,
+      "is_subset_of_reference": false,
+      "contains_reference": false,
+      "new_cells_vs_reference": [
+        [
+          0.046,
+          1.06
+        ]
+      ],
+      "lost_reference_cells": [
+        [
+          0.038,
+          1.02
+        ],
+        [
+          0.042,
+          1.06
+        ]
+      ]
+    },
+    "vs_v13_6_1_best_no_arms": {
+      "overlap": [
+        [
+          0.042,
+          0.98
+        ],
+        [
+          0.042,
+          1.02
+        ],
+        [
+          0.046,
+          1.06
+        ]
+      ],
+      "overlap_n": 3,
+      "is_subset_of_reference": true,
+      "contains_reference": false,
+      "new_cells_vs_reference": [],
+      "lost_reference_cells": [
+        [
+          0.042,
+          1.06
+        ],
+        [
+          0.046,
+          1.1
+        ]
+      ]
+    },
+    "vs_v14b_v13_6_params": {
+      "overlap": [
+        [
+          0.042,
+          0.98
+        ],
+        [
+          0.042,
+          1.02
+        ]
+      ],
+      "overlap_n": 2,
+      "is_subset_of_reference": false,
+      "contains_reference": false,
+      "new_cells_vs_reference": [
+        [
+          0.046,
+          1.06
+        ]
+      ],
+      "lost_reference_cells": [
+        [
+          0.038,
+          1.02
+        ]
+      ]
+    }
+  },
+  "delta_vs_v14b_v13_6_pp": 0.0,
+  "delta_vs_v13_6_1_best_no_arms_pp": -5.566666666666668,
+  "verdict": "same_as_v14b_v136_gain_erased_by_arms_needs_v14c_arm_mechanics",
+  "verdict_rules": {
+    ">8.3pct": "V13.6.1 best recovers geometry edge under arms; recommend as stage-2 FSM baseline.",
+    "=8.3pct": "V13.6.1 gain is erased under arms; V14c arm mechanics needed.",
+    "<8.3pct": "V13.6.1 best and arms create a new interaction instability."
+  }
+}

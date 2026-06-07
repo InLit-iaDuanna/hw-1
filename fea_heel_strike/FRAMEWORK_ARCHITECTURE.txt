@@ -1,0 +1,249 @@
+```
+═══════════════════════════════════════════════════════════════════════════════
+                    MuJoCo-FEA Integration Framework
+                    hw-1 Mechanical Design Validation
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           COMPLETE WORKFLOW                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+    MuJoCo Simulation                          FEA Analysis
+    ─────────────────                          ────────────
+         CSV Data                              Abaqus Model
+            │                                       │
+            ▼                                       ▼
+    ┌───────────────┐                      ┌──────────────┐
+    │ [1] Extract   │                      │ [3] Run FEA  │
+    │ Contact Forces├─────┐                │   Analysis   │
+    └───────────────┘     │                └──────────────┘
+            │             │                        │
+            ▼             │                        ▼
+    contact_forces.json   │                   results.odb
+            │             │                        │
+            │             │                        ▼
+            │             │                ┌──────────────┐
+            ▼             │                │ postprocess  │
+    ┌───────────────┐     │                │     odb      │
+    │ [2] Generate  │◄────┘                └──────────────┘
+    │  Boundary     │                              │
+    │  Conditions   │                              ▼
+    └───────────────┘                    heel_strike_results.json
+            │                                      │
+            ▼                                      │
+      .inp / .json                                 │
+            │                                      │
+            └──────────────┬───────────────────────┘
+                           │
+                           ▼
+                   ┌───────────────┐
+                   │ [4] Parse     │
+                   │ FEA Results   │
+                   └───────────────┘
+                           │
+                           ▼
+                   design_metrics.json
+                           │
+                           ▼
+                   ┌───────────────┐
+                   │ [5] Validate  │
+                   │ Constraints   │
+                   └───────────────┘
+                           │
+                           ▼
+                   ┌───────────────┐
+                   │  PASS / FAIL  │
+                   │ + Recommend   │
+                   └───────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              CORE MODULES
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ extract_contact_forces.py                                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Loads MuJoCo simulation CSV                                               │
+│ • Detects heel-strike / toe-off / steady-contact events                     │
+│ • Extracts peak forces and velocities                                       │
+│ • Calculates statistics (mean, std) across events                           │
+│ • Supports time-history extraction for dynamic FEA                          │
+│                                                                              │
+│ Input:  CSV file or version directory                                       │
+│ Output: contact_forces.json                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ generate_fea_boundary_conditions.py                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Converts contact forces to FEA boundary conditions                        │
+│ • Supports 3 BC types: initial_velocity, force_history, quasi_static        │
+│ • Generates Abaqus .inp fragments (*INITIAL CONDITIONS, *AMPLITUDE)         │
+│ • Exports generic JSON for other FEA tools (ANSYS, LS-DYNA)                │
+│ • Provides analysis type recommendations                                    │
+│                                                                              │
+│ Input:  contact_forces.json                                                 │
+│ Output: BC files (.inp, .json, .py)                                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ parse_fea_results.py                                                        │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Parses Abaqus ODB postprocessing JSON                                     │
+│ • Extracts peak von Mises stress, safety factors, plastic strain            │
+│ • Compares multiple materials (elastic scaling estimate)                    │
+│ • Calculates fatigue life using S-N curves                                  │
+│ • Generates design recommendations                                          │
+│                                                                              │
+│ Input:  heel_strike_results.json                                            │
+│ Output: design_validation_report.json                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ design_constraint_validator.py                                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • Validates structural integrity (SF_yield, plastic deformation)            │
+│ • Validates operational performance (walking speed, stability)              │
+│ • Validates fatigue life (100k cycles requirement)                          │
+│ • Validates manufacturing feasibility (cost, compatibility)                 │
+│ • Generates pass/fail verdict with recommendations                          │
+│                                                                              │
+│ Input:  FEA results + MuJoCo data                                           │
+│ Output: validation_report.json                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ workflow_example.py                                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ • End-to-end workflow orchestration                                         │
+│ • MuJoCoFEAWorkflow class for step-by-step or full execution               │
+│ • Handles version detection, output management, error recovery              │
+│ • Supports skip-FEA mode (use existing results)                             │
+│ • Material comparison and parametric studies                                │
+│                                                                              │
+│ Usage: python workflow_example.py --version v10 --material PLA --run-all   │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          SUPPORTING MODULES
+═══════════════════════════════════════════════════════════════════════════════
+
+  build_heel_strike_model.py    → Generates Abaqus axisymmetric impact model
+  build_tpu_model.py            → Generates dual-layer (PLA core + TPU shell)
+  postprocess_odb.py            → Abaqus Python ODB extraction script
+  contact_param_calibration.py  → MuJoCo contact parameter tuning
+  impact_conditions.py          → Legacy V10 impact extraction (superseded)
+  run_via_mcp.py                → MCP server integration example
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                             DOCUMENTATION
+═══════════════════════════════════════════════════════════════════════════════
+
+  README.md              → Quick overview and getting started
+  INTEGRATION_GUIDE.md   → Complete framework documentation (16 KB)
+  EXAMPLES.md            → 7 real-world application scenarios (14 KB)
+  QUICK_REFERENCE.md     → Command cheat sheet
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          VALIDATION & TESTING
+═══════════════════════════════════════════════════════════════════════════════
+
+  test_integration.py    → 7 integration tests covering all modules
+
+  Test Results: ✓ 7/7 PASSED (100%)
+    [OK] Module Imports
+    [OK] Data Structures
+    [OK] Contact Force Extraction
+    [OK] Boundary Condition Generation
+    [OK] Result Parsing
+    [OK] Design Validation
+    [OK] Workflow Manager
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                           APPLICATION SCENARIOS
+═══════════════════════════════════════════════════════════════════════════════
+
+  1. Material Selection          → Compare PLA, AL6061-T6, PETG, TPU
+  2. Design Verification         → Validate against safety/fatigue constraints
+  3. TPU Buffer Layer Optimization → Reduce impact stress by 25%
+  4. Parametric Study            → Heel radius effect on contact stress
+  5. Fatigue Life Analysis       → Estimate 100k cycle durability
+  6. Ground Condition Comparison → Hard vs elastic surface impact
+  7. Version Evolution Tracking  → Monitor design improvements V10→V19
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                         KEY DESIGN DECISIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+  Material Recommendation for V22 Hardware:
+
+    ┌────────────────┬────────────┬─────────────┬────────────┬─────────┐
+    │ Material       │ SF (yield) │ Fatigue     │ Mass (kg)  │ Status  │
+    ├────────────────┼────────────┼─────────────┼────────────┼─────────┤
+    │ AL6061-T6      │ 4.57       │ Infinite    │ 0.35       │ ✓ PASS  │
+    │ PETG           │ 2.12       │ 80k cycles  │ 0.16       │ ✓ PASS  │
+    │ PLA            │ 0.99       │ 15k cycles  │ 0.16       │ ✗ FAIL  │
+    │ TPU-95A (solo) │ 0.14       │ N/A         │ 0.14       │ ✗ FAIL  │
+    └────────────────┴────────────┴─────────────┴────────────┴─────────┘
+
+  Recommendation: AL6061-T6 CNC machining for final hardware
+                  PETG 3D printing for prototyping
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                            QUICK START
+═══════════════════════════════════════════════════════════════════════════════
+
+  cd D:\Dunna\Documents\hw-1\fea_heel_strike
+
+  # One-line full workflow
+  python workflow_example.py --version v10 --material PLA --skip-fea
+
+  # With material comparison
+  python workflow_example.py --version v10 --material PLA --skip-fea --compare-materials
+
+  # Run tests
+  python test_integration.py
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                          TECHNICAL SPECIFICATIONS
+═══════════════════════════════════════════════════════════════════════════════
+
+  FEA Setup:
+    • Solver: Abaqus/Explicit (impact transient dynamics)
+    • Geometry: Axisymmetric hemisphere r=40mm + rigid ground
+    • Elements: CAX4R (4-node axisymmetric, reduced integration)
+    • Mesh: ~2000 elements, 1mm element size
+    • Contact: General contact + Coulomb friction μ=1.35
+    • Load: 2.5 kg effective mass + initial velocity 0.758 m/s
+    • Duration: 10 ms
+
+  Supported Materials:
+    • PLA:       E=3.5 GPa,  σ_y=60 MPa,  ρ=1240 kg/m³
+    • AL6061-T6: E=69 GPa,   σ_y=276 MPa, ρ=2700 kg/m³
+    • TPU-95A:   E=26 MPa,   σ_y=8.6 MPa, ρ=1120 kg/m³
+    • PETG:      E=2.2 GPa,  σ_y=53 MPa,  ρ=1270 kg/m³
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                              VERSION INFO
+═══════════════════════════════════════════════════════════════════════════════
+
+  Framework Version: 1.0 (2026-06-04)
+  Python: 3.10+
+  Dependencies: numpy
+  FEA Software: Abaqus 2020+ (CAE + Solver)
+
+  Project: hw-1 Gait Rehabilitation Device
+  Application: Mechanical design validation for V22 hardware
+
+
+═══════════════════════════════════════════════════════════════════════════════
+```

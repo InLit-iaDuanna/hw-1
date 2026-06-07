@@ -1,0 +1,20 @@
+{
+  "analysis": "HeelStrike_V10_Axisymmetric_Explicit",
+  "status": "COMPLETED",
+  "material": "PLA",
+  "peak_contact_force_N": 3810.96,
+  "peak_force_time_ms": 1.3451,
+  "peak_von_mises_Pa": 23318476.0,
+  "peak_von_mises_MPa": 23.32,
+  "safety_factor_yield": 2.57,
+  "peak_PEEQ": 0.249222,
+  "plastic_deformation": true,
+  "energy_balance": {
+    "ALLKE": 0.653063178062439,
+    "ALLIE": 0.1607135534286499,
+    "ALLPD": 0.0840701162815094,
+    "ALLSE": 0.008374441415071487,
+    "ETOTAL": 0.8143356442451477
+  },
+  "v22_design_verdict": "PLA adequate (SF=2.6)"
+}

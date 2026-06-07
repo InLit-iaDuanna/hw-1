@@ -1,0 +1,237 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "foot_radius": 0.042,
+    "foot_length": 0.12,
+    "toe_radius": 0.028,
+    "ankle_limit_deg": 25.0,
+    "ankle_damping": 0.08,
+    "ankle_stiffness": 10.0,
+    "friction": 1.35,
+    "hip_mass": 5.0,
+    "torso_mass": 0.05,
+    "torso_height": 0.3,
+    "initial_vx": 0.03,
+    "knee_limit_deg": 70.0,
+    "duration": 12.0,
+    "timestep": 0.001,
+    "thigh_length": 0.4896,
+    "shank_length": 0.5304,
+    "step_length": 0.34680000000000005,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "hip_torque_limit": 4.0,
+    "knee_torque_limit": 4.0,
+    "hip_kp": 30.0,
+    "hip_kd": 6.0,
+    "knee_kp": 16.0,
+    "knee_kd": 2.0,
+    "gait_period": 0.8,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "recovery_clearance": 0.38,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035,
+    "arm_length": 0.4,
+    "arm_mass": 0.01,
+    "arm_shoulder_z": 0.2,
+    "arm_lateral": 0.13,
+    "arm_limit_deg": 70.0,
+    "arm_damping": 0.02,
+    "arm_stiffness": 0.0,
+    "arm_radius": 0.022,
+    "arm_init_deg": 0.0
+  },
+  "v136_phase_params": {
+    "stance_early": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "stance_late": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "swing_thrust": {
+      "k_E": 7.5,
+      "k_PD": 10.0,
+      "tau_max": 4.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    },
+    "swing_retract": {
+      "k_E": 0.0,
+      "k_PD": 30.0,
+      "tau_max": 3.0,
+      "kd": 6.0,
+      "E_target": 52.66
+    }
+  },
+  "v13_7_motor": {
+    "hip": {
+      "name": "ideal_v14c_degenerate",
+      "Kt": 1.0,
+      "J_rotor": 0.0,
+      "N": 1.0,
+      "eta": 1.0,
+      "I_max": 1000000000.0,
+      "I_cont": 1000000000.0,
+      "R_arm": 0.0,
+      "tau_C_motor": 0.0,
+      "b_visc_motor": 0.0,
+      "joint_J_eff": 0.0,
+      "joint_b_eff": 0.0,
+      "joint_tau_C_eff": 0.0,
+      "joint_tau_sat_peak": 1000000000.0,
+      "joint_tau_sat_cont": 1000000000.0
+    },
+    "knee": {
+      "name": "ideal_v14c_degenerate",
+      "Kt": 1.0,
+      "J_rotor": 0.0,
+      "N": 1.0,
+      "eta": 1.0,
+      "I_max": 1000000000.0,
+      "I_cont": 1000000000.0,
+      "R_arm": 0.0,
+      "tau_C_motor": 0.0,
+      "b_visc_motor": 0.0,
+      "joint_J_eff": 0.0,
+      "joint_b_eff": 0.0,
+      "joint_tau_C_eff": 0.0,
+      "joint_tau_sat_peak": 1000000000.0,
+      "joint_tau_sat_cont": 1000000000.0
+    }
+  },
+  "compensate_friction": true,
+  "score": 5187.82047080946,
+  "success": true,
+  "success_criteria": {
+    "simulated_time_s": 10.0,
+    "alternating_touchdowns": 10,
+    "forward_distance_m": 0.8,
+    "must_complete_without_failure": true
+  },
+  "alternating_touchdowns": 10,
+  "contact_events": [
+    {
+      "time": 0.137,
+      "foot": "left",
+      "E": 52.1441624533524
+    },
+    {
+      "time": 0.358,
+      "foot": "right",
+      "E": 51.627302597883656
+    },
+    {
+      "time": 0.792,
+      "foot": "left",
+      "E": 51.97699293452559
+    },
+    {
+      "time": 1.3,
+      "foot": "right",
+      "E": 52.614930359597274
+    },
+    {
+      "time": 3.337,
+      "foot": "left",
+      "E": 53.825431081680165
+    },
+    {
+      "time": 4.698,
+      "foot": "right",
+      "E": 53.96391423585191
+    },
+    {
+      "time": 5.9750000000000005,
+      "foot": "left",
+      "E": 54.00254217209129
+    },
+    {
+      "time": 7.234,
+      "foot": "right",
+      "E": 54.010708237024154
+    },
+    {
+      "time": 8.485,
+      "foot": "left",
+      "E": 54.019831964245924
+    },
+    {
+      "time": 9.736,
+      "foot": "right",
+      "E": 53.999678100847085
+    },
+    {
+      "time": 10.988,
+      "foot": "left",
+      "E": 54.01324624915867
+    }
+  ],
+  "forward_distance": 4.616822907034934,
+  "simulated_time": 11.994,
+  "failure": "completed",
+  "actuator_count": 4,
+  "actuator_names": [
+    "left_hip_muscle",
+    "left_knee_stabilizer",
+    "right_hip_muscle",
+    "right_knee_stabilizer"
+  ],
+  "active_input_energy_j": 16.2363012042121,
+  "active_input_energy_mech_j": 16.2363012042121,
+  "active_input_energy_elec_j": 16.2363012042121,
+  "coulomb_friction_dissipation_j": 0.0,
+  "net_actuator_work_j": 12.948174394442349,
+  "energy_per_alternation_j": 1.62363012042121,
+  "total_mass_kg": 6.079999999999999,
+  "phase_transitions": 22,
+  "phase_durations_s": {
+    "stance_early": 4.215999999999743,
+    "stance_late": 7.784000000000934,
+    "swing_thrust": 4.215999999999743,
+    "swing_retract": 7.784000000000934
+  },
+  "phase_torque_integral_abs_Nms": {
+    "stance_early": 9.810910757405596,
+    "stance_late": 27.051031609458036,
+    "swing_thrust": 3.5551840277658067,
+    "swing_retract": 7.582616211472202
+  },
+  "motor_saturation_count": {
+    "left_hip": 0,
+    "left_knee": 0,
+    "right_hip": 0,
+    "right_knee": 0
+  },
+  "phase_saturation_rate": {
+    "stance_early": 0.0,
+    "stance_late": 0.0,
+    "swing_thrust": 0.0,
+    "swing_retract": 0.0
+  },
+  "quasi_passive": true,
+  "pure_passive": false,
+  "passive_arms": true,
+  "uses_reward_function": false,
+  "controller": "v13_7_friction_compensated_fsm",
+  "v137_actuator_model": "L1_motor_dynamics_with_feedforward_compensation"
+}
