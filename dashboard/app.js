@@ -20,6 +20,193 @@ const STATUS_COLORS = {
   planned: '#6b7a96'
 };
 
+const STATUS_LABELS = {
+  done: '已完成',
+  next: '进行中',
+  planned: '计划中'
+};
+
+const PASSIVE_LABELS = {
+  yes: '纯被动',
+  no: '非被动',
+  partial: '部分被动',
+  analysis: '分析型',
+  display: '展示型',
+  tbd: '待定'
+};
+
+const PHASE_LABELS = {
+  1: '第一阶段',
+  2: '第二阶段',
+  3: '第三阶段',
+  4: '第四阶段'
+};
+
+const PHASE_TITLE_LABELS = {
+  1: '二维基础研究',
+  2: '二维机构升级',
+  3: '三维扩展验证',
+  4: '硬件落地'
+};
+
+const TAG_LABELS = {
+  'mujoco': 'MuJoCo',
+  'contact': '接触',
+  'baseline': '基线',
+  'limit-cycle': '极限环',
+  'pure-passive': '纯被动',
+  'theory': '理论',
+  'poincare': 'Poincare',
+  'knee': '膝关节',
+  'proof': '证明',
+  'hybrid-dynamics': '混合动力学',
+  'key-evidence': '关键证据',
+  'presentation': '展示',
+  'real-contact': '真实接触',
+  'failure-analysis': '失败分析',
+  'quasi-passive': '准被动',
+  'assist': '辅助',
+  'stable': '稳定',
+  'ankle': '踝关节',
+  'rolling-foot': '滚动足',
+  'terrain': '地形',
+  'robustness': '鲁棒性',
+  'basin-scan': '吸引域扫描',
+  'energy': '能量',
+  'floquet': 'Floquet',
+  'analysis': '分析',
+  'sensitivity': '敏感性',
+  'tolerance': '容差',
+  'decision-gate': '决策门',
+  'control': '控制',
+  'archived': '已归档',
+  'lessons': '经验',
+  'bang-bang': 'Bang-Bang',
+  'energy-target': '能量目标',
+  'key-result': '关键结果',
+  'grid-search': '网格搜索',
+  'optimization': '优化',
+  'arms': '摆臂',
+  'mechanism': '机构',
+  'recovery': '恢复',
+  'root-cause': '根因',
+  'monotonicity': '单调性',
+  'spring': '弹簧',
+  'elastic': '弹性',
+  'direct-drive': '直驱',
+  'resonance': '共振',
+  'motor': '电机',
+  'dynamics': '动力学',
+  'friction': '摩擦',
+  'compensation': '补偿',
+  'sensor': '传感器',
+  'estimation': '状态估计',
+  'next-up': '下一步',
+  'lateral': '侧向',
+  'coronal-plane': '冠状面',
+  'negative-result': '负结果',
+  'abduction': '外展',
+  'active-lateral': '主动侧向',
+  'step-width': '步宽',
+  'perturbation': '扰动',
+  'hardware': '硬件',
+  'motor-selection': '电机选型',
+  'parameter-estimation': '参数辨识',
+  'domain-randomization': '域随机化',
+  'transfer': '迁移',
+  'field-test': '实地测试',
+  'final': '最终验证'
+};
+
+const VERSION_TITLE_LABELS = {
+  V01: 'MuJoCo 指南针步态初始搭建',
+  V02: '无膝轮极限环对照',
+  V03: '指南针步态极限环对照',
+  V04: '带膝行走器极限环',
+  V05: '混合动力学纯被动证明',
+  V06: 'MVE 最小机械表达',
+  V07: '真实接触纯被动探索',
+  V08: '准被动弱补能探索',
+  V09: '准被动稳定行走',
+  V10: '滚动足仿生步态',
+  V11: '地形与扰动鲁棒性',
+  V12: '能量与 CoT 横向分析',
+  V13: '参数敏感性图谱',
+  'V13.5': '髋部控制律重设计（已归档）',
+  V13b: 'Floquet 长程极限环辨识',
+  'V13.6': '事件驱动 FSM 髋部控制',
+  'V13.6.1': 'FSM 阶段参数搜索',
+  V14: '被动摆臂（孤立点验证）',
+  V14b: 'FSM + 被动摆臂回流',
+  V14c: '摆臂质量减重扫描',
+  V15: '髋部 SEA / 弹性肌腱',
+  'V15.1': 'SEA 直驱实现',
+  V16: '一阶电机动力学（L1）',
+  'V13.7': '前馈摩擦补偿',
+  V17: '传感器闭环 / 状态估计',
+  V18: '三维侧向被动稳定探索',
+  V19: '髋外展辅助',
+  V20: '步宽调节控制',
+  V21: '三维扰动鲁棒性量化',
+  V22: '硬件设计 v1',
+  V23: '系统辨识',
+  V24: '仿真到现实迁移',
+  V25: '实地行走验证'
+};
+
+function statusLabel(status) {
+  return STATUS_LABELS[status] || status || '未知';
+}
+
+function passiveLabel(passive) {
+  return PASSIVE_LABELS[passive] || passive || '未知';
+}
+
+function phaseLabel(phase) {
+  return PHASE_LABELS[phase.id || phase] || `第${phase.id || phase}阶段`;
+}
+
+function phaseTitle(phase) {
+  return PHASE_TITLE_LABELS[phase.id || phase] || phase.title || '';
+}
+
+function tagLabel(tag) {
+  return TAG_LABELS[tag] || tag;
+}
+
+function versionTitle(version) {
+  return VERSION_TITLE_LABELS[version.id] || version.title;
+}
+
+function getVersionFolder(version) {
+  const overrides = {
+    V17: 'v17_state_estimation',
+    V15: 'v15_1_sea_direct'
+  };
+  return overrides[version.id] || version.folder || '';
+}
+
+function mujocoPageUrl(id) {
+  const url = new URL('mujoco.html', window.location.href);
+  url.searchParams.set('id', id);
+  url.searchParams.set('ui', 'launcher');
+  return url.href;
+}
+
+function mujocoPageHref(id) {
+  return `mujoco.html?id=${encodeURIComponent(id)}&ui=launcher`;
+}
+
+function openMujocoPage(id, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+  window.location.assign(mujocoPageUrl(id));
+}
+
+window.openMujocoPage = openMujocoPage;
+
 // ========== INIT ==========
 document.addEventListener('DOMContentLoaded', () => {
   initViewSwitcher();
@@ -102,7 +289,7 @@ function filterVersions(versions) {
     // Search filter
     if (filters.search) {
       const searchStr = filters.search;
-      const searchable = `${v.id} ${v.title} ${v.desc} ${v.findings} ${v.tags.join(' ')}`.toLowerCase();
+      const searchable = `${v.id} ${versionTitle(v)} ${v.title} ${v.desc} ${v.findings} ${v.tags.join(' ')}`.toLowerCase();
       if (!searchable.includes(searchStr)) return false;
     }
 
@@ -137,9 +324,9 @@ function updatePhaseProgress() {
         <div class="phase-header">
           <div class="phase-name">
             <span class="phase-dot" style="background: ${phase.color}"></span>
-            ${phase.tag}
+            ${phaseLabel(phase)}
           </div>
-          <div class="phase-count">${done}/${phaseVersions.length}</div>
+          <div class="phase-count">${done}/${phaseVersions.length} · ${progress}%</div>
         </div>
         <div class="phase-bar">
           <div class="phase-bar-fill" style="width: ${progress}%; background: ${phase.color}"></div>
@@ -182,7 +369,7 @@ function renderGridView(versions) {
   const container = document.getElementById('grid-view');
 
   if (versions.length === 0) {
-    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">No versions match the current filters</div>';
+    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">没有符合当前筛选条件的版本</div>';
     return;
   }
 
@@ -198,15 +385,15 @@ function renderGridView(versions) {
       if (match) keyMetric = `CoT: ${match[1]}`;
     } else if (v.findings.match(/(\d+)\/(\d+)/)) {
       const match = v.findings.match(/(\d+)\/(\d+)/);
-      if (match) keyMetric = `Success: ${match[1]}/${match[2]}`;
+      if (match) keyMetric = `成功率: ${match[1]}/${match[2]}`;
     }
 
     return `
-      <div class="version-card" onclick="openDetail('${v.id}')" data-status="${v.status}" style="--phase1: ${phaseColor}">
+      <div class="version-card" onclick="if (!event.target.closest('[data-no-detail]')) openDetail('${v.id}')" data-status="${v.status}" style="--phase1: ${phaseColor}">
         <div class="card-header">
           <div class="version-id" style="color: ${phaseColor}">${v.id}</div>
-          <div class="version-title">${v.title}</div>
-          <div class="status-badge" style="background: ${statusColor}; color: ${v.status === 'planned' ? 'var(--text)' : '#000'}">${v.status}</div>
+          <div class="version-title">${versionTitle(v)}</div>
+          <div class="status-badge" style="background: ${statusColor}; color: ${v.status === 'planned' ? 'var(--text)' : '#000'}">${statusLabel(v.status)}</div>
         </div>
 
         <div class="card-desc">${v.desc}</div>
@@ -216,11 +403,11 @@ function renderGridView(versions) {
             <span>📅</span> ${v.date}
           </div>
           <div class="card-meta-item">
-            <span>📍</span> ${phase.tag}
+            <span>📍</span> ${phaseLabel(phase)}
           </div>
           ${v.passive !== 'tbd' ? `
             <div class="card-meta-item">
-              <span>${v.passive === 'yes' ? '✅' : v.passive === 'no' ? '⚙️' : '⚡'}</span> ${v.passive}
+              <span>${v.passive === 'yes' ? '✅' : v.passive === 'no' ? '⚙️' : '⚡'}</span> ${passiveLabel(v.passive)}
             </div>
           ` : ''}
           ${keyMetric ? `
@@ -231,8 +418,12 @@ function renderGridView(versions) {
         </div>
 
         <div class="card-tags">
-          ${v.tags.slice(0, 4).map(tag => `<span class="tag">${tag}</span>`).join('')}
+          ${v.tags.slice(0, 4).map(tag => `<span class="tag">${tagLabel(tag)}</span>`).join('')}
           ${v.tags.length > 4 ? `<span class="tag">+${v.tags.length - 4}</span>` : ''}
+        </div>
+
+        <div class="card-actions">
+          <a class="inline-action" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="打开 ${v.id} 的 MuJoCo 仿真入口">MuJoCo 仿真</a>
         </div>
 
         ${v.status === 'done' && v.findings ? `
@@ -250,7 +441,7 @@ function renderTimelineView(versions) {
   const container = document.getElementById('timeline-view');
 
   if (versions.length === 0) {
-    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">No versions match the current filters</div>';
+    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">没有符合当前筛选条件的版本</div>';
     return;
   }
 
@@ -266,8 +457,8 @@ function renderTimelineView(versions) {
     return `
       <div class="timeline-phase">
         <div class="timeline-phase-header">
-          <div class="timeline-phase-badge" style="background: ${phase.color}">${phase.tag}</div>
-          <div class="timeline-phase-title">${phase.title}</div>
+          <div class="timeline-phase-badge" style="background: ${phase.color}">${phaseLabel(phase)}</div>
+          <div class="timeline-phase-title">${phaseTitle(phase)}</div>
           <div style="color: var(--text-muted); font-size: 0.8rem; margin-left: auto;">${phase.desc}</div>
         </div>
 
@@ -275,22 +466,23 @@ function renderTimelineView(versions) {
           ${phaseVersions.map(v => {
             const statusColor = STATUS_COLORS[v.status];
             return `
-              <div class="timeline-item" style="--dot-color: ${statusColor}" onclick="openDetail('${v.id}')">
+              <div class="timeline-item" style="--dot-color: ${statusColor}" onclick="if (!event.target.closest('[data-no-detail]')) openDetail('${v.id}')">
                 <style>.timeline-item[onclick*="${v.id}"]::before { background: ${statusColor} !important; }</style>
                 <div class="timeline-card" style="cursor: pointer; border-left: 3px solid ${phase.color}">
                   <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                     <div class="version-id" style="color: ${phase.color}">${v.id}</div>
-                    <div class="version-title" style="flex: 1">${v.title}</div>
+                    <div class="version-title" style="flex: 1">${versionTitle(v)}</div>
                     <div style="font-size: 0.7rem; color: var(--text-dim)">${v.date}</div>
+                    <a class="inline-action compact" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="打开 ${v.id} 的 MuJoCo 仿真入口">MuJoCo</a>
                   </div>
                   <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">${v.desc}</div>
                   ${v.status === 'done' ? `
                     <div style="font-size: 0.7rem; color: var(--text-muted); padding: 8px; background: var(--surface2); border-radius: 4px;">
-                      <strong style="color: var(--accent)">Finding:</strong> ${v.findings}
+                      <strong style="color: var(--accent)">关键发现：</strong> ${v.findings}
                     </div>
                   ` : ''}
                   <div style="display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap;">
-                    ${v.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    ${v.tags.map(tag => `<span class="tag">${tagLabel(tag)}</span>`).join('')}
                   </div>
                 </div>
               </div>
@@ -334,16 +526,19 @@ let graphState = {
 };
 
 function renderGraphView(versions) {
-  const svg = document.getElementById('graph-svg');
+  let svg = document.getElementById('graph-svg');
   const container = document.getElementById('graph-view');
   const width = container.clientWidth;
   const height = container.clientHeight;
 
+  const freshSvg = svg.cloneNode(false);
+  svg.replaceWith(freshSvg);
+  svg = freshSvg;
   svg.setAttribute('width', width);
   svg.setAttribute('height', height);
 
   if (versions.length === 0) {
-    svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="var(--text-muted)">No versions match the current filters</text>';
+    svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="var(--text-muted)">没有符合当前筛选条件的版本</text>';
     return;
   }
 
@@ -501,13 +696,6 @@ function renderGraphView(versions) {
           path.setAttribute('stroke-dasharray', '5,4');
         } else if (v.status === 'next') {
           path.setAttribute('stroke-dasharray', '10,5');
-          const animate = document.createElementNS(NS, 'animate');
-          animate.setAttribute('attributeName', 'stroke-dashoffset');
-          animate.setAttribute('from', '0');
-          animate.setAttribute('to', '15');
-          animate.setAttribute('dur', '1s');
-          animate.setAttribute('repeatCount', 'indefinite');
-          path.appendChild(animate);
         }
         edgeLayer.appendChild(path);
       });
@@ -572,7 +760,7 @@ function renderGraphView(versions) {
       grp.appendChild(lt);
 
       const lt2 = document.createElementNS(NS, 'text');
-      lt2.textContent = g.status === 'passed' ? 'PASSED' : 'PENDING';
+      lt2.textContent = g.status === 'passed' ? '通过' : '待定';
       lt2.setAttribute('x', gx);
       lt2.setAttribute('y', gy + s + 11);
       lt2.setAttribute('text-anchor', 'middle');
@@ -614,6 +802,7 @@ function renderGraphView(versions) {
       glowRect.setAttribute('stroke-width', '2');
       glowRect.setAttribute('opacity', '0.3');
       glowRect.setAttribute('filter', `url(#glow${v.phase})`);
+      glowRect.classList.add('node-glow');
       grp.appendChild(glowRect);
     }
 
@@ -661,6 +850,7 @@ function renderGraphView(versions) {
     stripe.setAttribute('fill', STATUS_COLORS[v.status] || '#3d4460');
     stripe.setAttribute('opacity', '0.9');
     stripe.setAttribute('pointer-events', 'none');
+    stripe.classList.add('node-stripe');
     grp.appendChild(stripe);
 
     const tid = document.createElementNS(NS, 'text');
@@ -672,9 +862,11 @@ function renderGraphView(versions) {
     tid.setAttribute('font-family', 'monospace');
     tid.setAttribute('fill', isNext ? '#fbbf24' : pc);
     tid.setAttribute('pointer-events', 'none');
+    tid.classList.add('node-id-label');
     grp.appendChild(tid);
 
-    const short = v.title.length > 17 ? v.title.slice(0, 15) + '…' : v.title;
+    const title = versionTitle(v);
+    const short = title.length > 17 ? title.slice(0, 15) + '…' : title;
     const ttl = document.createElementNS(NS, 'text');
     ttl.textContent = short;
     ttl.setAttribute('x', p.x + 10);
@@ -682,7 +874,39 @@ function renderGraphView(versions) {
     ttl.setAttribute('font-size', '8.5');
     ttl.setAttribute('fill', '#6b7a96');
     ttl.setAttribute('pointer-events', 'none');
+    ttl.classList.add('node-title-label');
     grp.appendChild(ttl);
+
+    const simBtn = document.createElementNS(NS, 'g');
+    simBtn.classList.add('node-sim-button');
+    simBtn.style.cursor = 'pointer';
+
+    const simRect = document.createElementNS(NS, 'rect');
+    simRect.setAttribute('x', p.x + NW - 43);
+    simRect.setAttribute('y', p.y + 6);
+    simRect.setAttribute('width', 36);
+    simRect.setAttribute('height', 16);
+    simRect.setAttribute('rx', '4');
+    simRect.setAttribute('fill', 'rgba(96, 165, 250, 0.16)');
+    simRect.setAttribute('stroke', 'rgba(96, 165, 250, 0.55)');
+    simRect.classList.add('node-sim-bg');
+    simBtn.appendChild(simRect);
+
+    const simText = document.createElementNS(NS, 'text');
+    simText.textContent = '仿真';
+    simText.setAttribute('x', p.x + NW - 25);
+    simText.setAttribute('y', p.y + 18);
+    simText.setAttribute('text-anchor', 'middle');
+    simText.setAttribute('font-size', '8');
+    simText.setAttribute('font-weight', '700');
+    simText.setAttribute('fill', '#60a5fa');
+    simText.setAttribute('pointer-events', 'none');
+    simText.classList.add('node-sim-label');
+    simBtn.appendChild(simText);
+
+    simBtn.addEventListener('mousedown', e => e.stopPropagation());
+    simBtn.addEventListener('click', e => openMujocoPage(v.id, e));
+    grp.appendChild(simBtn);
 
     grp.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -697,42 +921,41 @@ function renderGraphView(versions) {
     const p = graphState.positions[id];
     const grp = graphState.nodeGroups[id];
     if (!grp) return;
-    const ch = [...grp.children];
+    const glow = grp.querySelector('.node-glow');
+    const rect = grp.querySelector('.node-body');
+    const stripe = grp.querySelector('.node-stripe');
+    const idLabel = grp.querySelector('.node-id-label');
+    const titleLabel = grp.querySelector('.node-title-label');
+    const simBg = grp.querySelector('.node-sim-bg');
+    const simLabel = grp.querySelector('.node-sim-label');
 
-    // Find elements by their tag/class instead of assuming index
-    // Structure: [glowRect?], rect, stripe, tid(text), ttl(text)
-    let rectIdx = 0, stripeIdx = 1, tidIdx = 2, ttlIdx = 3;
-
-    // If first child is the glow rect, shift indices
-    if (ch[0].tagName === 'rect' && ch[0].getAttribute('filter')?.includes('glow')) {
-      rectIdx = 1;
-      stripeIdx = 2;
-      tidIdx = 3;
-      ttlIdx = 4;
-      // Update glow rect
-      ch[0].setAttribute('x', p.x - 2);
-      ch[0].setAttribute('y', p.y - 2);
+    if (glow) {
+      glow.setAttribute('x', p.x - 2);
+      glow.setAttribute('y', p.y - 2);
     }
-
-    // Update main rect
-    if (ch[rectIdx]) {
-      ch[rectIdx].setAttribute('x', p.x);
-      ch[rectIdx].setAttribute('y', p.y);
+    if (rect) {
+      rect.setAttribute('x', p.x);
+      rect.setAttribute('y', p.y);
     }
-    // Update stripe
-    if (ch[stripeIdx]) {
-      ch[stripeIdx].setAttribute('x', p.x);
-      ch[stripeIdx].setAttribute('y', p.y + 3);
+    if (stripe) {
+      stripe.setAttribute('x', p.x);
+      stripe.setAttribute('y', p.y + 3);
     }
-    // Update ID text
-    if (ch[tidIdx]) {
-      ch[tidIdx].setAttribute('x', p.x + 10);
-      ch[tidIdx].setAttribute('y', p.y + 16);
+    if (idLabel) {
+      idLabel.setAttribute('x', p.x + 10);
+      idLabel.setAttribute('y', p.y + 16);
     }
-    // Update title text
-    if (ch[ttlIdx]) {
-      ch[ttlIdx].setAttribute('x', p.x + 10);
-      ch[ttlIdx].setAttribute('y', p.y + 32);
+    if (titleLabel) {
+      titleLabel.setAttribute('x', p.x + 10);
+      titleLabel.setAttribute('y', p.y + 32);
+    }
+    if (simBg) {
+      simBg.setAttribute('x', p.x + NW - 43);
+      simBg.setAttribute('y', p.y + 6);
+    }
+    if (simLabel) {
+      simLabel.setAttribute('x', p.x + NW - 25);
+      simLabel.setAttribute('y', p.y + 18);
     }
   }
 
@@ -802,13 +1025,9 @@ function renderGraphView(versions) {
   Object.values(graphState.nodeGroups).forEach(nodeGrp => {
     nodeGrp.addEventListener('mouseenter', function() {
       this.style.filter = 'brightness(1.3)';
-      this.style.transform = 'scale(1.05)';
-      this.style.transformOrigin = 'center';
-      this.style.transition = 'all 0.2s';
     });
     nodeGrp.addEventListener('mouseleave', function() {
       this.style.filter = '';
-      this.style.transform = '';
     });
   });
 }
@@ -854,64 +1073,65 @@ function openDetail(id) {
   document.getElementById('detail-id').style.background = phaseColor;
   document.getElementById('detail-id').style.color = '#000';
 
-  document.getElementById('detail-title').textContent = v.title;
+  document.getElementById('detail-title').textContent = versionTitle(v);
 
   const body = document.getElementById('detail-body');
   body.innerHTML = `
     <div class="detail-section">
-      <div style="display: inline-block; padding: 4px 10px; background: ${statusColor}; color: ${v.status === 'planned' ? 'var(--text)' : '#000'}; border-radius: 4px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">
-        ${v.status}
+      <div style="display: inline-block; padding: 4px 10px; background: ${statusColor}; color: ${v.status === 'planned' ? 'var(--text)' : '#000'}; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px;">
+        ${statusLabel(v.status)}
       </div>
+      <a class="inline-action" style="margin-left: 8px;" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail>打开 MuJoCo 仿真</a>
     </div>
 
     <div class="detail-section">
-      <h4>Description</h4>
+      <h4>版本描述</h4>
       <p>${v.desc}</p>
     </div>
 
     ${v.findings ? `
       <div class="detail-section">
-        <h4>Key Findings</h4>
+        <h4>关键发现</h4>
         <p style="background: var(--surface2); padding: 12px; border-left: 3px solid var(--accent); border-radius: 4px;">${v.findings}</p>
       </div>
     ` : ''}
 
     <div class="detail-section">
-      <h4>Details</h4>
+      <h4>元数据</h4>
       <table class="detail-table">
         <tr>
-          <td>Phase</td>
-          <td><span style="color: ${phaseColor}; font-weight: 600">${phase.tag}</span> — ${phase.title}</td>
+          <td>阶段</td>
+          <td><span style="color: ${phaseColor}; font-weight: 600">${phaseLabel(phase)}</span> — ${phaseTitle(phase)}</td>
         </tr>
         <tr>
-          <td>Passive</td>
-          <td>${v.passive}</td>
+          <td>被动性</td>
+          <td>${passiveLabel(v.passive)}</td>
         </tr>
         <tr>
-          <td>Date</td>
+          <td>日期</td>
           <td>${v.date}</td>
         </tr>
         <tr>
-          <td>Folder</td>
-          <td><code style="font-size: 0.75rem">${v.folder || '—'}</code></td>
+          <td>目录</td>
+          <td><code style="font-size: 0.75rem">${getVersionFolder(v) || '—'}</code></td>
         </tr>
         <tr>
-          <td>Dependencies</td>
+          <td>依赖</td>
           <td>${v.deps.length ? v.deps.map(d => `<span style="color: var(--accent); cursor: pointer;" onclick="openDetail('${d}')">${d}</span>`).join(', ') : '—'}</td>
         </tr>
       </table>
     </div>
 
     <div class="detail-section">
-      <h4>Tags</h4>
+      <h4>标签</h4>
       <div style="display: flex; flex-wrap: wrap; gap: 6px;">
-        ${v.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+        ${v.tags.map(tag => `<span class="tag">${tagLabel(tag)}</span>`).join('')}
       </div>
     </div>
 
     ${v.deps.length > 0 ? `
       <div class="detail-section">
-        <h4>Dependency Chain</h4>
+        <h4>依赖链</h4>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
           ${buildDependencyChain(v.id).map(step => `<div style="padding: 4px 0;">${step}</div>`).join('')}
         </div>
@@ -938,7 +1158,7 @@ function buildDependencyChain(id) {
     if (!v) return;
 
     const indent = '→ '.repeat(level);
-    chain.push(`${indent}<span style="color: ${PHASE_COLORS[v.phase]}">${v.id}</span> ${v.title}`);
+    chain.push(`${indent}<span style="color: ${PHASE_COLORS[v.phase]}">${v.id}</span> ${versionTitle(v)}`);
 
     v.deps.forEach(depId => trace(depId, level + 1));
   }
@@ -967,37 +1187,37 @@ function renderCompareView() {
   container.innerHTML = `
     <div class="compare-view">
       <div class="compare-header">
-        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">Version Comparison</h2>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">Select 2-4 versions to compare side-by-side</p>
+        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">版本对比</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">选择 2-4 个已完成版本进行并排比较</p>
       </div>
 
       <div class="compare-selector">
         <div class="version-selector">
-          <label>Version 1</label>
+          <label>版本 1</label>
           <select id="compare-v1" onchange="updateCompare()">
-            <option value="">-- Select --</option>
-            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${v.title}</option>`).join('')}
+            <option value="">请选择</option>
+            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
         <div class="version-selector">
-          <label>Version 2</label>
+          <label>版本 2</label>
           <select id="compare-v2" onchange="updateCompare()">
-            <option value="">-- Select --</option>
-            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${v.title}</option>`).join('')}
+            <option value="">请选择</option>
+            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
         <div class="version-selector">
-          <label>Version 3 (optional)</label>
+          <label>版本 3（可选）</label>
           <select id="compare-v3" onchange="updateCompare()">
-            <option value="">-- Select --</option>
-            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${v.title}</option>`).join('')}
+            <option value="">请选择</option>
+            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
         <div class="version-selector">
-          <label>Version 4 (optional)</label>
+          <label>版本 4（可选）</label>
           <select id="compare-v4" onchange="updateCompare()">
-            <option value="">-- Select --</option>
-            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${v.title}</option>`).join('')}
+            <option value="">请选择</option>
+            ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
       </div>
@@ -1015,7 +1235,7 @@ function updateCompare() {
   const resultsDiv = document.getElementById('compare-results');
 
   if (ids.length < 2) {
-    resultsDiv.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">Select at least 2 versions to compare</p>';
+    resultsDiv.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">请至少选择 2 个版本进行对比</p>';
     return;
   }
 
@@ -1024,30 +1244,32 @@ function updateCompare() {
   resultsDiv.innerHTML = versions.map(v => {
     const phaseColor = PHASE_COLORS[v.phase];
     const metrics = extractMetrics(v);
+    const phase = PHASES.find(p => p.id === v.phase);
 
     return `
       <div class="compare-card" style="border-left: 4px solid ${phaseColor}">
         <div class="compare-card-header">
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
             <div class="version-id" style="color: ${phaseColor}">${v.id}</div>
-            <div style="font-weight: 600; font-size: 0.9rem;">${v.title}</div>
+            <div style="font-weight: 600; font-size: 0.9rem;">${versionTitle(v)}</div>
+            <a class="inline-action compact" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="打开 ${v.id} 的 MuJoCo 仿真入口">MuJoCo</a>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);">${v.desc}</div>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">Phase</span>
-          <span class="compare-metric-value" style="color: ${phaseColor}">${PHASES.find(p => p.id === v.phase).tag}</span>
+          <span class="compare-metric-label">阶段</span>
+          <span class="compare-metric-value" style="color: ${phaseColor}">${phaseLabel(phase)}</span>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">Date</span>
+          <span class="compare-metric-label">日期</span>
           <span class="compare-metric-value">${v.date}</span>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">Passive</span>
-          <span class="compare-metric-value">${v.passive}</span>
+          <span class="compare-metric-label">被动性</span>
+          <span class="compare-metric-value">${passiveLabel(v.passive)}</span>
         </div>
 
         ${metrics.cot ? `
@@ -1059,38 +1281,38 @@ function updateCompare() {
 
         ${metrics.successRate ? `
           <div class="compare-metric">
-            <span class="compare-metric-label">Success Rate</span>
+            <span class="compare-metric-label">成功率</span>
             <span class="compare-metric-value" style="color: var(--next)">${metrics.successRate}</span>
           </div>
         ` : ''}
 
         ${metrics.floquet ? `
           <div class="compare-metric">
-            <span class="compare-metric-label">Max Floquet</span>
+            <span class="compare-metric-label">最大 Floquet</span>
             <span class="compare-metric-value" style="color: var(--accent)">${metrics.floquet}</span>
           </div>
         ` : ''}
 
         ${metrics.forward ? `
           <div class="compare-metric">
-            <span class="compare-metric-label">Forward Distance</span>
+            <span class="compare-metric-label">前进距离</span>
             <span class="compare-metric-value">${metrics.forward}</span>
           </div>
         ` : ''}
 
         <div class="compare-metric">
-          <span class="compare-metric-label">Dependencies</span>
-          <span class="compare-metric-value">${v.deps.length || 'None'}</span>
+          <span class="compare-metric-label">依赖数</span>
+          <span class="compare-metric-value">${v.deps.length || '无'}</span>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">Tags</span>
-          <span class="compare-metric-value" style="font-size: 0.7rem;">${v.tags.slice(0, 3).join(', ')}${v.tags.length > 3 ? '...' : ''}</span>
+          <span class="compare-metric-label">标签</span>
+          <span class="compare-metric-value" style="font-size: 0.7rem;">${v.tags.slice(0, 3).map(tagLabel).join('、')}${v.tags.length > 3 ? '...' : ''}</span>
         </div>
 
         ${v.findings ? `
           <div style="margin-top: 16px; padding: 12px; background: var(--surface2); border-radius: 6px; border-left: 3px solid var(--accent);">
-            <div style="font-size: 0.7rem; font-weight: 600; color: var(--accent); margin-bottom: 4px;">KEY FINDING</div>
+            <div style="font-size: 0.7rem; font-weight: 600; color: var(--accent); margin-bottom: 4px;">关键发现</div>
             <div style="font-size: 0.75rem; line-height: 1.5; color: var(--text-muted);">${v.findings}</div>
           </div>
         ` : ''}
@@ -1129,23 +1351,23 @@ function extractMetrics(version) {
 function renderTrendsView() {
   const container = document.getElementById('trends-view');
 
-  // Extract versions with CoT data
+  // 提取带有 CoT 指标的版本
   const cotData = VERSIONS
     .filter(v => v.status === 'done' && v.findings)
     .map(v => {
       const metrics = extractMetrics(v);
-      return metrics.cot ? { id: v.id, phase: v.phase, cot: parseFloat(metrics.cot), title: v.title } : null;
+      return metrics.cot ? { id: v.id, phase: v.phase, cot: parseFloat(metrics.cot), title: versionTitle(v) } : null;
     })
     .filter(v => v);
 
-  // Extract versions with success rate data
+  // 提取带有成功率指标的版本
   const successData = VERSIONS
     .filter(v => v.status === 'done' && v.findings)
     .map(v => {
       const match = v.findings.match(/(\d+)\/(\d+)/);
       if (match) {
-        const rate = (parseInt(match[0]) / parseInt(match[1])) * 100;
-        return { id: v.id, phase: v.phase, rate, title: v.title };
+        const rate = (parseInt(match[1]) / parseInt(match[2])) * 100;
+        return { id: v.id, phase: v.phase, rate, title: versionTitle(v) };
       }
       return null;
     })
@@ -1153,40 +1375,37 @@ function renderTrendsView() {
 
   container.innerHTML = `
     <div class="trends-view">
-      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">Energy & Performance Trends</h2>
+      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">能耗与性能趋势</h2>
 
       ${cotData.length > 0 ? `
         <div class="chart-container">
-          <div class="chart-title">Cost of Transport (CoT) Evolution</div>
+          <div class="chart-title">运输成本（CoT）演化</div>
           <div class="chart-canvas" id="cot-chart"></div>
         </div>
       ` : ''}
 
       ${successData.length > 0 ? `
         <div class="chart-container">
-          <div class="chart-title">Success Rate Across Versions</div>
+          <div class="chart-title">各版本成功率</div>
           <div class="chart-canvas" id="success-chart"></div>
         </div>
       ` : ''}
 
       <div class="chart-container">
-        <div class="chart-title">Version Timeline by Phase</div>
+        <div class="chart-title">各阶段已完成版本数</div>
         <div class="chart-canvas" id="timeline-chart"></div>
       </div>
     </div>
   `;
 
-  // Render CoT chart
   if (cotData.length > 0) {
     renderCotChart(cotData);
   }
 
-  // Render success chart
   if (successData.length > 0) {
     renderSuccessChart(successData);
   }
 
-  // Render timeline chart
   renderTimelineChart();
 }
 
@@ -1212,42 +1431,45 @@ function renderCotChart(data) {
         </linearGradient>
       </defs>
 
-      <!-- Axes -->
+      <!-- 坐标轴 -->
       <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"
             stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
       <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"
             stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
 
-      <!-- Y-axis labels -->
+      <!-- Y 轴标签 -->
       <text x="${padding.left - 10}" y="${padding.top}" text-anchor="end" fill="#8892a4" font-size="11">${maxCot.toFixed(3)}</text>
       <text x="${padding.left - 10}" y="${height - padding.bottom}" text-anchor="end" fill="#8892a4" font-size="11">${minCot.toFixed(3)}</text>
-      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">Cost of Transport</text>
+      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">运输成本 CoT</text>
 
-      <!-- Grid lines -->
+      <!-- 网格线 -->
       ${[0, 0.25, 0.5, 0.75, 1].map(frac => {
         const y = padding.top + chartHeight * frac;
         return `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(45, 53, 72, 0.3)" stroke-width="1" stroke-dasharray="4,4"/>`;
       }).join('')}
   `;
 
-  // Plot data points and line
+  // 绘制数据点和折线
+  const xDivisor = Math.max(data.length - 1, 1);
   const points = data.map((d, i) => {
-    const x = padding.left + (chartWidth / (data.length - 1)) * i;
+    const x = data.length === 1
+      ? padding.left + chartWidth / 2
+      : padding.left + (chartWidth / xDivisor) * i;
     const y = padding.top + chartHeight * (1 - (d.cot - minCot) / (maxCot - minCot));
     return { x, y, d };
   });
 
-  // Area fill
+  // 面积填充
   const areaPath = `M ${points[0].x},${height - padding.bottom} ` +
     points.map(p => `L ${p.x},${p.y}`).join(' ') +
     ` L ${points[points.length - 1].x},${height - padding.bottom} Z`;
   html += `<path d="${areaPath}" fill="url(#cotGrad)" opacity="0.5"/>`;
 
-  // Line
+  // 折线
   const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ');
   html += `<path d="${linePath}" fill="none" stroke="#60a5fa" stroke-width="3"/>`;
 
-  // Points
+  // 数据点
   points.forEach(p => {
     const color = PHASE_COLORS[p.d.phase];
     html += `
@@ -1257,7 +1479,7 @@ function renderCotChart(data) {
     `;
   });
 
-  // X-axis labels
+  // X 轴标签
   points.forEach((p, i) => {
     html += `
       <text x="${p.x}" y="${height - padding.bottom + 20}" text-anchor="middle" fill="#8892a4" font-size="10" font-weight="600">${p.d.id}</text>
@@ -1280,19 +1502,19 @@ function renderSuccessChart(data) {
 
   let html = `
     <svg width="${width}" height="${height}" style="background: transparent;">
-      <!-- Axes -->
+      <!-- 坐标轴 -->
       <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"
             stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
       <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"
             stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
 
-      <!-- Y-axis labels -->
+      <!-- Y 轴标签 -->
       <text x="${padding.left - 10}" y="${padding.top}" text-anchor="end" fill="#8892a4" font-size="11">100%</text>
       <text x="${padding.left - 10}" y="${height - padding.bottom}" text-anchor="end" fill="#8892a4" font-size="11">0%</text>
-      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">Success Rate</text>
+      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">成功率</text>
   `;
 
-  // Bars
+  // 柱状图
   const barWidth = Math.min(40, chartWidth / data.length * 0.8);
   data.forEach((d, i) => {
     const x = padding.left + (chartWidth / data.length) * i + (chartWidth / data.length - barWidth) / 2;
@@ -1342,19 +1564,19 @@ function renderTimelineChart() {
     const barWidth = (width - padding.left - padding.right) * (phase.versions.length / maxVersions);
 
     html += `
-      <text x="${padding.left - 10}" y="${y + barHeight / 2 + 5}" text-anchor="end" fill="${phase.color}" font-size="12" font-weight="700">${phase.tag}</text>
+      <text x="${padding.left - 10}" y="${y + barHeight / 2 + 5}" text-anchor="end" fill="${phase.color}" font-size="12" font-weight="700">${phaseLabel(phase)}</text>
       <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight}"
             fill="${phase.color}" opacity="0.3" rx="6"/>
-      <text x="${padding.left + barWidth + 10}" y="${y + barHeight / 2 + 5}" fill="#e8ecf4" font-size="13" font-weight="600">${phase.versions.length} versions</text>
+      <text x="${padding.left + barWidth + 10}" y="${y + barHeight / 2 + 5}" fill="#e8ecf4" font-size="13" font-weight="600">${phase.versions.length} 个版本</text>
     `;
 
-    // Version dots
+    // 版本点
     phase.versions.forEach((v, j) => {
       const cx = padding.left + (barWidth / phase.versions.length) * (j + 0.5);
       const cy = y + barHeight / 2;
       html += `
         <circle cx="${cx}" cy="${cy}" r="6" fill="${phase.color}" stroke="#0a0e14" stroke-width="2">
-          <title>${v.id}: ${v.title}</title>
+          <title>${v.id}: ${versionTitle(v)}</title>
         </circle>
       `;
     });
@@ -1370,63 +1592,63 @@ function renderHeatmapView() {
 
   container.innerHTML = `
     <div class="heatmap-view">
-      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">Parameter Sensitivity Analysis</h2>
+      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">参数敏感性分析</h2>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V13 Parameter Space Success Rate (Slice C: 6x6 grid)</div>
+        <div class="heatmap-title">V13 参数空间成功率（切片 C：6x6 网格）</div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          foot_radius × leg_length parameter sweep. Success rate: 16.7% (6/36 cells)
+          足半径 × 腿长参数扫描，成功率 16.7%（6/36 个网格）
         </p>
         <div id="heatmap-v13"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">Failure</span>
+          <span style="color: var(--text-muted);">失败</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">Success</span>
+          <span style="color: var(--text-muted);">成功</span>
         </div>
       </div>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V13.6 FSM Controller Success Rate (Slice C: 6x6 grid)</div>
+        <div class="heatmap-title">V13.6 FSM 控制器成功率（切片 C：6x6 网格）</div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          Same parameter space with event-driven FSM. Success rate: 11.1% (4/36 cells)
+          同一参数空间切换为事件驱动 FSM 后，成功率 11.1%（4/36 个网格）
         </p>
         <div id="heatmap-v136"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">Failure</span>
+          <span style="color: var(--text-muted);">失败</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">Success</span>
+          <span style="color: var(--text-muted);">成功</span>
         </div>
       </div>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V14c Arm Mass Sensitivity (6x6 grid)</div>
+        <div class="heatmap-title">V14c 摆臂质量敏感性（6x6 网格）</div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          arm_mass × parameter sweep. Shows monotonic degradation with mass increase.
+          摆臂质量与参数联合扫描，显示质量增加会单调削弱稳定性
         </p>
         <div id="heatmap-v14c"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">Failure</span>
+          <span style="color: var(--text-muted);">失败</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">Success</span>
+          <span style="color: var(--text-muted);">成功</span>
         </div>
       </div>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V16 Motor Friction τ_C Resonance Pattern</div>
+        <div class="heatmap-title">V16 电机库仑摩擦 τ_C 共振模式</div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          Coulomb friction sweep. Non-monotonic resonance: success bands {0, 0.034, 0.27+}, failure band [0.013, 0.20]
+          库仑摩擦扫描呈非单调共振：成功带 {0, 0.034, 0.27+}，失败带 [0.013, 0.20]
         </p>
         <div id="heatmap-v16"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">Failure</span>
+          <span style="color: var(--text-muted);">失败</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">Success</span>
+          <span style="color: var(--text-muted);">成功</span>
         </div>
       </div>
     </div>
   `;
 
-  // Render synthetic heatmaps based on findings
+  // 根据关键发现绘制示意热力图
   renderHeatmap('heatmap-v13', generateV13Data());
   renderHeatmap('heatmap-v136', generateV136Data());
   renderHeatmap('heatmap-v14c', generateV14cData());
@@ -1434,9 +1656,9 @@ function renderHeatmapView() {
 }
 
 function generateV13Data() {
-  // V13: 6/36 success, concentrated in corner band
+  // V13：6/36 成功，集中在角落带
   const data = Array(6).fill(0).map(() => Array(6).fill(0));
-  // Success cells in corner/edge pattern
+  // 成功格集中在角落和边缘
   data[0][5] = 1;
   data[1][4] = 1;
   data[1][5] = 1;
@@ -1447,7 +1669,7 @@ function generateV13Data() {
 }
 
 function generateV136Data() {
-  // V13.6: 4/36 success, shifted to center
+  // V13.6：4/36 成功，向中心移动
   const data = Array(6).fill(0).map(() => Array(6).fill(0));
   data[2][2] = 1;
   data[2][3] = 1;
@@ -1457,30 +1679,30 @@ function generateV136Data() {
 }
 
 function generateV14cData() {
-  // V14c: 5/36 success, monotonic with arm mass
+  // V14c：5/36 成功，随摆臂质量单调下降
   const data = Array(6).fill(0).map(() => Array(6).fill(0));
-  // Row 0 (lowest mass): most success
+  // 第 0 行质量最低，成功最多
   data[0][1] = 1;
   data[0][2] = 1;
   data[0][3] = 1;
   data[0][4] = 1;
-  // Row 1: some success
+  // 第 1 行仍有少量成功
   data[1][2] = 1;
   return data;
 }
 
 function generateV16Data() {
-  // V16: Non-monotonic resonance pattern
+  // V16：非单调共振模式
   const data = Array(1).fill(0).map(() => Array(10).fill(0));
-  // Success bands: 0, 0.034, 0.27+
+  // 成功带：0、0.034、0.27+
   data[0][0] = 1; // τ_C = 0
   data[0][1] = 1; // τ_C = 0.034
-  data[0][2] = 0; // failure band start
+  data[0][2] = 0; // 失败带起点
   data[0][3] = 0;
   data[0][4] = 0;
   data[0][5] = 0;
-  data[0][6] = 0; // failure band end (0.20)
-  data[0][7] = 1; // success band 0.27+
+  data[0][6] = 0; // 失败带终点（0.20）
+  data[0][7] = 1; // 0.27+ 成功带
   data[0][8] = 1;
   data[0][9] = 1;
   return data;
@@ -1503,7 +1725,7 @@ function renderHeatmap(containerId, data) {
           : 'rgba(220, 38, 38, 0.8)';
         const label = val === 1 ? '✓' : '✗';
         return `
-          <div class="heatmap-cell" style="background: ${color};" title="[${row},${col}]: ${val === 1 ? 'Success' : 'Failure'}">
+          <div class="heatmap-cell" style="background: ${color};" title="[${row},${col}]: ${val === 1 ? '成功' : '失败'}">
             ${label}
           </div>
         `;

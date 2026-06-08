@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Compass Gait Research Dashboard</title>
+<title>指南针步态研究看板</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -377,6 +377,7 @@ header {
   height: 100%;
   background: linear-gradient(180deg, var(--phase1) 0%, rgba(0,0,0,0) 100%);
   box-shadow: 0 0 10px var(--phase1);
+  pointer-events: none;
 }
 
 .version-card::after {
@@ -389,6 +390,12 @@ header {
   background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.version-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .version-card:hover {
@@ -444,8 +451,7 @@ header {
   border-radius: 4px;
   font-size: 0.65rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
   flex-shrink: 0;
   box-shadow: 0 2px 8px currentColor;
   border: 1px solid currentColor;
@@ -481,6 +487,42 @@ header {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.inline-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  padding: 5px 10px;
+  background: rgba(96, 165, 250, 0.12);
+  border: 1px solid rgba(96, 165, 250, 0.45);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.inline-action:hover {
+  background: rgba(96, 165, 250, 0.22);
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.inline-action.compact {
+  padding: 4px 8px;
+  font-size: 0.65rem;
+  flex-shrink: 0;
 }
 
 .tag {
@@ -1012,21 +1054,21 @@ header {
 
 <header>
   <div class="logo-area">
-    <h1>🚶 Compass Gait Research Dashboard</h1>
-    <div class="subtitle">Passive Walking | V01 → V25 | 2D Theory → 3D Hardware</div>
+    <h1>🚶 指南针步态研究看板</h1>
+    <div class="subtitle">被动行走 | V01 → V25 | 二维理论 → 三维与硬件</div>
   </div>
 
   <div class="view-switcher">
-    <button class="view-btn active" data-view="grid">📋 Grid</button>
-    <button class="view-btn" data-view="timeline">📅 Timeline</button>
-    <button class="view-btn" data-view="graph">🔗 Graph</button>
-    <button class="view-btn" data-view="compare">⚖️ Compare</button>
-    <button class="view-btn" data-view="trends">📈 Trends</button>
-    <button class="view-btn" data-view="heatmap">🔥 Heatmap</button>
+    <button class="view-btn active" data-view="grid">📋 网格</button>
+    <button class="view-btn" data-view="timeline">📅 时间线</button>
+    <button class="view-btn" data-view="graph">🔗 依赖图</button>
+    <button class="view-btn" data-view="compare">⚖️ 对比</button>
+    <button class="view-btn" data-view="trends">📈 趋势</button>
+    <button class="view-btn" data-view="heatmap">🔥 热力图</button>
   </div>
 
   <div class="search-box">
-    <input type="text" id="search" placeholder="Search versions...">
+    <input type="text" id="search" placeholder="搜索版本、发现或标签...">
     <span class="search-icon">🔍</span>
   </div>
 </header>
@@ -1034,62 +1076,62 @@ header {
 <div class="main-container">
   <aside class="sidebar">
     <div class="sidebar-section">
-      <h3>Overview</h3>
+      <h3>总览</h3>
       <div class="stat-grid">
         <div class="stat-card">
           <div class="num" style="color: var(--done)" id="stat-done">0</div>
-          <div class="label">Completed</div>
+          <div class="label">已完成</div>
         </div>
         <div class="stat-card">
           <div class="num" style="color: var(--next)" id="stat-next">0</div>
-          <div class="label">In Progress</div>
+          <div class="label">进行中</div>
         </div>
         <div class="stat-card">
           <div class="num" style="color: var(--planned)" id="stat-planned">0</div>
-          <div class="label">Planned</div>
+          <div class="label">计划中</div>
         </div>
         <div class="stat-card">
           <div class="num" style="color: var(--accent)" id="stat-progress">0%</div>
-          <div class="label">Progress</div>
+          <div class="label">完成率</div>
         </div>
       </div>
     </div>
 
     <div class="sidebar-section">
-      <h3>Phase Progress</h3>
+      <h3>阶段进度</h3>
       <div id="phase-progress-container"></div>
     </div>
 
     <div class="sidebar-section">
-      <h3>Filters</h3>
+      <h3>筛选</h3>
 
       <div class="filter-group">
-        <div class="filter-label">Status</div>
+        <div class="filter-label">状态</div>
         <div class="filter-options">
-          <div class="filter-chip active" data-filter="status" data-value="all">All</div>
-          <div class="filter-chip" data-filter="status" data-value="done">Done</div>
-          <div class="filter-chip" data-filter="status" data-value="next">In Progress</div>
-          <div class="filter-chip" data-filter="status" data-value="planned">Planned</div>
+          <div class="filter-chip active" data-filter="status" data-value="all">全部</div>
+          <div class="filter-chip" data-filter="status" data-value="done">已完成</div>
+          <div class="filter-chip" data-filter="status" data-value="next">进行中</div>
+          <div class="filter-chip" data-filter="status" data-value="planned">计划中</div>
         </div>
       </div>
 
       <div class="filter-group">
-        <div class="filter-label">Phase</div>
+        <div class="filter-label">阶段</div>
         <div class="filter-options">
-          <div class="filter-chip active" data-filter="phase" data-value="all">All</div>
-          <div class="filter-chip" data-filter="phase" data-value="1">Phase 1</div>
-          <div class="filter-chip" data-filter="phase" data-value="2">Phase 2</div>
-          <div class="filter-chip" data-filter="phase" data-value="3">Phase 3</div>
-          <div class="filter-chip" data-filter="phase" data-value="4">Phase 4</div>
+          <div class="filter-chip active" data-filter="phase" data-value="all">全部</div>
+          <div class="filter-chip" data-filter="phase" data-value="1">第一阶段</div>
+          <div class="filter-chip" data-filter="phase" data-value="2">第二阶段</div>
+          <div class="filter-chip" data-filter="phase" data-value="3">第三阶段</div>
+          <div class="filter-chip" data-filter="phase" data-value="4">第四阶段</div>
         </div>
       </div>
 
       <div class="filter-group">
-        <div class="filter-label">Passive</div>
+        <div class="filter-label">被动性</div>
         <div class="filter-options">
-          <div class="filter-chip active" data-filter="passive" data-value="all">All</div>
-          <div class="filter-chip" data-filter="passive" data-value="yes">Yes</div>
-          <div class="filter-chip" data-filter="passive" data-value="no">No</div>
+          <div class="filter-chip active" data-filter="passive" data-value="all">全部</div>
+          <div class="filter-chip" data-filter="passive" data-value="yes">纯被动</div>
+          <div class="filter-chip" data-filter="passive" data-value="no">非被动</div>
         </div>
       </div>
     </div>
@@ -1101,41 +1143,41 @@ header {
     <div id="graph-view" class="graph-view hidden">
       <svg id="graph-svg"></svg>
       <div class="graph-legend">
-        <div class="graph-legend-title">Legend</div>
+        <div class="graph-legend-title">图例</div>
         <div class="graph-legend-item">
           <div class="graph-legend-color" style="background: var(--phase1)"></div>
-          <span>Phase 1: 2D Fundamental</span>
+          <span>第一阶段：二维基础研究</span>
         </div>
         <div class="graph-legend-item">
           <div class="graph-legend-color" style="background: var(--phase2)"></div>
-          <span>Phase 2: 2D Mechanical</span>
+          <span>第二阶段：二维机构升级</span>
         </div>
         <div class="graph-legend-item">
           <div class="graph-legend-color" style="background: var(--phase3)"></div>
-          <span>Phase 3: 3D Extension</span>
+          <span>第三阶段：三维扩展验证</span>
         </div>
         <div class="graph-legend-item">
           <div class="graph-legend-color" style="background: var(--phase4)"></div>
-          <span>Phase 4: Hardware</span>
+          <span>第四阶段：硬件落地</span>
         </div>
         <div style="margin: 10px 0; border-top: 1px solid rgba(45, 53, 72, 0.6); padding-top: 8px;">
           <div class="graph-legend-item">
             <div class="graph-legend-color" style="background: var(--done)"></div>
-            <span>Done</span>
+            <span>已完成</span>
           </div>
           <div class="graph-legend-item">
             <div class="graph-legend-color" style="background: var(--next)"></div>
-            <span>In Progress</span>
+            <span>进行中</span>
           </div>
           <div class="graph-legend-item">
             <div class="graph-legend-color" style="background: var(--planned)"></div>
-            <span>Planned</span>
+            <span>计划中</span>
           </div>
         </div>
       </div>
       <div class="graph-controls">
-        <button class="graph-control-btn" onclick="resetGraphView()" title="Reset View">⊙</button>
-        <button class="graph-control-btn" onclick="fitGraphView()" title="Fit to Screen">⛶</button>
+        <button class="graph-control-btn" onclick="resetGraphView()" title="重置视图">⊙</button>
+        <button class="graph-control-btn" onclick="fitGraphView()" title="适配屏幕">⛶</button>
       </div>
     </div>
     <div id="compare-view" class="hidden"></div>
@@ -1156,7 +1198,7 @@ header {
 </div>
 
 <script src="data.js"></script>
-<script src="app.js"></script>
+<script src="app.js?v=20260607-launcher"></script>
 
 </body>
 </html>
