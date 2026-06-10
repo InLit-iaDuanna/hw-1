@@ -81,10 +81,10 @@
     "swing_retract": 7.660000000000893
   },
   "phase_torque_integral_Nms": {
-    "stance_early": 9.655908731658808,
-    "stance_late": 25.991602006073734,
-    "swing_thrust": 11.126528034425027,
-    "swing_retract": 7.215647994308633
+    "stance_early": 9.655908731857663,
+    "stance_late": 25.99160200625318,
+    "swing_thrust": 11.126528034354065,
+    "swing_retract": 7.215647994460799
   },
   "phase_timeline_head": [
     [
@@ -281,7 +281,7 @@
     ]
   ],
   "phase_transitions": 22,
-  "score": 5398.5930874843125,
+  "score": 5398.593087479203,
   "success": true,
   "alternating_touchdowns": 11,
   "contact_events": [
@@ -293,65 +293,65 @@
     {
       "time": 0.372,
       "foot": "right",
-      "E": 50.59528703832838
+      "E": 50.595287038328365
     },
     {
       "time": 0.758,
       "foot": "left",
-      "E": 50.905767501968384
+      "E": 50.90576750196837
     },
     {
       "time": 1.2710000000000001,
       "foot": "right",
-      "E": 51.15343611576844
+      "E": 51.15343611576835
     },
     {
       "time": 2.83,
       "foot": "left",
-      "E": 52.78586392009719
+      "E": 52.7858639200974
     },
     {
       "time": 4.1930000000000005,
       "foot": "right",
-      "E": 52.85902282251185
+      "E": 52.85902282251224
     },
     {
       "time": 5.493,
       "foot": "left",
-      "E": 52.88447415551391
+      "E": 52.884474155515754
     },
     {
       "time": 6.774,
       "foot": "right",
-      "E": 52.89542216105258
+      "E": 52.8954221610577
     },
     {
       "time": 8.05,
       "foot": "left",
-      "E": 52.89249255194112
+      "E": 52.892492551956956
     },
     {
       "time": 9.322000000000001,
       "foot": "right",
-      "E": 52.895457232340874
+      "E": 52.89545723238504
     },
     {
       "time": 10.593,
       "foot": "left",
-      "E": 52.89650091420225
+      "E": 52.89650091432913
     },
     {
       "time": 11.864,
       "foot": "right",
-      "E": 52.89479840905658
+      "E": 52.8947984094284
     }
   ],
-  "forward_distance": 4.856828261678692,
+  "forward_distance": 4.856828261596313,
   "simulated_time": 11.994,
   "failure": "completed",
-  "active_input_energy_j": 17.445536072136434,
-  "net_actuator_work_j": 12.60885572999503,
-  "energy_per_alternation_j": 1.585957824739676,
+  "active_input_energy_j": 17.445536072191807,
+  "net_actuator_work_j": 12.608855730351518,
+  "energy_per_alternation_j": 1.5859578247447097,
   "quasi_passive": true,
   "pure_passive": false,
   "controller": "v13_6_event_driven_fsm"

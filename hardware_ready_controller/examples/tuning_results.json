@@ -1,0 +1,111 @@
+{
+  "timestamp": "2026-06-08 12:53:17",
+  "n_evaluated": 625,
+  "top_results": [
+    {
+      "rank": 1,
+      "parameters": {
+        "kp_stance": 40.0,
+        "kd_stance": 4.0,
+        "kp_swing": 40.0,
+        "kd_swing": 3.5
+      },
+      "metrics": {
+        "rms_position_error": 0.03544449723218422,
+        "rms_velocity_error": 0.06954091325887614,
+        "max_position_error": 0.04999999769106498,
+        "torque_saturation_ratio": 0.0,
+        "control_effort": 1.3500587622127533,
+        "control_smoothness": 7.408339772270431,
+        "energy_total": 7.965673633925425,
+        "energy_per_step": 1.593134726785085,
+        "distance_traveled": 3.5,
+        "composite_score": -4.290061359785606
+      }
+    },
+    {
+      "rank": 2,
+      "parameters": {
+        "kp_stance": 40.0,
+        "kd_stance": 6.0,
+        "kp_swing": 40.0,
+        "kd_swing": 6.5
+      },
+      "metrics": {
+        "rms_position_error": 0.03544449723218422,
+        "rms_velocity_error": 0.06954091325887614,
+        "max_position_error": 0.04999999769106498,
+        "torque_saturation_ratio": 0.0,
+        "control_effort": 1.4037387057826884,
+        "control_smoothness": 7.520756326034564,
+        "energy_total": 8.22926504844037,
+        "energy_per_step": 1.645853009688074,
+        "distance_traveled": 3.5,
+        "composite_score": -4.2327217505811925
+      }
+    },
+    {
+      "rank": 3,
+      "parameters": {
+        "kp_stance": 40.0,
+        "kd_stance": 8.0,
+        "kp_swing": 40.0,
+        "kd_swing": 8.0
+      },
+      "metrics": {
+        "rms_position_error": 0.03544449723218422,
+        "rms_velocity_error": 0.06954091325887614,
+        "max_position_error": 0.04999999769106498,
+        "torque_saturation_ratio": 0.0,
+        "control_effort": 1.4492778588796902,
+        "control_smoothness": 7.493225508788495,
+        "energy_total": 8.45686248712463,
+        "energy_per_step": 1.691372497424926,
+        "distance_traveled": 3.5,
+        "composite_score": -4.214563820297404
+      }
+    },
+    {
+      "rank": 4,
+      "parameters": {
+        "kp_stance": 40.0,
+        "kd_stance": 4.0,
+        "kp_swing": 40.0,
+        "kd_swing": 5.0
+      },
+      "metrics": {
+        "rms_position_error": 0.03544449723218422,
+        "rms_velocity_error": 0.06954091325887614,
+        "max_position_error": 0.04999999769106498,
+        "torque_saturation_ratio": 0.0,
+        "control_effort": 1.3625032164156499,
+        "control_smoothness": 7.905312992224112,
+        "energy_total": 8.033786046030784,
+        "energy_per_step": 1.6067572092061568,
+        "distance_traveled": 3.5,
+        "composite_score": -4.158620196520141
+      }
+    },
+    {
+      "rank": 5,
+      "parameters": {
+        "kp_stance": 40.0,
+        "kd_stance": 6.0,
+        "kp_swing": 40.0,
+        "kd_swing": 5.0
+      },
+      "metrics": {
+        "rms_position_error": 0.03544449723218422,
+        "rms_velocity_error": 0.06954091325887614,
+        "max_position_error": 0.04999999769106498,
+        "torque_saturation_ratio": 0.0,
+        "control_effort": 1.3903892131971411,
+        "control_smoothness": 8.030484491098555,
+        "energy_total": 8.153980532762777,
+        "energy_per_step": 1.6307961065525554,
+        "distance_traveled": 3.5,
+        "composite_score": -4.113144153402238
+      }
+    }
+  ]
+}

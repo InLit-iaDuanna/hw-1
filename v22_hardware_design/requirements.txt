@@ -1,0 +1,5 @@
+# V22: Hardware Design Documentation
+# Minimal dependencies for design calculations and plots
+
+numpy>=2.0.0
+matplotlib>=3.7.0

@@ -86,12 +86,12 @@
       "T_meas": 0.485472
     }
   ],
-  "forward_distance": 1.33320800829873,
+  "forward_distance": 1.3332080082987299,
   "simulated_time": 3.498,
   "failure": "fall_down",
-  "active_input_energy_j": 3.0607305992327505,
-  "net_actuator_work_j": -9.60569523355195,
-  "energy_per_alternation_j": 0.7651826498081876,
+  "active_input_energy_j": 3.060730599232743,
+  "net_actuator_work_j": -9.605695233551925,
+  "energy_per_alternation_j": 0.7651826498081857,
   "quasi_passive": true,
   "pure_passive": false,
   "controller": "v13_5_adaptive_period_pd"

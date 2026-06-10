@@ -1,0 +1,9 @@
+{
+  "num_episodes": 2,
+  "total_transitions": 1198,
+  "avg_transitions_per_episode": 599.0,
+  "avg_distance": 4.630276455778082,
+  "avg_time": 11.999,
+  "avg_touchdowns": 10.0,
+  "avg_reward": 230.76011788588949
+}

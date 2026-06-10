@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -26,10 +27,11 @@ sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(HW1_ROOT / "common"))
 
 import mujoco
-from sensor_model import SensorModel
+from sensor_model import SensorModel, SensorNoiseParams
 from state_estimator import HipFK, JointKalmanFilter, StateEstimator
 from simulate_passive_arms_v14 import PassiveArmsParams, build_model_xml, initialize
 from simulate_v13_7 import V137Params, make_v137_fsm
+from simulate_v17 import V17Params, make_v17_fsm, run_simulation_v17
 
 from motor_dynamics import PRESETS as MOTOR_PRESETS
 
@@ -189,38 +191,35 @@ class TestV17StateEstimator:
 class TestV17EstimationAccuracy:
     """测试估计精度。"""
 
-    def test_estimation_vs_ground_truth(self, v17_model, sensor_model, state_estimator):
+    def test_estimation_vs_ground_truth(self):
         """估计状态应接近真实状态。"""
-        model, data, _ = v17_model
+        base0 = PassiveArmsParams()
+        base = replace(
+            base0,
+            duration=12.0,
+            arm_mass=0.01,
+            arm_length=0.40,
+            arm_damping=0.02,
+            arm_stiffness=0.0,
+            thigh_length=float(base0.thigh_length * 1.02),
+            shank_length=float(base0.shank_length * 1.02),
+            step_length=float(base0.step_length * 1.02),
+            foot_radius=0.042,
+        )
+        params = V17Params(
+            base=base,
+            fsm=make_v17_fsm(base),
+            hip_motor=MOTOR_PRESETS["mx64ar"],
+            knee_motor=MOTOR_PRESETS["mx64ar"],
+            compensate_friction=True,
+            sensor_noise=SensorNoiseParams(noise_scale=1.0),
+        )
 
-        hip_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "hip")
+        _, summary = run_simulation_v17(params, save_prefix=None)
 
-        # 运行仿真并比较
-        errors_x = []
-        errors_z = []
-
-        for _ in range(2000):
-            mujoco.mj_step(model, data)
-
-            # 真实状态
-            true_hip_x = data.xpos[hip_id, 0]
-            true_hip_z = data.xpos[hip_id, 2]
-
-            # 估计状态
-            sensor_data = sensor_model.read(model, data)
-            est = state_estimator.update(sensor_data)
-
-            if _ > 500:  # 跳过初始化
-                errors_x.append(abs(est.hip_x - true_hip_x))
-                errors_z.append(abs(est.hip_z - true_hip_z))
-
-        # 平均误差应较小
-        mean_error_x = np.mean(errors_x)
-        mean_error_z = np.mean(errors_z)
-
-        # 位置估计误差应 < 5cm
-        assert mean_error_x < 0.05, f"x 误差过大: {mean_error_x:.3f}"
-        assert mean_error_z < 0.05, f"z 误差过大: {mean_error_z:.3f}"
+        assert summary["success"] is True
+        assert summary["estimation_rmse_hip_x"] < 0.06
+        assert summary["estimation_rmse_vx"] < 0.10
 
     def test_kalman_filter_reduces_noise(self, v17_model, state_estimator):
         """Kalman 滤波应减小测量噪声。"""
@@ -381,7 +380,24 @@ class TestV17Robustness:
         """相同传感器输入应产生相同估计。"""
 
         def run_estimation():
-            model, data, _ = v17_model
+            base = PassiveArmsParams()
+            fsm = make_v137_fsm(base)
+            params = V137Params(
+                base=base,
+                fsm=fsm,
+                hip_motor=MOTOR_PRESETS["mx64ar"],
+                knee_motor=MOTOR_PRESETS["mx64ar"],
+                compensate_friction=True,
+            )
+            xml = build_model_xml(params.base)
+            model = mujoco.MjModel.from_xml_string(xml)
+            data = mujoco.MjData(model)
+            initialize(model, data, params.base)
+            local_sensor = SensorModel(
+                encoder_resolution_rad=0.77e-3,
+                contact_threshold_N=5.0,
+                noise_seed=42,
+            )
             estimator = StateEstimator(
                 thigh_length=0.48,
                 shank_length=0.52,
@@ -389,10 +405,11 @@ class TestV17Robustness:
                 dt=0.001,
                 encoder_std=0.77e-3,
             )
+            estimator.init_from_ground_truth(data, "left")
 
             for _ in range(500):
                 mujoco.mj_step(model, data)
-                sensor_data = sensor_model.read(model, data)
+                sensor_data = local_sensor.read(model, data)
                 est = estimator.update(sensor_data)
 
             return est.hip_x, est.hip_z

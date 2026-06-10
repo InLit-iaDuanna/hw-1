@@ -1,0 +1,32 @@
+⚠️ INVALID MODEL - DO NOT USE ⚠️
+
+This model was trained with a CRITICALLY FLAWED environment configuration.
+
+ISSUE:
+------
+The environment.py used during training had incorrect qpos initialization:
+  - qpos[1] was set to 0.0 (thinking it was hip_y)
+  - qpos[2] was set to 1.0 (thinking it was hip_z)
+
+ACTUAL qpos MAPPING (verified via jnt_qposadr):
+  - qpos[0] = hip_x (forward position)
+  - qpos[1] = hip_z (HEIGHT) ← was set to 0.0, placing robot ON GROUND
+  - qpos[2] = left_hip (joint angle) ← was set to 1.0 rad (57°)
+
+CONSEQUENCE:
+------------
+Every episode started with the robot:
+  - Collapsed on the ground (hip_z = 0)
+  - Left hip bent at 57 degrees
+  - Physically impossible initial state
+
+Any learned policy is MEANINGLESS and should be discarded.
+
+FIX APPLIED:
+------------
+environment.py has been corrected to:
+  self.data.qpos[0] = 0.0  # hip_x
+  self.data.qpos[1] = 1.0  # hip_z (CORRECT)
+
+TIMESTAMP: 2026-06-08
+VERIFIED BY: verify_qpos_indices.py (D:\Dunna\Documents\hw-1\v13_7_friction_compensation\)

@@ -38,7 +38,7 @@
 
 - **Conda/Miniconda** (如果偏好 conda 环境管理)
 - **MATLAB R2020b+** (仅需要对照 MATLAB 版本时)
-- **Node.js 18+** (仅需要 Remotion 动画时)
+- **Node.js 18+** (仅需要 旧动画工程 动画时)
 
 ---
 

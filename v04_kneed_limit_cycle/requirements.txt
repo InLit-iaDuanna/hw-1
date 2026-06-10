@@ -1,0 +1,5 @@
+# V04: Kneed Passive Walker Limit Cycle (Theoretical Analysis)
+# Minimal dependencies for analysis and plotting
+
+numpy>=2.0.0
+matplotlib>=3.7.0

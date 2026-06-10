@@ -22,7 +22,7 @@
       <joint name="hip_x" type="slide" axis="1 0 0" damping="0.001"/>
       <joint name="hip_y" type="slide" axis="0 1 0" damping="0.001"/>
       <joint name="hip_z" type="slide" axis="0 0 1" damping="0.001"/>
-      <joint name="hip_roll" type="hinge" axis="1 0 0" damping="0.5" stiffness="100.0" springref="0"/>
+      <joint name="hip_roll" type="hinge" axis="1 0 0" damping="0.5" stiffness="50.0" springref="0"/>
       <geom name="hip_mass" type="sphere" size="0.08" mass="5.0" material="hip_mat" contype="0" conaffinity="0"/>
       <geom name="torso_mass" type="capsule" fromto="0 0 0.02 0 0 0.3" size="0.04" mass="0.05" material="hip_mat" contype="0" conaffinity="0"/>
       <geom name="hip_axis" type="cylinder" fromto="0 -0.13 0 0 0.13 0" size="0.018" mass="0.05" material="hip_mat" contype="0" conaffinity="0"/>

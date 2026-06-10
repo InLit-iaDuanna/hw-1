@@ -1,4 +1,4 @@
-﻿# hw-1 数据管理快速参考
+# hw-1 数据管理快速参考
 
 ## 立即可执行的优化
 
@@ -86,7 +86,7 @@ git commit -m "Add Git LFS tracking for large files"
 
 - **总项目大小**: 1.95 GB
 - **虚拟环境**: 1.09 GB (.venv-mujoco + .venv-codex)
-- **Remotion 项目**: 602 MB
+- **旧动画工程 项目**: 602 MB
 - **版本输出数据**: 155 MB
 - **可清理缓存**: ~15 MB
 

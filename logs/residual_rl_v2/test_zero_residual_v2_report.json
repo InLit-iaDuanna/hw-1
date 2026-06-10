@@ -1,0 +1,37 @@
+{
+  "diagnosis": "PASS",
+  "num_episodes": 3,
+  "baseline_distance": 4.63,
+  "statistics": {
+    "avg_distance": 4.63027636322708,
+    "std_distance": 4.933841302105034e-07,
+    "max_distance": 4.630277038396985,
+    "min_distance": 4.630275873159179,
+    "avg_time": 11.999,
+    "success_rate": 1.0
+  },
+  "episodes": [
+    {
+      "episode_id": 0,
+      "distance": 4.630275873159179,
+      "sim_time": 11.999,
+      "success": true,
+      "failure_reason": "completed"
+    },
+    {
+      "episode_id": 1,
+      "distance": 4.630277038396985,
+      "sim_time": 11.999,
+      "success": true,
+      "failure_reason": "completed"
+    },
+    {
+      "episode_id": 2,
+      "distance": 4.630276178125076,
+      "sim_time": 11.999,
+      "success": true,
+      "failure_reason": "completed"
+    }
+  ],
+  "reference_trajectory": null
+}

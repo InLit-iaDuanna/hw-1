@@ -1,6 +1,9 @@
 """跨版本公共库。从 V11 起逐步填充，避免每版重写工具脚本。"""
 
-from .control_utils import limited_pd, ramp_height, smoothstep
+from .control_utils import limited_pd
+from .failure_classifier import FailureMode, classify_failure
+from .ik_utils import leg_ik_front_knee, ramp_height, smoothstep
+from .rolling_foot_gait import RollingFootGait, RollingFootParams
 from .energy_metrics import (
     collision_loss_per_step,
     cost_of_transport,
@@ -23,6 +26,12 @@ from .motor_dynamics import (
 from .mujoco_utils import get_contact_flags, get_joint_address
 from .plot_styles import PALETTE, set_style
 from .poincare import collect_section, floquet_multipliers, plot_section
+from .phase_portrait_visualizer import (
+    PhasePortraitVisualizer,
+    StateVariable,
+    TrajectoryAnnotation,
+    quick_phase_portrait,
+)
 from .simulation_framework import (
     ContactState,
     Controller,
@@ -104,6 +113,11 @@ __all__ = [
     "collect_section",
     "plot_section",
     "floquet_multipliers",
+    # phase_portrait_visualizer
+    "PhasePortraitVisualizer",
+    "StateVariable",
+    "TrajectoryAnnotation",
+    "quick_phase_portrait",
     "MotorParams",
     "MOTOR_PRESETS",
     "L1MotorActuator",
@@ -112,11 +126,17 @@ __all__ = [
     "smoothstep",
     "limited_pd",
     "ramp_height",
+    "leg_ik_front_knee",
+    "FailureMode",
+    "classify_failure",
     "get_joint_address",
     "get_contact_flags",
     "solve_2d_leg_ik",
     "solve_3d_leg_ik",
     "compute_foot_position_from_joints",
+    # rolling_foot_gait
+    "RollingFootGait",
+    "RollingFootParams",
     # simulation_runner
     "SimulationRunner",
     "SimulationResult",

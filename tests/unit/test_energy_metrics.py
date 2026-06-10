@@ -13,6 +13,7 @@ sys.path.insert(0, str(HW1_ROOT / "common"))
 
 from energy_metrics import (
     collision_loss_per_step,
+    compute_power_components,
     cost_of_transport,
     mechanical_energy_series,
     spring_potential_energy,
@@ -195,6 +196,28 @@ class TestMechanicalEnergySeries:
         spring_pe = 0.5 * 1000.0 * 0.1 ** 2 + 0.5 * 2000.0 * 0.05 ** 2
         expected_pe = 10.0 * 9.81 * 1.0 + spring_pe
         assert result["pe"][0] == pytest.approx(expected_pe)
+
+
+class TestPowerComponents:
+    """Test the shared power decomposition helper."""
+
+    def test_increasing_energy_is_input_power(self):
+        time = np.array([0.0, 1.0, 2.0])
+        total = np.array([0.0, 2.0, 4.0])
+        power_input, power_dissipation = compute_power_components(time, total)
+        np.testing.assert_allclose(power_input, np.array([2.0, 2.0, 2.0]))
+        np.testing.assert_allclose(power_dissipation, np.zeros(3))
+
+    def test_decreasing_energy_is_dissipation(self):
+        time = np.array([0.0, 1.0, 2.0])
+        total = np.array([4.0, 2.0, 0.0])
+        power_input, power_dissipation = compute_power_components(time, total)
+        np.testing.assert_allclose(power_input, np.zeros(3))
+        np.testing.assert_allclose(power_dissipation, np.array([2.0, 2.0, 2.0]))
+
+    def test_non_monotonic_time_rejected(self):
+        with pytest.raises(ValueError, match="strictly increasing"):
+            compute_power_components(np.array([0.0, 0.0]), np.array([1.0, 2.0]))
 
 
 class TestCollisionLossPerStep:

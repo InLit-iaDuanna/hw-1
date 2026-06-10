@@ -1,0 +1,391 @@
+{
+  "timestamp": "2026-06-09T09:11:12",
+  "diagnosis": "FAIL",
+  "timesteps": 500000,
+  "completed_timesteps": 350000,
+  "training_completed": false,
+  "stop_reason": "aborted: failure_rate 1.000 exceeded 0.050",
+  "residual_scale": 0.2,
+  "prior_action": [
+    0.5,
+    1.0
+  ],
+  "delta_scale": 0.02,
+  "horizon_s": 12.0,
+  "baseline": {
+    "timestep": 0,
+    "mean_distance_m": 4.630275873159179,
+    "std_distance_m": 0.0,
+    "mean_reward": 0.04138100231180886,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179
+    ],
+    "mean_actual_action": null,
+    "std_actual_action": null,
+    "min_actual_action": null,
+    "max_actual_action": null
+  },
+  "sweep_best": {
+    "mean_distance_m": 4.972583,
+    "improvement_pct": 7.392801988864424
+  },
+  "sanity_100k": {
+    "mean_distance_m": 4.898271,
+    "improvement_pct": 5.7878868167302455
+  },
+  "prior_eval": {
+    "timestep": 0,
+    "mean_distance_m": 4.972582593471345,
+    "std_distance_m": 0.0,
+    "mean_reward": 48.95130579558675,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345
+    ],
+    "mean_actual_action": null,
+    "std_actual_action": null,
+    "min_actual_action": null,
+    "max_actual_action": null
+  },
+  "pass_threshold_m": 4.830275873159179,
+  "target_distance_m": 4.972583,
+  "nice_target_distance_m": 5.0,
+  "abort_failure_rate": 0.05,
+  "final_eval": {
+    "timestep": 350000,
+    "mean_distance_m": 0.15036897789268758,
+    "std_distance_m": 0.0,
+    "mean_reward": -167.19284348509035,
+    "success_rate": 0.0,
+    "failure_rate": 1.0,
+    "distances_m": [
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758,
+      0.15036897789268758
+    ],
+    "mean_actual_action": [
+      0.5016019940376282,
+      0.9999768137931824
+    ],
+    "std_actual_action": [
+      0.002573058707639575,
+      0.0001331123785348609
+    ],
+    "min_actual_action": [
+      0.4957326054573059,
+      0.9988871216773987
+    ],
+    "max_actual_action": [
+      0.5050334334373474,
+      1.0
+    ]
+  },
+  "eval_history": [
+    {
+      "timestep": 50000,
+      "mean_distance_m": 4.768763687975691,
+      "std_distance_m": 0.0,
+      "mean_reward": 18.374053066411086,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691
+      ],
+      "mean_actual_action": [
+        0.5030792951583862,
+        0.9999940395355225
+      ],
+      "std_actual_action": [
+        0.001814613351598382,
+        8.836015331326053e-05
+      ],
+      "min_actual_action": [
+        0.49658092856407166,
+        0.9982743859291077
+      ],
+      "max_actual_action": [
+        0.5063129663467407,
+        1.0
+      ]
+    },
+    {
+      "timestep": 100000,
+      "mean_distance_m": 4.897796286585068,
+      "std_distance_m": 8.881784197001252e-16,
+      "mean_reward": 37.72886551539896,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067
+      ],
+      "mean_actual_action": [
+        0.5027574300765991,
+        1.0
+      ],
+      "std_actual_action": [
+        0.002340584760531783,
+        2.978140628329129e-06
+      ],
+      "min_actual_action": [
+        0.49688521027565,
+        0.9999061226844788
+      ],
+      "max_actual_action": [
+        0.5068605542182922,
+        1.0
+      ]
+    },
+    {
+      "timestep": 150000,
+      "mean_distance_m": 4.4863155019421495,
+      "std_distance_m": 0.0,
+      "mean_reward": -23.98829397360678,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495,
+        4.4863155019421495
+      ],
+      "mean_actual_action": [
+        0.5010203719139099,
+        1.0
+      ],
+      "std_actual_action": [
+        0.0026584092993289232,
+        0.0
+      ],
+      "min_actual_action": [
+        0.49635055661201477,
+        1.0
+      ],
+      "max_actual_action": [
+        0.5058494210243225,
+        1.0
+      ]
+    },
+    {
+      "timestep": 200000,
+      "mean_distance_m": 4.954476708526338,
+      "std_distance_m": 8.881784197001252e-16,
+      "mean_reward": 46.22896712574843,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339,
+        4.954476708526339
+      ],
+      "mean_actual_action": [
+        0.5036768317222595,
+        0.9998614192008972
+      ],
+      "std_actual_action": [
+        0.0038168311584740877,
+        0.0004116977797821164
+      ],
+      "min_actual_action": [
+        0.4955122768878937,
+        0.9974706172943115
+      ],
+      "max_actual_action": [
+        0.5095957517623901,
+        1.0
+      ]
+    },
+    {
+      "timestep": 250000,
+      "mean_distance_m": 4.9141777767254355,
+      "std_distance_m": 8.881784197001252e-16,
+      "mean_reward": 40.18644742990976,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435,
+        4.914177776725435
+      ],
+      "mean_actual_action": [
+        0.5024228692054749,
+        0.9999991059303284
+      ],
+      "std_actual_action": [
+        0.006215481087565422,
+        2.734984809649177e-05
+      ],
+      "min_actual_action": [
+        0.4928217828273773,
+        0.999447226524353
+      ],
+      "max_actual_action": [
+        0.5117782950401306,
+        1.0
+      ]
+    },
+    {
+      "timestep": 300000,
+      "mean_distance_m": 4.936282029331861,
+      "std_distance_m": 8.881784197001252e-16,
+      "mean_reward": 43.508127750290114,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186,
+        4.93628202933186
+      ],
+      "mean_actual_action": [
+        0.499776691198349,
+        0.9997023940086365
+      ],
+      "std_actual_action": [
+        0.00536684412509203,
+        0.0005836297641508281
+      ],
+      "min_actual_action": [
+        0.492497056722641,
+        0.9974581599235535
+      ],
+      "max_actual_action": [
+        0.5093140006065369,
+        1.0
+      ]
+    },
+    {
+      "timestep": 350000,
+      "mean_distance_m": 0.15036897789268758,
+      "std_distance_m": 0.0,
+      "mean_reward": -167.19284348509035,
+      "success_rate": 0.0,
+      "failure_rate": 1.0,
+      "distances_m": [
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758,
+        0.15036897789268758
+      ],
+      "mean_actual_action": [
+        0.5016019940376282,
+        0.9999768137931824
+      ],
+      "std_actual_action": [
+        0.002573058707639575,
+        0.0001331123785348609
+      ],
+      "min_actual_action": [
+        0.4957326054573059,
+        0.9988871216773987
+      ],
+      "max_actual_action": [
+        0.5050334334373474,
+        1.0
+      ]
+    }
+  ],
+  "best_checkpoint": {
+    "timestep": 200000,
+    "mean_distance_m": 4.954476708526338,
+    "improvement_pct": 7.001760677943379
+  },
+  "convergence_quality": {
+    "monotonic_after_300k": false,
+    "final_std_m": 0.0,
+    "catastrophic_forgetting": true
+  },
+  "artifacts": {
+    "best_model_exists": true,
+    "final_model_exists": true,
+    "checkpoint_count": 7,
+    "checkpoints": [
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k\\checkpoints\\ppo_500k_100000_steps.zip",
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k\\checkpoints\\ppo_500k_150000_steps.zip",
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k\\checkpoints\\ppo_500k_200000_steps.zip",
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k\\checkpoints\\ppo_500k_250000_steps.zip",
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k\\checkpoints\\ppo_500k_300000_steps.zip",
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k\\checkpoints\\ppo_500k_350000_steps.zip",
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k\\checkpoints\\ppo_500k_50000_steps.zip"
+    ]
+  },
+  "model_dir": "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k",
+  "tensorboard_dir": "D:\\Dunna\\Documents\\hw-1\\logs\\residual_rl_v2\\tensorboard"
+}

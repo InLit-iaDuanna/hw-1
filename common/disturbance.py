@@ -37,14 +37,19 @@ def apply_impulse(model, data, spec: ImpulseSpec, t: float) -> bool:
 
     body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, spec.body_name)
     if body_id < 0:
+        # body 不存在，无法施力也无法清零，直接返回
         return False
+
     if spec.t_start_s <= t < spec.t_end_s:
+        # 在脉冲窗口内，施加外力
         data.xfrc_applied[body_id, 0] = spec.force_xyz[0]
         data.xfrc_applied[body_id, 1] = spec.force_xyz[1]
         data.xfrc_applied[body_id, 2] = spec.force_xyz[2]
         return True
-    data.xfrc_applied[body_id, 0:3] = 0.0
-    return False
+    else:
+        # 出窗口（包括未到达和已结束），清零外力
+        data.xfrc_applied[body_id, 0:3] = 0.0
+        return False
 
 
 @dataclass

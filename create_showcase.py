@@ -62,24 +62,6 @@ SHOWCASE_DEFINITIONS = {
                 "start": 0,
                 "description": "被动侧向稳定不可能性证明"
             },
-            {
-                "version": "compass-gait-remotion",
-                "video": "out/fsm_state_transition.mp4",
-                "title": "FSM状态机可视化",
-                "duration": 60,
-                "start": 0,
-                "description": "四相位切换逻辑动画讲解",
-                "optional": True
-            },
-            {
-                "version": "compass-gait-remotion",
-                "video": "out/gait_comparison.mp4",
-                "title": "V10 vs V13.6 性能对比",
-                "duration": 90,
-                "start": 0,
-                "description": "控制律横向对比分析",
-                "optional": True
-            }
         ]
     },
     "paper": {

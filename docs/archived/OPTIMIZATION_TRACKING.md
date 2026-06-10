@@ -336,13 +336,13 @@ cd D:\Dunna\Documents\hw-1
 
 ---
 
-### 8. Remotion 动画项目优化 ✅
+### 8. 旧动画工程 动画项目优化 ✅
 **完成时间**: 2026-06-05 15:35  
 **执行时长**: 10.6 分钟  
 **负责 Agent**: abb3dbc0e386343e0
 
 **成果**:
-- ✅ 升级 Remotion 到 v2.0.0
+- ✅ 升级 旧动画工程 到 v2.0.0
 - ✅ 新增 3 个高质量动画组件
 - ✅ 修复 TypeScript 配置（5.9.3）
 - ✅ 生成 ANIMATION_GUIDE.md（20+ KB）
@@ -567,7 +567,7 @@ core (5包) → viz (9包) → analysis (11包)
 
 **Top 5 占用**:
 1. .venv-mujoco - 835.90 MB（41.9%）
-2. compass-gait-remotion - 602.24 MB（30.2%）
+2. compass-gait-旧动画工程 - 602.24 MB（30.2%）
 3. .venv-codex - 256.22 MB（12.8%）
 4. fea_heel_strike - 51.47 MB（2.6%）⚠️ 关键数据
 5. v13_7_friction_compensation - 40.24 MB（2.0%）
@@ -746,8 +746,8 @@ core (5包) → viz (9包) → analysis (11包)
 - 验证 MATLAB 和 Python 结果的一致性
 - 生成跨语言对比报告
 
-### B. Remotion 动画项目优化
-- 检查 compass-gait-remotion/ 项目
+### B. 旧动画工程 动画项目优化
+- 检查 compass-gait-旧动画工程/ 项目
 - 更新动画内容到最新版本
 - 改进动画质量和演示效果
 

@@ -45,11 +45,11 @@
     "stable_contact_time": 0.035
   },
   "scenario": {
-    "terrain_amplitude_m": 0.02,
+    "terrain_amplitude_m": 0.0,
     "terrain_wavelength_m": 1.2,
-    "terrain_seed": 1,
-    "impulse_force_n": 30.0,
-    "impulse_t_s": 4.0,
+    "terrain_seed": 0,
+    "impulse_force_n": 0.0,
+    "impulse_t_s": 5.0,
     "impulse_duration_s": 0.05,
     "impulse_dir": [
       1.0,
@@ -59,8 +59,8 @@
     "contact_phase_noise_s": 0.0,
     "contact_phase_seed": 0
   },
-  "success": false,
-  "alternating_touchdowns": 8,
+  "success": true,
+  "alternating_touchdowns": 12,
   "contact_events": [
     {
       "time": 0.148,
@@ -91,17 +91,33 @@
       "foot": "left"
     },
     {
-      "time": 4.583,
+      "time": 5.0200000000000005,
       "foot": "right"
     },
     {
-      "time": 5.017,
+      "time": 6.263,
+      "foot": "left"
+    },
+    {
+      "time": 7.493,
+      "foot": "right"
+    },
+    {
+      "time": 8.72,
+      "foot": "left"
+    },
+    {
+      "time": 9.945,
+      "foot": "right"
+    },
+    {
+      "time": 11.169,
       "foot": "left"
     }
   ],
-  "forward_distance": 2.2309459169255508,
-  "simulated_time": 5.5120000000000005,
-  "failure": "fall_down",
+  "forward_distance": 4.556503787042742,
+  "simulated_time": 11.992,
+  "failure": "completed",
   "actuator_count": 4,
   "actuator_names": [
     "left_hip_muscle",
@@ -109,8 +125,8 @@
     "right_hip_muscle",
     "right_knee_stabilizer"
   ],
-  "active_input_energy_j": 6.699096706205475,
-  "net_actuator_work_j": -5.386578629649827,
+  "active_input_energy_j": 16.215377446606034,
+  "net_actuator_work_j": 12.529835737269865,
   "impulse_active_steps": 50,
   "quasi_passive": true,
   "pure_passive": false

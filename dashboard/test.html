@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Test</title>
+</head>
+<body>
+<h1>Dashboard Test Page</h1>
+<p>If you can see this, the server is working.</p>
+<button onclick="testJS()">Test JavaScript</button>
+<div id="result"></div>
+
+<script>
+function testJS() {
+  document.getElementById('result').innerHTML = 'JavaScript is working!';
+  console.log('Test passed');
+}
+
+// Test loading data.js
+setTimeout(() => {
+  if (typeof VERSIONS !== 'undefined') {
+    document.getElementById('result').innerHTML += '<br>data.js loaded: ' + VERSIONS.length + ' versions';
+  } else {
+    document.getElementById('result').innerHTML += '<br>ERROR: data.js not loaded';
+  }
+}, 500);
+</script>
+<script src="data.js"></script>
+</body>
+</html>

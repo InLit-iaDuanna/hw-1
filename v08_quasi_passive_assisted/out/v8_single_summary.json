@@ -2,8 +2,11 @@
   "params": {
     "slope_deg": 2.0,
     "foot_radius": 0.055,
+    "foot_length": 0.16,
     "friction": 1.25,
     "hip_mass": 5.0,
+    "torso_mass": 2.0,
+    "torso_height": 0.36,
     "initial_vx": 0.18,
     "knee_limit_deg": 58.0,
     "duration": 12.0,
@@ -13,26 +16,45 @@
     "step_length": 0.34,
     "knee_damping": 0.035,
     "knee_stiffness": 0.12,
+    "hip_joint_damping": 0.03,
+    "hip_joint_stiffness": 0.0,
     "joint_damping": 0.014,
     "release_phase": 0.08,
-    "swing_foot_x": -0.22,
+    "swing_foot_x": 0.3,
     "swing_foot_clearance": 0.1,
     "swing_hip_vel": 0.18,
     "swing_knee_vel": -0.08,
     "assist_torque": 0.25,
     "assist_duration": 0.12,
-    "assist_sign": -1.0
+    "assist_target_deg": -18.0,
+    "support_assist_torque": 0.2,
+    "support_target_deg": 18.0,
+    "assist_kp": 2.2,
+    "assist_kd": 0.18,
+    "phase_assist": true,
+    "phase_mode": "global",
+    "gait_period": 0.72,
+    "hip_amplitude_deg": 24.0,
+    "hip_offset_deg": 0.0,
+    "swing_back_deg": 18.0,
+    "swing_front_deg": -24.0,
+    "stance_front_deg": -18.0,
+    "stance_back_deg": 22.0
   },
-  "score": 44.597630096591075,
-  "alternating_touchdowns": 0,
+  "score": 187.44748259281204,
+  "alternating_touchdowns": 1,
   "contact_events": [
     {
-      "time": 0.035,
+      "time": 0.177,
       "foot": "left"
+    },
+    {
+      "time": 0.358,
+      "foot": "right"
     }
   ],
-  "forward_distance": 1.1536461164772822,
-  "simulated_time": 1.744,
+  "forward_distance": 1.2691128562384448,
+  "simulated_time": 1.104,
   "failure": "fall_down",
   "actuator_count": 2,
   "actuator_names": [
@@ -40,9 +62,9 @@
     "right_hip_assist"
   ],
   "knee_actuators": [],
-  "active_input_energy_j": 0.0,
-  "net_actuator_work_j": -0.017462150116124866,
-  "energy_per_alternation_j": 0.0,
+  "active_input_energy_j": 0.06542744097399854,
+  "net_actuator_work_j": -0.45485289322643135,
+  "energy_per_alternation_j": 0.06542744097399854,
   "quasi_passive": true,
   "uses_reward_function": false
 }

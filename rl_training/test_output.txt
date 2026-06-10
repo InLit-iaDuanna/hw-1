@@ -1,0 +1,81 @@
+﻿python.exe : D:\Dunna\Documents\hw-1\.venv-mujoco\lib\site-packages\stable_baselines3\common\on_policy_algorithm.py:150
+: UserWarning: You are trying to run PPO on the GPU, but it is primarily intended to run on the CPU when not using a CN
+N policy (you are using ActorCriticPolicy which should be a MlpPolicy). See https://github.com/DLR-RM/stable-baselines3
+/issues/1245 for more info. You can pass `device='cpu'` or `export CUDA_VISIBLE_DEVICES=` to force using the CPU.Note: 
+The model will train, but the GPU utilization will be poor and the training might take longer than on CPU.
+At line:1 char:43
++ ... _training"; & "D:\Dunna\Documents\hw-1\.venv-mujoco\Scripts\python.ex ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (D:\Dunna\Docume...er than on CPU.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  warnings.warn(
+================================================================================
+V13.7 FSM �� RL �����е����ʵ��
+================================================================================
+ÿ���� episode ��: 5
+�����: 1000
+
+���� PPO ģ��...
+[OK] PPO ģ�ͼ��سɹ�
+
+���в���: Zero Action
+--------------------------------------------------------------------------------
+  Episode 1: [FAIL] | ����=-0.90m | ����=67 | ʱ��=1.34s | ��ֹԭ��=fall_low_height
+  Episode 2: [FAIL] | ����=-0.97m | ����=98 | ʱ��=1.96s | ��ֹԭ��=fall_low_height
+  Episode 3: [FAIL] | ����=-0.94m | ����=78 | ʱ��=1.56s | ��ֹԭ��=fall_low_height
+  Episode 4: [FAIL] | ����=-0.89m | ����=66 | ʱ��=1.32s | ��ֹԭ��=fall_low_height
+  Episode 5: [FAIL] | ����=-0.96m | ����=74 | ʱ��=1.48s | ��ֹԭ��=fall_low_height
+
+���в���: Random Action
+--------------------------------------------------------------------------------
+  Episode 1: [FAIL] | ����=0.05m | ����=280 | ʱ��=5.60s | ��ֹԭ��=fall_low_height
+  Episode 2: [FAIL] | ����=0.96m | ����=66 | ʱ��=1.32s | ��ֹԭ��=fall_low_height
+  Episode 3: [FAIL] | ����=-0.21m | ����=43 | ʱ��=0.86s | ��ֹԭ��=fall_low_height
+  Episode 4: [FAIL] | ����=-0.47m | ����=902 | ʱ��=18.04s | ��ֹԭ��=fall_low_height
+  Episode 5: [FAIL] | ����=-0.18m | ����=45 | ʱ��=0.90s | ��ֹԭ��=fall_low_height
+
+���в���: V13.7 FSM
+--------------------------------------------------------------------------------
+  Episode 1: [FAIL] | ����=-0.20m | ����=298 | ʱ��=5.96s | ��ֹԭ��=fall_low_height
+  Episode 2: [FAIL] | ����=-0.24m | ����=525 | ʱ��=10.50s | ��ֹԭ��=fall_low_height
+  Episode 3: [FAIL] | ����=-0.19m | ����=436 | ʱ��=8.72s | ��ֹԭ��=fall_low_height
+  Episode 4: [FAIL] | ����=-0.22m | ����=474 | ʱ��=9.48s | ��ֹԭ��=fall_low_height
+  Episode 5: [FAIL] | ����=-0.28m | ����=780 | ʱ��=15.60s | ��ֹԭ��=fall_low_height
+
+���в���: PPO Model
+--------------------------------------------------------------------------------
+  Episode 1: [FAIL] | ����=1.21m | ����=69 | ʱ��=1.38s | ��ֹԭ��=fall_low_height
+  Episode 2: [FAIL] | ����=1.16m | ����=67 | ʱ��=1.34s | ��ֹԭ��=fall_low_height
+  Episode 3: [FAIL] | ����=1.14m | ����=64 | ʱ��=1.28s | ��ֹԭ��=fall_low_height
+  Episode 4: [FAIL] | ����=1.13m | ����=67 | ʱ��=1.34s | ��ֹԭ��=fall_low_height
+  Episode 5: [FAIL] | ����=1.19m | ����=68 | ʱ��=1.36s | ��ֹԭ��=fall_low_height
+
+================================================================================
+�ԱȽ��ͳ��
+================================================================================
+
+����              | �ɹ���        | ƽ������         | ƽ������       | ƽ��ʱ��         | ��Ҫʧ��ԭ��              
+----------------------------------------------------------------------------------------------
+Zero Action     |      0.0% |      -0.93m |         77 |       1.53s | fall_low_height     
+Random Action   |      0.0% |       0.03m |        267 |       5.34s | fall_low_height     
+V13.7 FSM       |      0.0% |      -0.23m |        503 |      10.05s | fall_low_height     
+PPO Model       |      0.0% |       1.17m |         67 |       1.34s | fall_low_height     
+
+================================================================================
+�ؼ��������ش�
+================================================================================
+
+����: V13.7 FSM �� RL ���������߶�Զ��
+��: ƽ�� -0.23m����Զ -0.19m
+
+����: V13.7 FSM �Ƿ�Ҳ��Լ 1.3 ��ʧ�ܣ�
+��: ƽ������ 10.05s��� 15.60s
+
+���: FSM �� RL �����б����������󲿷� episodes > 2s��
+����ԭ��:
+  1. RL reward ��ƿ����� FSM Ŀ�겻ƥ��
+  2. RL ѵ�����������ھֲ�����
+  3. PPO ģ�Ϳ�����Ҫ����ѵ����ͬ hyperparameters
+
+����ѱ��浽: D:\Dunna\Documents\hw-1\rl_training\fsm_comparison_results.json

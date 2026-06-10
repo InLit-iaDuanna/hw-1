@@ -57,7 +57,6 @@
 ### deep_cleanup.ps1
 
 **清理内容**:
-- Node.js 模块 (node_modules) - ~599 MB
 - Python 虚拟环境 (.venv-mujoco, .venv-codex) - ~1,092 MB
 - 离线轮子包 (wheelhouse) - ~5 MB
 
@@ -72,7 +71,6 @@
 # 2. 交互式确认删除
 .\scripts\deep_cleanup.ps1 -Confirm
 
-# 3. 仅删除 node_modules
 .\scripts\deep_cleanup.ps1 -NodeModulesOnly -Confirm
 
 # 4. 仅删除虚拟环境
@@ -90,9 +88,6 @@
 删除后可以通过以下命令恢复：
 
 ```powershell
-# 恢复 Node.js 依赖
-cd compass-gait-remotion
-npm install
 
 # 恢复 Python 虚拟环境
 .\scripts\setup_env.ps1
@@ -107,7 +102,6 @@ pip download -r requirements.txt -d wheelhouse
 
 ### 预期效果
 
-- 节省磁盘空间: 599 MB (node_modules) + 1,092 MB (venv) = ~1.7 GB
 - 重建时间: 5-15 分钟
 - 风险: 低（需要联网重建）
 
@@ -190,7 +184,6 @@ pip download -r requirements.txt -d wheelhouse
 # 1. 先清理缓存（安全）
 .\scripts\cleanup_temp_files.ps1
 
-# 2. 如果还不够，清理 node_modules
 .\scripts\deep_cleanup.ps1 -NodeModulesOnly -Confirm
 
 # 3. 最后手段：清理虚拟环境
@@ -227,8 +220,6 @@ A: 会略微影响首次运行速度（需要重新编译），但影响很小�
 **Q: 删除虚拟环境后如何恢复？**  
 A: 运行 `.\scripts\setup_env.ps1` 或手动创建虚拟环境并安装依赖。
 
-**Q: node_modules 可以安全删除吗？**  
-A: 可以，运行 `npm install` 即可恢复，但需要 2-5 分钟和网络连接。
 
 **Q: 如何查看当前磁盘占用？**  
 A: 运行 `.\scripts\analyze_disk_usage.ps1` 查看详细分析。
@@ -266,7 +257,6 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 1. 关闭 IDE (VS Code, PyCharm)
 2. 停止 Python 进程
-3. 关闭 Node.js 开发服务器
 4. 重试删除
 
 ---

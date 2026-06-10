@@ -12,6 +12,7 @@
     "shank_length": 0.52,
     "step_length": 0.34,
     "knee_damping": 0.018,
+    "knee_stiffness": 0.0,
     "joint_damping": 0.012,
     "release_phase": 0.12,
     "swing_foot_x": -0.22,

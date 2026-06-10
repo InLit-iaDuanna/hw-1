@@ -217,6 +217,16 @@ document.addEventListener('DOMContentLoaded', () => {
   renderCurrentView();
 });
 
+// ========== SIDEBAR TOGGLE ==========
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const toggle = document.getElementById('sidebar-toggle');
+  sidebar.classList.toggle('collapsed');
+  toggle.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+}
+
+window.toggleSidebar = toggleSidebar;
+
 // ========== VIEW SWITCHER ==========
 function initViewSwitcher() {
   document.querySelectorAll('.view-btn').forEach(btn => {
@@ -494,36 +504,293 @@ function renderTimelineView(versions) {
   }).join('');
 }
 
-// ========== GRAPH VIEW (Original Advanced Version) ==========
-const NW = 118, NH = 44, GX = 145, GY = 110, OFFX = 60, OFFY = 60;
-
-const INIT_GRID = {
-  "V01":[0,2],"V02":[1,2],"V03":[2,2],"V04":[3,2],"V05":[4,2],
-  "V06":[5,1],
-  "V07":[5,2],"V08":[6,2],"V09":[7,2],"V10":[8,2],"V11":[9,2],"V12":[10,2],"V13":[11,2],
-  "V13.5":[12,3],"V13b":[13,3],
-  "V13.6":[14,2],"V13.6.1":[15,2],
-  "V14":[15,1],"V14b":[16,1],"V14c":[17,1],"V15":[18,1],"V15.1":[19,1],
-  "V16":[16,2],"V13.7":[17,2],"V17":[18,2],
-  "V18":[19,3],"V19":[20,3],"V20":[21,3],"V21":[22,3],
-  "V22":[22,4],"V23":[23,4],"V24":[24,4],"V25":[25,4],
-};
+// ========== GRAPH VIEW (Progress Roadmap Version) ==========
+const NW = 100, NH = 38, GX = 132, PHASE_GAP = 118, OFFX = 120, OFFY = 86;
+const GRAPH_STORAGE_KEY = 'limit-cycle-dashboard.graph-state.v2';
 
 let graphState = {
   vpX: 0,
   vpY: 0,
+  scale: 1,
   positions: {},
+  savedPositions: {},
   nodeGroups: {},
+  collapsedPhases: new Set(),
+  phaseSummaryByVersion: {},
+  legendCollapsed: false,
+  controlsCollapsed: false,
+  hasSavedViewport: false,
   draggingId: null,
   dragOffX: 0,
   dragOffY: 0,
   dragMoved: false,
+  activePointerId: null,
   panning: false,
   panX: 0,
   panY: 0,
   panVpX: 0,
   panVpY: 0
 };
+
+function validGraphPoint(point) {
+  return point &&
+    Number.isFinite(point.x) &&
+    Number.isFinite(point.y) &&
+    Math.abs(point.x) < 100000 &&
+    Math.abs(point.y) < 100000;
+}
+
+function roundGraphPoint(point) {
+  return {
+    x: Math.round(point.x * 10) / 10,
+    y: Math.round(point.y * 10) / 10
+  };
+}
+
+function defaultGraphPosition(node) {
+  return {
+    x: OFFX + node.col * GX,
+    y: OFFY + node.row * PHASE_GAP
+  };
+}
+
+function summaryIdForPhase(phaseId) {
+  return `phase-${phaseId}`;
+}
+
+function isSummaryNodeId(id) {
+  return typeof id === 'string' && id.startsWith('phase-');
+}
+
+function isPhaseCollapsed(phaseId) {
+  return graphState.collapsedPhases.has(String(phaseId));
+}
+
+function resolveGraphNodeId(versionId) {
+  return graphState.phaseSummaryByVersion[versionId] || versionId;
+}
+
+function loadGraphState() {
+  try {
+    const raw = localStorage.getItem(GRAPH_STORAGE_KEY);
+    if (!raw) return;
+
+    const saved = JSON.parse(raw);
+    if (saved && typeof saved === 'object') {
+      graphState.savedPositions = Object.fromEntries(
+        Object.entries(saved.positions || {}).filter(([, point]) => validGraphPoint(point))
+      );
+
+      graphState.collapsedPhases = new Set(
+        (saved.collapsedPhases || [])
+          .map(id => String(id))
+          .filter(id => PHASES.some(phase => String(phase.id) === id))
+      );
+      graphState.legendCollapsed = Boolean(saved.legendCollapsed);
+      graphState.controlsCollapsed = Boolean(saved.controlsCollapsed);
+
+      if (saved.viewport &&
+          Number.isFinite(saved.viewport.vpX) &&
+          Number.isFinite(saved.viewport.vpY) &&
+          Number.isFinite(saved.viewport.scale)) {
+        graphState.vpX = saved.viewport.vpX;
+        graphState.vpY = saved.viewport.vpY;
+        graphState.scale = Math.max(0.3, Math.min(3, saved.viewport.scale));
+        graphState.hasSavedViewport = true;
+      }
+    }
+  } catch (err) {
+    graphState.savedPositions = {};
+    graphState.collapsedPhases = new Set();
+    graphState.legendCollapsed = false;
+    graphState.controlsCollapsed = false;
+    graphState.hasSavedViewport = false;
+  }
+}
+
+function saveGraphState() {
+  try {
+    const positions = { ...graphState.savedPositions };
+    Object.entries(graphState.positions).forEach(([id, point]) => {
+      if (validGraphPoint(point)) {
+        positions[id] = roundGraphPoint(point);
+      }
+    });
+
+    graphState.savedPositions = positions;
+    graphState.hasSavedViewport = true;
+
+    localStorage.setItem(GRAPH_STORAGE_KEY, JSON.stringify({
+      positions,
+      collapsedPhases: Array.from(graphState.collapsedPhases),
+      legendCollapsed: graphState.legendCollapsed,
+      controlsCollapsed: graphState.controlsCollapsed,
+      viewport: {
+        vpX: Math.round(graphState.vpX * 10) / 10,
+        vpY: Math.round(graphState.vpY * 10) / 10,
+        scale: Math.round(graphState.scale * 1000) / 1000
+      },
+      updatedAt: new Date().toISOString()
+    }));
+  } catch (err) {
+    // localStorage 不可用时只保持当前会话状态。
+  }
+}
+
+function updateGraphLegend() {
+  const legend = document.getElementById('graph-legend');
+  const toggle = document.getElementById('graph-legend-toggle');
+  if (!legend || !toggle) return;
+
+  legend.classList.toggle('collapsed', graphState.legendCollapsed);
+  toggle.textContent = graphState.legendCollapsed ? '▸' : '▾';
+  toggle.title = graphState.legendCollapsed ? '展开图例' : '收起图例';
+  toggle.setAttribute('aria-expanded', String(!graphState.legendCollapsed));
+}
+
+function toggleGraphLegend(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  graphState.legendCollapsed = !graphState.legendCollapsed;
+  updateGraphLegend();
+  saveGraphState();
+}
+
+function updateGraphToolbar() {
+  const toolbar = document.getElementById('graph-toolbar');
+  const toggle = document.getElementById('graph-toolbar-toggle');
+  if (!toolbar || !toggle) return;
+
+  toolbar.classList.toggle('collapsed', graphState.controlsCollapsed);
+  toggle.textContent = graphState.controlsCollapsed ? '⋯' : '⌄';
+  toggle.title = graphState.controlsCollapsed ? '展开路径图工具' : '收起路径图工具';
+  toggle.setAttribute('aria-expanded', String(!graphState.controlsCollapsed));
+}
+
+function toggleGraphToolbar(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  graphState.controlsCollapsed = !graphState.controlsCollapsed;
+  updateGraphToolbar();
+  saveGraphState();
+}
+
+function toggleGraphPhase(phaseId, event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  const key = String(phaseId);
+  if (graphState.collapsedPhases.has(key)) {
+    graphState.collapsedPhases.delete(key);
+  } else {
+    graphState.collapsedPhases.add(key);
+  }
+
+  saveGraphState();
+  renderCurrentView();
+}
+
+loadGraphState();
+
+// Build layout from the current research progress in data.js.
+// X follows version order inside each phase; Y follows phase lanes.
+function buildProgressLayout(versions) {
+  const nodes = [];
+  graphState.phaseSummaryByVersion = {};
+
+  PHASES.forEach(phase => {
+    const phaseVersions = versions
+      .filter(v => v.phase === phase.id)
+      .sort((a, b) => VERSIONS.findIndex(v => v.id === a.id) - VERSIONS.findIndex(v => v.id === b.id));
+
+    if (phaseVersions.length === 0) return;
+
+    if (isPhaseCollapsed(phase.id)) {
+      const summaryId = summaryIdForPhase(phase.id);
+      phaseVersions.forEach(v => {
+        graphState.phaseSummaryByVersion[v.id] = summaryId;
+      });
+      nodes.push({
+        id: summaryId,
+        summary: true,
+        phase,
+        versions: phaseVersions,
+        counts: {
+          done: phaseVersions.filter(v => v.status === 'done').length,
+          next: phaseVersions.filter(v => v.status === 'next').length,
+          planned: phaseVersions.filter(v => v.status === 'planned').length
+        },
+        col: 0,
+        row: phase.id - 1
+      });
+      return;
+    }
+
+    phaseVersions.forEach((v, idx) => nodes.push({
+        id: v.id,
+        version: v,
+        col: idx,
+        row: phase.id - 1
+      }));
+  });
+  return nodes;
+}
+
+function graphBounds(positions) {
+  const values = Object.values(positions);
+  if (values.length === 0) return null;
+
+  let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+  values.forEach(p => {
+    minX = Math.min(minX, p.x);
+    minY = Math.min(minY, p.y);
+    maxX = Math.max(maxX, p.x + NW);
+    maxY = Math.max(maxY, p.y + NH);
+  });
+
+  return { minX, minY, maxX, maxY, width: maxX - minX, height: maxY - minY };
+}
+
+function fitGraphToContainer(container) {
+  const bounds = graphBounds(graphState.positions);
+  if (!bounds) return;
+
+  const padding = 72;
+  const scaleX = (container.clientWidth - padding * 2) / bounds.width;
+  const scaleY = (container.clientHeight - padding * 2) / bounds.height;
+  graphState.scale = Math.max(0.35, Math.min(scaleX, scaleY, 1.1));
+  graphState.vpX = (container.clientWidth - bounds.width * graphState.scale) / 2 - bounds.minX * graphState.scale;
+  graphState.vpY = (container.clientHeight - bounds.height * graphState.scale) / 2 - bounds.minY * graphState.scale;
+}
+
+function updateGraphPhaseControls(versions = VERSIONS) {
+  const container = document.getElementById('graph-phase-controls');
+  if (!container) return;
+
+  container.innerHTML = '';
+  PHASES.forEach(phase => {
+    const phaseVersions = versions.filter(v => v.phase === phase.id);
+    const collapsed = isPhaseCollapsed(phase.id);
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `graph-phase-btn${collapsed ? ' collapsed' : ''}`;
+    btn.disabled = phaseVersions.length === 0;
+    btn.textContent = collapsed ? '▸' : '▾';
+    btn.title = `${collapsed ? '展开' : '收起'}${phaseLabel(phase)}`;
+    btn.setAttribute('aria-label', `${collapsed ? '展开' : '收起'}${phaseLabel(phase)}`);
+    btn.style.setProperty('--phase-color', phase.color);
+    btn.addEventListener('click', e => toggleGraphPhase(phase.id, e));
+    container.appendChild(btn);
+  });
+}
 
 function renderGraphView(versions) {
   let svg = document.getElementById('graph-svg');
@@ -537,316 +804,399 @@ function renderGraphView(versions) {
   svg.setAttribute('width', width);
   svg.setAttribute('height', height);
 
-  if (versions.length === 0) {
+  const graphVersions = versions;
+  updateGraphPhaseControls(graphVersions);
+  updateGraphLegend();
+  updateGraphToolbar();
+
+  if (graphVersions.length === 0) {
     svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="var(--text-muted)">没有符合当前筛选条件的版本</text>';
     return;
   }
 
-  // Initialize positions
+  const layout = buildProgressLayout(graphVersions);
+
   graphState.positions = {};
-  for (const [id, [c, r]] of Object.entries(INIT_GRID)) {
-    if (versions.find(v => v.id === id)) {
-      graphState.positions[id] = { x: OFFX + c * GX, y: OFFY + r * GY };
-    }
+  layout.forEach(node => {
+    const saved = graphState.savedPositions[node.id];
+    graphState.positions[node.id] = validGraphPoint(saved) ? { ...saved } : defaultGraphPosition(node);
+  });
+
+  if (!graphState.hasSavedViewport) {
+    fitGraphToContainer(container);
   }
 
   // Clear and setup
   svg.innerHTML = '';
   const NS = 'http://www.w3.org/2000/svg';
 
-  // Create defs
+  // Create defs with simplified styling
   const defs = document.createElementNS(NS, 'defs');
 
-  // Glow filters for each phase
-  Object.entries(PHASE_COLORS).forEach(([phase, color]) => {
-    const filter = document.createElementNS(NS, 'filter');
-    filter.setAttribute('id', `glow${phase}`);
-    filter.setAttribute('x', '-50%');
-    filter.setAttribute('y', '-50%');
-    filter.setAttribute('width', '200%');
-    filter.setAttribute('height', '200%');
-
-    const feGaussian = document.createElementNS(NS, 'feGaussianBlur');
-    feGaussian.setAttribute('stdDeviation', '3');
-    feGaussian.setAttribute('result', 'coloredBlur');
-    filter.appendChild(feGaussian);
-
-    const feMerge = document.createElementNS(NS, 'feMerge');
-    const feMergeNode1 = document.createElementNS(NS, 'feMergeNode');
-    feMergeNode1.setAttribute('in', 'coloredBlur');
-    const feMergeNode2 = document.createElementNS(NS, 'feMergeNode');
-    feMergeNode2.setAttribute('in', 'SourceGraphic');
-    feMerge.appendChild(feMergeNode1);
-    feMerge.appendChild(feMergeNode2);
-    filter.appendChild(feMerge);
-
-    defs.appendChild(filter);
-  });
-
-  // Arrow markers with glow
+  // Simple arrow markers without glow
   Object.entries(PHASE_COLORS).forEach(([phase, color]) => {
     const marker = document.createElementNS(NS, 'marker');
     marker.setAttribute('id', `arr${phase}`);
-    marker.setAttribute('markerWidth', '8');
-    marker.setAttribute('markerHeight', '8');
-    marker.setAttribute('refX', '7');
-    marker.setAttribute('refY', '4');
+    marker.setAttribute('markerWidth', '6');
+    marker.setAttribute('markerHeight', '6');
+    marker.setAttribute('refX', '5');
+    marker.setAttribute('refY', '3');
     marker.setAttribute('orient', 'auto');
     const path = document.createElementNS(NS, 'path');
-    path.setAttribute('d', 'M0,0 L8,4 L0,8 Z');
+    path.setAttribute('d', 'M0,0 L6,3 L0,6 Z');
     path.setAttribute('fill', color);
-    path.setAttribute('opacity', '0.8');
-    path.setAttribute('filter', `url(#glow${phase})`);
+    path.setAttribute('opacity', '0.7');
     marker.appendChild(path);
     defs.appendChild(marker);
   });
 
   const markerP = document.createElementNS(NS, 'marker');
   markerP.setAttribute('id', 'arrP');
-  markerP.setAttribute('markerWidth', '7');
-  markerP.setAttribute('markerHeight', '7');
-  markerP.setAttribute('refX', '6');
+  markerP.setAttribute('markerWidth', '6');
+  markerP.setAttribute('markerHeight', '6');
+  markerP.setAttribute('refX', '5');
   markerP.setAttribute('refY', '3');
   markerP.setAttribute('orient', 'auto');
   const pathP = document.createElementNS(NS, 'path');
-  pathP.setAttribute('d', 'M0,0 L7,3 L0,6 Z');
-  pathP.setAttribute('fill', '#3d4460');
-  pathP.setAttribute('opacity', '0.6');
+  pathP.setAttribute('d', 'M0,0 L6,3 L0,6 Z');
+  pathP.setAttribute('fill', '#4a5568');
+  pathP.setAttribute('opacity', '0.5');
   markerP.appendChild(pathP);
   defs.appendChild(markerP);
-
-  // Gradient for edges
-  Object.entries(PHASE_COLORS).forEach(([phase, color]) => {
-    const grad = document.createElementNS(NS, 'linearGradient');
-    grad.setAttribute('id', `grad${phase}`);
-    const stop1 = document.createElementNS(NS, 'stop');
-    stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('stop-color', color);
-    stop1.setAttribute('stop-opacity', '0.3');
-    const stop2 = document.createElementNS(NS, 'stop');
-    stop2.setAttribute('offset', '100%');
-    stop2.setAttribute('stop-color', color);
-    stop2.setAttribute('stop-opacity', '0.7');
-    grad.appendChild(stop1);
-    grad.appendChild(stop2);
-    defs.appendChild(grad);
-  });
 
   svg.appendChild(defs);
 
   // Main group
   const rootG = document.createElementNS(NS, 'g');
+  const bandLayer = document.createElementNS(NS, 'g');
   const edgeLayer = document.createElementNS(NS, 'g');
   const gateLayer = document.createElementNS(NS, 'g');
   const nodeLayer = document.createElementNS(NS, 'g');
 
+  rootG.appendChild(bandLayer);
   rootG.appendChild(edgeLayer);
   rootG.appendChild(gateLayer);
   rootG.appendChild(nodeLayer);
   svg.appendChild(rootG);
 
   function applyVP() {
-    rootG.setAttribute('transform', `translate(${graphState.vpX},${graphState.vpY})`);
+    rootG.setAttribute('transform', `translate(${graphState.vpX},${graphState.vpY}) scale(${graphState.scale})`);
   }
 
-  // Draw edges with smart routing
+  function svgPt(e) {
+    const rect = svg.getBoundingClientRect();
+    return {
+      x: (e.clientX - rect.left - graphState.vpX) / graphState.scale,
+      y: (e.clientY - rect.top - graphState.vpY) / graphState.scale
+    };
+  }
+
+  function drawPhaseBands() {
+    bandLayer.innerHTML = '';
+    const bounds = graphBounds(graphState.positions);
+    if (!bounds) return;
+
+    PHASES.forEach(phase => {
+      const phaseVersions = graphVersions.filter(v => v.phase === phase.id);
+      if (phaseVersions.length === 0) return;
+
+      const laneY = OFFY + (phase.id - 1) * PHASE_GAP - 24;
+      const laneX = bounds.minX - 52;
+      const laneWidth = bounds.width + 104;
+
+      const rect = document.createElementNS(NS, 'rect');
+      rect.setAttribute('x', laneX);
+      rect.setAttribute('y', laneY);
+      rect.setAttribute('width', laneWidth);
+      rect.setAttribute('height', 86);
+      rect.setAttribute('rx', '8');
+      rect.setAttribute('fill', phase.color);
+      rect.setAttribute('opacity', '0.045');
+      bandLayer.appendChild(rect);
+    });
+  }
+
+  // Draw edges based on actual deps
   function drawEdges() {
     edgeLayer.innerHTML = '';
-    const offsets = buildEdgeOffsets();
+    const drawnEdges = new Set();
 
-    versions.forEach(v => {
-      if (!graphState.positions[v.id]) return;
-      const tp = graphState.positions[v.id];
-      const color = v.status === 'planned' ? '#3d4460' : PHASE_COLORS[v.phase];
-      const opacity = v.status === 'planned' ? 0.2 : (v.status === 'done' ? 0.45 : 0.7);
-      const arrowId = v.status === 'planned' ? 'arrP' : `arr${v.phase}`;
+    graphVersions.forEach(v => {
+      const targetId = resolveGraphNodeId(v.id);
+      const tp = graphState.positions[targetId];
+      if (!tp) return;
 
-      v.deps.forEach(dep => {
-        if (!graphState.positions[dep]) return;
-        const sp = graphState.positions[dep];
-        const sx = sp.x + NW, sy = sp.y + NH / 2;
-        const tx = tp.x - 3, ty = tp.y + NH / 2;
+      v.deps.forEach(depId => {
+        const sourceId = resolveGraphNodeId(depId);
+        if (sourceId === targetId || !graphState.positions[sourceId]) return;
 
-        const ek = dep + '->' + v.id;
-        const off = offsets[ek] || { idx: 0, total: 1 };
-        const spread = off.total > 1 ? ((off.idx / (off.total - 1)) - 0.5) * 32 : 0;
+        const edgeKey = `${sourceId}->${targetId}`;
+        if (drawnEdges.has(edgeKey)) return;
+        drawnEdges.add(edgeKey);
 
-        const dy = ty - sy;
+        const sp = graphState.positions[sourceId];
+        const sx = sp.x + NW;
+        const sy = sp.y + NH / 2;
+        const tx = tp.x;
+        const ty = tp.y + NH / 2;
+
+        const color = v.status === 'planned' ? '#4a5568' : PHASE_COLORS[v.phase];
+        const opacity = v.status === 'planned' ? 0.3 : (v.status === 'next' ? 0.85 : 0.58);
+        const arrowId = v.status === 'planned' ? 'arrP' : `arr${v.phase}`;
+
         const dx = tx - sx;
-        let d;
-        if (Math.abs(dy) < 8) {
-          const cx1 = sx + dx * 0.4;
-          const cx2 = tx - dx * 0.4;
-          d = `M${sx},${sy} C${cx1},${sy + spread} ${cx2},${ty + spread} ${tx},${ty}`;
-        } else {
-          const cx1 = sx + Math.abs(dx) * 0.45 + spread * 0.3;
-          const cx2 = tx - Math.abs(dx) * 0.45 + spread * 0.3;
-          d = `M${sx},${sy} C${cx1},${sy} ${cx2},${ty} ${tx},${ty}`;
-        }
+        const dy = ty - sy;
+        const cx1 = sx + Math.max(48, Math.abs(dx) * 0.45);
+        const cx2 = tx - Math.max(48, Math.abs(dx) * 0.45);
+        const d = `M${sx},${sy} C${cx1},${sy} ${cx2},${ty} ${tx},${ty}`;
 
         const path = document.createElementNS(NS, 'path');
         path.setAttribute('d', d);
         path.setAttribute('fill', 'none');
-        path.setAttribute('stroke', v.status === 'planned' ? color : `url(#grad${v.phase})`);
-        path.setAttribute('stroke-width', v.status === 'next' ? '2.5' : '2');
+        path.setAttribute('stroke', color);
+        path.setAttribute('stroke-width', v.status === 'next' ? '3' : '2');
         path.setAttribute('opacity', opacity);
         path.setAttribute('marker-end', `url(#${arrowId})`);
-        path.setAttribute('filter', v.status !== 'planned' ? `url(#glow${v.phase})` : '');
         if (v.status === 'planned') {
-          path.setAttribute('stroke-dasharray', '5,4');
-        } else if (v.status === 'next') {
-          path.setAttribute('stroke-dasharray', '10,5');
+          path.setAttribute('stroke-dasharray', '4,4');
         }
         edgeLayer.appendChild(path);
       });
     });
   }
 
-  function buildEdgeOffsets() {
-    const buckets = {};
-    versions.forEach(v => {
-      if (!graphState.positions[v.id]) return;
-      v.deps.forEach(dep => {
-        if (!graphState.positions[dep]) return;
-        const sy = Math.round(graphState.positions[dep].y / 10) * 10;
-        const ty = Math.round(graphState.positions[v.id].y / 10) * 10;
-        const bk = `${sy}:${ty}`;
-        if (!buckets[bk]) buckets[bk] = [];
-        buckets[bk].push(dep + '->' + v.id);
-      });
-    });
-    const offsets = {};
-    Object.values(buckets).forEach(edges => {
-      edges.forEach((ek, i) => offsets[ek] = { idx: i, total: edges.length });
-    });
-    return offsets;
-  }
-
-  // Draw gates
+  // Draw gates (decision points) - simplified
   function drawGates() {
     gateLayer.innerHTML = '';
+    const drawnGates = new Set();
+
     GATES.forEach(g => {
-      if (!graphState.positions[g.after]) return;
-      const p = graphState.positions[g.after];
-      const gx = p.x + NW + 24, gy = p.y + NH / 2;
-      const s = 9, col = g.status === 'passed' ? '#34d399' : '#f59e0b';
+      const nodeId = resolveGraphNodeId(g.after);
+      if (!graphState.positions[nodeId]) return;
+
+      const gateKey = `${nodeId}-${g.after}`;
+      if (drawnGates.has(gateKey)) return;
+      drawnGates.add(gateKey);
+
+      const p = graphState.positions[nodeId];
+      const gx = p.x + NW + 18;
+      const gy = p.y + NH / 2;
+      const s = 7;
+      const col = g.status === 'passed' ? '#34d399' : '#f59e0b';
 
       const grp = document.createElementNS(NS, 'g');
       grp.style.cursor = 'help';
 
-      // Outer glow
-      const polyGlow = document.createElementNS(NS, 'polygon');
-      polyGlow.setAttribute('points', `${gx},${gy - s - 2} ${gx + s + 2},${gy} ${gx},${gy + s + 2} ${gx - s - 2},${gy}`);
-      polyGlow.setAttribute('fill', col);
-      polyGlow.setAttribute('opacity', '0.3');
-      polyGlow.setAttribute('filter', 'url(#glow1)');
-      grp.appendChild(polyGlow);
-
       const poly = document.createElementNS(NS, 'polygon');
       poly.setAttribute('points', `${gx},${gy - s} ${gx + s},${gy} ${gx},${gy + s} ${gx - s},${gy}`);
       poly.setAttribute('fill', col);
-      poly.setAttribute('opacity', '0.95');
+      poly.setAttribute('opacity', '0.8');
       grp.appendChild(poly);
 
       const lt = document.createElementNS(NS, 'text');
       lt.textContent = g.status === 'passed' ? '✓' : '?';
       lt.setAttribute('x', gx);
-      lt.setAttribute('y', gy + 4);
+      lt.setAttribute('y', gy + 3);
       lt.setAttribute('text-anchor', 'middle');
-      lt.setAttribute('font-size', '9');
+      lt.setAttribute('font-size', '8');
       lt.setAttribute('fill', '#0a0e14');
       lt.setAttribute('font-weight', '700');
       lt.setAttribute('pointer-events', 'none');
       grp.appendChild(lt);
 
-      const lt2 = document.createElementNS(NS, 'text');
-      lt2.textContent = g.status === 'passed' ? '通过' : '待定';
-      lt2.setAttribute('x', gx);
-      lt2.setAttribute('y', gy + s + 11);
-      lt2.setAttribute('text-anchor', 'middle');
-      lt2.setAttribute('font-size', '7.5');
-      lt2.setAttribute('fill', col);
-      lt2.setAttribute('opacity', '0.8');
-      lt2.setAttribute('pointer-events', 'none');
-      grp.appendChild(lt2);
+      const title = document.createElementNS(NS, 'title');
+      title.textContent = g.text;
+      grp.appendChild(title);
 
-      grp.title = g.text;
       gateLayer.appendChild(grp);
     });
   }
 
+  function updateNodePos(id) {
+    const p = graphState.positions[id];
+    const grp = graphState.nodeGroups[id];
+    if (!p || !grp) return;
+
+    const nodeBody = grp.querySelector('.node-body');
+    const nodeStripe = grp.querySelector('.node-stripe');
+    const idLabel = grp.querySelector('.node-id-label');
+    const titleLabel = grp.querySelector('.node-title-label');
+    const statusLabelEl = grp.querySelector('.node-status-label');
+    const simBg = grp.querySelector('.node-sim-bg');
+    const simLabel = grp.querySelector('.node-sim-label');
+
+    if (nodeBody) {
+      nodeBody.setAttribute('x', p.x);
+      nodeBody.setAttribute('y', p.y);
+    }
+    if (nodeStripe) {
+      nodeStripe.setAttribute('x', p.x);
+      nodeStripe.setAttribute('y', p.y + 2);
+    }
+    if (idLabel) {
+      idLabel.setAttribute('x', p.x + 8);
+      idLabel.setAttribute('y', p.y + 14);
+    }
+    if (titleLabel) {
+      titleLabel.setAttribute('x', p.x + 8);
+      titleLabel.setAttribute('y', p.y + 28);
+    }
+    if (statusLabelEl) {
+      statusLabelEl.setAttribute('x', p.x + NW - 8);
+      statusLabelEl.setAttribute('y', p.y + 30);
+    }
+    if (simBg) {
+      simBg.setAttribute('x', p.x + NW - 30);
+      simBg.setAttribute('y', p.y + 4);
+    }
+    if (simLabel) {
+      simLabel.setAttribute('x', p.x + NW - 17);
+      simLabel.setAttribute('y', p.y + 13);
+    }
+  }
+
+  function makeDraggable(grp, id) {
+    const startDrag = e => {
+      if (e.button !== 0 || e.target.closest('.node-sim-button')) return;
+      if (graphState.draggingId) return;
+      e.preventDefault();
+      e.stopPropagation();
+
+      const pt = svgPt(e);
+      graphState.draggingId = id;
+      graphState.dragMoved = false;
+      graphState.activePointerId = e.pointerId ?? null;
+      graphState.dragOffX = pt.x - graphState.positions[id].x;
+      graphState.dragOffY = pt.y - graphState.positions[id].y;
+      if (typeof grp.setPointerCapture === 'function' && e.pointerId !== undefined) {
+        grp.setPointerCapture(e.pointerId);
+      }
+      grp.style.cursor = 'grabbing';
+      svg.style.cursor = 'grabbing';
+    };
+
+    grp.addEventListener('pointerdown', startDrag);
+    grp.addEventListener('mousedown', startDrag);
+  }
+
   // Draw nodes
   graphState.nodeGroups = {};
-  versions.forEach(v => {
-    if (!graphState.positions[v.id]) return;
-    const p = graphState.positions[v.id];
-    const pc = PHASE_COLORS[v.phase];
-    const isPlanned = v.status === 'planned';
-    const isNext = v.status === 'next';
+
+  function drawSummaryNode(node) {
+    const p = graphState.positions[node.id];
+    const phase = node.phase;
 
     const grp = document.createElementNS(NS, 'g');
-    grp.classList.add('node-g');
-    grp.style.cursor = 'pointer';
-    graphState.nodeGroups[v.id] = grp;
-
-    // Background glow
-    if (!isPlanned) {
-      const glowRect = document.createElementNS(NS, 'rect');
-      glowRect.setAttribute('x', p.x - 2);
-      glowRect.setAttribute('y', p.y - 2);
-      glowRect.setAttribute('width', NW + 4);
-      glowRect.setAttribute('height', NH + 4);
-      glowRect.setAttribute('rx', '10');
-      glowRect.setAttribute('fill', 'none');
-      glowRect.setAttribute('stroke', STATUS_COLORS[v.status]);
-      glowRect.setAttribute('stroke-width', '2');
-      glowRect.setAttribute('opacity', '0.3');
-      glowRect.setAttribute('filter', `url(#glow${v.phase})`);
-      glowRect.classList.add('node-glow');
-      grp.appendChild(glowRect);
-    }
+    grp.classList.add('node-g', 'summary-node');
+    grp.style.cursor = 'grab';
+    graphState.nodeGroups[node.id] = grp;
 
     const rect = document.createElementNS(NS, 'rect');
     rect.setAttribute('x', p.x);
     rect.setAttribute('y', p.y);
     rect.setAttribute('width', NW);
     rect.setAttribute('height', NH);
-    rect.setAttribute('rx', '8');
-
-    // Glassmorphism effect
-    const gradId = `node-grad-${v.id}`;
-    const nodeGrad = document.createElementNS(NS, 'linearGradient');
-    nodeGrad.setAttribute('id', gradId);
-    nodeGrad.setAttribute('x1', '0%');
-    nodeGrad.setAttribute('y1', '0%');
-    nodeGrad.setAttribute('x2', '0%');
-    nodeGrad.setAttribute('y2', '100%');
-    const stop1 = document.createElementNS(NS, 'stop');
-    stop1.setAttribute('offset', '0%');
-    stop1.setAttribute('stop-color', isPlanned ? '#14182a' : '#1a1f2e');
-    stop1.setAttribute('stop-opacity', isPlanned ? '0.6' : '0.9');
-    const stop2 = document.createElementNS(NS, 'stop');
-    stop2.setAttribute('offset', '100%');
-    stop2.setAttribute('stop-color', isPlanned ? '#0d1117' : '#12161f');
-    stop2.setAttribute('stop-opacity', isPlanned ? '0.4' : '0.7');
-    nodeGrad.appendChild(stop1);
-    nodeGrad.appendChild(stop2);
-    defs.appendChild(nodeGrad);
-
-    rect.setAttribute('fill', `url(#${gradId})`);
-    rect.setAttribute('stroke', isNext ? '#fbbf24' : isPlanned ? '#2d3548' : pc);
-    rect.setAttribute('stroke-width', isNext ? '2.5' : '1.5');
-    if (isPlanned) rect.setAttribute('stroke-dasharray', '5,3');
-    if (!isPlanned) rect.setAttribute('filter', `url(#glow${v.phase})`);
+    rect.setAttribute('rx', '6');
+    rect.setAttribute('fill', 'rgba(18, 22, 31, 0.96)');
+    rect.setAttribute('stroke', phase.color);
+    rect.setAttribute('stroke-width', '2');
+    rect.setAttribute('stroke-dasharray', '5,3');
     rect.classList.add('node-body');
     grp.appendChild(rect);
 
     const stripe = document.createElementNS(NS, 'rect');
     stripe.setAttribute('x', p.x);
-    stripe.setAttribute('y', p.y + 3);
-    stripe.setAttribute('width', 4);
-    stripe.setAttribute('height', NH - 6);
-    stripe.setAttribute('rx', '2');
+    stripe.setAttribute('y', p.y + 2);
+    stripe.setAttribute('width', 3);
+    stripe.setAttribute('height', NH - 4);
+    stripe.setAttribute('rx', '1.5');
+    stripe.setAttribute('fill', phase.color);
+    stripe.setAttribute('opacity', '0.95');
+    stripe.setAttribute('pointer-events', 'none');
+    stripe.classList.add('node-stripe');
+    grp.appendChild(stripe);
+
+    const tid = document.createElementNS(NS, 'text');
+    tid.textContent = phaseLabel(phase);
+    tid.setAttribute('x', p.x + 8);
+    tid.setAttribute('y', p.y + 14);
+    tid.setAttribute('font-size', '9');
+    tid.setAttribute('font-weight', '700');
+    tid.setAttribute('fill', phase.color);
+    tid.setAttribute('pointer-events', 'none');
+    tid.classList.add('node-id-label');
+    grp.appendChild(tid);
+
+    const ttl = document.createElementNS(NS, 'text');
+    ttl.textContent = `${node.versions.length} 个版本`;
+    ttl.setAttribute('x', p.x + 8);
+    ttl.setAttribute('y', p.y + 28);
+    ttl.setAttribute('font-size', '7.5');
+    ttl.setAttribute('fill', '#8892a4');
+    ttl.setAttribute('pointer-events', 'none');
+    ttl.classList.add('node-title-label');
+    grp.appendChild(ttl);
+
+    const st = document.createElementNS(NS, 'text');
+    st.textContent = '展开';
+    st.setAttribute('x', p.x + NW - 8);
+    st.setAttribute('y', p.y + 30);
+    st.setAttribute('text-anchor', 'end');
+    st.setAttribute('font-size', '7');
+    st.setAttribute('font-weight', '700');
+    st.setAttribute('fill', '#60a5fa');
+    st.setAttribute('pointer-events', 'none');
+    st.classList.add('node-status-label');
+    grp.appendChild(st);
+
+    const nodeTitle = document.createElementNS(NS, 'title');
+    nodeTitle.textContent = `${phaseLabel(phase)}已收起，包含 ${node.versions.length} 个版本。点击展开。`;
+    grp.appendChild(nodeTitle);
+
+    grp.addEventListener('click', e => {
+      e.stopPropagation();
+      if (graphState.dragMoved) {
+        graphState.dragMoved = false;
+        return;
+      }
+      toggleGraphPhase(phase.id, e);
+    });
+
+    makeDraggable(grp, node.id);
+    nodeLayer.appendChild(grp);
+  }
+
+  function drawVersionNode(node) {
+    const v = node.version;
+    const p = graphState.positions[node.id];
+    const pc = PHASE_COLORS[v.phase];
+    const isPlanned = v.status === 'planned';
+    const isNext = v.status === 'next';
+
+    const grp = document.createElementNS(NS, 'g');
+    grp.classList.add('node-g');
+    grp.style.cursor = 'grab';
+    graphState.nodeGroups[node.id] = grp;
+
+    const rect = document.createElementNS(NS, 'rect');
+    rect.setAttribute('x', p.x);
+    rect.setAttribute('y', p.y);
+    rect.setAttribute('width', NW);
+    rect.setAttribute('height', NH);
+    rect.setAttribute('rx', '6');
+    rect.setAttribute('fill', isPlanned ? '#161b27' : (isNext ? '#26220f' : '#1e2433'));
+    rect.setAttribute('stroke', isNext ? '#fbbf24' : isPlanned ? '#3d4460' : pc);
+    rect.setAttribute('stroke-width', isNext ? '2.6' : '1.5');
+    if (isPlanned) rect.setAttribute('stroke-dasharray', '4,3');
+    rect.classList.add('node-body');
+    grp.appendChild(rect);
+
+    const stripe = document.createElementNS(NS, 'rect');
+    stripe.setAttribute('x', p.x);
+    stripe.setAttribute('y', p.y + 2);
+    stripe.setAttribute('width', 3);
+    stripe.setAttribute('height', NH - 4);
+    stripe.setAttribute('rx', '1.5');
     stripe.setAttribute('fill', STATUS_COLORS[v.status] || '#3d4460');
     stripe.setAttribute('opacity', '0.9');
     stripe.setAttribute('pointer-events', 'none');
@@ -855,10 +1205,10 @@ function renderGraphView(versions) {
 
     const tid = document.createElementNS(NS, 'text');
     tid.textContent = v.id;
-    tid.setAttribute('x', p.x + 10);
-    tid.setAttribute('y', p.y + 16);
-    tid.setAttribute('font-size', '10');
-    tid.setAttribute('font-weight', '800');
+    tid.setAttribute('x', p.x + 8);
+    tid.setAttribute('y', p.y + 14);
+    tid.setAttribute('font-size', '9');
+    tid.setAttribute('font-weight', '700');
     tid.setAttribute('font-family', 'monospace');
     tid.setAttribute('fill', isNext ? '#fbbf24' : pc);
     tid.setAttribute('pointer-events', 'none');
@@ -866,168 +1216,187 @@ function renderGraphView(versions) {
     grp.appendChild(tid);
 
     const title = versionTitle(v);
-    const short = title.length > 17 ? title.slice(0, 15) + '…' : title;
+    const short = title.length > 14 ? title.slice(0, 12) + '…' : title;
     const ttl = document.createElementNS(NS, 'text');
     ttl.textContent = short;
-    ttl.setAttribute('x', p.x + 10);
-    ttl.setAttribute('y', p.y + 32);
-    ttl.setAttribute('font-size', '8.5');
-    ttl.setAttribute('fill', '#6b7a96');
+    ttl.setAttribute('x', p.x + 8);
+    ttl.setAttribute('y', p.y + 28);
+    ttl.setAttribute('font-size', '7.5');
+    ttl.setAttribute('fill', '#8892a4');
     ttl.setAttribute('pointer-events', 'none');
     ttl.classList.add('node-title-label');
     grp.appendChild(ttl);
+
+    if (v.status !== 'done') {
+      const st = document.createElementNS(NS, 'text');
+      st.textContent = v.status === 'next' ? '进行中' : '计划';
+      st.setAttribute('x', p.x + NW - 8);
+      st.setAttribute('y', p.y + 30);
+      st.setAttribute('text-anchor', 'end');
+      st.setAttribute('font-size', '7');
+      st.setAttribute('font-weight', '700');
+      st.setAttribute('fill', STATUS_COLORS[v.status] || '#8892a4');
+      st.setAttribute('pointer-events', 'none');
+      st.classList.add('node-status-label');
+      grp.appendChild(st);
+    }
 
     const simBtn = document.createElementNS(NS, 'g');
     simBtn.classList.add('node-sim-button');
     simBtn.style.cursor = 'pointer';
 
     const simRect = document.createElementNS(NS, 'rect');
-    simRect.setAttribute('x', p.x + NW - 43);
-    simRect.setAttribute('y', p.y + 6);
-    simRect.setAttribute('width', 36);
-    simRect.setAttribute('height', 16);
-    simRect.setAttribute('rx', '4');
-    simRect.setAttribute('fill', 'rgba(96, 165, 250, 0.16)');
-    simRect.setAttribute('stroke', 'rgba(96, 165, 250, 0.55)');
+    simRect.setAttribute('x', p.x + NW - 30);
+    simRect.setAttribute('y', p.y + 4);
+    simRect.setAttribute('width', 26);
+    simRect.setAttribute('height', 13);
+    simRect.setAttribute('rx', '3');
+    simRect.setAttribute('fill', 'rgba(96, 165, 250, 0.15)');
+    simRect.setAttribute('stroke', 'rgba(96, 165, 250, 0.4)');
+    simRect.setAttribute('stroke-width', '1');
     simRect.classList.add('node-sim-bg');
     simBtn.appendChild(simRect);
 
     const simText = document.createElementNS(NS, 'text');
     simText.textContent = '仿真';
-    simText.setAttribute('x', p.x + NW - 25);
-    simText.setAttribute('y', p.y + 18);
+    simText.setAttribute('x', p.x + NW - 17);
+    simText.setAttribute('y', p.y + 13);
     simText.setAttribute('text-anchor', 'middle');
-    simText.setAttribute('font-size', '8');
-    simText.setAttribute('font-weight', '700');
+    simText.setAttribute('font-size', '7');
+    simText.setAttribute('font-weight', '600');
     simText.setAttribute('fill', '#60a5fa');
     simText.setAttribute('pointer-events', 'none');
     simText.classList.add('node-sim-label');
     simBtn.appendChild(simText);
 
+    simBtn.addEventListener('pointerdown', e => e.stopPropagation());
     simBtn.addEventListener('mousedown', e => e.stopPropagation());
     simBtn.addEventListener('click', e => openMujocoPage(v.id, e));
     grp.appendChild(simBtn);
 
+    const nodeTitle = document.createElementNS(NS, 'title');
+    nodeTitle.textContent = `${v.id} · ${statusLabel(v.status)} · ${versionTitle(v)}`;
+    grp.appendChild(nodeTitle);
+
     grp.addEventListener('click', (e) => {
       e.stopPropagation();
+      if (graphState.dragMoved) {
+        graphState.dragMoved = false;
+        return;
+      }
       openDetail(v.id);
     });
 
-    makeDraggable(grp, v.id);
+    makeDraggable(grp, node.id);
     nodeLayer.appendChild(grp);
+  }
+
+  layout.forEach(node => {
+    if (!graphState.positions[node.id]) return;
+    if (node.summary) {
+      drawSummaryNode(node);
+    } else {
+      drawVersionNode(node);
+    }
   });
 
-  function updateNodePos(id) {
-    const p = graphState.positions[id];
-    const grp = graphState.nodeGroups[id];
-    if (!grp) return;
-    const glow = grp.querySelector('.node-glow');
-    const rect = grp.querySelector('.node-body');
-    const stripe = grp.querySelector('.node-stripe');
-    const idLabel = grp.querySelector('.node-id-label');
-    const titleLabel = grp.querySelector('.node-title-label');
-    const simBg = grp.querySelector('.node-sim-bg');
-    const simLabel = grp.querySelector('.node-sim-label');
-
-    if (glow) {
-      glow.setAttribute('x', p.x - 2);
-      glow.setAttribute('y', p.y - 2);
-    }
-    if (rect) {
-      rect.setAttribute('x', p.x);
-      rect.setAttribute('y', p.y);
-    }
-    if (stripe) {
-      stripe.setAttribute('x', p.x);
-      stripe.setAttribute('y', p.y + 3);
-    }
-    if (idLabel) {
-      idLabel.setAttribute('x', p.x + 10);
-      idLabel.setAttribute('y', p.y + 16);
-    }
-    if (titleLabel) {
-      titleLabel.setAttribute('x', p.x + 10);
-      titleLabel.setAttribute('y', p.y + 32);
-    }
-    if (simBg) {
-      simBg.setAttribute('x', p.x + NW - 43);
-      simBg.setAttribute('y', p.y + 6);
-    }
-    if (simLabel) {
-      simLabel.setAttribute('x', p.x + NW - 25);
-      simLabel.setAttribute('y', p.y + 18);
-    }
-  }
-
-  function svgPt(e) {
-    const r = svg.getBoundingClientRect();
-    return { x: (e.clientX - r.left) - graphState.vpX, y: (e.clientY - r.top) - graphState.vpY };
-  }
-
-  function makeDraggable(grp, id) {
-    grp.addEventListener('mousedown', e => {
-      if (e.button !== 0) return;
-      e.stopPropagation();
-      graphState.draggingId = id;
-      graphState.dragMoved = false;
-      const pt = svgPt(e);
-      graphState.dragOffX = pt.x - graphState.positions[id].x;
-      graphState.dragOffY = pt.y - graphState.positions[id].y;
-      svg.style.cursor = 'grabbing';
-    });
-  }
-
-  // Pan
-  svg.addEventListener('mousedown', e => {
+  // Pan and zoom
+  const startPan = e => {
     if (e.button !== 0 || e.target.closest('.node-g')) return;
+    if (graphState.panning) return;
+    e.preventDefault();
     graphState.panning = true;
+    graphState.activePointerId = e.pointerId ?? null;
     graphState.panX = e.clientX;
     graphState.panY = e.clientY;
     graphState.panVpX = graphState.vpX;
     graphState.panVpY = graphState.vpY;
+    if (typeof svg.setPointerCapture === 'function' && e.pointerId !== undefined) {
+      svg.setPointerCapture(e.pointerId);
+    }
     svg.style.cursor = 'grabbing';
-  });
+  };
 
-  svg.addEventListener('mousemove', e => {
+  const moveGraph = e => {
     if (graphState.draggingId) {
-      graphState.dragMoved = true;
+      e.preventDefault();
       const pt = svgPt(e);
       graphState.positions[graphState.draggingId].x = pt.x - graphState.dragOffX;
       graphState.positions[graphState.draggingId].y = pt.y - graphState.dragOffY;
+      graphState.dragMoved = true;
       updateNodePos(graphState.draggingId);
       drawEdges();
       drawGates();
       return;
     }
+
     if (graphState.panning) {
+      e.preventDefault();
       graphState.vpX = graphState.panVpX + (e.clientX - graphState.panX);
       graphState.vpY = graphState.panVpY + (e.clientY - graphState.panY);
       applyVP();
     }
-  });
+  };
 
-  svg.addEventListener('mouseup', () => {
+  const endGraphGesture = () => {
+    const shouldSave = graphState.draggingId || graphState.panning;
+
+    if (graphState.draggingId && graphState.nodeGroups[graphState.draggingId]) {
+      graphState.nodeGroups[graphState.draggingId].style.cursor = 'grab';
+    }
     graphState.draggingId = null;
+    graphState.activePointerId = null;
     graphState.panning = false;
     svg.style.cursor = 'default';
+
+    if (shouldSave) {
+      saveGraphState();
+    }
+  };
+
+  svg.addEventListener('pointerdown', startPan);
+  svg.addEventListener('mousedown', startPan);
+  svg.addEventListener('pointermove', moveGraph);
+  svg.addEventListener('mousemove', moveGraph);
+  svg.addEventListener('pointerup', endGraphGesture);
+  svg.addEventListener('mouseup', endGraphGesture);
+  svg.addEventListener('pointercancel', endGraphGesture);
+  svg.addEventListener('mouseleave', endGraphGesture);
+
+  // Zoom with mouse wheel
+  svg.addEventListener('wheel', e => {
+    e.preventDefault();
+    const rect = svg.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    const newScale = Math.max(0.3, Math.min(3, graphState.scale * delta));
+
+    // Zoom towards mouse position
+    const worldX = (mouseX - graphState.vpX) / graphState.scale;
+    const worldY = (mouseY - graphState.vpY) / graphState.scale;
+
+    graphState.scale = newScale;
+    graphState.vpX = mouseX - worldX * graphState.scale;
+    graphState.vpY = mouseY - worldY * graphState.scale;
+
+    applyVP();
+    saveGraphState();
   });
 
-  svg.addEventListener('mouseleave', () => {
-    graphState.draggingId = null;
-    graphState.panning = false;
-  });
-
+  drawPhaseBands();
   drawEdges();
   drawGates();
   applyVP();
 
-  // Add hover effects for nodes
+  // Subtle hover effect
   Object.values(graphState.nodeGroups).forEach(nodeGrp => {
     nodeGrp.addEventListener('mouseenter', function() {
-      this.style.filter = 'brightness(1.3)';
+      this.style.opacity = '0.85';
     });
     nodeGrp.addEventListener('mouseleave', function() {
-      this.style.filter = '';
+      this.style.opacity = '1';
     });
   });
 }
@@ -1036,11 +1405,13 @@ function renderGraphView(versions) {
 function resetGraphView() {
   graphState.vpX = 0;
   graphState.vpY = 0;
+  graphState.scale = 1;
+  graphState.hasSavedViewport = true;
+  saveGraphState();
   renderCurrentView();
 }
 
 function fitGraphView() {
-  // Calculate bounds of all nodes
   const positions = Object.values(graphState.positions);
   if (positions.length === 0) return;
 
@@ -1053,9 +1424,17 @@ function fitGraphView() {
   });
 
   const container = document.getElementById('graph-view');
-  const padding = 100;
-  graphState.vpX = (container.clientWidth - maxX - minX) / 2 - minX + padding;
-  graphState.vpY = (container.clientHeight - maxY - minY) / 2 - minY + padding;
+  const padding = 80;
+  const contentWidth = maxX - minX;
+  const contentHeight = maxY - minY;
+  const scaleX = (container.clientWidth - padding * 2) / contentWidth;
+  const scaleY = (container.clientHeight - padding * 2) / contentHeight;
+
+  graphState.scale = Math.min(scaleX, scaleY, 1.2);
+  graphState.vpX = (container.clientWidth - contentWidth * graphState.scale) / 2 - minX * graphState.scale;
+  graphState.vpY = (container.clientHeight - contentHeight * graphState.scale) / 2 - minY * graphState.scale;
+  graphState.hasSavedViewport = true;
+  saveGraphState();
 
   renderCurrentView();
 }
@@ -1733,3 +2112,13 @@ function renderHeatmap(containerId, data) {
     </div>
   `;
 }
+
+window.switchView = switchView;
+window.resetGraphView = resetGraphView;
+window.fitGraphView = fitGraphView;
+window.toggleGraphPhase = toggleGraphPhase;
+window.toggleGraphLegend = toggleGraphLegend;
+window.toggleGraphToolbar = toggleGraphToolbar;
+window.openDetail = openDetail;
+window.closeDetail = closeDetail;
+window.updateCompare = updateCompare;

@@ -322,9 +322,9 @@
 
 ---
 
-## 🎬 Remotion 讲解动画 (compass-gait-remotion)
+## 🎬 MuJoCo 离线动画渲染
 
-**独立动画项目**: 使用 Remotion 框架生成高质量学术展示动画
+**统一动画入口**: 项目动画由 MuJoCo 仿真数据和各版本 `render_*.py` 脚本生成。
 
 ### 可用动画
 
@@ -347,12 +347,11 @@
 
 ### 渲染命令
 ```powershell
-cd D:\Dunna\Documents\hw-1\compass-gait-remotion
-npm start  # 预览
-npx remotion render FSMStateTransition out/fsm_state_transition.mp4
-npx remotion render RollingFootAnimation out/rolling_foot_animation.mp4
-npx remotion render PhaseVisualization out/phase_visualization.mp4
-npx remotion render GaitComparison out/gait_comparison.mp4
+.\.venv-mujoco\Scripts\python.exe render_all.py --versions v10 v13_6 v18
+.\.venv-mujoco\Scripts\python.exe batch_render_hd.py --priority A
+.\.venv-mujoco\Scripts\python.exe .\v10_rolling_foot_biomimetic_gait\render_rolling_foot_gait_v10.py
+.\.venv-mujoco\Scripts\python.exe .\v13_6_event_driven_fsm\render_v13_6.py
+.\.venv-mujoco\Scripts\python.exe .\v18_3d_lateral_stability\render_v18.py
 ```
 
 ---
@@ -449,8 +448,8 @@ start animation_gallery.html
 
 ### 答辩幻灯片精选
 - 极限环可视化: V05 相位图
-- 仿生步态动画: V10 视频 + Remotion RollingFootAnimation
-- 控制律对比: V13.6 视频 + Remotion GaitComparison
+- 仿生步态动画: V10 MuJoCo 视频
+- 控制律对比: V13.6 MuJoCo 视频和指标表
 - 失败案例分析: V18 侧向发散视频
 
 ---
@@ -461,7 +460,6 @@ start animation_gallery.html
 - [render_all.py 使用说明](render_all.py) — 批量渲染脚本
 - [create_showcase.py 使用说明](create_showcase.py) — 精选合集生成器
 - [animation_gallery.html](animation_gallery.html) — 本地浏览画廊
-- [compass-gait-remotion/README.md](compass-gait-remotion/README.md) — Remotion动画项目
 
 ---
 

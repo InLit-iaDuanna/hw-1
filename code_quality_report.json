@@ -1,0 +1,1196 @@
+{
+  "stats": {
+    "import_star": 4,
+    "todos": 93,
+    "requirements": 44,
+    "hardcoded_paths": 21,
+    "missing_docstrings": 1543,
+    "long_functions": 117,
+    "naming": 15,
+    "total_imports": 3393
+  },
+  "issues": {
+    "import_star": [
+      "fea_heel_strike\\postprocess_heel_strike.py",
+      "fea_heel_strike\\postprocess_odb.py",
+      "hardware_ready_controller\\deployment\\raspberry_pi_interface.py",
+      "v13_6_event_driven_fsm\\test_contact_robustness.py"
+    ],
+    "todos": [
+      {
+        "file": "check_code_quality.py",
+        "line": 27,
+        "content": "self.check_todos()"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 55,
+        "content": "def check_todos(self):"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 56,
+        "content": "\"\"\"\u68c0\u67e5 TODO/FIXME \u6807\u8bb0\"\"\""
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 57,
+        "content": "print(\"[2/8] Checking TODO/FIXME markers...\")"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 66,
+        "content": "if re.search(r'(TODO|FIXME|XXX|HACK|BUG)', line, re.IGNORECASE):"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 67,
+        "content": "self.issues['todos'].append({"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 72,
+        "content": "self.stats['todos'] += 1"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 76,
+        "content": "print(f\"  Found {self.stats['todos']} TODO/FIXME markers\")"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 270,
+        "content": "total_issues = sum(1 for k, v in self.issues.items() if v and k != 'todos')"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 285,
+        "content": "if self.issues['todos']:"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 286,
+        "content": "print(\"## [LOW] TODO/FIXME Markers\")"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 287,
+        "content": "print(f\"Found {len(self.issues['todos'])} markers\")"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 288,
+        "content": "for todo in self.issues['todos'][:5]:"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 289,
+        "content": "print(f\"  - {todo['file']}:{todo['line']}\")"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 290,
+        "content": "print(f\"    {todo['content'][:60]}\")"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 291,
+        "content": "if len(self.issues['todos']) > 5:"
+      },
+      {
+        "file": "check_code_quality.py",
+        "line": 292,
+        "content": "print(f\"  ... and {len(self.issues['todos']) - 5} more\")"
+      },
+      {
+        "file": "advanced_profiling\\example_parallel_optimization.py",
+        "line": 189,
+        "content": "# TODO: \u6dfb\u52a0\u53c2\u6570\u751f\u6210\u903b\u8f91"
+      },
+      {
+        "file": "advanced_profiling\\example_parallel_optimization.py",
+        "line": 209,
+        "content": "# TODO: \u6dfb\u52a0\u7ed3\u679c\u4fdd\u5b58\u903b\u8f91"
+      },
+      {
+        "file": "common\\error_handler.py",
+        "line": 61,
+        "content": "log_level: \u65e5\u5fd7\u7ea7\u522b\uff08\"DEBUG\", \"INFO\", \"WARNING\", \"ERROR\", \"CRITICAL\"\uff09"
+      },
+      {
+        "file": "common\\logging_config.py",
+        "line": 5,
+        "content": "- \u591a\u7ea7\u522b\u65e5\u5fd7\uff08DEBUG, INFO, WARNING, ERROR, CRITICAL\uff09"
+      },
+      {
+        "file": "common\\logging_config.py",
+        "line": 42,
+        "content": "\"DEBUG\": \"\\033[36m\",  # Cyan"
+      },
+      {
+        "file": "common\\logging_config.py",
+        "line": 92,
+        "content": "# \u6dfb\u52a0\u4ee3\u7801\u4f4d\u7f6e\u4fe1\u606f\uff08DEBUG \u6a21\u5f0f\uff09"
+      },
+      {
+        "file": "common\\logging_config.py",
+        "line": 93,
+        "content": "if record.levelno >= logging.DEBUG:"
+      },
+      {
+        "file": "common\\logging_config.py",
+        "line": 142,
+        "content": "level: \u65e5\u5fd7\u7ea7\u522b\uff08\"DEBUG\", \"INFO\", \"WARNING\", \"ERROR\", \"CRITICAL\" \u6216\u6570\u5b57\uff09"
+      },
+      {
+        "file": "common\\logging_config.py",
+        "line": 153,
+        "content": ">>> setup_logging(level=\"DEBUG\", log_dir=\"out/logs/v19\")"
+      },
+      {
+        "file": "common\\examples\\example_error_logging.py",
+        "line": 198,
+        "content": "logger.debug("
+      },
+      {
+        "file": "gait_medical_system\\analysis\\baseline_extractor.py",
+        "line": 175,
+        "content": "# TODO: \u89e3\u6790v10_data.csv\u6216summary.json"
+      },
+      {
+        "file": "hardware_ready_controller\\controller.py",
+        "line": 345,
+        "content": "self.logger.debug(f\"Phase transition: {current_phase} -> {new_phase} after {duration:.3f}s\")"
+      },
+      {
+        "file": "matlab-v01-v13-gait\\generate_markdown_interpretations.py",
+        "line": 34,
+        "content": "\"v08\": REPO / \"v08_quasi_passive_assisted/out/debug_v8_fast10_summary.json\","
+      },
+      {
+        "file": "parameter_tuning\\cma_es_tuning.py",
+        "line": 252,
+        "content": "# TODO: Replace with actual evaluation logic"
+      },
+      {
+        "file": "rl_training\\debug_3_2_to_3_7s.py",
+        "line": 1,
+        "content": "\"\"\"Debug what happens between 3.2s and 3.7s in V2\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_3_2_to_3_7s.py",
+        "line": 13,
+        "content": "def debug_3_2s_to_3_7s():"
+      },
+      {
+        "file": "rl_training\\debug_3_2_to_3_7s.py",
+        "line": 17,
+        "content": "print(\"Debug V2: 3.2s - 3.7s (FSM transition delay period)\")"
+      },
+      {
+        "file": "rl_training\\debug_3_2_to_3_7s.py",
+        "line": 75,
+        "content": "debug_3_2s_to_3_7s()"
+      },
+      {
+        "file": "rl_training\\debug_baseline_fsm.py",
+        "line": 1,
+        "content": "\"\"\"Debug FSM transitions in test_v137_identity.py baseline\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_baseline_fsm.py",
+        "line": 11,
+        "content": "def debug_baseline_fsm():"
+      },
+      {
+        "file": "rl_training\\debug_baseline_fsm.py",
+        "line": 15,
+        "content": "print(\"FSM Transition Debug for test_v137_identity.py (BASELINE)\")"
+      },
+      {
+        "file": "rl_training\\debug_baseline_fsm.py",
+        "line": 135,
+        "content": "debug_baseline_fsm()"
+      },
+      {
+        "file": "rl_training\\debug_contact_1_3s.py",
+        "line": 1,
+        "content": "\"\"\"Debug contact detection timing around 1.3s\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_contact_1_3s.py",
+        "line": 15,
+        "content": "def debug_contact_timing():"
+      },
+      {
+        "file": "rl_training\\debug_contact_1_3s.py",
+        "line": 19,
+        "content": "print(\"Contact Detection Timing Debug (1.28s - 1.32s)\")"
+      },
+      {
+        "file": "rl_training\\debug_contact_1_3s.py",
+        "line": 166,
+        "content": "debug_contact_timing()"
+      },
+      {
+        "file": "rl_training\\debug_control_torques.py",
+        "line": 1,
+        "content": "\"\"\"Debug control torques at each timestep\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_control_torques.py",
+        "line": 12,
+        "content": "def debug_control_torques():"
+      },
+      {
+        "file": "rl_training\\debug_control_torques.py",
+        "line": 16,
+        "content": "print(\"Control Torque Debug for train_residual_rl_v2.py\")"
+      },
+      {
+        "file": "rl_training\\debug_control_torques.py",
+        "line": 67,
+        "content": "debug_control_torques()"
+      },
+      {
+        "file": "rl_training\\debug_distance.py",
+        "line": 1,
+        "content": "\"\"\"Debug: \u66f4\u8be6\u7ec6\u5730\u68c0\u67e5episode_distance\u8ba1\u7b97\u3002\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_distance.py",
+        "line": 22,
+        "content": "print(\"Debug: Episode Distance Calculation\")"
+      },
+      {
+        "file": "rl_training\\debug_failure.py",
+        "line": 1,
+        "content": "\"\"\"Debug: \u68c0\u67e5failure detection\u662f\u5426\u5de5\u4f5c\u3002\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_failure.py",
+        "line": 22,
+        "content": "print(\"Debug: Failure Detection\")"
+      },
+      {
+        "file": "rl_training\\debug_fsm_transitions.py",
+        "line": 1,
+        "content": "\"\"\"Debug FSM transitions in train_residual_rl_v2.py\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_fsm_transitions.py",
+        "line": 12,
+        "content": "def debug_fsm_transitions():"
+      },
+      {
+        "file": "rl_training\\debug_fsm_transitions.py",
+        "line": 16,
+        "content": "print(\"FSM Transition Debug for train_residual_rl_v2.py\")"
+      },
+      {
+        "file": "rl_training\\debug_fsm_transitions.py",
+        "line": 79,
+        "content": "debug_fsm_transitions()"
+      },
+      {
+        "file": "rl_training\\debug_full_episode.py",
+        "line": 1,
+        "content": "\"\"\"Debug: \u8fd0\u884c\u5b8c\u657412\u79d2episode\u67e5\u770b\u662f\u5426\u80fd\u7a33\u5b9a\u3002\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_full_episode.py",
+        "line": 22,
+        "content": "print(\"Debug: Full 12-second Episode\")"
+      },
+      {
+        "file": "rl_training\\debug_init.py",
+        "line": 1,
+        "content": "\"\"\"Debug: \u68c0\u67e5\u521d\u59cb\u5316\u53c2\u6570\u3002\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_init.py",
+        "line": 22,
+        "content": "print(\"Debug: Initialization Parameters\")"
+      },
+      {
+        "file": "rl_training\\debug_v2_env.py",
+        "line": 1,
+        "content": "\"\"\"Debug script: \u68c0\u67e5V13.7\u63a7\u5236\u5668\u5728ResidualRLEnvV2\u4e2d\u662f\u5426\u6b63\u5e38\u5de5\u4f5c\u3002\"\"\""
+      },
+      {
+        "file": "rl_training\\debug_v2_env.py",
+        "line": 22,
+        "content": "print(\"Debug: Check V13.7 Controller in ResidualRLEnvV2\")"
+      },
+      {
+        "file": "rl_training\\debug_v2_env.py",
+        "line": 71,
+        "content": "print(\"Debug complete.\")"
+      },
+      {
+        "file": "rl_training\\debug_v2_vs_identity.py",
+        "line": 210,
+        "content": "print(\"DEBUG: ResidualRLEnvV2 vs test_v137_identity.py\")"
+      },
+      {
+        "file": "rl_training\\smoke_test_env.py",
+        "line": 8,
+        "content": "3. Observation indexing reads the intended joints (no off-by-N bug)."
+      },
+      {
+        "file": "rl_training\\smoke_test_env.py",
+        "line": 46,
+        "content": "# left_hip must NOT alias to left_ankle (the old +2 bug)"
+      },
+      {
+        "file": "rl_training\\smoke_test_env.py",
+        "line": 49,
+        "content": "ok &= check(lh != la, f\"left_hip addr {lh} != left_ankle addr {la} (off-by-N bug gone)\")"
+      },
+      {
+        "file": "rl_training\\train_residual_rl_v2_simple.py",
+        "line": 182,
+        "content": "# TODO: \u6dfb\u52a0residual\uff08\u5f53\u524d\u662fzero residual\uff09"
+      },
+      {
+        "file": "trajectory_optimization\\direct_collocation.py",
+        "line": 402,
+        "content": "X_opt = self.opti.debug.value(self.X)"
+      },
+      {
+        "file": "trajectory_optimization\\direct_collocation.py",
+        "line": 403,
+        "content": "U_opt = self.opti.debug.value(self.U)"
+      },
+      {
+        "file": "trajectory_optimization\\direct_collocation.py",
+        "line": 404,
+        "content": "cost = self.opti.debug.value(self.opti.f)"
+      },
+      {
+        "file": "v08_quasi_passive_assisted\\render_assisted_gait_v8.py",
+        "line": 75,
+        "content": "summary_path = OUT_DIR / \"debug_v8_fast10_summary.json\""
+      },
+      {
+        "file": "v08_quasi_passive_assisted\\render_assisted_gait_v8.py",
+        "line": 76,
+        "content": "data_path = OUT_DIR / \"debug_v8_fast10_data.csv\""
+      },
+      {
+        "file": "v08_quasi_passive_assisted\\view_assisted_gait_v8.py",
+        "line": 20,
+        "content": "with (OUT_DIR / \"debug_v8_fast10_data.csv\").open(\"r\", encoding=\"utf-8\") as f:"
+      },
+      {
+        "file": "v08_quasi_passive_assisted\\view_assisted_gait_v8.py",
+        "line": 34,
+        "content": "(OUT_DIR / \"debug_v8_fast10_summary.json\").read_text(encoding=\"utf-8\")"
+      },
+      {
+        "file": "v13_7_friction_compensation\\analyze_v13_7.py",
+        "line": 52,
+        "content": "if smoke[\"smoke_verdict\"] == \"v13_7_implementation_bug\":"
+      },
+      {
+        "file": "v13_7_friction_compensation\\analyze_v13_7.py",
+        "line": 53,
+        "content": "primary = \"v13_7_implementation_bug\""
+      },
+      {
+        "file": "v13_7_friction_compensation\\smoke_v13_7.py",
+        "line": 10,
+        "content": "- L0\uff1acompensated_ideal \u4e25\u683c\u8fd8\u539f V14c (\u22641%)       \u2192 \u5931\u8d25=v13_7_implementation_bug"
+      },
+      {
+        "file": "v13_7_friction_compensation\\smoke_v13_7.py",
+        "line": 175,
+        "content": "verdict = \"v13_7_implementation_bug\""
+      },
+      {
+        "file": "v15_2_strict_sea\\simulate_v152.py",
+        "line": 451,
+        "content": "debug_print_jntmap: bool = False,"
+      },
+      {
+        "file": "v15_2_strict_sea\\simulate_v152.py",
+        "line": 461,
+        "content": "if debug_print_jntmap:"
+      },
+      {
+        "file": "v15_2_strict_sea\\simulate_v152.py",
+        "line": 885,
+        "content": "\"--debug-jntmap\","
+      },
+      {
+        "file": "v15_2_strict_sea\\simulate_v152.py",
+        "line": 927,
+        "content": "debug_print_jntmap=args.debug_jntmap,"
+      },
+      {
+        "file": "v16_motor_dynamics\\analyze_v16.py",
+        "line": 71,
+        "content": "if smoke[\"smoke_verdict\"] == \"v16_implementation_bug\":"
+      },
+      {
+        "file": "v16_motor_dynamics\\analyze_v16.py",
+        "line": 72,
+        "content": "primary = \"v16_implementation_bug\""
+      },
+      {
+        "file": "v16_motor_dynamics\\smoke_v16.py",
+        "line": 11,
+        "content": "- L0\uff1aideal \u884c\u4e25\u683c\u8fd8\u539f V14c (\u22641%)         \u2192 \u5931\u8d25=v16_implementation_bug"
+      },
+      {
+        "file": "v16_motor_dynamics\\smoke_v16.py",
+        "line": 229,
+        "content": "verdict = \"v16_implementation_bug\""
+      },
+      {
+        "file": "v20_step_width_control\\simulate_v20.py",
+        "line": 203,
+        "content": "# TODO: \u540e\u7eed\u7248\u672c\u5b9e\u73b0\u771f\u6b63\u7684\u6b65\u5bbd\u8f68\u8ff9\u89c4\u5212"
+      },
+      {
+        "file": "virtual_constraints\\constraint_controller.py",
+        "line": 201,
+        "content": "info: Dictionary with debugging information"
+      },
+      {
+        "file": "virtual_constraints\\constraint_controller.py",
+        "line": 227,
+        "content": "# Debugging information"
+      },
+      {
+        "file": "virtual_constraints\\constraint_controller.py",
+        "line": 269,
+        "content": "info: Dictionary with debugging information"
+      },
+      {
+        "file": "virtual_constraints\\constraint_controller.py",
+        "line": 308,
+        "content": "# Debugging information"
+      },
+      {
+        "file": "virtual_constraints\\optimize_bezier.py",
+        "line": 109,
+        "content": "verbose: Print debug info"
+      },
+      {
+        "file": "virtual_constraints\\optimize_bezier.py",
+        "line": 320,
+        "content": "# TODO: Load and run V13.7 FSM controller if available"
+      }
+    ],
+    "duplicate_requirements": [
+      {
+        "file1": "v06_mve_gait_homework\\requirements.txt",
+        "file2": "v07_true_contact_exploration\\requirements.txt"
+      },
+      {
+        "file1": "v06_mve_gait_homework\\requirements.txt",
+        "file2": "v08_quasi_passive_assisted\\requirements.txt"
+      },
+      {
+        "file1": "v06_mve_gait_homework\\requirements.txt",
+        "file2": "v09_stable_biomimetic_gait\\requirements.txt"
+      },
+      {
+        "file1": "v06_mve_gait_homework\\requirements.txt",
+        "file2": "v10_rolling_foot_biomimetic_gait\\requirements.txt"
+      },
+      {
+        "file1": "v06_mve_gait_homework\\requirements.txt",
+        "file2": "v11_rugged_terrain_robustness\\requirements.txt"
+      }
+    ],
+    "hardcoded_paths": [
+      "batch_render_hd.py",
+      "check_ppt_bounds.py",
+      "benchmarks\\animation_rendering.py",
+      "data_versioning\\data_differ.py",
+      "data_versioning\\QUICK_REFERENCE.py",
+      "data_versioning\\restore_data.py",
+      "data_versioning\\snapshot_manager.py",
+      "data_versioning\\version_tracker.py",
+      "examples\\passive_walker.py",
+      "paper_figures\\generate_all_figures.py",
+      "rl_training\\imitation_learning.py",
+      "rl_training\\monitor_progress.py",
+      "rl_training\\monitor_training.py",
+      "rl_training\\test_fsm_in_rl_env.py",
+      "rl_training\\test_hold_frequency_ablation.py",
+      "rl_training\\test_residual_env.py",
+      "rl_training\\test_zero_residual_identity.py",
+      "rl_training\\train_residual_rl.py",
+      "rl_training\\train_residual_rl_curriculum.py",
+      "v13_7_friction_compensation\\verify_qpos_indices.py",
+      "virtual_constraints\\simulate_vc.py"
+    ],
+    "long_functions": [
+      {
+        "file": "analyze_dependencies.py",
+        "function": "generate_report",
+        "lines": 137
+      },
+      {
+        "file": "analyze_rl_results.py",
+        "function": "create_visualizations",
+        "lines": 123
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_research_pain",
+        "lines": 116
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_personas",
+        "lines": 228
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_goals",
+        "lines": 150
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_functions",
+        "lines": 106
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_structure",
+        "lines": 263
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_story",
+        "lines": 132
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_sim_overview",
+        "lines": 126
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_sim_next",
+        "lines": 152
+      },
+      {
+        "file": "build_ppt.py",
+        "function": "slide_summary",
+        "lines": 103
+      },
+      {
+        "file": "create_showcase.py",
+        "function": "create_showcase",
+        "lines": 116
+      },
+      {
+        "file": "generate_dependency_graph.py",
+        "function": "create_dependency_graph",
+        "lines": 181
+      },
+      {
+        "file": "templates.py",
+        "function": "to_dict",
+        "lines": 110
+      },
+      {
+        "file": "advanced_profiling\\optimization_advisor.py",
+        "function": "run_single",
+        "lines": 150
+      },
+      {
+        "file": "algorithm_comparison\\trade_off_analysis.py",
+        "function": "create_interactive_dashboard",
+        "lines": 173
+      },
+      {
+        "file": "analysis_pipeline\\preprocessor.py",
+        "function": "preprocess_gait_data",
+        "lines": 103
+      },
+      {
+        "file": "analysis_pipeline\\run_pipeline.py",
+        "function": "run_full_pipeline",
+        "lines": 161
+      },
+      {
+        "file": "auto_optimization\\compare_optimizers.py",
+        "function": "run_all_optimizers",
+        "lines": 118
+      },
+      {
+        "file": "auto_optimization\\example_v137_optimization.py",
+        "function": "optimize_v137_fsm_timing",
+        "lines": 154
+      },
+      {
+        "file": "auto_optimization\\run_optimization.py",
+        "function": "run_optimization",
+        "lines": 110
+      },
+      {
+        "file": "auto_optimization\\optimizers\\genetic_algorithm.py",
+        "function": "optimize",
+        "lines": 104
+      },
+      {
+        "file": "benchmarks\\animation_rendering.py",
+        "function": "benchmark_single_render",
+        "lines": 175
+      },
+      {
+        "file": "benchmarks\\animation_rendering.py",
+        "function": "generate_performance_report",
+        "lines": 297
+      },
+      {
+        "file": "benchmarks\\benchmark_runner.py",
+        "function": "generate_report",
+        "lines": 221
+      },
+      {
+        "file": "common\\comparison_tool.py",
+        "function": "plot_metrics_comparison",
+        "lines": 117
+      },
+      {
+        "file": "common\\comparison_tool.py",
+        "function": "export_to_html",
+        "lines": 112
+      },
+      {
+        "file": "common\\example_rolling_foot_gait.py",
+        "function": "run_simulation_example",
+        "lines": 201
+      },
+      {
+        "file": "common\\phase_portrait_visualizer.py",
+        "function": "plot",
+        "lines": 214
+      },
+      {
+        "file": "common\\examples\\example_error_logging.py",
+        "function": "run_simulation_with_monitoring",
+        "lines": 152
+      },
+      {
+        "file": "cross_version_analysis\\generate_comprehensive_report.py",
+        "function": "generate_html_report",
+        "lines": 324
+      },
+      {
+        "file": "data_storage\\data_importer.py",
+        "function": "import_scan_csv",
+        "lines": 108
+      },
+      {
+        "file": "data_storage\\db_schema.py",
+        "function": "create_database",
+        "lines": 145
+      },
+      {
+        "file": "data_versioning\\data_differ.py",
+        "function": "compare_csv_files",
+        "lines": 103
+      },
+      {
+        "file": "data_versioning\\data_differ.py",
+        "function": "generate_diff_report",
+        "lines": 114
+      },
+      {
+        "file": "diagnostics\\error_detector.py",
+        "function": "match_data",
+        "lines": 128
+      },
+      {
+        "file": "diagnostics\\example_integration.py",
+        "function": "run_simulation_with_diagnostics",
+        "lines": 103
+      },
+      {
+        "file": "diagnostics\\health_checker.py",
+        "function": "run_smoke_test",
+        "lines": 108
+      },
+      {
+        "file": "fea_heel_strike\\build_heel_strike_model.py",
+        "function": "write_inp",
+        "lines": 120
+      },
+      {
+        "file": "fea_heel_strike\\generate_fea_boundary_conditions.py",
+        "function": "contact_forces_to_fea_bc",
+        "lines": 110
+      },
+      {
+        "file": "fea_heel_strike\\generate_fea_boundary_conditions.py",
+        "function": "write_python_script",
+        "lines": 105
+      },
+      {
+        "file": "hardware_ready_controller\\examples\\tune_parameters.py",
+        "function": "evaluate",
+        "lines": 104
+      },
+      {
+        "file": "hardware_ready_controller\\tests\\test_full_controller.py",
+        "function": "test_generate_comparison_plots",
+        "lines": 128
+      },
+      {
+        "file": "matlab-v01-v13-gait\\generate_markdown_interpretations.py",
+        "function": "build_markdown",
+        "lines": 189
+      },
+      {
+        "file": "monitoring\\report_generator.py",
+        "function": "generate_markdown_report",
+        "lines": 152
+      },
+      {
+        "file": "paper_figures\\generate_all_figures.py",
+        "function": "generate_latex_snippets",
+        "lines": 143
+      },
+      {
+        "file": "paper_figures\\generators\\fig_hardware_specs.py",
+        "function": "draw_robot_schematic",
+        "lines": 162
+      },
+      {
+        "file": "parameter_explorer\\demo_v137_simple.py",
+        "function": "demo_exploration",
+        "lines": 104
+      },
+      {
+        "file": "parameter_tuner\\version_adapter.py",
+        "function": "get_param_specs",
+        "lines": 115
+      },
+      {
+        "file": "parameter_tuner\\pages\\simulation_runner.py",
+        "function": "show",
+        "lines": 204
+      },
+      {
+        "file": "parameter_tuning\\cma_es_tuning.py",
+        "function": "optimize",
+        "lines": 112
+      },
+      {
+        "file": "parameter_tuning\\multi_objective_opt.py",
+        "function": "run_optimization",
+        "lines": 118
+      },
+      {
+        "file": "parameter_tuning\\sensitivity_analysis.py",
+        "function": "visualize_sensitivity_results",
+        "lines": 107
+      },
+      {
+        "file": "rl_training\\collect_expert_trajectories.py",
+        "function": "run_episode",
+        "lines": 198
+      },
+      {
+        "file": "rl_training\\demo_final.py",
+        "function": "demo_rl_with_wrapper",
+        "lines": 114
+      },
+      {
+        "file": "rl_training\\evaluate.py",
+        "function": "run_episode",
+        "lines": 114
+      },
+      {
+        "file": "rl_training\\evaluate.py",
+        "function": "plot_trajectory",
+        "lines": 113
+      },
+      {
+        "file": "rl_training\\evaluate_and_compare.py",
+        "function": "evaluate_model",
+        "lines": 113
+      },
+      {
+        "file": "rl_training\\evaluate_and_compare.py",
+        "function": "compare_models",
+        "lines": 110
+      },
+      {
+        "file": "rl_training\\monitor_progress.py",
+        "function": "check_stage_progress",
+        "lines": 144
+      },
+      {
+        "file": "rl_training\\phase_gated_search.py",
+        "function": "evaluate_phase_gated",
+        "lines": 217
+      },
+      {
+        "file": "rl_training\\sweep_residual_combinations.py",
+        "function": "run_sweep",
+        "lines": 119
+      },
+      {
+        "file": "rl_training\\test_fsm_in_rl_env.py",
+        "function": "run_episode",
+        "lines": 108
+      },
+      {
+        "file": "rl_training\\test_fsm_in_rl_env.py",
+        "function": "run_comparison_experiment",
+        "lines": 101
+      },
+      {
+        "file": "rl_training\\test_residual_sweep.py",
+        "function": "test_residual_sweep",
+        "lines": 138
+      },
+      {
+        "file": "rl_training\\test_v137_identity.py",
+        "function": "run_episode",
+        "lines": 169
+      },
+      {
+        "file": "rl_training\\test_v137_identity.py",
+        "function": "run_identity_test",
+        "lines": 177
+      },
+      {
+        "file": "rl_training\\test_zero_residual_v2.py",
+        "function": "test_zero_residual",
+        "lines": 156
+      },
+      {
+        "file": "rl_training\\train_residual_rl.py",
+        "function": "__init__",
+        "lines": 127
+      },
+      {
+        "file": "rl_training\\train_residual_rl_v2.py",
+        "function": "__init__",
+        "lines": 133
+      },
+      {
+        "file": "rl_training\\train_residual_rl_v2.py",
+        "function": "step",
+        "lines": 116
+      },
+      {
+        "file": "rl_training\\train_sanity_100k.py",
+        "function": "train",
+        "lines": 223
+      },
+      {
+        "file": "rl_training\\train_v2_sanity.py",
+        "function": "make_env",
+        "lines": 132
+      },
+      {
+        "file": "trajectory_optimization\\run_optimization.py",
+        "function": "optimize",
+        "lines": 107
+      },
+      {
+        "file": "v08_quasi_passive_assisted\\simulate_assisted_gait_v8.py",
+        "function": "assist_for_phase",
+        "lines": 115
+      },
+      {
+        "file": "v08_quasi_passive_assisted\\simulate_assisted_gait_v8.py",
+        "function": "run_simulation",
+        "lines": 161
+      },
+      {
+        "file": "v09_stable_biomimetic_gait\\simulate_stable_gait_v9.py",
+        "function": "run_simulation",
+        "lines": 166
+      },
+      {
+        "file": "v10_rolling_foot_biomimetic_gait\\simulate_rolling_foot_gait_v10.py",
+        "function": "run_simulation",
+        "lines": 170
+      },
+      {
+        "file": "v11_rugged_terrain_robustness\\explore_rugged_gait_v11.py",
+        "function": "_u",
+        "lines": 120
+      },
+      {
+        "file": "v11_rugged_terrain_robustness\\explore_rugged_gait_v11.py",
+        "function": "render",
+        "lines": 148
+      },
+      {
+        "file": "v11_rugged_terrain_robustness\\scan_robustness_basin_v11.py",
+        "function": "run_grid",
+        "lines": 105
+      },
+      {
+        "file": "v11_rugged_terrain_robustness\\simulate_rugged_gait_v11.py",
+        "function": "run_rugged_simulation",
+        "lines": 192
+      },
+      {
+        "file": "v13b_floquet_long_run\\disturbance_recovery_v13b.py",
+        "function": "run_simulation_perturbed",
+        "lines": 136
+      },
+      {
+        "file": "v13b_floquet_long_run\\render_v13b.py",
+        "function": "create_phase_portrait_video",
+        "lines": 165
+      },
+      {
+        "file": "v13_5_robust_hip_control\\render_v13_5.py",
+        "function": "render_comparison",
+        "lines": 116
+      },
+      {
+        "file": "v13_5_robust_hip_control\\render_v13_5.py",
+        "function": "render_scan_heatmap",
+        "lines": 267
+      },
+      {
+        "file": "v13_5_robust_hip_control\\simulate_v13_5.py",
+        "function": "run_simulation",
+        "lines": 183
+      },
+      {
+        "file": "v13_5_robust_hip_control\\simulate_v13_5_planC.py",
+        "function": "run_simulation",
+        "lines": 202
+      },
+      {
+        "file": "v13_6_event_driven_fsm\\scan_v13_6_1_phase_params.py",
+        "function": "diagnostic_stats",
+        "lines": 125
+      },
+      {
+        "file": "v13_6_event_driven_fsm\\simulate_v13_6.py",
+        "function": "control_v136",
+        "lines": 107
+      },
+      {
+        "file": "v13_6_event_driven_fsm\\simulate_v13_6.py",
+        "function": "run_simulation",
+        "lines": 216
+      },
+      {
+        "file": "v13_6_refactored\\simulate_v136_refactored.py",
+        "function": "classify_wrapper",
+        "lines": 139
+      },
+      {
+        "file": "v13_7_floquet_analysis\\analyze_floquet_v13_7.py",
+        "function": "plot_comparison",
+        "lines": 111
+      },
+      {
+        "file": "v13_7_friction_compensation\\simulate_v13_7.py",
+        "function": "run_simulation_v137",
+        "lines": 325
+      },
+      {
+        "file": "v13_7_friction_compensation\\smoke_v13_7.py",
+        "function": "main",
+        "lines": 102
+      },
+      {
+        "file": "v13_7_refactored\\simulate_v137_refactored.py",
+        "function": "compute_control",
+        "lines": 114
+      },
+      {
+        "file": "v13_7_refactored\\simulate_v137_refactored.py",
+        "function": "classify_wrapper",
+        "lines": 137
+      },
+      {
+        "file": "v14b_state_machine_hip\\simulate_passive_arms_v136.py",
+        "function": "run_simulation",
+        "lines": 239
+      },
+      {
+        "file": "v14c_arm_mass_lightening\\scan_v14c_C_foot_leg.py",
+        "function": "diagnostic_stats",
+        "lines": 101
+      },
+      {
+        "file": "v14c_arm_mass_lightening\\simulate_v14c.py",
+        "function": "run_simulation",
+        "lines": 239
+      },
+      {
+        "file": "v14_passive_arms\\simulate_passive_arms_v14.py",
+        "function": "run_simulation",
+        "lines": 167
+      },
+      {
+        "file": "v15_1_sea_direct\\simulate_v151.py",
+        "function": "run_simulation_v151",
+        "lines": 332
+      },
+      {
+        "file": "v15_1_sea_direct\\simulate_v151_L1.py",
+        "function": "run_simulation_v151_L1",
+        "lines": 181
+      },
+      {
+        "file": "v15_2_strict_sea\\simulate_v152.py",
+        "function": "run_simulation_v152",
+        "lines": 396
+      },
+      {
+        "file": "v16_motor_dynamics\\simulate_v16.py",
+        "function": "run_simulation_v16",
+        "lines": 309
+      },
+      {
+        "file": "v16_refactored\\simulate_v16_refactored.py",
+        "function": "classify_wrapper",
+        "lines": 136
+      },
+      {
+        "file": "v17_state_estimation\\simulate_v17.py",
+        "function": "run_simulation_v17",
+        "lines": 225
+      },
+      {
+        "file": "v18_3d_lateral_stability\\render_v18.py",
+        "function": "run_and_record_v18",
+        "lines": 163
+      },
+      {
+        "file": "v18_3d_lateral_stability\\simulate_v18.py",
+        "function": "run_simulation_v18",
+        "lines": 242
+      },
+      {
+        "file": "v19_hip_abduction_active\\render_v19.py",
+        "function": "simulate_and_render",
+        "lines": 344
+      },
+      {
+        "file": "v19_hip_abduction_active\\render_v19.py",
+        "function": "plot_trajectory",
+        "lines": 106
+      },
+      {
+        "file": "v19_hip_abduction_active\\simulate_v19.py",
+        "function": "run_simulation_v19",
+        "lines": 231
+      },
+      {
+        "file": "v20_step_width_control\\simulate_v20.py",
+        "function": "run_simulation_v20",
+        "lines": 316
+      },
+      {
+        "file": "v21_3d_perturbation_robustness\\render_v21.py",
+        "function": "simulate_and_record",
+        "lines": 255
+      },
+      {
+        "file": "v21_3d_perturbation_robustness\\simulate_v21_perturbation.py",
+        "function": "run_simulation_v21",
+        "lines": 265
+      },
+      {
+        "file": "version_graph\\extract_dependencies.py",
+        "function": "extract_version_graph",
+        "lines": 184
+      },
+      {
+        "file": "version_graph\\generate_dot.py",
+        "function": "generate_dot_file",
+        "lines": 116
+      }
+    ],
+    "naming": [
+      {
+        "type": "version_dir",
+        "name": "v13b_floquet_long_run",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v13_5_robust_hip_control",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v13_6_event_driven_fsm",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v13_6_refactored",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v13_7_floquet_analysis",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v13_7_friction_compensation",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v13_7_refactored",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v14b_state_machine_hip",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v14c_arm_mass_lightening",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v15_1_sea_direct",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v15_2_strict_sea",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v18_3d_lateral_stability",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "v21_3d_perturbation_robustness",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "version_graph",
+        "expected": "v{number}_{snake_case}"
+      },
+      {
+        "type": "version_dir",
+        "name": "virtual_constraints",
+        "expected": "v{number}_{snake_case}"
+      }
+    ]
+  }
+}

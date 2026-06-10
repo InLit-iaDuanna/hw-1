@@ -159,7 +159,7 @@ class TestHfieldDataFilling:
         model = mujoco.MjModel.from_xml_string(xml)
         wrong_profile = np.random.rand(HFIELD_NROW, HFIELD_NCOL).astype(np.float32)
 
-        with pytest.raises(AssertionError, match="hfield 尺寸不匹配"):
+        with pytest.raises(ValueError, match="hfield data size mismatch"):
             fill_hfield_data(model, wrong_profile)
 
 

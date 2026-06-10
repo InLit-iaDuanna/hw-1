@@ -134,7 +134,7 @@ docs/
 
 ### 有用工具（27个）
 - benchmarks, ci, tests, dashboard, scripts
-- compass-gait-remotion（动画子项目）
+- render_all.py / batch_render_hd.py（MuJoCo 动画渲染入口）
 - matlab-v01-v13-gait（MATLAB对照）
 - cross_version_analysis, parameter_tuner
 - knowledge_base, tutorials, paper_figures

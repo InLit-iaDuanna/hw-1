@@ -26,9 +26,30 @@ class SensorReading:
 
 
 class SensorModel:
-    def __init__(self, params: SensorNoiseParams, seed: int = 42):
+    def __init__(
+        self,
+        params: SensorNoiseParams | None = None,
+        seed: int = 42,
+        encoder_resolution_rad: float | None = None,
+        contact_threshold_N: float | None = None,
+        noise_seed: int | None = None,
+    ):
+        if noise_seed is not None:
+            seed = noise_seed
+        if params is None:
+            if encoder_resolution_rad is not None and encoder_resolution_rad > 0.0:
+                encoder_cpr = max(1, int(round(2.0 * math.pi / encoder_resolution_rad)))
+            else:
+                encoder_cpr = SensorNoiseParams.encoder_cpr
+            params = SensorNoiseParams(encoder_cpr=encoder_cpr)
         self.params = params
         self._rad_per_count = 2.0 * math.pi / params.encoder_cpr
+        self._read_noise_std = (
+            0.5 * encoder_resolution_rad
+            if encoder_resolution_rad is not None
+            else 0.0
+        )
+        self.contact_threshold_N = contact_threshold_N
         self._last_left_contact: bool | None = None
         self._last_right_contact: bool | None = None
         self._left_transition_t: float = -1.0
@@ -86,3 +107,42 @@ class SensorModel:
             right_contact_raw=right_out,
             timestamp=t,
         )
+
+    def read(self, model, data) -> dict:
+        """Compatibility wrapper used by older integration tests."""
+        left_contact, right_contact = self._infer_contacts(model, data)
+        reading = self.measure(data, float(getattr(data, "time", 0.0)), left_contact, right_contact)
+        joint_angles = reading.joint_angles.copy()
+        if self._read_noise_std > 0.0:
+            joint_angles = np.array(
+                [
+                    angle + self._rng.gauss(0.0, self._read_noise_std)
+                    for angle in joint_angles
+                ]
+            )
+        return {
+            "joint_angles": joint_angles,
+            "left_contact": reading.left_contact_raw,
+            "right_contact": reading.right_contact_raw,
+            "timestamp": reading.timestamp,
+        }
+
+    @staticmethod
+    def _infer_contacts(model, data) -> tuple[bool, bool]:
+        left_contact = False
+        right_contact = False
+        for i in range(data.ncon):
+            contact = data.contact[i]
+            names = []
+            for geom_id in (contact.geom1, contact.geom2):
+                name = model.geom(geom_id).name
+                if name:
+                    names.append(name)
+            joined = " ".join(names).lower()
+            if "floor" not in joined and "ground" not in joined and "ramp" not in joined:
+                continue
+            if "left" in joined:
+                left_contact = True
+            if "right" in joined:
+                right_contact = True
+        return left_contact, right_contact

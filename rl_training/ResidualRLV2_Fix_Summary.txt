@@ -1,0 +1,19 @@
+﻿
+## 总结：ResidualRLEnvV2 修复成功
+
+### 问题根源
+原V2环境在4秒时失败，根本原因是control_v136()的时间参数使用了self.sim_time而非steps*dt
+
+### 解决方案  
+train_residual_rl_v2_simple.py 使用 t = self.steps * self.dt，成功达到4.630m
+
+### 下一步
+1. 将简化版扩展为完整42维observation
+2. 添加hip-only residual action支持
+3. 实现baseline-relative reward
+4. 运行zero residual test验证
+5. 执行residual sweep
+6. 100k sanity training
+
+文件位置：D:\Dunna\Documents\hw-1\rl_training\train_residual_rl_v2_simple.py
+

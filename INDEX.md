@@ -219,7 +219,7 @@ A: 先读 [CLAUDE.md](CLAUDE.md) 和 [docs/CI_CD_GUIDE.md](docs/CI_CD_GUIDE.md)
 
 - **仓库：** `D:\Dunna\Documents\hw-1`
 - **Python 环境：** `.venv-mujoco`
-- **主要工具：** MuJoCo, NumPy, Matplotlib, Remotion
+- **主要工具：** MuJoCo, NumPy, Matplotlib, imageio
 - **文档更新：** 2026-06-07
 
 ---

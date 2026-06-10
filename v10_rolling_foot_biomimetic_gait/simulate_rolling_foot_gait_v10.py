@@ -10,6 +10,9 @@ from pathlib import Path
 import mujoco
 import numpy as np
 
+from common.failure_classifier import classify_failure
+from common.ik_utils import leg_ik_front_knee, ramp_height, smoothstep
+
 ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "out"
 MODEL_DIR = ROOT / "models"
@@ -85,45 +88,10 @@ class RollingFootParams:
         return self.thigh_length + self.shank_length
 
 
-def ramp_height(x: float, params: RollingFootParams) -> float:
-    return -math.tan(params.gamma) * x
-
-
 def foot_center_z_on_ramp(x: float, params: RollingFootParams) -> float:
     return ramp_height(x, params) + params.foot_radius / max(
         0.2, math.cos(params.gamma)
     )
-
-
-def smoothstep(u: float) -> float:
-    u = min(max(u, 0.0), 1.0)
-    return u * u * (3.0 - 2.0 * u)
-
-
-def leg_ik_front_knee(
-    hip_x: float, hip_z: float, foot_x: float, foot_z: float, params: RollingFootParams
-) -> tuple[float, float]:
-    px = hip_x - foot_x
-    pz = hip_z - foot_z
-    d = math.hypot(px, pz)
-    d = float(
-        np.clip(
-            d,
-            abs(params.thigh_length - params.shank_length) + 1e-5,
-            params.leg_length - 1e-5,
-        )
-    )
-    base = math.atan2(px, pz)
-    cos_delta = (params.thigh_length**2 + d**2 - params.shank_length**2) / (
-        2.0 * params.thigh_length * d
-    )
-    delta = math.acos(float(np.clip(cos_delta, -1.0, 1.0)))
-    thigh = base - delta
-    knee_x = hip_x - params.thigh_length * math.sin(thigh)
-    knee_z = hip_z - params.thigh_length * math.cos(thigh)
-    shank = math.atan2(knee_x - foot_x, knee_z - foot_z)
-    knee = float(np.clip(shank - thigh, 0.0, math.radians(params.knee_limit_deg)))
-    return thigh, knee
 
 
 def build_model_xml(params: RollingFootParams) -> str:
@@ -359,36 +327,6 @@ def control(
         params.knee_torque_limit,
     )
     return left_hip_tau, left_knee_tau, right_hip_tau, right_knee_tau, mode
-
-
-def classify_failure(
-    model: mujoco.MjModel,
-    data: mujoco.MjData,
-    params: RollingFootParams,
-    start_x: float,
-    t: float,
-) -> str:
-    if not np.all(np.isfinite(data.qpos)) or not np.all(np.isfinite(data.qvel)):
-        return "nan_or_unstable"
-    if float(np.linalg.norm(data.qvel)) > 45.0:
-        return "nan_or_unstable"
-    hip_x, hip_z = float(data.qpos[0]), float(data.qpos[1])
-    hip_clearance = hip_z - ramp_height(hip_x, params)
-    if hip_clearance < 0.22:
-        return "fall_down"
-    if hip_clearance > 2.5:
-        return "fly_away"
-    foot_margins = [
-        site_margin(model, data, "left_heel_site", params),
-        site_margin(model, data, "left_toe_site", params),
-        site_margin(model, data, "right_heel_site", params),
-        site_margin(model, data, "right_toe_site", params),
-    ]
-    if min(foot_margins) < -0.12:
-        return "penetration"
-    if t > 4.0 and hip_x - start_x < 0.20:
-        return "stuck"
-    return ""
 
 
 def make_row(

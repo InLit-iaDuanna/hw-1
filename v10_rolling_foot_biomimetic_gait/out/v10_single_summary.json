@@ -13,7 +13,7 @@
     "torso_height": 0.3,
     "initial_vx": 0.04,
     "knee_limit_deg": 70.0,
-    "duration": 10.0,
+    "duration": 12.0,
     "timestep": 0.001,
     "thigh_length": 0.48,
     "shank_length": 0.52,
@@ -67,7 +67,7 @@
       "foot": "left"
     }
   ],
-  "forward_distance": 0.11822720979652274,
+  "forward_distance": 0.11822720979652207,
   "simulated_time": 4.0,
   "failure": "stuck",
   "actuator_count": 4,
@@ -82,9 +82,9 @@
     "right_knee_stabilizer"
   ],
   "ankle_actuators": [],
-  "active_input_energy_j": 2.047053284169435,
-  "net_actuator_work_j": 0.5448625928476306,
-  "energy_per_alternation_j": 1.0235266420847176,
+  "active_input_energy_j": 2.047053284169437,
+  "net_actuator_work_j": 0.5448625928476307,
+  "energy_per_alternation_j": 1.0235266420847184,
   "quasi_passive": true,
   "pure_passive": false,
   "uses_reward_function": false

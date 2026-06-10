@@ -1,5 +1,5 @@
 # hw-1 Project Deep Cleanup Script
-# Purpose: Remove large but regenerable files (node_modules, venv, wheelhouse)
+# Purpose: Remove large but regenerable files (venv, wheelhouse)
 # Author: Auto-generated
 # Date: 2026-06-05
 # WARNING: This script deletes files that require reinstallation. Use with caution.
@@ -7,7 +7,6 @@
 param(
     [switch]$DryRun = $false,           # Dry run mode (show what would be deleted)
     [switch]$Confirm = $false,          # Require confirmation before deletion
-    [switch]$NodeModulesOnly = $false,  # Only delete node_modules
     [switch]$VenvOnly = $false,         # Only delete virtual environments
     [switch]$WheelhouseOnly = $false,   # Only delete wheelhouse
     [switch]$Force = $false             # Skip all confirmations (dangerous!)
@@ -138,31 +137,18 @@ function Remove-ItemDeep {
 }
 
 # Determine what to clean
-$cleanNodeModules = $NodeModulesOnly -or (-not $VenvOnly -and -not $WheelhouseOnly)
-$cleanVenv = $VenvOnly -or (-not $NodeModulesOnly -and -not $WheelhouseOnly)
-$cleanWheelhouse = $WheelhouseOnly -or (-not $NodeModulesOnly -and -not $VenvOnly)
+$cleanVenv = $VenvOnly -or (-not $WheelhouseOnly)
+$cleanWheelhouse = $WheelhouseOnly -or (-not $VenvOnly)
 
 Write-Host "Cleanup targets:" -ForegroundColor Cyan
-Write-Host "  - Node.js modules:        $cleanNodeModules" -ForegroundColor $(if ($cleanNodeModules) { "Green" } else { "Gray" })
 Write-Host "  - Python virtual envs:    $cleanVenv" -ForegroundColor $(if ($cleanVenv) { "Green" } else { "Gray" })
 Write-Host "  - Wheelhouse packages:    $cleanWheelhouse" -ForegroundColor $(if ($cleanWheelhouse) { "Green" } else { "Gray" })
 Write-Host ""
 
-# 1. Clean node_modules
-if ($cleanNodeModules) {
-    Write-Host ("[1/3] Cleaning Node.js modules") -ForegroundColor Cyan
-    Write-Host ("=" * 80) -ForegroundColor Cyan
-
-    $nodeModulesPath = Join-Path $projectRoot "compass-gait-remotion\node_modules"
-    Remove-ItemDeep -Path $nodeModulesPath `
-                    -ItemName "node_modules (Remotion dependencies)" `
-                    -RestoreCommand "cd compass-gait-remotion; npm install"
-}
-
-# 2. Clean Python virtual environments
+# 1. Clean Python virtual environments
 if ($cleanVenv) {
     Write-Host ""
-    Write-Host ("[2/3] Cleaning Python virtual environments") -ForegroundColor Cyan
+    Write-Host ("[1/2] Cleaning Python virtual environments") -ForegroundColor Cyan
     Write-Host ("=" * 80) -ForegroundColor Cyan
 
     # .venv-mujoco
@@ -178,10 +164,10 @@ if ($cleanVenv) {
                     -RestoreCommand "python -m venv .venv-codex; .\.venv-codex\Scripts\Activate.ps1; pip install -r requirements.txt"
 }
 
-# 3. Clean wheelhouse
+# 2. Clean wheelhouse
 if ($cleanWheelhouse) {
     Write-Host ""
-    Write-Host ("[3/3] Cleaning offline wheel packages") -ForegroundColor Cyan
+    Write-Host ("[2/2] Cleaning offline wheel packages") -ForegroundColor Cyan
     Write-Host ("=" * 80) -ForegroundColor Cyan
 
     $wheelhousePath = Join-Path $projectRoot "wheelhouse"
@@ -219,13 +205,6 @@ if ($DryRun) {
 Write-Host ""
 Write-Host "Restoration commands:" -ForegroundColor Cyan
 Write-Host ""
-
-if ($cleanNodeModules) {
-    Write-Host "  Node.js modules:" -ForegroundColor Yellow
-    Write-Host "    cd compass-gait-remotion" -ForegroundColor Gray
-    Write-Host "    npm install" -ForegroundColor Gray
-    Write-Host ""
-}
 
 if ($cleanVenv) {
     Write-Host "  Python virtual environment:" -ForegroundColor Yellow
@@ -312,7 +291,6 @@ Write-Host ("=" * 80) -ForegroundColor Cyan
     Project: hw-1 Gait Training Assistance Device
 
     RESTORATION COMMANDS:
-    - Node.js: cd compass-gait-remotion; npm install
     - Python venv: .\scripts\setup_env.ps1
     - Wheelhouse: pip download -r requirements.txt -d wheelhouse
 #>

@@ -1,0 +1,336 @@
+{
+  "params": {
+    "base": "PassiveArmsParams",
+    "hip_motor": "Dynamixel MX-64AR @12V",
+    "knee_motor": "Dynamixel MX-64AR @12V",
+    "compensate_friction": true
+  },
+  "motor_specs": {
+    "hip": {
+      "name": "Dynamixel MX-64AR @12V",
+      "Kt": 0.0109,
+      "J_rotor": 7e-08,
+      "N": 200.0,
+      "eta": 0.67,
+      "I_max": 4.1,
+      "I_cont": 1.2,
+      "R_arm": 1.0,
+      "tau_C_motor": 0.0015,
+      "b_visc_motor": 1.25e-06,
+      "joint_J_eff": 0.0028000000000000004,
+      "joint_b_eff": 0.05,
+      "joint_tau_C_eff": 0.201,
+      "joint_tau_sat_peak": 5.988459999999999,
+      "joint_tau_sat_cont": 1.7527199999999998
+    },
+    "knee": {
+      "name": "Dynamixel MX-64AR @12V",
+      "Kt": 0.0109,
+      "J_rotor": 7e-08,
+      "N": 200.0,
+      "eta": 0.67,
+      "I_max": 4.1,
+      "I_cont": 1.2,
+      "R_arm": 1.0,
+      "tau_C_motor": 0.0015,
+      "b_visc_motor": 1.25e-06,
+      "joint_J_eff": 0.0028000000000000004,
+      "joint_b_eff": 0.05,
+      "joint_tau_C_eff": 0.201,
+      "joint_tau_sat_peak": 5.988459999999999,
+      "joint_tau_sat_cont": 1.7527199999999998
+    }
+  },
+  "phase_durations_s": {
+    "stance_early": 4.20799999999974,
+    "stance_late": 7.792000000000937,
+    "swing_thrust": 4.20799999999974,
+    "swing_retract": 7.792000000000937
+  },
+  "phase_torque_integral_Nms": {
+    "stance_early": 9.977748897877701,
+    "stance_late": 27.103958428298174,
+    "swing_thrust": 11.567160406330025,
+    "swing_retract": 7.885207493617247
+  },
+  "phase_saturation_steps": {
+    "stance_early": 0,
+    "stance_late": 0,
+    "swing_thrust": 0,
+    "swing_retract": 0
+  },
+  "phase_total_steps": {
+    "stance_early": 4208,
+    "stance_late": 7792,
+    "swing_thrust": 4208,
+    "swing_retract": 7792
+  },
+  "phase_saturation_rate": {
+    "stance_early": 0.0,
+    "stance_late": 0.0,
+    "swing_thrust": 0.0,
+    "swing_retract": 0.0
+  },
+  "phase_timeline_head": [
+    [
+      0.0,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      0.153,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      0.374,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      0.766,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      1.165,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      1.264,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      1.6640000000000001,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      2.981,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      3.3810000000000002,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      4.43,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      4.83,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      5.809,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      6.208,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      7.171,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      7.57,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      8.525,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      8.925,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      9.88,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      10.279,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      11.232000000000001,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      11.631,
+      "stance_late",
+      "swing_retract"
+    ]
+  ],
+  "phase_timeline_tail": [
+    [
+      1.264,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      1.6640000000000001,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      2.981,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      3.3810000000000002,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      4.43,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      4.83,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      5.809,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      6.208,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      7.171,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      7.57,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      8.525,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      8.925,
+      "stance_late",
+      "swing_retract"
+    ],
+    [
+      9.88,
+      "swing_thrust",
+      "stance_early"
+    ],
+    [
+      10.279,
+      "swing_retract",
+      "stance_late"
+    ],
+    [
+      11.232000000000001,
+      "stance_early",
+      "swing_thrust"
+    ],
+    [
+      11.631,
+      "stance_late",
+      "swing_retract"
+    ]
+  ],
+  "phase_transitions": 21,
+  "score": 5175.316960178559,
+  "success": true,
+  "alternating_touchdowns": 10,
+  "contact_events": [
+    {
+      "time": 0.152,
+      "foot": "left",
+      "E": 50.99422518739238
+    },
+    {
+      "time": 0.373,
+      "foot": "right",
+      "E": 50.53996030368473
+    },
+    {
+      "time": 0.765,
+      "foot": "left",
+      "E": 50.83356502099823
+    },
+    {
+      "time": 1.2630000000000001,
+      "foot": "right",
+      "E": 50.86432276987622
+    },
+    {
+      "time": 2.98,
+      "foot": "left",
+      "E": 52.738143223858664
+    },
+    {
+      "time": 4.429,
+      "foot": "right",
+      "E": 52.79673365505584
+    },
+    {
+      "time": 5.808,
+      "foot": "left",
+      "E": 52.81444246989234
+    },
+    {
+      "time": 7.17,
+      "foot": "right",
+      "E": 52.819230373227235
+    },
+    {
+      "time": 8.524000000000001,
+      "foot": "left",
+      "E": 52.827726663861675
+    },
+    {
+      "time": 9.879,
+      "foot": "right",
+      "E": 52.822874968842754
+    },
+    {
+      "time": 11.231,
+      "foot": "left",
+      "E": 52.82684201229774
+    }
+  ],
+  "forward_distance": 4.485161507764486,
+  "simulated_time": 12.0,
+  "failure": "completed",
+  "active_input_energy_j": 17.930910095769953,
+  "net_actuator_work_j": 13.202861754161756,
+  "positive_input_energy_elec_j": 131.0630341376761,
+  "coulomb_dissipation_j": 4.510847969183062,
+  "energy_per_alternation_j": 1.7930910095769952,
+  "quasi_passive": true,
+  "pure_passive": false,
+  "controller": "v13_7_friction_compensation_refactored",
+  "framework_version": "simulation_framework_v1"
+}

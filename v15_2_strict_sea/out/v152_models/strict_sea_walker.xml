@@ -1,6 +1,6 @@
 <mujoco model="strict_sea_walker_v152">
   <compiler angle="degree" coordinate="local"/>
-  <option timestep="0.0005" integrator="implicitfast" gravity="0 0 -9.81"/>
+  <option timestep="0.001" integrator="implicitfast" gravity="0 0 -9.81"/>
   <visual><global offwidth="1280" offheight="720"/></visual>
   <default>
     <joint armature="0.004" damping="0.01"/>
@@ -30,16 +30,16 @@
         <inertial pos="0 0 0" mass="0.05" diaginertia="0.0021 0.004 0.0021"/>
         <joint name="left_hip_motor" type="hinge" axis="0 1 0" range="-95 95" limited="true" armature="0" damping="0.02"/>
         <body name="left_thigh" pos="0 0 0">
-        <joint name="left_hip_link" type="hinge" axis="0 1 0" range="-95 95" limited="true" armature="0" damping="2.529822128134704" stiffness="10000.0" springref="0"/>
-        <geom name="left_upper" type="capsule" fromto="0 0 0 0 0 -0.4896" size="0.026" mass="0.18" material="left_mat" contype="0" conaffinity="0"/>
-        <body name="left_shank" pos="0 0 -0.4896">
+        <joint name="left_hip_link" type="hinge" axis="0 1 0" range="-95 95" limited="true" armature="0" damping="0.8" stiffness="1000.0" springref="0"/>
+        <geom name="left_upper" type="capsule" fromto="0 0 0 0 0 -0.48" size="0.026" mass="0.18" material="left_mat" contype="0" conaffinity="0"/>
+        <body name="left_shank" pos="0 0 -0.48">
           <joint name="left_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.08" stiffness="0.8" springref="0"/>
           <geom name="left_knee_marker" type="sphere" pos="0 0 0" size="0.04" mass="0.03" material="knee_mat" contype="0" conaffinity="0"/>
-          <geom name="left_lower" type="capsule" fromto="0 0 0 0 0 -0.5304" size="0.023" mass="0.16" material="left_mat" contype="0" conaffinity="0"/>
-          <body name="left_foot_body" pos="0 0 -0.5304">
+          <geom name="left_lower" type="capsule" fromto="0 0 0 0 0 -0.52" size="0.023" mass="0.16" material="left_mat" contype="0" conaffinity="0"/>
+          <body name="left_foot_body" pos="0 0 -0.52">
             <joint name="left_ankle" type="hinge" axis="0 1 0" range="-25.0 25.0" limited="true" damping="0.08" stiffness="10.0" springref="0"/>
-            <geom name="left_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.023100000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
-            <geom name="left_heel" type="sphere" pos="-0.06 0 -0.015" size="0.042" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="left_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.022000000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="left_heel" type="sphere" pos="-0.06 0 -0.015" size="0.04" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <geom name="left_toe" type="sphere" pos="0.0576 0 -0.018" size="0.028" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <site name="left_foot_site" pos="0 0 -0.015" size="0.01"/>
             <site name="left_heel_site" pos="-0.06 0 -0.015" size="0.01"/>
@@ -52,16 +52,16 @@
         <inertial pos="0 0 0" mass="0.05" diaginertia="0.0021 0.004 0.0021"/>
         <joint name="right_hip_motor" type="hinge" axis="0 1 0" range="-95 95" limited="true" armature="0" damping="0.02"/>
         <body name="right_thigh" pos="0 0 0">
-        <joint name="right_hip_link" type="hinge" axis="0 1 0" range="-95 95" limited="true" armature="0" damping="2.529822128134704" stiffness="10000.0" springref="0"/>
-        <geom name="right_upper" type="capsule" fromto="0 0 0 0 0 -0.4896" size="0.026" mass="0.18" material="right_mat" contype="0" conaffinity="0"/>
-        <body name="right_shank" pos="0 0 -0.4896">
+        <joint name="right_hip_link" type="hinge" axis="0 1 0" range="-95 95" limited="true" armature="0" damping="0.8" stiffness="1000.0" springref="0"/>
+        <geom name="right_upper" type="capsule" fromto="0 0 0 0 0 -0.48" size="0.026" mass="0.18" material="right_mat" contype="0" conaffinity="0"/>
+        <body name="right_shank" pos="0 0 -0.48">
           <joint name="right_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.08" stiffness="0.8" springref="0"/>
           <geom name="right_knee_marker" type="sphere" pos="0 0 0" size="0.04" mass="0.03" material="knee_mat" contype="0" conaffinity="0"/>
-          <geom name="right_lower" type="capsule" fromto="0 0 0 0 0 -0.5304" size="0.023" mass="0.16" material="right_mat" contype="0" conaffinity="0"/>
-          <body name="right_foot_body" pos="0 0 -0.5304">
+          <geom name="right_lower" type="capsule" fromto="0 0 0 0 0 -0.52" size="0.023" mass="0.16" material="right_mat" contype="0" conaffinity="0"/>
+          <body name="right_foot_body" pos="0 0 -0.52">
             <joint name="right_ankle" type="hinge" axis="0 1 0" range="-25.0 25.0" limited="true" damping="0.08" stiffness="10.0" springref="0"/>
-            <geom name="right_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.023100000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
-            <geom name="right_heel" type="sphere" pos="-0.06 0 -0.015" size="0.042" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="right_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.022000000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="right_heel" type="sphere" pos="-0.06 0 -0.015" size="0.04" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <geom name="right_toe" type="sphere" pos="0.0576 0 -0.018" size="0.028" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <site name="right_foot_site" pos="0 0 -0.015" size="0.01"/>
             <site name="right_heel_site" pos="-0.06 0 -0.015" size="0.01"/>

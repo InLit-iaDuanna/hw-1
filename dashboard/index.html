@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>指南针步态研究看板</title>
+<title>极限环步态研究</title>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 :root {
@@ -31,8 +31,8 @@
 }
 
 @keyframes glow {
-  0%, 100% { box-shadow: 0 0 5px currentColor, 0 0 10px currentColor; }
-  50% { box-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor; }
+  0%, 100% { box-shadow: 0 0 5px currentColor; }
+  50% { box-shadow: 0 0 12px currentColor; }
 }
 
 @keyframes slideIn {
@@ -179,6 +179,48 @@ header {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
+  transition: width 0.3s ease, margin-left 0.3s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+}
+
+.sidebar-toggle {
+  position: fixed;
+  left: 280px;
+  top: 92px;
+  width: 30px;
+  height: 40px;
+  background: rgba(18, 22, 31, 0.95);
+  border: 1px solid rgba(45, 53, 72, 0.8);
+  border-left: none;
+  border-radius: 0 8px 8px 0;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.sidebar.collapsed .sidebar-toggle {
+  left: 0;
+  border-left: 1px solid rgba(45, 53, 72, 0.8);
+  border-right: none;
+  border-radius: 8px 0 0 8px;
+}
+
+.sidebar-toggle:hover {
+  background: rgba(34, 41, 56, 0.9);
+  color: var(--accent);
 }
 
 .sidebar-section {
@@ -373,10 +415,9 @@ header {
   position: absolute;
   left: 0;
   top: 0;
-  width: 4px;
+  width: 3px;
   height: 100%;
   background: linear-gradient(180deg, var(--phase1) 0%, rgba(0,0,0,0) 100%);
-  box-shadow: 0 0 10px var(--phase1);
   pointer-events: none;
 }
 
@@ -399,12 +440,11 @@ header {
 }
 
 .version-card:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-3px) scale(1.01);
   box-shadow:
-    0 12px 24px rgba(0, 0, 0, 0.3),
-    0 0 0 1px rgba(96, 165, 250, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  border-color: rgba(96, 165, 250, 0.6);
+    0 8px 16px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(96, 165, 250, 0.2);
+  border-color: rgba(96, 165, 250, 0.4);
 }
 
 .version-card:hover::after {
@@ -412,11 +452,11 @@ header {
 }
 
 .version-card[data-status="done"] {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 15px rgba(52, 211, 153, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .version-card[data-status="next"] {
-  animation: glow 3s infinite;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 0 12px rgba(251, 191, 36, 0.15);
 }
 
 .card-header {
@@ -432,11 +472,9 @@ header {
   font-family: 'JetBrains Mono', monospace;
   padding: 4px 8px;
   border-radius: 6px;
-  background: linear-gradient(135deg, rgba(31, 111, 235, 0.2) 0%, rgba(31, 111, 235, 0.05) 100%);
-  backdrop-filter: blur(4px);
+  background: rgba(31, 111, 235, 0.15);
   border: 1px solid rgba(31, 111, 235, 0.3);
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(31, 111, 235, 0.2);
 }
 
 .version-title {
@@ -453,7 +491,6 @@ header {
   font-weight: 700;
   letter-spacing: 0;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px currentColor;
   border: 1px solid currentColor;
 }
 
@@ -537,8 +574,7 @@ header {
 .key-finding {
   margin-top: 10px;
   padding: 10px;
-  background: linear-gradient(135deg, rgba(96, 165, 250, 0.08) 0%, rgba(96, 165, 250, 0.02) 100%);
-  backdrop-filter: blur(4px);
+  background: rgba(96, 165, 250, 0.08);
   border-left: 3px solid var(--accent);
   border-radius: 6px;
   font-size: 0.7rem;
@@ -548,7 +584,6 @@ header {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(96, 165, 250, 0.1);
 }
 
 /* Timeline View */
@@ -685,11 +720,53 @@ header {
   font-size: 0.75rem;
 }
 
+.graph-legend.collapsed {
+  padding: 8px 10px;
+}
+
+.graph-legend-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .graph-legend-title {
   font-weight: 700;
   margin-bottom: 8px;
   color: var(--text);
   font-size: 0.8rem;
+}
+
+.graph-legend-header .graph-legend-title {
+  margin-bottom: 0;
+}
+
+.graph-legend-toggle {
+  width: 28px;
+  height: 24px;
+  background: rgba(34, 41, 56, 0.78);
+  border: 1px solid rgba(96, 165, 250, 0.36);
+  border-radius: 6px;
+  color: var(--accent);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.graph-legend-toggle:hover {
+  background: rgba(96, 165, 250, 0.18);
+  border-color: rgba(96, 165, 250, 0.72);
+  color: var(--text);
+}
+
+.graph-legend-body {
+  margin-top: 8px;
+}
+
+.graph-legend.collapsed .graph-legend-body {
+  display: none;
 }
 
 .graph-legend-item {
@@ -711,16 +788,28 @@ header {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.graph-controls {
+.graph-toolbar {
   position: absolute;
   bottom: 20px;
   left: 20px;
   display: flex;
   gap: 8px;
+  align-items: center;
   z-index: 10;
 }
 
-.graph-control-btn {
+.graph-toolbar-body {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.graph-toolbar.collapsed .graph-toolbar-body {
+  display: none;
+}
+
+.graph-control-btn,
+.graph-toolbar-toggle {
   width: 36px;
   height: 36px;
   background: rgba(18, 22, 31, 0.9);
@@ -736,7 +825,52 @@ header {
   transition: all 0.2s;
 }
 
-.graph-control-btn:hover {
+.graph-toolbar-toggle {
+  color: var(--accent);
+}
+
+.graph-toolbar.collapsed .graph-toolbar-toggle {
+  border-color: rgba(96, 165, 250, 0.6);
+  background: rgba(34, 41, 56, 0.94);
+}
+
+.graph-phase-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.graph-phase-btn {
+  height: 36px;
+  width: 42px;
+  padding: 0;
+  background: rgba(18, 22, 31, 0.9);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(45, 53, 72, 0.6);
+  border-left: 3px solid var(--phase-color);
+  border-radius: 8px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+.graph-phase-btn:hover:not(:disabled),
+.graph-phase-btn.collapsed {
+  background: rgba(34, 41, 56, 0.94);
+  border-color: color-mix(in srgb, var(--phase-color) 70%, rgba(45, 53, 72, 0.6));
+  border-left-color: var(--phase-color);
+  color: var(--text);
+}
+
+.graph-phase-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.graph-control-btn:hover,
+.graph-toolbar-toggle:hover {
   background: rgba(34, 41, 56, 0.9);
   border-color: rgba(96, 165, 250, 0.6);
   color: var(--accent);
@@ -1054,14 +1188,14 @@ header {
 
 <header>
   <div class="logo-area">
-    <h1>🚶 指南针步态研究看板</h1>
+    <h1>🚶 极限环步态研究</h1>
     <div class="subtitle">被动行走 | V01 → V25 | 二维理论 → 三维与硬件</div>
   </div>
 
   <div class="view-switcher">
     <button class="view-btn active" data-view="grid">📋 网格</button>
     <button class="view-btn" data-view="timeline">📅 时间线</button>
-    <button class="view-btn" data-view="graph">🔗 依赖图</button>
+    <button class="view-btn" data-view="graph">🔗 路径图</button>
     <button class="view-btn" data-view="compare">⚖️ 对比</button>
     <button class="view-btn" data-view="trends">📈 趋势</button>
     <button class="view-btn" data-view="heatmap">🔥 热力图</button>
@@ -1074,7 +1208,8 @@ header {
 </header>
 
 <div class="main-container">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">◀</button>
     <div class="sidebar-section">
       <h3>总览</h3>
       <div class="stat-grid">
@@ -1142,42 +1277,51 @@ header {
     <div id="timeline-view" class="timeline-view hidden"></div>
     <div id="graph-view" class="graph-view hidden">
       <svg id="graph-svg"></svg>
-      <div class="graph-legend">
-        <div class="graph-legend-title">图例</div>
-        <div class="graph-legend-item">
-          <div class="graph-legend-color" style="background: var(--phase1)"></div>
-          <span>第一阶段：二维基础研究</span>
+      <div class="graph-legend" id="graph-legend">
+        <div class="graph-legend-header">
+          <div class="graph-legend-title">图例</div>
+          <button class="graph-legend-toggle" id="graph-legend-toggle" onclick="toggleGraphLegend(event)" title="收起图例" aria-expanded="true">▾</button>
         </div>
-        <div class="graph-legend-item">
-          <div class="graph-legend-color" style="background: var(--phase2)"></div>
-          <span>第二阶段：二维机构升级</span>
-        </div>
-        <div class="graph-legend-item">
-          <div class="graph-legend-color" style="background: var(--phase3)"></div>
-          <span>第三阶段：三维扩展验证</span>
-        </div>
-        <div class="graph-legend-item">
-          <div class="graph-legend-color" style="background: var(--phase4)"></div>
-          <span>第四阶段：硬件落地</span>
-        </div>
-        <div style="margin: 10px 0; border-top: 1px solid rgba(45, 53, 72, 0.6); padding-top: 8px;">
+        <div class="graph-legend-body">
           <div class="graph-legend-item">
-            <div class="graph-legend-color" style="background: var(--done)"></div>
-            <span>已完成</span>
+            <div class="graph-legend-color" style="background: var(--phase1)"></div>
+            <span>第一阶段：二维基础研究</span>
           </div>
           <div class="graph-legend-item">
-            <div class="graph-legend-color" style="background: var(--next)"></div>
-            <span>进行中</span>
+            <div class="graph-legend-color" style="background: var(--phase2)"></div>
+            <span>第二阶段：二维机构升级</span>
           </div>
           <div class="graph-legend-item">
-            <div class="graph-legend-color" style="background: var(--planned)"></div>
-            <span>计划中</span>
+            <div class="graph-legend-color" style="background: var(--phase3)"></div>
+            <span>第三阶段：三维扩展验证</span>
+          </div>
+          <div class="graph-legend-item">
+            <div class="graph-legend-color" style="background: var(--phase4)"></div>
+            <span>第四阶段：硬件落地</span>
+          </div>
+          <div style="margin: 10px 0; border-top: 1px solid rgba(45, 53, 72, 0.6); padding-top: 8px;">
+            <div class="graph-legend-item">
+              <div class="graph-legend-color" style="background: var(--done)"></div>
+              <span>已完成</span>
+            </div>
+            <div class="graph-legend-item">
+              <div class="graph-legend-color" style="background: var(--next)"></div>
+              <span>进行中</span>
+            </div>
+            <div class="graph-legend-item">
+              <div class="graph-legend-color" style="background: var(--planned)"></div>
+              <span>计划中</span>
+            </div>
           </div>
         </div>
       </div>
-      <div class="graph-controls">
-        <button class="graph-control-btn" onclick="resetGraphView()" title="重置视图">⊙</button>
-        <button class="graph-control-btn" onclick="fitGraphView()" title="适配屏幕">⛶</button>
+      <div class="graph-toolbar" id="graph-toolbar">
+        <button class="graph-toolbar-toggle" id="graph-toolbar-toggle" onclick="toggleGraphToolbar(event)" title="收起路径图工具" aria-expanded="true">⌄</button>
+        <div class="graph-toolbar-body">
+          <button class="graph-control-btn" onclick="resetGraphView()" title="重置视图" aria-label="重置视图">↺</button>
+          <button class="graph-control-btn" onclick="fitGraphView()" title="适配屏幕" aria-label="适配屏幕">⛶</button>
+          <div class="graph-phase-controls" id="graph-phase-controls"></div>
+        </div>
       </div>
     </div>
     <div id="compare-view" class="hidden"></div>
@@ -1198,7 +1342,6 @@ header {
 </div>
 
 <script src="data.js"></script>
-<script src="app.js?v=20260607-launcher"></script>
-
+<script src="app.js?v=20260608-toolbar-icons"></script>
 </body>
 </html>

@@ -27,16 +27,16 @@
       <geom name="torso_mass" type="capsule" fromto="0 0 0.02 0 0 0.3" size="0.04" mass="0.05" material="hip_mat" contype="0" conaffinity="0"/>
       <geom name="hip_axis" type="cylinder" fromto="0 -0.13 0 0 0.13 0" size="0.018" mass="0.05" material="hip_mat" contype="0" conaffinity="0"/>
       <body name="left_thigh" pos="0 -0.055 0">
-        <joint name="left_hip" type="hinge" axis="0 1 0" range="-95 95" limited="true" damping="0.020000" armature="0.004000"/>
-        <geom name="left_upper" type="capsule" fromto="0 0 0 0 0 -0.4896" size="0.026" mass="0.18" material="left_mat" contype="0" conaffinity="0"/>
-        <body name="left_shank" pos="0 0 -0.4896">
-          <joint name="left_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.080000" armature="0.004000" stiffness="0.8" springref="0"/>
+        <joint name="left_hip" type="hinge" axis="0 1 0" range="-95 95" limited="true" damping="0.070000" armature="0.006800"/>
+        <geom name="left_upper" type="capsule" fromto="0 0 0 0 0 -0.48" size="0.026" mass="0.18" material="left_mat" contype="0" conaffinity="0"/>
+        <body name="left_shank" pos="0 0 -0.48">
+          <joint name="left_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.130000" armature="0.006800" stiffness="0.8" springref="0"/>
           <geom name="left_knee_marker" type="sphere" pos="0 0 0" size="0.04" mass="0.03" material="knee_mat" contype="0" conaffinity="0"/>
-          <geom name="left_lower" type="capsule" fromto="0 0 0 0 0 -0.5304" size="0.023" mass="0.16" material="left_mat" contype="0" conaffinity="0"/>
-          <body name="left_foot_body" pos="0 0 -0.5304">
+          <geom name="left_lower" type="capsule" fromto="0 0 0 0 0 -0.52" size="0.023" mass="0.16" material="left_mat" contype="0" conaffinity="0"/>
+          <body name="left_foot_body" pos="0 0 -0.52">
             <joint name="left_ankle" type="hinge" axis="0 1 0" range="-25.0 25.0" limited="true" damping="0.08" stiffness="10.0" springref="0"/>
-            <geom name="left_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.023100000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
-            <geom name="left_heel" type="sphere" pos="-0.06 0 -0.015" size="0.042" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="left_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.022000000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="left_heel" type="sphere" pos="-0.06 0 -0.015" size="0.04" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <geom name="left_toe" type="sphere" pos="0.0576 0 -0.018" size="0.028" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <site name="left_foot_site" pos="0 0 -0.015" size="0.01"/>
             <site name="left_heel_site" pos="-0.06 0 -0.015" size="0.01"/>
@@ -45,16 +45,16 @@
         </body>
       </body>
       <body name="right_thigh" pos="0 0.055 0">
-        <joint name="right_hip" type="hinge" axis="0 1 0" range="-95 95" limited="true" damping="0.020000" armature="0.004000"/>
-        <geom name="right_upper" type="capsule" fromto="0 0 0 0 0 -0.4896" size="0.026" mass="0.18" material="right_mat" contype="0" conaffinity="0"/>
-        <body name="right_shank" pos="0 0 -0.4896">
-          <joint name="right_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.080000" armature="0.004000" stiffness="0.8" springref="0"/>
+        <joint name="right_hip" type="hinge" axis="0 1 0" range="-95 95" limited="true" damping="0.070000" armature="0.006800"/>
+        <geom name="right_upper" type="capsule" fromto="0 0 0 0 0 -0.48" size="0.026" mass="0.18" material="right_mat" contype="0" conaffinity="0"/>
+        <body name="right_shank" pos="0 0 -0.48">
+          <joint name="right_knee" type="hinge" axis="0 1 0" range="0 70.0" limited="true" damping="0.130000" armature="0.006800" stiffness="0.8" springref="0"/>
           <geom name="right_knee_marker" type="sphere" pos="0 0 0" size="0.04" mass="0.03" material="knee_mat" contype="0" conaffinity="0"/>
-          <geom name="right_lower" type="capsule" fromto="0 0 0 0 0 -0.5304" size="0.023" mass="0.16" material="right_mat" contype="0" conaffinity="0"/>
-          <body name="right_foot_body" pos="0 0 -0.5304">
+          <geom name="right_lower" type="capsule" fromto="0 0 0 0 0 -0.52" size="0.023" mass="0.16" material="right_mat" contype="0" conaffinity="0"/>
+          <body name="right_foot_body" pos="0 0 -0.52">
             <joint name="right_ankle" type="hinge" axis="0 1 0" range="-25.0 25.0" limited="true" damping="0.08" stiffness="10.0" springref="0"/>
-            <geom name="right_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.023100000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
-            <geom name="right_heel" type="sphere" pos="-0.06 0 -0.015" size="0.042" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="right_sole" type="capsule" fromto="-0.054 0 -0.015 0.041999999999999996 0 -0.015" size="0.022000000000000002" mass="0.06" material="foot_mat" contype="1" conaffinity="1"/>
+            <geom name="right_heel" type="sphere" pos="-0.06 0 -0.015" size="0.04" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <geom name="right_toe" type="sphere" pos="0.0576 0 -0.018" size="0.028" mass="0.025" material="foot_mat" contype="1" conaffinity="1"/>
             <site name="right_foot_site" pos="0 0 -0.015" size="0.01"/>
             <site name="right_heel_site" pos="-0.06 0 -0.015" size="0.01"/>
@@ -64,11 +64,11 @@
       </body>
       <body name="left_arm" pos="0 -0.13 0.2">
         <joint name="left_arm" type="hinge" axis="0 1 0" range="-70.0 70.0" limited="true" damping="0.02" stiffness="0.0" springref="0"/>
-        <geom name="left_arm_geom" type="capsule" fromto="0 0 0 0 0 -0.4" size="0.022" mass="0.01" material="arm_left_mat" contype="0" conaffinity="0"/>
+        <geom name="left_arm_geom" type="capsule" fromto="0 0 0 0 0 -0.24" size="0.022" mass="0.05" material="arm_left_mat" contype="0" conaffinity="0"/>
       </body>
       <body name="right_arm" pos="0 0.13 0.2">
         <joint name="right_arm" type="hinge" axis="0 1 0" range="-70.0 70.0" limited="true" damping="0.02" stiffness="0.0" springref="0"/>
-        <geom name="right_arm_geom" type="capsule" fromto="0 0 0 0 0 -0.4" size="0.022" mass="0.01" material="arm_right_mat" contype="0" conaffinity="0"/>
+        <geom name="right_arm_geom" type="capsule" fromto="0 0 0 0 0 -0.24" size="0.022" mass="0.05" material="arm_right_mat" contype="0" conaffinity="0"/>
       </body>
     </body>
   </worldbody>

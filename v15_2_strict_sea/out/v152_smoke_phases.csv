@@ -1,0 +1,8 @@
+time,left_phase,right_phase
+0.0,stance_late,swing_retract
+0.17,stance_early,swing_thrust
+0.391,swing_thrust,stance_early
+0.79,swing_retract,stance_late
+0.972,stance_early,swing_thrust
+1.371,stance_late,swing_retract
+1.739,stance_early,swing_retract

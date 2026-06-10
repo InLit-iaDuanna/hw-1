@@ -1,0 +1,11 @@
+# RL Training Dependencies
+# For Residual RL V2 training (PPO on V13.7 baseline)
+
+gymnasium>=0.29.1
+stable-baselines3>=2.3.2
+tensorboard>=2.15.0
+torch>=2.0.0
+
+# Optional: for advanced RL features
+# sb3-contrib>=2.3.0
+# shimmy>=1.3.0

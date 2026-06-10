@@ -1,0 +1,69 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "friction": 1.35,
+    "foot_radius": 0.04,
+    "foot_length": 0.16,
+    "toe_radius": 0.028,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "hip_mass": 7.0,
+    "torso_mass": 0.2,
+    "torso_height": 0.3,
+    "ankle_limit_deg": 25.0,
+    "ankle_damping": 0.08,
+    "ankle_stiffness": 0.55,
+    "knee_limit_deg": 70.0,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "hip_kp": 18.0,
+    "hip_kd": 4.0,
+    "knee_kp": 10.0,
+    "knee_kd": 1.2,
+    "hip_torque_limit": 8.0,
+    "knee_torque_limit": 2.0,
+    "gait_period": 1.2,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "initial_vx": 0.04,
+    "step_length": 0.34,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035,
+    "recovery_clearance": 0.38,
+    "timestep": 0.001,
+    "duration": 8.0
+  },
+  "simulated_time": 4.001,
+  "forward_distance": 0.10698977099001927,
+  "alternating_touchdowns": 2,
+  "contact_events": [
+    {
+      "time": 0.14300000000000002,
+      "foot": "left"
+    },
+    {
+      "time": 0.364,
+      "foot": "right"
+    },
+    {
+      "time": 0.585,
+      "foot": "left"
+    }
+  ],
+  "positive_input_energy": 4.83384484578144,
+  "net_work": 0.8016536411196208,
+  "energy_per_alternation": 2.41692242289072,
+  "failure": "stuck",
+  "num_samples": 501
+}

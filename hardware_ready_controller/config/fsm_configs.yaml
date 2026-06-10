@@ -1,0 +1,351 @@
+# FSM Configuration Presets
+# Hardware-Ready Controller - Finite State Machine Parameter Database
+
+# FSM Version History and Configurations
+fsm_versions:
+  v13_6:
+    version: "13.6"
+    description: "Stable lightweight compliant FSM with refined phase detection"
+    date_created: "2025-11-18"
+    control_frequency: 100  # Hz
+    phases:
+      - "stance"
+      - "pre_swing"
+      - "swing"
+      - "terminal_swing"
+    decision_gates:
+      stance_to_preswing:
+        trigger: "knee_flexion_threshold"
+        threshold: 15  # degrees
+        hysteresis: 3  # degrees
+        min_duration: 0.15  # seconds
+      preswing_to_swing:
+        trigger: "foot_off"
+        threshold: 5  # N (force sensor)
+        hysteresis: 2  # N
+        min_duration: 0.08  # seconds
+      swing_to_terminal:
+        trigger: "knee_extension_velocity"
+        threshold: -50  # deg/s (negative = extending)
+        position_threshold: -10  # degrees (relative to max flexion)
+        min_duration: 0.12  # seconds
+      terminal_to_stance:
+        trigger: "heel_strike"
+        threshold: 20  # N (force sensor)
+        hysteresis: 5  # N
+        min_duration: 0.05  # seconds
+    assistance_profiles:
+      hip:
+        stance: 0.0
+        pre_swing: 0.3
+        swing: 0.5
+        terminal_swing: 0.2
+      knee:
+        stance: 0.1
+        pre_swing: 0.4
+        swing: 0.3
+        terminal_swing: 0.2
+      ankle:
+        stance: 0.2
+        pre_swing: 0.3
+        swing: 0.1
+        terminal_swing: 0.2
+    safety_limits:
+      max_joint_velocity: 180  # deg/s
+      max_torque_rate: 5.0  # N·m/s
+      emergency_stop_deceleration: 10.0  # N·m/s
+    notes: "Validated on 5 subjects (40-75kg). Smooth transitions, low oscillation."
+
+  v13_7:
+    version: "13.7"
+    description: "Enhanced v13.6 with adaptive threshold tuning"
+    date_created: "2025-12-03"
+    control_frequency: 100  # Hz
+    phases:
+      - "stance"
+      - "pre_swing"
+      - "swing"
+      - "terminal_swing"
+    decision_gates:
+      stance_to_preswing:
+        trigger: "knee_flexion_threshold"
+        threshold: 15  # degrees (adaptive: 12-18)
+        hysteresis: 3  # degrees
+        min_duration: 0.15  # seconds
+        adaptive: true
+        adaptation_rate: 0.05  # per cycle
+      preswing_to_swing:
+        trigger: "foot_off"
+        threshold: 5  # N (adaptive: 3-8)
+        hysteresis: 2  # N
+        min_duration: 0.08  # seconds
+        adaptive: true
+        adaptation_rate: 0.08
+      swing_to_terminal:
+        trigger: "knee_extension_velocity"
+        threshold: -50  # deg/s
+        position_threshold: -10  # degrees
+        min_duration: 0.12  # seconds
+        adaptive: false
+      terminal_to_stance:
+        trigger: "heel_strike"
+        threshold: 20  # N (adaptive: 15-30)
+        hysteresis: 5  # N
+        min_duration: 0.05  # seconds
+        adaptive: true
+        adaptation_rate: 0.1
+    assistance_profiles:
+      hip:
+        stance: 0.0
+        pre_swing: 0.35
+        swing: 0.55
+        terminal_swing: 0.25
+      knee:
+        stance: 0.1
+        pre_swing: 0.45
+        swing: 0.35
+        terminal_swing: 0.2
+      ankle:
+        stance: 0.25
+        pre_swing: 0.3
+        swing: 0.1
+        terminal_swing: 0.2
+    adaptation_config:
+      learning_window: 10  # gait cycles
+      outlier_rejection: true
+      outlier_threshold: 2.5  # standard deviations
+    safety_limits:
+      max_joint_velocity: 180  # deg/s
+      max_torque_rate: 5.0  # N·m/s
+      emergency_stop_deceleration: 10.0  # N·m/s
+    notes: "Self-tuning thresholds adapt to user gait pattern over 10 cycles."
+
+  v10_legacy:
+    version: "10.0"
+    description: "Legacy 3-phase FSM (testing baseline)"
+    date_created: "2025-08-22"
+    control_frequency: 50  # Hz
+    phases:
+      - "stance"
+      - "swing"
+      - "transition"
+    decision_gates:
+      stance_to_transition:
+        trigger: "knee_flexion_threshold"
+        threshold: 20  # degrees
+        min_duration: 0.2  # seconds
+      transition_to_swing:
+        trigger: "foot_off"
+        threshold: 8  # N
+        min_duration: 0.1  # seconds
+      swing_to_stance:
+        trigger: "heel_strike"
+        threshold: 25  # N
+        min_duration: 0.08  # seconds
+    assistance_profiles:
+      hip:
+        stance: 0.0
+        transition: 0.5
+        swing: 0.6
+      knee:
+        stance: 0.1
+        transition: 0.5
+        swing: 0.4
+      ankle:
+        stance: 0.3
+        transition: 0.3
+        swing: 0.1
+    safety_limits:
+      max_joint_velocity: 150  # deg/s
+      max_torque_rate: 4.0  # N·m/s
+    notes: "Deprecated. Retained for comparison. Coarser phase resolution."
+
+  v19_experimental:
+    version: "19.0"
+    description: "6-phase high-resolution FSM with mid-stance detection"
+    date_created: "2026-03-15"
+    control_frequency: 200  # Hz
+    phases:
+      - "heel_strike"
+      - "loading_response"
+      - "mid_stance"
+      - "terminal_stance"
+      - "pre_swing"
+      - "swing"
+    decision_gates:
+      heel_strike_to_loading:
+        trigger: "heel_force_stabilized"
+        threshold: 30  # N
+        stabilization_time: 0.03  # seconds
+      loading_to_mid_stance:
+        trigger: "hip_angle_forward"
+        threshold: 5  # degrees (relative to vertical)
+        min_duration: 0.08  # seconds
+      mid_stance_to_terminal:
+        trigger: "ankle_dorsiflexion_peak"
+        threshold: 15  # degrees
+        min_duration: 0.1  # seconds
+      terminal_to_preswing:
+        trigger: "heel_off"
+        threshold: 10  # N
+        min_duration: 0.05  # seconds
+      preswing_to_swing:
+        trigger: "toe_off"
+        threshold: 3  # N
+        min_duration: 0.05  # seconds
+      swing_to_heel_strike:
+        trigger: "heel_strike"
+        threshold: 20  # N
+        min_duration: 0.05  # seconds
+    assistance_profiles:
+      hip:
+        heel_strike: 0.0
+        loading_response: 0.1
+        mid_stance: 0.0
+        terminal_stance: 0.2
+        pre_swing: 0.4
+        swing: 0.5
+      knee:
+        heel_strike: 0.15
+        loading_response: 0.2
+        mid_stance: 0.1
+        terminal_stance: 0.3
+        pre_swing: 0.5
+        swing: 0.3
+      ankle:
+        heel_strike: 0.3
+        loading_response: 0.2
+        mid_stance: 0.3
+        terminal_stance: 0.4
+        pre_swing: 0.2
+        swing: 0.05
+    safety_limits:
+      max_joint_velocity: 200  # deg/s
+      max_torque_rate: 6.0  # N·m/s
+      emergency_stop_deceleration: 12.0  # N·m/s
+    notes: "Under testing. High computational load. Requires force plate array."
+
+# Custom Configuration Templates
+custom_templates:
+  minimal_assistance:
+    description: "Low intervention for mild impairment"
+    base_version: "v13_6"
+    assistance_scale: 0.5  # multiply all assistance values by 0.5
+    notes: "For users with good voluntary control"
+
+  max_assistance:
+    description: "High intervention for severe impairment"
+    base_version: "v13_7"
+    assistance_scale: 1.5  # multiply all assistance values by 1.5
+    safety_limits:
+      max_joint_velocity: 120  # deg/s (reduced for safety)
+      max_torque_rate: 3.5  # N·m/s
+    notes: "Slower, more supportive gait pattern"
+
+  pediatric:
+    description: "Child-scale parameters (20-40kg users)"
+    base_version: "v13_6"
+    decision_gates:
+      stance_to_preswing:
+        threshold: 12  # degrees (smaller joints)
+      terminal_to_stance:
+        threshold: 10  # N (lower body weight)
+    assistance_scale: 0.6
+    safety_limits:
+      max_joint_velocity: 120  # deg/s
+      max_torque_rate: 3.0  # N·m/s
+    notes: "Scaled for pediatric gait rehabilitation"
+
+  treadmill_mode:
+    description: "Optimized for treadmill training"
+    base_version: "v13_7"
+    control_frequency: 150  # Hz (higher for consistent treadmill speed)
+    decision_gates:
+      stance_to_preswing:
+        min_duration: 0.12  # seconds (faster cadence)
+      swing_to_terminal:
+        min_duration: 0.10  # seconds
+    notes: "Faster phase transitions for treadmill cadence"
+
+  overground_mode:
+    description: "Optimized for variable-speed overground walking"
+    base_version: "v13_7"
+    decision_gates:
+      stance_to_preswing:
+        min_duration: 0.20  # seconds (accommodate speed variation)
+      terminal_to_stance:
+        adaptive: true
+        adaptation_rate: 0.15  # faster adaptation to speed changes
+    notes: "More tolerant of speed and terrain variations"
+
+# Sensor Configuration Requirements
+sensor_requirements:
+  v13_6:
+    required:
+      - "knee_encoder"
+      - "foot_force_sensor"
+    optional:
+      - "hip_encoder"
+      - "ankle_encoder"
+      - "imu"
+  v13_7:
+    required:
+      - "knee_encoder"
+      - "foot_force_sensor"
+      - "imu"
+    optional:
+      - "hip_encoder"
+      - "ankle_encoder"
+  v10_legacy:
+    required:
+      - "knee_encoder"
+      - "foot_force_sensor"
+    optional: []
+  v19_experimental:
+    required:
+      - "hip_encoder"
+      - "knee_encoder"
+      - "ankle_encoder"
+      - "force_plate_array"
+      - "imu"
+    optional:
+      - "emg_sensors"
+
+# Tuning Guidelines
+tuning_guidelines:
+  threshold_adjustment:
+    description: "How to adjust decision gate thresholds"
+    too_early_transition: "Increase threshold or min_duration"
+    too_late_transition: "Decrease threshold or min_duration"
+    oscillating_transitions: "Increase hysteresis or min_duration"
+    notes: "Make small changes (±10%) and test over 5+ gait cycles"
+
+  assistance_tuning:
+    description: "How to adjust assistance profiles"
+    insufficient_support: "Increase assistance_scale or phase-specific values"
+    over_assistance: "Decrease assistance_scale; check for user dependency"
+    unnatural_movement: "Review phase timing; reduce assistance during voluntary phases"
+    notes: "Balance support vs. user effort to promote neuroplasticity"
+
+  frequency_selection:
+    50: "Legacy systems, low computational power"
+    100: "Standard for most applications (v13.x)"
+    150: "Treadmill mode, high-frequency sensors"
+    200: "High-resolution FSM (v19), research-grade hardware"
+    notes: "Higher frequency requires faster sensors and processing"
+
+# Validation Metrics
+validation_metrics:
+  phase_detection_accuracy:
+    target: "> 95%"
+    method: "Compare FSM output to video-labeled ground truth"
+  transition_smoothness:
+    target: "< 0.5 N·m torque discontinuity"
+    method: "Measure torque derivative at phase boundaries"
+  user_comfort:
+    target: "> 7/10 subjective rating"
+    method: "Post-session questionnaire"
+  metabolic_cost:
+    target: "< 90% of unassisted walking"
+    method: "Indirect calorimetry (VO2)"
+  notes: "All configurations should meet these targets before clinical deployment"

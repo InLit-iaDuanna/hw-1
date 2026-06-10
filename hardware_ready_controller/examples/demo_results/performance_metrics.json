@@ -1,0 +1,17 @@
+{
+  "avg_velocity_m_s": -0.002848226822857117,
+  "total_distance_m": 0.5420713946844348,
+  "total_steps": 0,
+  "step_frequency_hz": 0.0,
+  "avg_mechanical_energy_j": -0.5421929424681947,
+  "rms_torque_nm": 2.463343420652411,
+  "peak_torque_nm": 4.0,
+  "saturation_events": {
+    "left_hip": 12001,
+    "left_knee": 854,
+    "right_hip": 12001,
+    "right_knee": 581
+  },
+  "phase_transitions": 3,
+  "simulation_duration_s": 11.999999999998789
+}

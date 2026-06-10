@@ -1,0 +1,69 @@
+{
+  "name": "Controller Comparison",
+  "results": [
+    {
+      "name": "Passive (No Control)",
+      "metrics": {
+        "forward_distance": 0.22658045264484156,
+        "cot": 32.08730331561392,
+        "total_energy": 356.6109475462725,
+        "touchdowns": 11.0,
+        "alternations": 5.0,
+        "success_rate": 0.0
+      },
+      "metadata": {
+        "controller_type": "passive",
+        "duration": 8.0,
+        "failure_reason": "none"
+      }
+    },
+    {
+      "name": "PD Control (kp=50, kd=10)",
+      "metrics": {
+        "forward_distance": 0.18407029003020334,
+        "cot": 49.10579113053683,
+        "total_energy": 443.35888942324266,
+        "touchdowns": 25.0,
+        "alternations": 1.0,
+        "success_rate": 0.0
+      },
+      "metadata": {
+        "controller_type": "pd",
+        "duration": 8.0,
+        "failure_reason": "none"
+      }
+    },
+    {
+      "name": "FSM v13.6 (Event-Driven)",
+      "metrics": {
+        "forward_distance": -1.2980064934028606,
+        "cot": Infinity,
+        "total_energy": 62.07593986568586,
+        "touchdowns": 93.0,
+        "alternations": 75.0,
+        "success_rate": 0.0
+      },
+      "metadata": {
+        "controller_type": "v136",
+        "duration": 8.0,
+        "failure_reason": "backward"
+      }
+    },
+    {
+      "name": "FSM v13.7 (Motor + Friction)",
+      "metrics": {
+        "forward_distance": 1.2982240889125378,
+        "cot": 0.7722236983007283,
+        "total_energy": 49.1735769213517,
+        "touchdowns": 134.0,
+        "alternations": 95.0,
+        "success_rate": 0.0
+      },
+      "metadata": {
+        "controller_type": "v137",
+        "duration": 8.0,
+        "failure_reason": "fall"
+      }
+    }
+  ]
+}

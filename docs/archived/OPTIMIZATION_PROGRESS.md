@@ -36,7 +36,7 @@
 - [ ] **Dashboard 优化**（Agent: a5175648ec1a00dbf）
 - [ ] **MuJoCo 动画补完**（Agent: adb885d88e5c225bb）
 - [ ] **论文图表生成**（Agent: a43442aed1e113e2e）
-- [ ] **Remotion 动画优化**（Agent: abb3dbc0e386343e0）
+- [ ] **旧动画工程 动画优化**（Agent: abb3dbc0e386343e0）
 
 ### 测试和质量
 - [ ] **测试套件改进**（Agent: a9046898cc4106de9）

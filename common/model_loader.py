@@ -62,6 +62,7 @@ def load_model_from_xml(xml_string: str, *, validate: bool = True) -> mujoco.MjM
     if not xml_string or not xml_string.strip():
         raise ValueError("XML 字符串为空")
 
+    tmp_path = None
     try:
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".xml", delete=False, encoding="utf-8"
@@ -70,7 +71,6 @@ def load_model_from_xml(xml_string: str, *, validate: bool = True) -> mujoco.MjM
             tmp_path = tmp.name
 
         model = mujoco.MjModel.from_xml_path(tmp_path)
-        Path(tmp_path).unlink(missing_ok=True)
 
         if validate:
             _basic_validation(model)
@@ -78,6 +78,10 @@ def load_model_from_xml(xml_string: str, *, validate: bool = True) -> mujoco.MjM
         return model
     except Exception as e:
         raise ValueError(f"MuJoCo 模型加载失败: {e}") from e
+    finally:
+        # 确保临时文件被清理，即使在异常情况下
+        if tmp_path is not None:
+            Path(tmp_path).unlink(missing_ok=True)
 
 
 def load_model_from_file(path: str | Path, *, validate: bool = True) -> mujoco.MjModel:

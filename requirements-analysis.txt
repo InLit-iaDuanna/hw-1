@@ -1,0 +1,5 @@
+-r requirements-viz.txt
+
+# Data analysis and configuration files.
+pandas>=2.0.0
+pyyaml>=6.0

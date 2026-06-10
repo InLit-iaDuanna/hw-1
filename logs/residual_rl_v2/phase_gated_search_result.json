@@ -1,0 +1,48 @@
+{
+  "best_params": [
+    -0.019634110610061796,
+    -0.04027091425356466,
+    0.00790227375108632,
+    0.001356030519140683,
+    -0.009167295413581744,
+    -0.051073531943558216,
+    0.020863649654357053,
+    0.0178902218941124
+  ],
+  "best_distance": 0.16721982231464722,
+  "std_distance": 2.7755575615628914e-17,
+  "failure_rate": 1.0,
+  "energy_cost": 6.218524437097101e-07,
+  "phase_params": {
+    "left_stance_early": -0.019634110610061796,
+    "left_stance_late": -0.04027091425356466,
+    "left_swing_thrust": 0.00790227375108632,
+    "left_swing_retract": 0.001356030519140683,
+    "right_stance_early": -0.009167295413581744,
+    "right_stance_late": -0.051073531943558216,
+    "right_swing_thrust": 0.020863649654357053,
+    "right_swing_retract": 0.0178902218941124
+  },
+  "comparison": {
+    "constant_best": 4.973,
+    "rl_100k": 4.779,
+    "phase_gated_8d": 0.16721982231464722,
+    "improvement_vs_constant": -4.805780177685353,
+    "improvement_vs_rl": -4.611780177685353
+  },
+  "cma_es_config": {
+    "initial_guess": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5
+    ],
+    "sigma": 0.2,
+    "iterations": 30,
+    "popsize": 12
+  }
+}

@@ -56,7 +56,7 @@ def floquet_multipliers(
     fixed_point: 若为 None，取后 max(2, tail_frac*N) 个点的均值。
     skip_head: 跳过前若干个点（暂态）。
     返回 dict: jacobian (d,d), eigvals (d,), fixed_point (d,), n_pairs。
-    样本不足（<d+1 对）时 jacobian 用 lstsq 仍可解，但谱可能不可靠；调用方应自查 n_pairs。
+    样本不足（n_pairs < d）时返回 NaN（欠定系统无法可靠估计谱）；调用方应检查 n_pairs >= d。
     """
     pts = np.asarray(section_pts, dtype=float)
     if skip_head > 0:
@@ -75,6 +75,17 @@ def floquet_multipliers(
     fp = np.asarray(fixed_point, dtype=float)
     X = pts[:-1] - fp  # shape (n-1, d)，输入扰动
     Y = pts[1:] - fp  # shape (n-1, d)，下一周期扰动
+    n_pairs = int(X.shape[0])
+
+    # 检查欠定条件：需要至少 d 对数据点才能可靠估计 d×d Jacobian
+    if n_pairs < d:
+        return {
+            "jacobian": np.full((d, d), np.nan),
+            "eigvals": np.full(d, np.nan + 0j),
+            "fixed_point": fp,
+            "n_pairs": n_pairs,
+        }
+
     # 解 Y ≈ X @ J^T  =>  J^T = lstsq(X, Y)
     Jt, *_ = np.linalg.lstsq(X, Y, rcond=None)
     J = Jt.T
@@ -83,5 +94,5 @@ def floquet_multipliers(
         "jacobian": J,
         "eigvals": eigvals,
         "fixed_point": fp,
-        "n_pairs": int(X.shape[0]),
+        "n_pairs": n_pairs,
     }

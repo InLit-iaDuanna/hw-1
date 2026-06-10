@@ -1,12 +1,12 @@
 {
   "version": "hw-1-v1.0",
-  "timestamp": "2026-06-04T12:11:19.240241",
+  "timestamp": "2026-06-08T20:44:51.672916",
   "success": false,
   "simulated_time": 0.834,
   "stop_reason": "hip_too_low",
-  "forward_distance": -0.2685173147880546,
-  "final_height": -0.5994765859841834,
-  "average_velocity": -0.32720614388186764,
+  "forward_distance": -0.26851731478805435,
+  "final_height": -0.5994765859841836,
+  "average_velocity": -0.32720614388186736,
   "model_info": {
     "n_joints": 5,
     "n_actuators": 2,

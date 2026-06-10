@@ -1,0 +1,137 @@
+{
+  "timestamp": "2026-06-09T01:53:04",
+  "diagnosis": "PASS",
+  "timesteps": 100000,
+  "residual_scale": 0.2,
+  "prior_action": [
+    0.5,
+    1.0
+  ],
+  "delta_scale": 0.02,
+  "horizon_s": 12.0,
+  "baseline": {
+    "timestep": 0,
+    "mean_distance_m": 4.630275873159179,
+    "std_distance_m": 0.0,
+    "mean_reward": 0.04138100231180886,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179,
+      4.630275873159179
+    ]
+  },
+  "prior_eval": {
+    "timestep": 0,
+    "mean_distance_m": 4.972582593471345,
+    "std_distance_m": 0.0,
+    "mean_reward": 48.951305795586755,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345,
+      4.972582593471345
+    ]
+  },
+  "pass_threshold_m": 4.830275873159179,
+  "final_eval": {
+    "timestep": 100000,
+    "mean_distance_m": 4.898270549326509,
+    "std_distance_m": 0.0,
+    "mean_reward": 37.80020578834284,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.898270549326509,
+      4.898270549326509,
+      4.898270549326509,
+      4.898270549326509,
+      4.898270549326509
+    ]
+  },
+  "eval_history": [
+    {
+      "timestep": 25000,
+      "mean_distance_m": 4.812656347005547,
+      "std_distance_m": 0.0,
+      "mean_reward": 24.96092306350787,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.812656347005547,
+        4.812656347005547,
+        4.812656347005547,
+        4.812656347005547,
+        4.812656347005547
+      ]
+    },
+    {
+      "timestep": 50000,
+      "mean_distance_m": 4.768763687975691,
+      "std_distance_m": 0.0,
+      "mean_reward": 18.374053066411086,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691,
+        4.768763687975691
+      ]
+    },
+    {
+      "timestep": 75000,
+      "mean_distance_m": 4.8309018787212725,
+      "std_distance_m": 0.0,
+      "mean_reward": 27.69552461020556,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.8309018787212725,
+        4.8309018787212725,
+        4.8309018787212725,
+        4.8309018787212725,
+        4.8309018787212725
+      ]
+    },
+    {
+      "timestep": 100000,
+      "mean_distance_m": 4.897796286585067,
+      "std_distance_m": 0.0,
+      "mean_reward": 37.72886551539895,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067,
+        4.897796286585067
+      ]
+    },
+    {
+      "timestep": 100000,
+      "mean_distance_m": 4.898270549326509,
+      "std_distance_m": 0.0,
+      "mean_reward": 37.80020578834284,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.898270549326509,
+        4.898270549326509,
+        4.898270549326509,
+        4.898270549326509,
+        4.898270549326509
+      ]
+    }
+  ],
+  "model_dir": "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_sanity",
+  "tensorboard_dir": "D:\\Dunna\\Documents\\hw-1\\logs\\residual_rl_v2\\tensorboard"
+}

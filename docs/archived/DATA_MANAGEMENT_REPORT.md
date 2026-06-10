@@ -163,7 +163,7 @@ out/model_cache/pendulum_*.xml (333 bytes each)
 **类别**:
 1. **仿真数据 CSV** (`*_data.csv`): 可通过 `simulate_v*.py` 重新生成
 2. **参数扫描结果** (`*_scan_*.csv`): 可通过扫描脚本复现
-3. **视频文件** (`*.mp4`): 可通过 `render_v*.py` 或 Remotion 重新渲染
+3. **视频文件** (`*.mp4`): 可通过 `render_v*.py` 或 旧动画工程 重新渲染
 4. **临时分析输出** (`trial_*.csv`): 测试和演示文件
 
 **复现步骤**:

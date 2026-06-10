@@ -1,0 +1,24 @@
+{
+  "success": false,
+  "lateral_stable": false,
+  "forward_distance": 0.1668141228092544,
+  "simulated_time": 1.495,
+  "alternating_touchdowns": 3,
+  "failure": "lateral_drift",
+  "max_abs_roll_deg": 13.040833848866317,
+  "max_abs_hip_y_m": 0.5001204302266417,
+  "max_abs_abd_deg": 15.263773685333973,
+  "scenario": {
+    "init_hip_roll_deg": 0.0,
+    "lateral_impulse_n": 0.0,
+    "impulse_t_s": 2.0,
+    "impulse_duration_s": 0.05,
+    "random_wind_std_n": 0.0,
+    "wind_seed": 0
+  },
+  "params": {
+    "abd_kp": 40.0,
+    "abd_kd": 4.0,
+    "init_hip_roll_deg": 0.0
+  }
+}

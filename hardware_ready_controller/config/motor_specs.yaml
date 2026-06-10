@@ -1,0 +1,182 @@
+# Motor Specifications Database
+# Hardware-Ready Controller - Motor Parameter Reference
+
+motors:
+  MX-64AR:
+    manufacturer: "Dynamixel"
+    model: "MX-64AR"
+    type: "servo"
+    rated_voltage: 12.0  # V
+    stall_torque: 6.0    # N·m @ 12V
+    no_load_speed: 63    # RPM @ 12V
+    weight: 0.135        # kg
+    gear_ratio: 200
+    resolution: 4096     # pulse/rev
+    operating_angle: 360 # degrees (multi-turn capable)
+    protocol: "Dynamixel Protocol 2.0"
+    communication: "TTL/RS485"
+    notes: "High torque servo for hip/knee joints"
+
+  MX-28AR:
+    manufacturer: "Dynamixel"
+    model: "MX-28AR"
+    type: "servo"
+    rated_voltage: 12.0  # V
+    stall_torque: 2.5    # N·m @ 12V
+    no_load_speed: 55    # RPM @ 12V
+    weight: 0.072        # kg
+    gear_ratio: 193
+    resolution: 4096     # pulse/rev
+    operating_angle: 360 # degrees
+    protocol: "Dynamixel Protocol 2.0"
+    communication: "TTL/RS485"
+    notes: "Lighter servo for ankle joint"
+
+  EC-i40:
+    manufacturer: "Maxon"
+    model: "EC-i40"
+    type: "brushless_dc"
+    rated_voltage: 24.0  # V
+    rated_torque: 0.134  # N·m
+    rated_speed: 15200   # RPM
+    stall_torque: 1.09   # N·m
+    no_load_speed: 18500 # RPM
+    weight: 0.150        # kg
+    rotor_inertia: 27.5  # gcm²
+    thermal_resistance: 2.47  # K/W
+    thermal_time_constant: 18.3  # s
+    mechanical_time_constant: 4.68  # ms
+    torque_constant: 24.4  # mN·m/A
+    speed_constant: 392    # RPM/V
+    efficiency_max: 90     # %
+    notes: "High-performance BLDC for precise control with encoder feedback"
+
+  EC-45-flat:
+    manufacturer: "Maxon"
+    model: "EC-45-flat"
+    type: "brushless_dc"
+    rated_voltage: 24.0  # V
+    rated_torque: 0.236  # N·m
+    rated_speed: 3960    # RPM
+    stall_torque: 1.48   # N·m
+    no_load_speed: 4690  # RPM
+    weight: 0.240        # kg
+    rotor_inertia: 98    # gcm²
+    torque_constant: 46.7  # mN·m/A
+    speed_constant: 204    # RPM/V
+    efficiency_max: 92     # %
+    notes: "Flat design for compact integration"
+
+  RE40:
+    manufacturer: "Maxon"
+    model: "RE40"
+    type: "brushed_dc"
+    rated_voltage: 24.0  # V
+    rated_torque: 0.170  # N·m
+    rated_speed: 7200    # RPM
+    stall_torque: 1.64   # N·m
+    no_load_speed: 8530  # RPM
+    weight: 0.270        # kg
+    rotor_inertia: 126   # gcm²
+    torque_constant: 48.8  # mN·m/A
+    speed_constant: 196    # RPM/V
+    notes: "Classic brushed motor, robust and cost-effective"
+
+# Motor Controller Specifications
+controllers:
+  EPOS4_Compact_24_5:
+    manufacturer: "Maxon"
+    model: "EPOS4 Compact 24/5"
+    type: "digital_servo_controller"
+    supply_voltage_range: [10, 28]  # V DC
+    continuous_output_current: 5.0   # A
+    peak_output_current: 10.0        # A (< 1s)
+    control_modes: ["Profile Position Mode", "Profile Velocity Mode", "Homing Mode", "Cyclic Synchronous Position Mode", "Cyclic Synchronous Velocity Mode", "Cyclic Synchronous Torque Mode"]
+    communication: ["CANopen", "USB", "RS232"]
+    encoder_interface: ["Digital Incremental", "SSI", "Hall Sensors"]
+    notes: "Recommended for EC-i40, EC-45-flat pairing"
+
+  U2D2:
+    manufacturer: "Robotis"
+    model: "U2D2"
+    type: "usb_interface"
+    protocol: "Dynamixel Protocol 2.0"
+    communication: "USB to TTL/RS485"
+    baudrate_max: 10500000  # bps
+    notes: "PC interface for MX-series servos"
+
+# Gearbox/Transmission Options
+transmissions:
+  GP42C_30:
+    manufacturer: "Maxon"
+    model: "GP42C"
+    gear_ratio: 30
+    efficiency: 70  # %
+    max_continuous_torque: 4.0  # N·m
+    notes: "Planetary gearhead for EC-i40"
+
+  GP52C_50:
+    manufacturer: "Maxon"
+    model: "GP52C"
+    gear_ratio: 50
+    efficiency: 72  # %
+    max_continuous_torque: 12.0  # N·m
+    notes: "Higher torque option for knee joint"
+
+# Sensor Specifications
+sensors:
+  ENX16_EASY:
+    manufacturer: "Maxon"
+    model: "ENX 16 EASY"
+    type: "encoder"
+    resolution: 512  # counts per turn
+    max_frequency: 500  # kHz
+    supply_voltage: 5.0  # V
+    interface: "Digital incremental (A, B, I)"
+    notes: "Encoder for EC-i40/EC-45-flat feedback"
+
+  FSR402:
+    manufacturer: "Interlink Electronics"
+    model: "FSR 402"
+    type: "force_sensor"
+    sensing_area: "18.28mm diameter"
+    resistance_range: [200, 100000]  # Ohm (force dependent)
+    force_range: [0.1, 100]  # N
+    notes: "Foot contact force sensing"
+
+  MPU6050:
+    manufacturer: "InvenSense"
+    model: "MPU-6050"
+    type: "imu"
+    gyroscope_range: [250, 500, 1000, 2000]  # °/s
+    accelerometer_range: [2, 4, 8, 16]  # g
+    communication: "I2C"
+    supply_voltage: 3.3  # V
+    notes: "6-axis IMU for orientation tracking"
+
+# Application Recommendations
+application_profiles:
+  gait_training_lightweight:
+    target_user_weight: [40, 70]  # kg
+    hip_motor: "MX-64AR"
+    knee_motor: "MX-64AR"
+    ankle_motor: "MX-28AR"
+    control_frequency: 100  # Hz
+    notes: "Lightweight compliant FSM setup (V01-V19 compatible)"
+
+  gait_training_high_torque:
+    target_user_weight: [70, 100]  # kg
+    hip_motor: "EC-45-flat"
+    hip_gearbox: "GP52C_50"
+    knee_motor: "EC-i40"
+    knee_gearbox: "GP42C_30"
+    ankle_motor: "MX-28AR"
+    control_frequency: 200  # Hz
+    controller: "EPOS4_Compact_24_5"
+    notes: "High-performance setup for heavy users"
+
+  prototype_budget:
+    hip_motor: "RE40"
+    knee_motor: "RE40"
+    ankle_motor: "MX-28AR"
+    notes: "Cost-effective brushed motor setup for initial testing"

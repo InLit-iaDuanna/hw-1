@@ -1,0 +1,154 @@
+{
+  "metadata": {
+    "version": "V13",
+    "slice": "C_foot_leg",
+    "description": "Parameter sensitivity atlas: foot radius vs leg scale at flat terrain (slope=0)",
+    "date_generated": "2026-05-26",
+    "data_source": "v13_C_foot_leg.csv (36 grid points from 6x6 scan)",
+    "note": "Based on documented claims in VERSIONS.md line 17, 20. Data extracted from existing CSV file."
+  },
+  "scan_parameters": {
+    "x_axis": {
+      "parameter": "foot_radius",
+      "min_m": 0.03,
+      "max_m": 0.05,
+      "num_points": 6,
+      "description": "Foot curvature radius (smaller = more curved)"
+    },
+    "y_axis": {
+      "parameter": "leg_scale",
+      "min": 0.9,
+      "max": 1.1,
+      "num_points": 6,
+      "description": "Leg length scaling factor (thigh + shank proportional scaling)"
+    },
+    "fixed_parameters": {
+      "slope_deg": 0.0,
+      "hip_kp": 30.0,
+      "hip_kd": 6.0,
+      "knee_kp": 16.0,
+      "knee_kd": 2.0,
+      "hip_torque_limit": 4.0,
+      "knee_torque_limit": 4.0
+    },
+    "duration_s": 12.0,
+    "grid_size": 36,
+    "success_criteria": {
+      "min_alternating_touchdowns": 10,
+      "min_forward_distance_m": 0.8,
+      "min_simulated_time_s": 10.0,
+      "failure_modes_excluded": ["fall_down", "stuck", "penetration", "nan"]
+    }
+  },
+  "results": {
+    "summary": {
+      "total_points": 36,
+      "success_count": 6,
+      "failure_count": 30,
+      "success_rate": 0.1667,
+      "success_rate_percent": "16.7%"
+    },
+    "success_cells": [
+      {
+        "ix": 1,
+        "iy": 0,
+        "foot_radius_m": 0.034,
+        "leg_scale": 0.9,
+        "alternating_touchdowns": 14,
+        "forward_distance_m": 3.902,
+        "cot": 0.0728,
+        "failure": "completed"
+      },
+      {
+        "ix": 2,
+        "iy": 0,
+        "foot_radius_m": 0.038,
+        "leg_scale": 0.9,
+        "alternating_touchdowns": 13,
+        "forward_distance_m": 4.421,
+        "cot": 0.0724,
+        "failure": "completed"
+      },
+      {
+        "ix": 2,
+        "iy": 1,
+        "foot_radius_m": 0.038,
+        "leg_scale": 0.94,
+        "alternating_touchdowns": 12,
+        "forward_distance_m": 4.207,
+        "cot": 0.0708,
+        "failure": "completed"
+      },
+      {
+        "ix": 2,
+        "iy": 2,
+        "foot_radius_m": 0.038,
+        "leg_scale": 0.98,
+        "alternating_touchdowns": 13,
+        "forward_distance_m": 4.058,
+        "cot": 0.0768,
+        "failure": "completed"
+      },
+      {
+        "ix": 4,
+        "iy": 4,
+        "foot_radius_m": 0.046,
+        "leg_scale": 1.06,
+        "alternating_touchdowns": 12,
+        "forward_distance_m": 5.736,
+        "cot": 0.0651,
+        "failure": "completed"
+      },
+      {
+        "ix": 4,
+        "iy": 5,
+        "foot_radius_m": 0.046,
+        "leg_scale": 1.1,
+        "alternating_touchdowns": 11,
+        "forward_distance_m": 5.527,
+        "cot": 0.0669,
+        "failure": "completed"
+      }
+    ],
+    "failure_breakdown": {
+      "stuck": 13,
+      "fall_down": 17,
+      "total_failures": 30
+    },
+    "performance_statistics": {
+      "success_only": {
+        "mean_forward_distance_m": 4.642,
+        "mean_cot": 0.0708,
+        "mean_alternating_touchdowns": 12.5,
+        "min_forward_distance_m": 3.902,
+        "max_forward_distance_m": 5.736
+      }
+    }
+  },
+  "key_findings": {
+    "1_narrow_success_basin": "Only 16.7% (6/36) of parameter space yields stable gait",
+    "2_geometric_sensitivity": "Success concentrated in mid-range foot_radius (0.034-0.046m) with varied leg_scale",
+    "3_failure_modes": "Stuck (36%) and fall_down (47%) dominate failure modes",
+    "4_best_performance": "Highest forward distance at (foot=0.046m, leg=1.06) with 5.736m traveled",
+    "5_controller_fragility": "V10 PD controller shows high sensitivity to geometric parameters"
+  },
+  "comparison_to_baseline": {
+    "baseline_parameters": {
+      "foot_radius_m": 0.038,
+      "leg_scale": 1.0,
+      "note": "Baseline not in grid but close to successful region at (0.038, 0.98)"
+    },
+    "interpretation": "Success region clusters around baseline values but tolerance is narrow"
+  },
+  "decision_gate_context": {
+    "roadmap_reference": "V13 decision gate",
+    "verdict": "Low success rate (16.7%) indicates V10 controller operates near isolated stability point, not robust basin",
+    "implication": "Hardware manufacturing tolerances may be too tight - controller redesign needed (V13.5/V13.6)",
+    "next_steps": "V13.6 event-driven FSM or V15 compliant actuation to widen success basin"
+  },
+  "reporting_guidance": {
+    "academic_integrity": "Report as 'parameter sensitivity analysis reveals narrow stability region (16.7% success)'",
+    "classification": "Quasi-passive gait (active hip/knee stabilization, NOT pure passive)",
+    "honest_representation": "This demonstrates controller fragility, not robustness - report failure rate honestly"
+  }
+}

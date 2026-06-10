@@ -1,0 +1,10 @@
+# V16: Refactored Codebase
+# Full simulation and rendering dependencies
+
+mujoco>=3.3.7
+numpy>=2.0.0
+matplotlib>=3.7.0
+scipy>=1.11.0
+imageio>=2.31.0
+imageio-ffmpeg>=0.4.9
+pillow>=10.0.0

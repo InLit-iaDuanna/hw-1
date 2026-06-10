@@ -1,0 +1,7 @@
+-r requirements-core.txt
+
+# Plotting and offline media generation.
+matplotlib>=3.8.0
+pillow>=10.0.0
+plotly>=5.17.0
+seaborn>=0.12.0

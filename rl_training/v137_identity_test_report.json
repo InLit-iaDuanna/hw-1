@@ -1,0 +1,91 @@
+{
+  "diagnosis": "PASS",
+  "num_episodes": 1,
+  "baseline": {
+    "forward_distance": 4.63,
+    "simulated_time": 11.99,
+    "alternating_touchdowns": 10
+  },
+  "statistics": {
+    "avg_distance": 4.630269442595289,
+    "std_distance": 0.0,
+    "max_distance": 4.630269442595289,
+    "min_distance": 4.630269442595289,
+    "avg_time": 11.999,
+    "avg_touchdowns": 10.0,
+    "success_rate": 1.0,
+    "baseline_match_rate": 1.0
+  },
+  "episodes": [
+    {
+      "episode_id": 0,
+      "forward_distance": 4.630269442595289,
+      "simulated_time": 11.999,
+      "alternating_touchdowns": 10,
+      "success": true,
+      "failure_reason": "completed",
+      "final_hip_x": 4.797424139305331,
+      "final_hip_z": 1.0677836481791823,
+      "final_hip_vx": 0.6006530694254089,
+      "contact_events": [
+        {
+          "time": 0.138,
+          "foot": "left",
+          "E": 52.150453243709435
+        },
+        {
+          "time": 0.359,
+          "foot": "right",
+          "E": 51.635983532483706
+        },
+        {
+          "time": 0.795,
+          "foot": "left",
+          "E": 51.966425931980034
+        },
+        {
+          "time": 1.314,
+          "foot": "right",
+          "E": 52.56967995612928
+        },
+        {
+          "time": 3.244,
+          "foot": "left",
+          "E": 53.826920611458256
+        },
+        {
+          "time": 4.612,
+          "foot": "right",
+          "E": 53.95502007667835
+        },
+        {
+          "time": 5.905,
+          "foot": "left",
+          "E": 53.985359906782016
+        },
+        {
+          "time": 7.181,
+          "foot": "right",
+          "E": 53.99214100689012
+        },
+        {
+          "time": 8.451,
+          "foot": "left",
+          "E": 53.97698447672552
+        },
+        {
+          "time": 9.72,
+          "foot": "right",
+          "E": 53.996888197420226
+        },
+        {
+          "time": 10.987,
+          "foot": "left",
+          "E": 53.99971067591545
+        }
+      ],
+      "matches_baseline": true,
+      "deviation_from_baseline_m": 0.00026944259528871584
+    }
+  ]
+}

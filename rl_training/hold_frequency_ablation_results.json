@@ -1,0 +1,57 @@
+[
+  {
+    "hold_ms": 1,
+    "freq_hz": 1000,
+    "avg_forward_distance": 1.0598836373733334,
+    "std_forward_distance": 0.02397317005571266,
+    "min_forward_distance": 1.0378123187533896,
+    "max_forward_distance": 1.1289742985745554,
+    "success_rate": 0.0,
+    "alternating_rate": 1.0,
+    "avg_touchdowns": 679.6
+  },
+  {
+    "hold_ms": 2,
+    "freq_hz": 500,
+    "avg_forward_distance": 1.083428189765675,
+    "std_forward_distance": 0.028922500393200126,
+    "min_forward_distance": 1.0297849070866238,
+    "max_forward_distance": 1.128889739739515,
+    "success_rate": 0.0,
+    "alternating_rate": 1.0,
+    "avg_touchdowns": 802.8
+  },
+  {
+    "hold_ms": 5,
+    "freq_hz": 200,
+    "avg_forward_distance": 1.0526657054481108,
+    "std_forward_distance": 0.011687943778855889,
+    "min_forward_distance": 1.0355696317423597,
+    "max_forward_distance": 1.0846022883646733,
+    "success_rate": 0.0,
+    "alternating_rate": 1.0,
+    "avg_touchdowns": 663.7
+  },
+  {
+    "hold_ms": 10,
+    "freq_hz": 100,
+    "avg_forward_distance": 1.1423046778292258,
+    "std_forward_distance": 0.04829266466723664,
+    "min_forward_distance": 1.0871602691554691,
+    "max_forward_distance": 1.2146430981259517,
+    "success_rate": 0.0,
+    "alternating_rate": 1.0,
+    "avg_touchdowns": 813.5
+  },
+  {
+    "hold_ms": 20,
+    "freq_hz": 50,
+    "avg_forward_distance": 0.1767028587263339,
+    "std_forward_distance": 1.0850710939575368,
+    "min_forward_distance": -1.222734048498285,
+    "max_forward_distance": 1.1256377460671336,
+    "success_rate": 0.0,
+    "alternating_rate": 1.0,
+    "avg_touchdowns": 1384.1
+  }
+]

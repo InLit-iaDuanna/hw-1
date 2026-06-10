@@ -1,0 +1,103 @@
+{
+  "params": {
+    "slope_deg": 0.0,
+    "foot_radius": 0.04,
+    "foot_length": 0.12,
+    "toe_radius": 0.028,
+    "ankle_limit_deg": 25.0,
+    "ankle_damping": 0.08,
+    "ankle_stiffness": 10.0,
+    "friction": 1.35,
+    "hip_mass": 5.0,
+    "torso_mass": 0.05,
+    "torso_height": 0.3,
+    "initial_vx": 0.03,
+    "knee_limit_deg": 70.0,
+    "duration": 12.0,
+    "timestep": 0.001,
+    "thigh_length": 0.48,
+    "shank_length": 0.52,
+    "step_length": 0.34,
+    "knee_damping": 0.08,
+    "knee_stiffness": 0.8,
+    "hip_joint_damping": 0.02,
+    "joint_damping": 0.01,
+    "release_phase": 0.08,
+    "swing_foot_x": 0.38,
+    "swing_foot_clearance": 0.12,
+    "swing_hip_vel": 0.1,
+    "swing_knee_vel": -0.04,
+    "hip_torque_limit": 4.0,
+    "knee_torque_limit": 4.0,
+    "hip_kp": 30.0,
+    "hip_kd": 6.0,
+    "knee_kp": 16.0,
+    "knee_kd": 2.0,
+    "gait_period": 0.8,
+    "swing_back_deg": 20.0,
+    "swing_front_deg": -22.0,
+    "stance_front_deg": -14.0,
+    "stance_back_deg": 22.0,
+    "swing_knee_flex_deg": 28.0,
+    "stance_knee_deg": 2.0,
+    "recovery_clearance": 0.38,
+    "min_event_interval": 0.22,
+    "stable_contact_time": 0.035,
+    "arm_length": 0.4,
+    "arm_mass": 0.3,
+    "arm_shoulder_z": 0.2,
+    "arm_lateral": 0.13,
+    "arm_limit_deg": 70.0,
+    "arm_damping": 0.02,
+    "arm_stiffness": 0.0,
+    "arm_radius": 0.022,
+    "arm_init_deg": 0.0
+  },
+  "score": 416.87306821421373,
+  "success": false,
+  "success_criteria": {
+    "simulated_time_s": 10.0,
+    "alternating_touchdowns": 10,
+    "forward_distance_m": 0.8,
+    "must_complete_without_failure": true
+  },
+  "alternating_touchdowns": 2,
+  "contact_events": [
+    {
+      "time": 0.147,
+      "foot": "left"
+    },
+    {
+      "time": 0.368,
+      "foot": "right"
+    },
+    {
+      "time": 0.842,
+      "foot": "left"
+    }
+  ],
+  "forward_distance": 0.16747600660029538,
+  "simulated_time": 4.0,
+  "failure": "stuck",
+  "actuator_count": 4,
+  "actuator_names": [
+    "left_hip_muscle",
+    "left_knee_stabilizer",
+    "right_hip_muscle",
+    "right_knee_stabilizer"
+  ],
+  "knee_actuators": [
+    "left_knee_stabilizer",
+    "right_knee_stabilizer"
+  ],
+  "ankle_actuators": [],
+  "arm_actuators": [],
+  "active_input_energy_j": 4.391830727267998,
+  "net_actuator_work_j": 0.37700214622790107,
+  "energy_per_alternation_j": 2.195915363633999,
+  "total_mass_kg": 6.659999999999999,
+  "quasi_passive": true,
+  "pure_passive": false,
+  "passive_arms": true,
+  "uses_reward_function": false
+}

@@ -61,11 +61,11 @@ class JointKalmanFilter:
         x_pred = self._F @ self._x
         P_pred = self._F @ self._P @ self._F.T + self._Q
 
-        y = z_angle - self._H @ x_pred
+        y = float(z_angle - (self._H @ x_pred)[0])
         S = (self._H @ P_pred @ self._H.T)[0, 0] + self._R
         K = (P_pred @ self._H.T) / S
 
-        self._x = x_pred + K.flatten() * float(y)
+        self._x = x_pred + K.flatten() * y
         self._P = (np.eye(2) - K @ self._H) @ P_pred
         return float(self._x[0]), float(self._x[1])
 
@@ -159,11 +159,14 @@ class StateEstimator:
         thigh_length: float,
         shank_length: float,
         foot_radius: float,
-        slope_rad: float,
-        dt: float,
+        slope_rad: float = 0.0,
+        dt: float = 0.001,
+        encoder_std: float = 0.77e-3,
     ):
         self.dt = dt
-        self._joint_filters = [JointKalmanFilter(dt) for _ in range(4)]
+        self._joint_filters = [
+            JointKalmanFilter(dt, measurement_std=encoder_std) for _ in range(4)
+        ]
         self._hip_fk = HipFK(thigh_length, shank_length, foot_radius, slope_rad, dt)
         self._state = EstimatedState(
             hip_x=0.0,
@@ -187,11 +190,23 @@ class StateEstimator:
         hip_angle = float(data.qpos[support_hip_idx])
         knee_angle = float(data.qpos[support_knee_idx])
         self._hip_fk.init_from_ground_truth(hip_x, hip_z, hip_angle, knee_angle)
+        self._state.hip_x = hip_x
+        self._state.hip_z = hip_z
+        self._state.hip_vx = 0.0
+        self._state.hip_vz = 0.0
         self._support_foot = support_foot
         self._initialized = True
 
-    def update(self, reading: SensorReading, support_foot: str):
+    def update(self, reading: SensorReading | dict, support_foot: str | None = None):
         """每步更新估计状态。"""
+        reading = self._coerce_reading(reading)
+        if support_foot is None:
+            support_foot = (
+                "right"
+                if reading.right_contact_raw and not reading.left_contact_raw
+                else "left"
+            )
+
         angles = np.zeros(4)
         velocities = np.zeros(4)
         for i in range(4):
@@ -213,7 +228,6 @@ class StateEstimator:
         hip_x, hip_z, hip_vx, hip_vz = self._hip_fk.estimate(
             angles[sup_idx], angles[sup_idx + 1]
         )
-
         self._state = EstimatedState(
             hip_x=hip_x,
             hip_z=hip_z,
@@ -224,6 +238,23 @@ class StateEstimator:
             left_contact=reading.left_contact_raw,
             right_contact=reading.right_contact_raw,
         )
+        return self._state
 
     def get_state(self) -> EstimatedState:
         return self._state
+
+    @staticmethod
+    def _coerce_reading(reading: SensorReading | dict) -> SensorReading:
+        if isinstance(reading, SensorReading):
+            return reading
+
+        raw_angles = np.asarray(reading.get("joint_angles", np.zeros(4)), dtype=float)
+        angles = np.zeros(4)
+        n = min(4, raw_angles.size)
+        angles[:n] = raw_angles[:n]
+        return SensorReading(
+            joint_angles=angles,
+            left_contact_raw=bool(reading.get("left_contact", False)),
+            right_contact_raw=bool(reading.get("right_contact", False)),
+            timestamp=float(reading.get("timestamp", 0.0)),
+        )

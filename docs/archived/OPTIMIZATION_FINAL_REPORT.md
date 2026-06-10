@@ -27,7 +27,7 @@
 | 5 | Git 版本控制优化 | 10.6 min | 4 文档 + 4 模板 + 清理脚本 |
 | 6 | 性能分析和自动化 | 12.0 min | 5 个脚本（2.3-3.0x 加速） |
 | 7 | 测试套件改进 | 13.5 min | +88 个测试用例 |
-| 8 | Remotion 动画优化 | 10.6 min | v2.0.0 + 3 个新动画 |
+| 8 | 旧动画工程 动画优化 | 10.6 min | v2.0.0 + 3 个新动画 |
 | 9 | 配置文件优化 | 10.3 min | 10+ 配置文件 + 3 脚本 |
 | 10 | 依赖管理优化 | 10.8 min | 7 个 requirements + 5 文档 |
 | 11 | 数据管理优化 | 12.9 min | DATA_MANIFEST.json + 清理脚本 |
@@ -53,7 +53,7 @@
 ### 代码产出
 - **88 个新测试用例**（3 个模块达 100% 覆盖）
 - **4 个核心错误处理模块**（exceptions/error_handler/logging/monitoring）
-- **3 个新 Remotion 动画组件**
+- **3 个新 旧动画工程 动画组件**
 - **修复 6 个版本冲突**
 
 ### 自动化产出
@@ -188,7 +188,7 @@
 ### MATLAB 文档（matlab-v01-v13-gait/）
 - MATLAB_PYTHON_COMPARISON.md（16,500 字对比）
 
-### Remotion 动画（compass-gait-remotion/）
+### 旧动画工程 动画（compass-gait-旧动画工程/）
 - 3 个新动画组件（FrictionCompensation、TechnicalRoadmap、MotorDynamics）
 - ANIMATION_GUIDE.md（20+ KB）
 

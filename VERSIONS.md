@@ -32,6 +32,7 @@
 | V22 | `v22_hardware_design` | 硬件设计 v1 | 设计文档 | 基于 V13.7+V17 的 2D 样机设计文档，包含 HARDWARE_SPEC.md、BOM.md（6500-8000元）、CAD_NOTES.md、SIMULATION_MAPPING.md；verdict=design_ready_for_manufacturing |
 | V23 | `v23_system_identification` | 系统辨识 | 方法论文档 | 从硬件数据反推物理参数：摩擦系数、转动惯量、弹簧刚度辨识流程；辨识误差目标 <10% |
 | V24 | `v24_sim_to_real` | Sim-to-real 迁移策略 | 策略文档 | 域随机化策略（质量±10%、腿长±5%、摩擦1.0-1.6、弹簧刚度±20%、电机延迟0-15ms）；鲁棒控制器设计；首次上机策略；目标随机化环境成功率 >50% |
+| **Residual RL V2** | `rl_training/` | PPO on V13.7 强化学习优化 | 否（RL优化层）| **训练完成（2026-06-09）**：Zero residual identity验证通过（baseline 4.630m/10td），Sweep找到最优方向 action=[0.50,1.00] residual=[0.100,0.200]Nm（forward 4.973m，+7.4%），100k PPO sanity训练达到 4.898m（+5.8%），成功率100%。产物：`logs/residual_rl_v2/`, `models/residual_rl_v2_sanity/` |
 
 ## 版本依赖树
 

@@ -1,0 +1,183 @@
+# ResidualRLV2 Implementation Status
+
+**Last Updated**: 2026-06-09 09:30 +08:00
+**Phase**: Training completed, 200k checkpoint adopted as final version
+
+---
+
+## Current Status
+
+### ✅ COMPLETED
+
+#### Environment Implementation
+- [x] Full `ResidualRLEnvV2` timing fixed: `control_v136()` uses `t = micro_steps * dt`
+- [x] 42-dim observation verified (20 base + 22 FSM/phase/energy info)
+- [x] Hip-only 2-dim action mapping verified (knee residual fixed at 0)
+- [x] Baseline-relative reward verified
+
+#### Validation
+- [x] Zero residual identity test passed: `4.630276m`, `100%` success over 10 episodes
+- [x] Residual sweep passed: best constant `[0.5, 1.0]` → `4.972583m`, `+7.39%`
+
+#### Training
+- [x] 100k sanity training passed: `4.898271m`, `+5.79%`, `100%` success
+- [x] 500k full training attempted: aborted at 350k due to catastrophic forgetting
+- [x] **200k checkpoint adopted as final version: `4.954477m`, `+7.00%`, `100%` success**
+
+#### Documentation
+- [x] Structured logs saved under `logs/residual_rl_v2/`
+- [x] Training reports: `train_sanity_100k_report.json`, `train_500k_report.json`
+- [x] Session logs: `SESSION_2026_06_08.md`, `SESSION_2026_06_09_CODEX.md`
+- [x] Handoff documents: `HANDOFF_TO_CODEX.md`, `HANDOFF_TO_CODEX_500K.md`
+- [x] Failure diagnosis: `DIAGNOSIS_500K_FAILURE.md`
+- [x] Final recommendation: `RECOMMENDATION.md`
+- [x] Questions for deep analysis: `QUESTIONS_FOR_GPT5.md`
+
+---
+
+## Performance Summary
+
+| Metric | Baseline | Sweep Best | 100k PPO | **200k PPO (Final)** | 350k PPO |
+|--------|----------|------------|----------|---------------------|----------|
+| Distance (12s) | 4.630276m | 4.972583m | 4.898271m | **4.954477m** | 0.150369m |
+| Improvement | 0.00% | +7.39% | +5.79% | **+7.00%** | -96.75% |
+| Success Rate | 100% | 100% | 100% | **100%** | 0% |
+| Status | Reference | Target | Sanity pass | **✅ Adopted** | ❌ Failed |
+
+---
+
+## Key Artifacts
+
+### Models
+- **Final (recommended)**: `models/residual_rl_v2_500k/ppo_best.zip` (200k checkpoint)
+- Alternative: `models/residual_rl_v2_sanity/ppo_best.zip` (100k checkpoint)
+- All checkpoints: `models/residual_rl_v2_500k/checkpoints/ppo_500k_*_steps.zip`
+
+### Training Scripts
+- Environment: `rl_training/train_residual_rl_v2.py`
+- Sweep: `rl_training/sweep_residual_combinations.py`
+- Training: `rl_training/train_sanity_100k.py` (supports both 100k and 500k runs)
+- Compatibility entry: `rl_training/train_residual_rl_v2_full.py`
+
+### Reports & Logs
+- **Training reports**:
+  - `logs/residual_rl_v2/train_sanity_100k_report.json`
+  - `logs/residual_rl_v2/train_500k_report.json`
+- **Sweep results**: `logs/residual_rl_v2/residual_sweep_results.json`
+- **Session logs**:
+  - `logs/residual_rl_v2/SESSION_2026_06_08.md` (Bug fix session)
+  - `logs/residual_rl_v2/SESSION_2026_06_09_CODEX.md` (500k training)
+- **Task logs**: `logs/residual_rl_v2/task*.log`
+- **Analysis**: `logs/residual_rl_v2/500k_analysis.md`
+
+### Documentation
+- **Handoff documents**:
+  - `logs/residual_rl_v2/HANDOFF_TO_CODEX.md` (Original 100k tasks)
+  - `logs/residual_rl_v2/HANDOFF_TO_CODEX_500K.md` (500k training specification)
+- **Diagnosis**: `logs/residual_rl_v2/DIAGNOSIS_500K_FAILURE.md`
+- **Recommendation**: `logs/residual_rl_v2/RECOMMENDATION.md`
+- **Deep questions**: `logs/residual_rl_v2/QUESTIONS_FOR_GPT5.md`
+
+### TensorBoard
+- Logs: `logs/residual_rl_v2/tensorboard/PPO_*/`
+- View: `tensorboard --logdir=logs/residual_rl_v2/tensorboard`
+
+---
+
+## Known Issues & Lessons Learned
+
+### ⚠️ Catastrophic Forgetting
+- **Issue**: Training beyond 200k leads to performance degradation
+- **Evidence**:
+  - 150k: 4.486m (-3.1% vs baseline)
+  - 200k: 4.954m (+7.0%) ← recovered
+  - 350k: 0.150m (-96.8%) ← catastrophic failure
+- **Root cause**:
+  - Reward function lacks stability penalties
+  - Value network misleading policy optimization
+  - Exploration-exploitation imbalance
+- **Mitigation**: Use 200k checkpoint, avoid longer training
+
+### ⚠️ Prior-Guided Architecture Limitation
+- **Observation**: PPO learns action ≈ prior with minimal variance (std < 0.005)
+- **Implication**: State-dependent policy barely differs from constant policy
+- **Question**: Is RL necessary, or is constant residual sufficient?
+
+### ✅ Critical Bug Fix (2026-06-08)
+- **Bug**: Original V2 used `control_v136(..., self.sim_time, ...)` causing 4s failure
+- **Fix**: Changed to `t = self.micro_steps * self.dt` achieving 4.630m baseline reproduction
+- **Lesson**: Time parameter consistency critical for control systems
+
+---
+
+## Next Steps (If Further Optimization Needed)
+
+### Option A: Accept 200k Result (Recommended)
+- **Action**: Use `models/residual_rl_v2_500k/ppo_best.zip` as final model
+- **Rationale**: +7.0% improvement, 100% stable, only -0.4% below sweep best
+- **Timeline**: Immediate
+
+### Option B: Fix Reward Function & Retrain
+- **Changes needed**:
+  - Add hip height penalty: `-20 * max(0, 0.5 - hip_height)`
+  - Add contact force penalty: `-0.1 * sum(abs(forces))`
+  - Add angular velocity penalty: `-5 * abs(qvel[3:6]).sum()`
+  - Early termination if `hip_height < 0.3m`
+- **Expected outcome**: +8-12% improvement
+- **Timeline**: 3-5 days
+
+### Option C: Phase-Dependent Constant Residual
+- **Approach**: Hand-design constant residual for each FSM phase (no RL)
+- **Based on**: Sweep results showing constant > state-dependent
+- **Expected outcome**: +8-10% improvement, more stable
+- **Timeline**: 1-2 days
+
+### Option D: Switch to TRPO Algorithm
+- **Rationale**: Trust region constraint prevents catastrophic forgetting
+- **Risk**: High (new algorithm tuning required)
+- **Expected outcome**: +10-15% with better stability
+- **Timeline**: 1 week
+
+---
+
+## Quick Start
+
+### Evaluate Final Model
+```powershell
+cd D:\Dunna\Documents\hw-1
+.\.venv-mujoco\Scripts\python.exe rl_training\evaluate_checkpoint.py `
+  --model models\residual_rl_v2_500k\ppo_best.zip `
+  --episodes 10
+```
+
+### Replay Training with Different Parameters
+```powershell
+.\.venv-mujoco\Scripts\python.exe rl_training\train_sanity_100k.py `
+  --timesteps 200000 `
+  --n-envs 8 `
+  --eval-freq 25000 `
+  --model-dir models\residual_rl_v2_custom `
+  --checkpoint-prefix ppo_custom
+```
+
+### View Training Curves
+```powershell
+.\.venv-mujoco\Scripts\tensorboard.exe --logdir=logs\residual_rl_v2\tensorboard
+# Open http://localhost:6006
+```
+
+---
+
+## References
+
+- **Memory record**: `C:\Users\duanj\.claude\projects\C--Users-duanj\memory\residual-rl-v2-fix.md`
+- **V13.7 baseline**: `v13_7_friction_compensation/simulate_v13_7.py`
+- **FSM controller**: `v13_6_event_driven_fsm/simulate_v13_6.py`
+- **Project README**: `D:\Dunna\Documents\hw-1\README.md`
+
+---
+
+**Status**: ✅ **READY FOR USE**
+**Recommended model**: `models/residual_rl_v2_500k/ppo_best.zip`
+**Performance**: 4.954m (+7.0% vs baseline), 100% success rate
+**Updated by**: Claude (post-500k training analysis)

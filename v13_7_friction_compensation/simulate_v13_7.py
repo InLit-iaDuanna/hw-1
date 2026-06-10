@@ -467,6 +467,25 @@ def run_simulation_v137(
     return rows, summary
 
 
+def simulate(
+    model: mujoco.MjModel,
+    data: mujoco.MjData,
+    params: V137Params,
+    duration: float | None = None,
+):
+    """Compatibility wrapper for older integration tests.
+
+    The current V13.7 runner owns model construction so motor parameters are
+    injected consistently. ``model`` and ``data`` are accepted for the legacy
+    call signature but are not reused.
+    """
+    del model, data
+    if duration is not None:
+        params = replace(params, base=replace(params.base, duration=duration))
+    rows, _summary = run_simulation_v137(params, save_prefix=None)
+    return rows
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--duration", type=float, default=12.0)

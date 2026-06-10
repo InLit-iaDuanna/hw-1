@@ -1,0 +1,8 @@
+{
+  "num_episodes": 0,
+  "total_transitions": 0,
+  "avg_distance": NaN,
+  "avg_time": NaN,
+  "avg_touchdowns": NaN,
+  "avg_reward": NaN
+}

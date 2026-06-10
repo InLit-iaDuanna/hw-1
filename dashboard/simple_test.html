@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Simple Dashboard Test</title>
+<style>
+body { font-family: Arial; padding: 20px; background: #0a0e14; color: #e8ecf4; }
+.box { background: #1a1f2e; padding: 20px; margin: 10px 0; border-radius: 8px; }
+button { padding: 10px 20px; margin: 5px; background: #1f6feb; color: white; border: none; border-radius: 4px; cursor: pointer; }
+button:hover { background: #238636; }
+#output { white-space: pre-wrap; font-family: monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>Dashboard Diagnostic</h1>
+
+<div class="box">
+<h2>Step 1: Server Test</h2>
+<p>Server is running: <span id="server-status">Testing...</span></p>
+</div>
+
+<div class="box">
+<h2>Step 2: Load data.js</h2>
+<button onclick="testData()">Test Data Loading</button>
+<div id="data-result"></div>
+</div>
+
+<div class="box">
+<h2>Step 3: Load app.js</h2>
+<button onclick="testApp()">Test App Loading</button>
+<div id="app-result"></div>
+</div>
+
+<div class="box">
+<h2>Step 4: Console Output</h2>
+<div id="output"></div>
+</div>
+
+<script>
+// Override console.log to show in page
+const originalLog = console.log;
+console.log = function(...args) {
+  originalLog.apply(console, args);
+  const output = document.getElementById('output');
+  output.textContent += args.join(' ') + '\n';
+};
+
+// Override console.error
+const originalError = console.error;
+console.error = function(...args) {
+  originalError.apply(console, args);
+  const output = document.getElementById('output');
+  output.textContent += 'ERROR: ' + args.join(' ') + '\n';
+  output.style.color = '#dc2626';
+};
+
+// Server status
+document.getElementById('server-status').textContent = '✓ Working (you can see this page)';
+document.getElementById('server-status').style.color = '#34d399';
+
+function testData() {
+  const result = document.getElementById('data-result');
+  try {
+    if (typeof VERSIONS !== 'undefined') {
+      result.innerHTML = `<p style="color:#34d399">✓ VERSIONS loaded: ${VERSIONS.length} items</p>`;
+      console.log('VERSIONS:', VERSIONS.slice(0, 3));
+    } else {
+      result.innerHTML = '<p style="color:#dc2626">✗ VERSIONS not defined</p>';
+    }
+
+    if (typeof PHASES !== 'undefined') {
+      result.innerHTML += `<p style="color:#34d399">✓ PHASES loaded: ${PHASES.length} items</p>`;
+    }
+  } catch (e) {
+    result.innerHTML = `<p style="color:#dc2626">Error: ${e.message}</p>`;
+    console.error(e);
+  }
+}
+
+function testApp() {
+  const result = document.getElementById('app-result');
+  try {
+    const functions = ['renderGraphView', 'buildDependencyLayout', 'toggleSidebar'];
+    let html = '';
+    functions.forEach(fn => {
+      if (typeof window[fn] === 'function') {
+        html += `<p style="color:#34d399">✓ ${fn} found</p>`;
+      } else {
+        html += `<p style="color:#dc2626">✗ ${fn} not found</p>`;
+      }
+    });
+    result.innerHTML = html;
+  } catch (e) {
+    result.innerHTML = `<p style="color:#dc2626">Error: ${e.message}</p>`;
+    console.error(e);
+  }
+}
+
+// Auto test after loading
+window.addEventListener('load', () => {
+  console.log('Page loaded');
+  setTimeout(testData, 500);
+  setTimeout(testApp, 1000);
+});
+</script>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>

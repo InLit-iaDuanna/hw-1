@@ -1,0 +1,161 @@
+{
+  "timestamp": "2026-06-09T08:58:36",
+  "diagnosis": "PASS",
+  "timesteps": 16,
+  "completed_timesteps": 16,
+  "training_completed": true,
+  "stop_reason": "completed",
+  "residual_scale": 0.2,
+  "prior_action": [
+    0.5,
+    1.0
+  ],
+  "delta_scale": 0.02,
+  "horizon_s": 12.0,
+  "baseline": {
+    "timestep": 0,
+    "mean_distance_m": 4.630275873159179,
+    "std_distance_m": 0.0,
+    "mean_reward": 0.04138100231180886,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.630275873159179
+    ],
+    "mean_actual_action": null,
+    "std_actual_action": null,
+    "min_actual_action": null,
+    "max_actual_action": null
+  },
+  "sweep_best": {
+    "mean_distance_m": 0.0,
+    "improvement_pct": -100.0
+  },
+  "sanity_100k": {
+    "mean_distance_m": 0.0,
+    "improvement_pct": -100.0
+  },
+  "prior_eval": {
+    "timestep": 0,
+    "mean_distance_m": 4.972582593471345,
+    "std_distance_m": 0.0,
+    "mean_reward": 48.951305795586755,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.972582593471345
+    ],
+    "mean_actual_action": null,
+    "std_actual_action": null,
+    "min_actual_action": null,
+    "max_actual_action": null
+  },
+  "pass_threshold_m": 4.830275873159179,
+  "target_distance_m": 0.0,
+  "nice_target_distance_m": 0.0,
+  "abort_failure_rate": 1.0,
+  "final_eval": {
+    "timestep": 16,
+    "mean_distance_m": 4.972506575890441,
+    "std_distance_m": 0.0,
+    "mean_reward": 48.93976354838925,
+    "success_rate": 1.0,
+    "failure_rate": 0.0,
+    "distances_m": [
+      4.972506575890441
+    ],
+    "mean_actual_action": [
+      0.5000756978988647,
+      0.9999975562095642
+    ],
+    "std_actual_action": [
+      4.96320026286412e-05,
+      1.4065652976569254e-05
+    ],
+    "min_actual_action": [
+      0.49989885091781616,
+      0.999869167804718
+    ],
+    "max_actual_action": [
+      0.500235378742218,
+      1.0
+    ]
+  },
+  "eval_history": [
+    {
+      "timestep": 8,
+      "mean_distance_m": 4.968020498508824,
+      "std_distance_m": 0.0,
+      "mean_reward": 48.26686357259462,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.968020498508824
+      ],
+      "mean_actual_action": [
+        0.5000980496406555,
+        0.9999975562095642
+      ],
+      "std_actual_action": [
+        4.745841943076812e-05,
+        1.440238247596426e-05
+      ],
+      "min_actual_action": [
+        0.4999413788318634,
+        0.9998693466186523
+      ],
+      "max_actual_action": [
+        0.5002318620681763,
+        1.0
+      ]
+    },
+    {
+      "timestep": 16,
+      "mean_distance_m": 4.972506575890441,
+      "std_distance_m": 0.0,
+      "mean_reward": 48.93976354838925,
+      "success_rate": 1.0,
+      "failure_rate": 0.0,
+      "distances_m": [
+        4.972506575890441
+      ],
+      "mean_actual_action": [
+        0.5000756978988647,
+        0.9999975562095642
+      ],
+      "std_actual_action": [
+        4.96320026286412e-05,
+        1.4065652976569254e-05
+      ],
+      "min_actual_action": [
+        0.49989885091781616,
+        0.999869167804718
+      ],
+      "max_actual_action": [
+        0.500235378742218,
+        1.0
+      ]
+    }
+  ],
+  "best_checkpoint": {
+    "timestep": 16,
+    "mean_distance_m": 4.972506575890441,
+    "improvement_pct": 7.391151458493177
+  },
+  "convergence_quality": {
+    "monotonic_after_300k": true,
+    "final_std_m": 0.0,
+    "catastrophic_forgetting": false
+  },
+  "artifacts": {
+    "best_model_exists": true,
+    "final_model_exists": true,
+    "checkpoint_count": 2,
+    "checkpoints": [
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k_smoke\\checkpoints\\ppo_smoke_16_steps.zip",
+      "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k_smoke\\checkpoints\\ppo_smoke_8_steps.zip"
+    ]
+  },
+  "model_dir": "D:\\Dunna\\Documents\\hw-1\\models\\residual_rl_v2_500k_smoke",
+  "tensorboard_dir": "D:\\Dunna\\Documents\\hw-1\\logs\\residual_rl_v2\\tensorboard"
+}

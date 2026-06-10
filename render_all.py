@@ -77,6 +77,7 @@ def find_render_scripts(version_dir: Path) -> List[Path]:
 
     # 排除不相关的文件
     scripts = [s for s in scripts if "render" in s.name.lower() and s.suffix == ".py"]
+    scripts = list(dict.fromkeys(scripts))
 
     # 优先选择主render脚本
     primary_names = ["render.py", f"render_{version_dir.name}.py"]
@@ -181,9 +182,9 @@ def print_summary(results: List[Dict]):
     no_script = sum(1 for r in results if r["status"] == "no_script")
 
     print(f"\n总计: {total} 个版本")
-    print(f"  ✓ 成功: {success}")
-    print(f"  ⚠ 部分成功: {partial}")
-    print(f"  ✗ 失败: {failed}")
+    print(f"  [OK] 成功: {success}")
+    print(f"  [PARTIAL] 部分成功: {partial}")
+    print(f"  [FAILED] 失败: {failed}")
     print(f"  - 无脚本: {no_script}")
 
     total_scripts = sum(r["scripts_found"] for r in results)
@@ -299,9 +300,9 @@ def main():
 
                 # 实时状态
                 status_icon = {
-                    "success": "✓",
-                    "partial": "⚠",
-                    "failed": "✗",
+                    "success": "[OK]",
+                    "partial": "[PARTIAL]",
+                    "failed": "[FAILED]",
                     "no_script": "-"
                 }.get(result["status"], "?")
 

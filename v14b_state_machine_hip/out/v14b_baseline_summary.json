@@ -83,7 +83,7 @@
       "E_target": 52.66
     }
   },
-  "score": 5397.224086639972,
+  "score": 5397.224086643172,
   "success": true,
   "success_criteria": {
     "simulated_time_s": 10.0,
@@ -101,60 +101,60 @@
     {
       "time": 0.372,
       "foot": "right",
-      "E": 50.59524640882858
+      "E": 50.59524640882857
     },
     {
       "time": 0.753,
       "foot": "left",
-      "E": 50.90993499074607
+      "E": 50.90993499074609
     },
     {
       "time": 1.2750000000000001,
       "foot": "right",
-      "E": 51.21085834968241
+      "E": 51.21085834968246
     },
     {
       "time": 2.845,
       "foot": "left",
-      "E": 52.77589457578042
+      "E": 52.77589457578021
     },
     {
       "time": 4.213,
       "foot": "right",
-      "E": 52.85308202038611
+      "E": 52.85308202038572
     },
     {
       "time": 5.514,
       "foot": "left",
-      "E": 52.88117702000858
+      "E": 52.88117702000749
     },
     {
       "time": 6.795,
       "foot": "right",
-      "E": 52.893872078143104
+      "E": 52.893872078139964
     },
     {
       "time": 8.07,
       "foot": "left",
-      "E": 52.89880463035121
+      "E": 52.898804630341886
     },
     {
       "time": 9.345,
       "foot": "right",
-      "E": 52.879766033870574
+      "E": 52.8797660338423
     },
     {
       "time": 10.621,
       "foot": "left",
-      "E": 52.897329766950854
+      "E": 52.89732976686754
     },
     {
       "time": 11.896,
       "foot": "right",
-      "E": 52.89374920421037
+      "E": 52.8937492039639
     }
   ],
-  "forward_distance": 4.83258546638264,
+  "forward_distance": 4.8325854664350185,
   "simulated_time": 11.994,
   "failure": "completed",
   "actuator_count": 4,
@@ -170,9 +170,9 @@
   ],
   "ankle_actuators": [],
   "arm_actuators": [],
-  "active_input_energy_j": 17.417013780995468,
-  "net_actuator_work_j": 12.608399080718002,
-  "energy_per_alternation_j": 1.5833648891814063,
+  "active_input_energy_j": 17.417013780976376,
+  "net_actuator_work_j": 12.608399080502698,
+  "energy_per_alternation_j": 1.5833648891796706,
   "total_mass_kg": 6.061999999999999,
   "phase_transitions": 22,
   "phase_durations_s": {
@@ -182,10 +182,15 @@
     "swing_retract": 7.7010000000009065
   },
   "phase_torque_integral_abs_Nms": {
-    "stance_early": 9.57608586602665,
-    "stance_late": 26.144364805999537,
-    "swing_thrust": 11.039659972123337,
-    "swing_retract": 7.226013280523909
+    "stance_early": 9.576085865928261,
+    "stance_late": 26.144364805882855,
+    "swing_thrust": 11.039659972183037,
+    "swing_retract": 7.226013280436645
+  },
+  "controller_energy_model": {
+    "mass_eff_kg": 5.1,
+    "excludes_passive_arm_mass": true,
+    "note": "Controller energy uses the original V13.6 calibrated effective mass (hip_mass + 2*torso_mass), intentionally excluding passive arm mass."
   },
   "quasi_passive": true,
   "pure_passive": false,

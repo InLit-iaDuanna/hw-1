@@ -155,16 +155,7 @@ class SimulationRunner:
         for step in range(total_steps):
             t = step * timestep
 
-            # 执行回调（控制律、数据记录等）
-            if step % callback_stride == 0:
-                for cb in self.callbacks:
-                    cb.on_step(self.model, self.data, t, step)
-
-            # 仿真步进
-            mujoco.mj_step(self.model, self.data)
-            actual_steps = step + 1
-
-            # 检查早停条件
+            # 检查早停条件（在 mj_step 之前，使用上一步的状态）
             for condition in self.early_stop_conditions:
                 should_stop, reason = condition.check(self.model, self.data, t)
                 if should_stop:
@@ -173,6 +164,15 @@ class SimulationRunner:
 
             if stop_reason != "completed":
                 break
+
+            # 执行回调（控制律、数据记录等）
+            if step % callback_stride == 0:
+                for cb in self.callbacks:
+                    cb.on_step(self.model, self.data, t, step)
+
+            # 仿真步进
+            mujoco.mj_step(self.model, self.data)
+            actual_steps = step + 1
 
         # 最终时间
         simulated_time = actual_steps * timestep

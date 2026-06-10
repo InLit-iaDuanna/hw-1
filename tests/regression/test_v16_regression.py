@@ -13,20 +13,18 @@ import pytest
 
 HW1_ROOT = Path(__file__).resolve().parents[2]
 V16_DIR = HW1_ROOT / "v16_motor_dynamics"
-V16_REF_DIR = HW1_ROOT / "v16_refactored"
+V14_DIR = HW1_ROOT / "v14_passive_arms"
 
 # 尝试加载 V16 或 V16_refactored
 try:
-    sys.path.insert(0, str(V16_REF_DIR))
-    from simulate_v16 import V16Params, build_model_xml, initialize
+    sys.path.insert(0, str(V14_DIR))
+    sys.path.insert(0, str(V16_DIR))
+    from simulate_passive_arms_v14 import PassiveArmsParams
+    from simulate_v16 import V16Params, build_model_xml_v16, initialize, make_v16_fsm
+
     V16_AVAILABLE = True
 except ImportError:
-    try:
-        sys.path.insert(0, str(V16_DIR))
-        from simulate_v16 import V16Params, build_model_xml, initialize
-        V16_AVAILABLE = True
-    except ImportError:
-        V16_AVAILABLE = False
+    V16_AVAILABLE = False
 
 
 @pytest.fixture
@@ -34,7 +32,8 @@ def v16_params():
     """V16 默认参数。"""
     if not V16_AVAILABLE:
         pytest.skip("V16 模块不可用")
-    return V16Params()
+    base = PassiveArmsParams(duration=1.0)
+    return V16Params(base=base, fsm=make_v16_fsm(base))
 
 
 @pytest.fixture
@@ -45,10 +44,10 @@ def v16_model(v16_params):
 
     import mujoco
 
-    xml = build_model_xml(v16_params)
+    xml = build_model_xml_v16(v16_params)
     model = mujoco.MjModel.from_xml_string(xml)
     data = mujoco.MjData(model)
-    initialize(model, data, v16_params)
+    initialize(model, data, v16_params.base)
     return model, data, v16_params
 
 
@@ -114,10 +113,10 @@ class TestV16Reproducibility:
         import mujoco
 
         def run_simulation():
-            xml = build_model_xml(v16_params)
+            xml = build_model_xml_v16(v16_params)
             model = mujoco.MjModel.from_xml_string(xml)
             data = mujoco.MjData(model)
-            initialize(model, data, v16_params)
+            initialize(model, data, v16_params.base)
 
             steps = int(1.0 / model.opt.timestep)
             for _ in range(steps):

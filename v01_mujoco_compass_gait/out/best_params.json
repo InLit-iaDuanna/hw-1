@@ -14,8 +14,8 @@
   "scan_score": {
     "contacts": 7,
     "alternating_contacts": 6,
-    "forward_distance": 1.2717441763367554,
-    "duration": 7.000000000000672,
+    "forward_distance": 1.2646621805117884,
+    "duration": 1.9999999999998905,
     "min_hip_clearance": 0.42431881045446906,
     "fell": false,
     "nan_or_blowup": false

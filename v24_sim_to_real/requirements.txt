@@ -1,0 +1,5 @@
+# V24: Sim-to-Real Transfer Documentation
+# Minimal dependencies for analysis and plotting
+
+numpy>=2.0.0
+matplotlib>=3.7.0
