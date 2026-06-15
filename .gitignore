@@ -133,3 +133,14 @@ dist/
 *.prof
 *.lprof
 *.pyprof
+
+# 硬件实测会话数据（原始 CSV/NPZ，不入库）
+hardware_v1_sessions/
+
+# ESP-IDF 本地安装配置（路径因机器而异）
+eim_config.toml
+
+# AI 会话生成的临时总结文件
+ALL_TASKS_COMPLETE.md
+FINAL_TASK_SUMMARY.md
+ULTIMATE_COMPLETION_REPORT.md

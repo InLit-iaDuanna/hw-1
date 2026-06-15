@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-06-13T00:00:00",
+  "duration_s": 10.0,
+  "frames": 2000,
+  "gyro_bias_raw": {
+    "left_foot": {"gx": 0.0, "gy": 0.0, "gz": 0.0},
+    "right_foot": {"gx": 0.0, "gy": 0.0, "gz": 0.0},
+    "left_shank": {"gx": 0.0, "gy": 0.0, "gz": 0.0},
+    "right_shank": {"gx": 0.0, "gy": 0.0, "gz": 0.0},
+    "left_thigh": {"gx": 0.0, "gy": 0.0, "gz": 0.0},
+    "right_thigh": {"gx": 0.0, "gy": 0.0, "gz": 0.0},
+    "pelvis": {"gx": 0.0, "gy": 0.0, "gz": 0.0}
+  }
+}

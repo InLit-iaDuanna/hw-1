@@ -1,0 +1,6 @@
+# Hardware V1 PC receiver and demo dependencies.
+numpy>=1.24.0
+pyserial>=3.5
+PyQt5>=5.15.0
+pyqtgraph>=0.13.0
+

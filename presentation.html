@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>步态重塑 — 偏瘫康复感知系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:       #060d1a;
+  --bg2:      #0d1b2e;
+  --card:     rgba(255,255,255,0.04);
+  --border:   rgba(255,255,255,0.08);
+  --teal:     #00c9b1;
+  --teal2:    #00e5cc;
+  --blue:     #2979ff;
+  --text:     #e8f0fe;
+  --muted:    rgba(232,240,254,0.50);
+  --warn:     #ffb300;
+  --red:      #ff5252;
+  --green:    #69f0ae;
+  --mono:     'DM Mono', monospace;
+  --sans:     'Inter', sans-serif;
+}
+.reveal-viewport { background: var(--bg); }
+.reveal { font-family: var(--sans); color: var(--text); }
+.reveal h1,.reveal h2,.reveal h3,.reveal h4 {
+  font-family: var(--sans); text-transform: none; letter-spacing: -0.02em;
+  color: #fff; font-weight: 700; line-height: 1.15;
+}
+.reveal section { padding: 0 !important; }
+/* ── SLIDE BASE ─────────────────────────────── */
+.slide {
+  width: 100vw; height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  padding: 48px 64px; box-sizing: border-box;
+  position: relative; overflow: hidden;
+}
+.slide.left { align-items: flex-start; }
+/* ── GRID NOISE OVERLAY ─── */
+.slide::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,201,177,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,201,177,.03) 1px,transparent 1px);
+  background-size: 48px 48px;
+}
+/* ── GLOW BLOB ─── */
+.blob {
+  position:absolute; border-radius:50%; filter:blur(80px);
+  pointer-events:none; z-index:0;
+}
+/* ── TAG / LABEL ─── */
+.tag {
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:600; letter-spacing:.12em;
+  text-transform:uppercase; padding:4px 12px; border-radius:20px;
+  border:1px solid; margin-bottom:20px;
+}
+.tag.teal  { color:var(--teal);  border-color:rgba(0,201,177,.35); background:rgba(0,201,177,.08); }
+.tag.blue  { color:#7eb2ff;      border-color:rgba(41,121,255,.35); background:rgba(41,121,255,.08); }
+.tag.warn  { color:var(--warn);  border-color:rgba(255,179,0,.35);  background:rgba(255,179,0,.08);  }
+.tag.red   { color:var(--red);   border-color:rgba(255,82,82,.35);  background:rgba(255,82,82,.08);  }
+/* ── HEADLINE ─── */
+.headline { font-size:clamp(28px,3.8vw,52px); font-weight:700; color:#fff; margin:0 0 16px; }
+.sub      { font-size:clamp(14px,1.6vw,20px); color:var(--muted); margin:0 0 40px; line-height:1.7; }
+/* ── CARD ─── */
+.card {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:28px 32px; position:relative; z-index:1;
+}
+.card-title { font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin:0 0 12px; }
+.card-val   { font-size:clamp(28px,3vw,40px); font-weight:700; color:#fff; line-height:1; }
+.card-label { font-size:13px; color:var(--muted); margin-top:6px; }
+/* ── METRIC ROW ─── */
+.metrics { display:flex; gap:20px; width:100%; flex-wrap:wrap; z-index:1; }
+.metrics .card { flex:1; min-width:160px; }
+/* ── TWO-COL ─── */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:32px; width:100%; z-index:1; }
+.three-col { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; width:100%; z-index:1; }
+/* ── DIVIDER LINE ─── */
+.rule { width:48px; height:2px; background:var(--teal); border-radius:2px; margin:0 0 24px; }
+/* ── STAT HIGHLIGHT ─── */
+.stat-big { font-size:clamp(40px,5.5vw,72px); font-weight:700; color:var(--teal); line-height:1; }
+.stat-unit { font-size:clamp(16px,2vw,24px); color:var(--muted); margin-left:6px; }
+/* ── TIMELINE ─── */
+.timeline { display:flex; flex-direction:column; gap:16px; z-index:1; width:100%; }
+.tl-item  { display:flex; align-items:flex-start; gap:20px; }
+.tl-dot   { width:10px; height:10px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+.tl-dot.done    { background:var(--teal); box-shadow:0 0 8px var(--teal); }
+.tl-dot.active  { background:var(--warn); box-shadow:0 0 8px var(--warn); }
+.tl-dot.pending { background:var(--border); border:1px solid rgba(255,255,255,.2); }
+.tl-line-wrap { display:flex; flex-direction:column; }
+.tl-head  { font-size:14px; font-weight:600; color:#fff; }
+.tl-desc  { font-size:12px; color:var(--muted); margin-top:3px; line-height:1.6; }
+/* ── FEATURE LIST ─── */
+.feat-list { list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:12px; }
+.feat-list li { display:flex; align-items:flex-start; gap:12px; font-size:14px; line-height:1.6; color:var(--muted); }
+.feat-list li::before { content:'→'; color:var(--teal); font-weight:700; flex-shrink:0; margin-top:1px; }
+.feat-list li strong { color:#fff; }
+/* ── COVER SPECIFIC ─── */
+.cover-logo { font-family:var(--mono); font-size:11px; color:var(--teal); letter-spacing:.2em; margin-bottom:60px; }
+/* ── CHART WRAPPER ─── */
+.chart-wrap { position:relative; width:100%; z-index:1; }
+/* ── BADGE ─── */
+.badge { display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:6px; }
+.badge.g { background:rgba(105,240,174,.15); color:var(--green); }
+.badge.r { background:rgba(255,82,82,.15);   color:var(--red); }
+.badge.y { background:rgba(255,179,0,.15);   color:var(--warn); }
+/* ── TABLE ─── */
+.data-table { width:100%; border-collapse:collapse; font-size:13px; z-index:1; }
+.data-table th { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); border-bottom:1px solid var(--border); padding:8px 14px; text-align:left; }
+.data-table td { padding:11px 14px; border-bottom:1px solid rgba(255,255,255,.04); color:#cfd8ef; }
+.data-table tr:last-child td { border-bottom:none; }
+.data-table tr:hover td { background:rgba(255,255,255,.03); }
+/* ── PROGRESS BAR ─── */
+.prog-bar { height:6px; border-radius:3px; background:rgba(255,255,255,.08); overflow:hidden; margin-top:8px; }
+.prog-fill { height:100%; border-radius:3px; transition:width .6s ease; }
+/* ── FOOTNOTE ─── */
+.footnote { font-size:11px; color:rgba(232,240,254,.3); margin-top:12px; z-index:1; }
+/* SLIDE NUMBER */
+.reveal .slide-number { font-family:var(--mono); font-size:11px; color:rgba(255,255,255,.25); }
+/* fragment */
+.reveal .fragment { transition: opacity .4s ease, transform .4s ease; }
+.reveal .fragment.visible { opacity:1; transform:none; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 1 · COVER
+════════════════════════════════════════════════════════ -->
+<section>
+<div class="slide" style="align-items:flex-start;justify-content:center;">
+  <div class="blob" style="width:600px;height:600px;background:radial-gradient(circle,rgba(0,201,177,.18) 0%,transparent 70%);top:-100px;right:-80px;"></div>
+  <div class="blob" style="width:400px;height:400px;background:radial-gradient(circle,rgba(41,121,255,.12) 0%,transparent 70%);bottom:-60px;left:-60px;"></div>
+  <div style="position:relative;z-index:1;max-width:820px;">
+    <div class="cover-logo">GAIT · REHAB · LAB · 2026</div>
+    <div class="tag teal">医疗康复设备</div>
+    <h1 style="font-size:clamp(36px,5.5vw,72px);margin:0 0 24px;line-height:1.05;">
+      步态重塑<br>
+      <span style="color:var(--teal);">偏瘫康复感知系统</span>
+    </h1>
+    <p class="sub" style="max-width:560px;">
+      基于被动动力学理论的偏瘫步态检测与康复评估平台<br>
+      V1 硬件 · 感知优先 · 多 IMU 全身动捕
+    </p>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;">
+      <div class="card" style="padding:16px 24px;flex:none;">
+        <div class="card-title">汇报日期</div>
+        <div style="font-size:18px;font-weight:600;color:#fff;">2026 / 06 / 16</div>
+      </div>
+      <div class="card" style="padding:16px 24px;flex:none;">
+        <div class="card-title">当前阶段</div>
+        <div style="font-size:18px;font-weight:600;color:var(--teal);">V25 硬件 Bring-Up</div>
+      </div>
+      <div class="card" style="padding:16px 24px;flex:none;">
+        <div class="card-title">仿真迭代</div>
+        <div style="font-size:18px;font-weight:600;color:#fff;">V01 → V24 完成</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════
+     SLIDE 2 · 问题定义
+════════════════════════════════════════════════════════ -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(255,82,82,.12) 0%,transparent 70%);top:-80px;right:0;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag red">问题定义</div>
+    <h2 class="headline">偏瘫步态为什么<br>需要精确感知？</h2>
+    <p class="sub">现有康复手段缺乏量化、客观的步态数据支撑</p>
+    <div class="three-col">
+      <div class="card">
+        <div style="font-size:32px;margin-bottom:12px;">📊</div>
+        <div class="card-title">量化盲区</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin:0;">
+          治疗师依赖目测评估，<strong style="color:#fff;">无法捕捉步态对称性、关节角速度等关键指标</strong>，康复进展难以量化追踪。
+        </p>
+      </div>
+      <div class="card">
+        <div style="font-size:32px;margin-bottom:12px;">⚡</div>
+        <div class="card-title">反馈滞后</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin:0;">
+          传统评估以周/月为周期，<strong style="color:#fff;">缺乏每步实时数据</strong>，代偿步态形成后纠正成本极高。
+        </p>
+      </div>
+      <div class="card">
+        <div style="font-size:32px;margin-bottom:12px;">🏥</div>
+        <div class="card-title">场景受限</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;margin:0;">
+          步态实验室设备昂贵（30万+），<strong style="color:#fff;">无法覆盖家庭/门诊场景</strong>，患者离开医院即失去监测。
+        </p>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px;border-color:rgba(255,82,82,.25);background:rgba(255,82,82,.05);">
+      <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.7;">
+        中国现有 <strong style="color:var(--red);font-size:18px;">~1300万</strong> 偏瘫患者，
+        年新增 <strong style="color:var(--red);font-size:18px;">~200万</strong>，
+        专业步态分析普及率不足 <strong style="color:var(--red);font-size:18px;">3%</strong>。
+      </p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 3 · 解决方案 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:600px;height:600px;background:radial-gradient(circle,rgba(0,201,177,.15) 0%,transparent 70%);bottom:-100px;right:-80px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag teal">解决方案</div>
+    <h2 class="headline">以力学模型驱动<br>智能步态感知</h2>
+    <p class="sub">不是单纯贴传感器——而是用被动动力学理论解释每一步</p>
+    <div class="two-col">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">技术核心</div>
+          <ul class="feat-list">
+            <li><strong>物理模型驱动</strong> — 基于指南针步态极限环理论，而非黑箱统计</li>
+            <li><strong>多节点 IMU 阵列</strong> — 7 个传感节点覆盖足/踝/膝/骨盆</li>
+            <li><strong>事件驱动状态机</strong> — 实时识别步态相位（站立/摆动）</li>
+            <li><strong>无线实时传输</strong> — ESP-NOW 200 Hz，低延迟上位机显示</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:rgba(0,201,177,.25);background:rgba(0,201,177,.05);">
+          <div class="card-title">V1 产品定位</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.7;margin:0;">
+            <strong style="color:var(--teal);">纯感知 · 不干预</strong>——第一代硬件专注于数据采集与步态评估，主动辅助留给下一代。
+          </p>
+        </div>
+      </div>
+      <div class="card" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card-title">方案对比</div>
+        <table class="data-table" style="font-size:12px;">
+          <thead><tr><th>方案</th><th>精度</th><th>场景</th><th>成本</th></tr></thead>
+          <tbody>
+            <tr><td>步态实验室</td><td><span class="badge g">高</span></td><td><span class="badge r">院内</span></td><td><span class="badge r">30万+</span></td></tr>
+            <tr><td>普通可穿戴</td><td><span class="badge y">中</span></td><td><span class="badge g">随身</span></td><td><span class="badge g">低</span></td></tr>
+            <tr><td style="color:var(--teal);font-weight:600;">本产品 V1</td><td><span class="badge g">高</span></td><td><span class="badge g">随身</span></td><td><span class="badge g">中</span></td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:var(--muted);margin:0;line-height:1.6;">BOM 成本目标：¥6,500 – ¥8,000，面向门诊与家庭康复场景。</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 4 · 技术理论基础 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(41,121,255,.15) 0%,transparent 70%);top:-60px;right:40px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag blue">技术理论</div>
+    <h2 class="headline">25 个仿真版本<br>验证理论可行性</h2>
+    <p class="sub">从纯被动极限环证明，到电机动力学补偿，逐步收敛到工程可落地方案</p>
+    <div class="two-col" style="align-items:start;">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-line-wrap">
+            <div class="tl-head">阶段 1 · 理论证明（V01–V05）</div>
+            <div class="tl-desc">MuJoCo 中严格证明指南针步态极限环存在性，Poincaré 映射 max|λ|&lt;1，确立被动动力学基础。</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-line-wrap">
+            <div class="tl-head">阶段 2 · 控制升级（V13–V17）</div>
+            <div class="tl-desc">事件驱动 FSM + 前馈摩擦补偿，解决 MX-64AR 电机 τ_C 共振失败带，传感器噪声验证通过（noise_scale≤5）。</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-line-wrap">
+            <div class="tl-head">阶段 3 · RL 残差优化（RL-V2）</div>
+            <div class="tl-desc">PPO 在 FSM 基础上学习残差力矩，步行距离 4.63m → 4.90m（+5.8%），验证优化空间。</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot done"></div>
+          <div class="tl-line-wrap">
+            <div class="tl-head">阶段 4 · 硬件设计（V22–V24）</div>
+            <div class="tl-desc">BOM/CAD/系统辨识方法论/Sim-to-Real 策略文档完成，硬件选型锁定。</div>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot active"></div>
+          <div class="tl-line-wrap">
+            <div class="tl-head">阶段 5 · 实物 Bring-Up（V25·进行中）</div>
+            <div class="tl-desc">M1 链路 200 Hz 稳定，CH0 left_foot 验通，CH1–CH6 接线中。</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">关键验证结果</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--muted);">参数成功率（仿真）</span><span style="color:#fff;font-weight:600;">16.7%→40%</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:40%;background:var(--teal);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--muted);">RL 步行提升</span><span style="color:#fff;font-weight:600;">+5.8%</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:58%;background:var(--blue);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--muted);">传感器噪声容忍</span><span style="color:#fff;font-weight:600;">noise_scale≤5</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:75%;background:var(--green);"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:13px;"><span style="color:var(--muted);">链路 CRC 错误率</span><span style="color:#fff;font-weight:600;">0%</span></div>
+              <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--teal);"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(105,240,174,.2);background:rgba(105,240,174,.04);">
+          <div class="card-title">核心结论</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.7;margin:0;">
+            被动动力学模型可在真实传感器噪声约束下稳定运行，<strong style="color:#fff;">理论到硬件的路径已被仿真充分验证</strong>。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 5 · 硬件架构 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(0,201,177,.12) 0%,transparent 70%);bottom:-60px;left:-60px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag teal">硬件架构</div>
+    <h2 class="headline">7 节点无线 IMU 网络</h2>
+    <p class="sub">ESP32-S3 主控 Hub + ESP32-C3 无线子节点，200 Hz 全身步态捕获</p>
+    <div class="two-col" style="align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">传感节点布局</div>
+          <table class="data-table" style="font-size:12px;margin-top:4px;">
+            <thead><tr><th>通道</th><th>位置</th><th>状态</th></tr></thead>
+            <tbody>
+              <tr><td>CH0</td><td>左足 (left_foot)</td><td><span class="badge g">✓ 验通</span></td></tr>
+              <tr><td>CH1</td><td>右足 (right_foot)</td><td><span class="badge y">接线中</span></td></tr>
+              <tr><td>CH2</td><td>左小腿</td><td><span class="badge y">接线中</span></td></tr>
+              <tr><td>CH3</td><td>右小腿</td><td><span class="badge y">接线中</span></td></tr>
+              <tr><td>CH4</td><td>左大腿</td><td><span class="badge y">接线中</span></td></tr>
+              <tr><td>CH5</td><td>右大腿</td><td><span class="badge y">接线中</span></td></tr>
+              <tr><td>CH6</td><td>骨盆</td><td><span class="badge y">接线中</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="three-col" style="gap:12px;">
+          <div class="card" style="padding:18px 16px;">
+            <div class="card-title">主控</div>
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-top:4px;">ESP32-S3</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">TCA9548A I²C Mux<br>Hub 节点</div>
+          </div>
+          <div class="card" style="padding:18px 16px;">
+            <div class="card-title">无线节点</div>
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-top:4px;">ESP32-C3</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">ESP-NOW 协议<br>基本验通</div>
+          </div>
+          <div class="card" style="padding:18px 16px;">
+            <div class="card-title">IMU</div>
+            <div style="font-size:14px;font-weight:600;color:#fff;margin-top:4px;">BMI160</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:4px;">/ BMX055<br>噪声规格✓</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">链路性能</div>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+              <span style="color:var(--muted);">采样率</span><span style="color:var(--teal);font-weight:600;">200 Hz 稳定</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+              <span style="color:var(--muted);">CRC 错误</span><span style="color:var(--green);font-weight:600;">0（M1 链路）</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+              <span style="color:var(--muted);">C3 丢包率</span><span style="color:var(--warn);font-weight:600;">~4.9%（优化中）</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:13px;">
+              <span style="color:var(--muted);">Jitter p95</span><span style="color:var(--green);font-weight:600;">达标</span>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(255,179,0,.2);background:rgba(255,179,0,.04);">
+          <div class="card-title">IMU 噪声验证</div>
+          <p style="font-size:12px;color:var(--muted);line-height:1.6;margin:0;">
+            V17 仿真验证：BMX055/BMI160 噪声规格满足 noise_scale≤5 约束，<strong style="color:#fff;">MX-64AR 真实噪声下步行距离 4.50m（仍 PASS）</strong>。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 6 : 性能数据 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(41,121,255,.15) 0%,transparent 70%);top:-40px;right:-40px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag blue">仿真验证数据</div>
+    <h2 class="headline">算法性能横向对比</h2>
+    <p class="sub">从 FSM 基线到 PPO 残差 RL，25 版本仿真数据支撑</p>
+    <div class="two-col" style="align-items:start;">
+      <div>
+        <div class="chart-wrap" style="height:280px;"><canvas id="chartPerf"></canvas></div>
+        <p class="footnote">步行距离 (m) · 基线 V13.7 FSM = 4.630m</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">Best 常量残差</div>
+          <div class="card-val">4.973 <span style="font-size:16px;color:var(--teal);">m</span></div>
+          <div class="card-label"><span style="color:var(--green);">+7.40%</span> vs 基线 · left=0.1, right=0.2 N·m</div>
+        </div>
+        <div class="card">
+          <div class="card-title">PPO 100k 步训练</div>
+          <div class="card-val">4.898 <span style="font-size:16px;color:var(--blue);">m</span></div>
+          <div class="card-label"><span style="color:var(--green);">+5.79%</span> vs 基线 · 成功率 100%</div>
+        </div>
+        <div class="card">
+          <div class="card-title">FSM 基线 (V13.7)</div>
+          <div class="card-val">4.630 <span style="font-size:16px;color:var(--muted);">m</span></div>
+          <div class="card-label">前馈摩擦补偿 · CoT = 0.066</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 7 : 产品能力 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(0,201,177,.12) 0%,transparent 70%);bottom:-80px;right:60px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag teal">产品能力</div>
+    <h2 class="headline">能测什么？</h2>
+    <p class="sub">基于多节点 IMU + 物理模型的步态量化能力</p>
+    <div class="two-col" style="align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card">
+          <div class="card-title">步态相位检测</div>
+          <ul class="feat-list">
+            <li><strong>触地/离地事件</strong> — 足部 IMU 加速度过零检测</li>
+            <li><strong>单/双支撑相划分</strong> — 基于 FSM 状态机</li>
+            <li><strong>步频 / 步长估算</strong> — 时域积分 + 零速修正</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">对称性分析</div>
+          <ul class="feat-list">
+            <li><strong>左右步态不对称指数</strong> — 偏瘫核心指标</li>
+            <li><strong>关节角速度对比</strong> — 健/患侧实时比较</li>
+            <li><strong>能量消耗估算</strong> — CoT 量化</li>
+          </ul>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card">
+          <div class="card-title">实时可视化输出</div>
+          <ul class="feat-list">
+            <li><strong>骨盆姿态曲线</strong> — 冠状面倾斜趋势</li>
+            <li><strong>步态时空参数</strong> — 支撑时间/摆动时间比</li>
+            <li><strong>异常步态预警</strong> — 偏离正常模式时标记</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:rgba(255,179,0,.2);background:rgba(255,179,0,.04);">
+          <div class="card-title">康复评估输出</div>
+          <ul class="feat-list">
+            <li><strong>每次训练报告</strong> — 步数/对称性/进步趋势</li>
+            <li><strong>纵向进度追踪</strong> — 跨训练 session 对比</li>
+            <li><strong>治疗师接口</strong> — 导出标准化数据格式</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 8 : 系统架构 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:400px;height:400px;background:radial-gradient(circle,rgba(41,121,255,.12) 0%,transparent 70%);top:-40px;left:-40px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag blue">系统架构</div>
+    <h2 class="headline">三层架构设计</h2>
+    <p class="sub">感知层 → 处理层 → 应用层，模块化可扩展</p>
+    <div class="three-col" style="gap:16px;align-items:start;">
+      <div class="card" style="border-color:rgba(0,201,177,.3);border-top:3px solid var(--teal);text-align:center;padding:24px 16px;">
+        <div style="font-size:28px;margin-bottom:12px;">📡</div>
+        <div class="card-title" style="text-align:center;">感知层</div>
+        <div style="font-size:13px;color:#fff;font-weight:600;margin:8px 0 4px;">硬件节点</div>
+        <ul class="feat-list" style="font-size:12px;gap:8px;text-align:left;">
+          <li>7x IMU (BMI160)</li><li>ESP32-C3 子节点</li>
+          <li>ESP-NOW 无线</li><li>200 Hz 采样</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(41,121,255,.3);border-top:3px solid var(--blue);text-align:center;padding:24px 16px;">
+        <div style="font-size:28px;margin-bottom:12px;">⚙️</div>
+        <div class="card-title" style="text-align:center;color:#7eb2ff;">处理层</div>
+        <div style="font-size:13px;color:#fff;font-weight:600;margin:8px 0 4px;">ESP32-S3 Hub</div>
+        <ul class="feat-list" style="font-size:12px;gap:8px;text-align:left;">
+          <li>数据融合校准</li><li>FSM 步态相位</li>
+          <li>实时特征提取</li><li>USB/WiFi 上传</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(255,179,0,.25);border-top:3px solid var(--warn);text-align:center;padding:24px 16px;">
+        <div style="font-size:28px;margin-bottom:12px;">💻</div>
+        <div class="card-title" style="text-align:center;color:var(--warn);">应用层</div>
+        <div style="font-size:13px;color:#fff;font-weight:600;margin:8px 0 4px;">PC / 平板端</div>
+        <ul class="feat-list" style="font-size:12px;gap:8px;text-align:left;">
+          <li>实时步态可视化</li><li>康复评估报告</li>
+          <li>历史趋势分析</li><li>治疗师仪表板</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px;border-color:rgba(0,201,177,.15);">
+      <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.6;text-align:center;">
+        V2 规划：增加执行器层（髋关节主动辅助），V1 架构完全兼容，<strong style="color:#fff;">无需重新设计感知/处理层</strong>。
+      </p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 9 : 当前进展 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(255,179,0,.12) 0%,transparent 70%);bottom:-60px;right:-40px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag warn">当前进展</div>
+    <h2 class="headline">V25 硬件 Bring-Up 实时状态</h2>
+    <p class="sub">截至 2026-06-15，M1 链路层已验通，全节点接线进行中</p>
+    <div class="two-col" style="align-items:start;">
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot done"></div><div class="tl-line-wrap"><div class="tl-head">M1 链路层验通</div><div class="tl-desc">固件 200 Hz 稳定运行，CRC 错误率 0，jitter p95 达标。</div></div></div>
+        <div class="tl-item"><div class="tl-dot done"></div><div class="tl-line-wrap"><div class="tl-head">ESP-NOW C3 节点基本验通</div><div class="tl-desc">zero-drop 已达成一次，长跑丢包约 4.9%，优化中。</div></div></div>
+        <div class="tl-item"><div class="tl-dot done"></div><div class="tl-line-wrap"><div class="tl-head">CH0 left_foot IMU 工作</div><div class="tl-desc">左足传感节点数据正常，基准校准完成。</div></div></div>
+        <div class="tl-item"><div class="tl-dot active"></div><div class="tl-line-wrap"><div class="tl-head">CH1–CH6 逐通道接线（进行中）</div><div class="tl-desc">按 WIRING.md Bring-Up Order 推进，右脚/双侧小腿/大腿/骨盆待接。</div></div></div>
+        <div class="tl-item"><div class="tl-dot pending"></div><div class="tl-line-wrap"><div class="tl-head">Gyro Bias 标定 + 全传感器验收</div><div class="tl-desc">7 节点同步验收测试，系统辨识启动。</div></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card">
+          <div class="card-title">Bring-Up 进度</div>
+          <div style="margin-top:8px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);">链路层</span><span style="color:var(--green);">100%</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--teal);"></div></div>
+          </div>
+          <div style="margin-top:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);">IMU 节点接线</span><span style="color:var(--warn);">1 / 7</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:14%;background:var(--warn);"></div></div>
+          </div>
+          <div style="margin-top:12px;">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px;"><span style="color:var(--muted);">系统辨识</span><span style="color:var(--muted);">待启动</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="width:0%;background:var(--blue);"></div></div>
+          </div>
+        </div>
+        <div class="card" style="border-color:rgba(255,179,0,.2);background:rgba(255,179,0,.04);">
+          <div class="card-title">当前卡点</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">CH1–CH6 物理接线，完成后即进入 <strong style="color:#fff;">gyro_bias 标定 → 全传感器验收</strong> 流程。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 10 : 路线图 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(0,201,177,.12) 0%,transparent 70%);top:-60px;right:-40px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag teal">产品路线图</div>
+    <h2 class="headline">从感知到辅助，分步落地</h2>
+    <p class="sub">三代产品规划，V1 聚焦数据，V2 引入辅助，V3 3D 全场景</p>
+    <div class="three-col" style="align-items:start;">
+      <div class="card" style="border-color:rgba(0,201,177,.35);border-top:3px solid var(--teal);">
+        <div class="tag teal" style="margin-bottom:12px;font-size:10px;">当前 · 2026 Q2-Q3</div>
+        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:12px;">V1 感知系统</div>
+        <ul class="feat-list" style="font-size:12px;gap:8px;">
+          <li>7节点 IMU 全身动捕</li><li>步态相位实时识别</li>
+          <li>左右对称性量化</li><li>康复评估报告</li>
+          <li>BOM 约 8000 元</li>
+        </ul>
+        <div style="margin-top:16px;"><span class="badge y">进行中</span></div>
+      </div>
+      <div class="card" style="border-color:rgba(41,121,255,.35);border-top:3px solid var(--blue);opacity:.85;">
+        <div class="tag blue" style="margin-bottom:12px;font-size:10px;">规划 · 2026 Q4</div>
+        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:12px;">V2 主动辅助</div>
+        <ul class="feat-list" style="font-size:12px;gap:8px;">
+          <li>髋关节 SEA 执行器</li><li>FSM 补能控制律</li>
+          <li>前馈摩擦补偿</li><li>患者自适应调参</li>
+          <li>Dynamixel MX-64AR</li>
+        </ul>
+        <div style="margin-top:16px;"><span class="badge y">规划中</span></div>
+      </div>
+      <div class="card" style="border-color:rgba(255,179,0,.25);border-top:3px solid var(--warn);opacity:.7;">
+        <div class="tag warn" style="margin-bottom:12px;font-size:10px;">远期 · 2027+</div>
+        <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:12px;">V3 3D 全场景</div>
+        <ul class="feat-list" style="font-size:12px;gap:8px;">
+          <li>冠状面主动稳定</li><li>步宽自适应控制</li>
+          <li>RL 残差在线优化</li><li>家庭独立使用</li>
+          <li>医疗器械注册</li>
+        </ul>
+        <div style="margin-top:16px;"><span class="badge r">远期</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 11 : 技术壁垒 -->
+<section>
+<div class="slide left">
+  <div class="blob" style="width:500px;height:500px;background:radial-gradient(circle,rgba(41,121,255,.15) 0%,transparent 70%);bottom:-60px;left:-40px;"></div>
+  <div style="position:relative;z-index:1;width:100%;">
+    <div class="tag blue">竞争壁垒</div>
+    <h2 class="headline">为什么我们能做到？</h2>
+    <p class="sub">25 版本仿真迭代积累的独特技术优势</p>
+    <div class="two-col" style="align-items:start;">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card" style="border-left:3px solid var(--teal);">
+          <div class="card-title">物理模型先验</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">基于混合动力学 + Poincaré 截面分析，<strong style="color:#fff;">检测算法有严格力学理论支撑</strong>，不依赖大量标注数据。</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--blue);">
+          <div class="card-title">噪声鲁棒性验证</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">V17 仿真在真实 IMU 噪声模型下全程 PASS，<strong style="color:#fff;">硬件选型有仿真数据背书</strong>，不靠猜测。</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--warn);">
+          <div class="card-title">摩擦补偿独创点</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">V13.7 前馈库仑摩擦补偿将 MX-64AR 失败带全部恢复，<strong style="color:#fff;">是控制律中的关键独创点</strong>。</p>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card" style="border-left:3px solid var(--green);">
+          <div class="card-title">完整 Sim-to-Real 方法论</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">域随机化范围来自系统辨识误差估计，<strong style="color:#fff;">有完整从仿真到实机的迁移方法论</strong>。</p>
+        </div>
+        <div class="card" style="border-left:3px solid rgba(255,82,82,.8);">
+          <div class="card-title">3D 失败经验价值</div>
+          <p style="font-size:13px;color:var(--muted);line-height:1.6;margin:0;">V18-V20 三次否定结果如实记录，<strong style="color:#fff;">明确了侧向主动控制的必要条件</strong>，为 V3 提供实验证据。</p>
+        </div>
+        <div class="card" style="background:rgba(0,201,177,.06);border-color:rgba(0,201,177,.25);">
+          <div style="display:flex;align-items:center;justify-content:space-around;">
+            <div style="text-align:center;"><div class="stat-big" style="font-size:36px;">25</div><div style="font-size:11px;color:var(--muted);">仿真版本</div></div>
+            <div style="text-align:center;"><div class="stat-big" style="font-size:36px;">2yr</div><div style="font-size:11px;color:var(--muted);">迭代积累</div></div>
+            <div style="text-align:center;"><div class="stat-big" style="font-size:36px;">100%</div><div style="font-size:11px;color:var(--muted);">关键验证通过</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- SLIDE 12 : 下一步 -->
+<section>
+<div class="slide" style="align-items:flex-start;justify-content:center;">
+  <div class="blob" style="width:700px;height:700px;background:radial-gradient(circle,rgba(0,201,177,.15) 0%,transparent 70%);top:-150px;right:-100px;"></div>
+  <div class="blob" style="width:400px;height:400px;background:radial-gradient(circle,rgba(41,121,255,.10) 0%,transparent 70%);bottom:-80px;left:-60px;"></div>
+  <div style="position:relative;z-index:1;max-width:860px;width:100%;">
+    <div class="tag teal">下一步</div>
+    <h2 class="headline" style="font-size:clamp(30px,4.5vw,60px);">接下来三件事</h2>
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:32px;">
+      <div class="card" style="display:flex;align-items:center;gap:24px;">
+        <div style="font-size:36px;font-weight:700;color:var(--teal);font-family:var(--mono);flex-shrink:0;width:48px;">01</div>
+        <div>
+          <div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;">完成 CH1–CH6 接线 + 全节点验收</div>
+          <div style="font-size:13px;color:var(--muted);">按 WIRING.md Bring-Up Order 推进，gyro_bias 标定，7节点同步 ACCEPTANCE_TEST。</div>
+        </div>
+        <span class="badge y" style="flex-shrink:0;">本周</span>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:24px;">
+        <div style="font-size:36px;font-weight:700;color:var(--blue);font-family:var(--mono);flex-shrink:0;width:48px;">02</div>
+        <div>
+          <div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;">系统辨识 + 步态检测算法上机</div>
+          <div style="font-size:13px;color:var(--muted);">实测摩擦/惯量参数，验证 V23 辨识方法论，将 FSM 步态相位检测部署至 ESP32-S3。</div>
+        </div>
+        <span class="badge y" style="flex-shrink:0;">近期</span>
+      </div>
+      <div class="card" style="display:flex;align-items:center;gap:24px;">
+        <div style="font-size:36px;font-weight:700;color:var(--warn);font-family:var(--mono);flex-shrink:0;width:48px;">03</div>
+        <div>
+          <div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:4px;">首次偏瘫患者步态数据采集</div>
+          <div style="font-size:13px;color:var(--muted);">配合康复科，采集健康对照 + 偏瘫患者步态数据，验证对称性检测指标有效性。</div>
+        </div>
+        <span class="badge r" style="flex-shrink:0;">Q3</span>
+      </div>
+    </div>
+    <div style="margin-top:32px;display:flex;align-items:center;gap:16px;">
+      <div class="rule" style="width:32px;"></div>
+      <p style="margin:0;font-size:13px;color:var(--muted);">Gait Rehab Lab · 2026 · <span style="color:var(--teal);">步态重塑 — 偏瘫康复感知系统</span></p>
+    </div>
+  </div>
+</div>
+</section>
+
+</div><!-- .slides -->
+</div><!-- .reveal -->
+
+<script>
+Reveal.initialize({
+  hash: true, slideNumber: 'c/t',
+  transition: 'fade', transitionSpeed: 'fast', backgroundTransition: 'fade',
+  controls: true, progress: true, center: false,
+  width: '100%', height: '100%', margin: 0,
+  minScale: 0.2, maxScale: 2.0, plugins: []
+});
+Reveal.on('slidechanged', function(e) {
+  if (e.currentSlide.querySelector('#chartPerf')) initChartPerf();
+});
+function initChartPerf() {
+  var ctx = document.getElementById('chartPerf');
+  if (!ctx || ctx._chartInited) return;
+  ctx._chartInited = true;
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['FSM 基线 (V13.7)', 'PPO 100k (RL-V2)', 'Zero-shot 残差', 'Best 常量残差'],
+      datasets: [{
+        label: '步行距离 (m)',
+        data: [4.630, 4.898, 4.973, 4.973],
+        backgroundColor: ['rgba(232,240,254,.15)','rgba(41,121,255,.7)','rgba(0,201,177,.5)','rgba(0,201,177,.9)'],
+        borderColor: ['rgba(232,240,254,.3)','rgba(41,121,255,1)','rgba(0,201,177,.8)','rgba(0,201,177,1)'],
+        borderWidth: 1, borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: { label: function(c) { return ' ' + c.parsed.y.toFixed(3) + ' m'; } },
+          backgroundColor: '#0d1b2e', borderColor: 'rgba(0,201,177,.3)', borderWidth: 1,
+          titleColor: '#fff', bodyColor: '#00c9b1'
+        }
+      },
+      scales: {
+        x: { grid: { color: 'rgba(255,255,255,.05)' }, ticks: { color: 'rgba(232,240,254,.5)', font: { size: 11 } } },
+        y: {
+          min: 4.5, max: 5.1,
+          grid: { color: 'rgba(255,255,255,.05)' },
+          ticks: { color: 'rgba(232,240,254,.5)', font: { size: 11 }, callback: function(v) { return v.toFixed(2)+'m'; } }
+        }
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+menu "Hardware V1.1 C3 IMU node"
+
+config HWV11_C3_I2C_PORT
+    int "I2C controller port"
+    default 0
+
+config HWV11_C3_I2C_SDA_GPIO
+    int "I2C SDA GPIO"
+    default 4
+
+config HWV11_C3_I2C_SCL_GPIO
+    int "I2C SCL GPIO"
+    default 5
+
+config HWV11_C3_I2C_FREQ_HZ
+    int "I2C clock frequency"
+    default 400000
+
+config HWV11_C3_SAMPLE_RATE_HZ
+    int "Sample rate"
+    default 100
+
+config HWV11_C3_NODE_ID
+    int "Node ID"
+    default 1
+
+config HWV11_C3_ESPNOW_CHANNEL
+    int "ESP-NOW Wi-Fi channel"
+    default 1
+
+endmenu
