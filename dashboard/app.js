@@ -1,4 +1,4 @@
-// ========== STATE ==========
+﻿// ========== STATE ==========
 let currentView = 'grid';
 let filters = {
   status: 'all',
@@ -21,149 +21,149 @@ const STATUS_COLORS = {
 };
 
 const STATUS_LABELS = {
-  done: '已完成',
-  next: '进行中',
-  planned: '计划中'
+  done: '宸插畬鎴?,
+  next: '杩涜涓?,
+  planned: '璁″垝涓?
 };
 
 const PASSIVE_LABELS = {
-  yes: '纯被动',
-  no: '非被动',
-  partial: '部分被动',
-  analysis: '分析型',
-  display: '展示型',
-  tbd: '待定'
+  yes: '绾鍔?,
+  no: '闈炶鍔?,
+  partial: '閮ㄥ垎琚姩',
+  analysis: '鍒嗘瀽鍨?,
+  display: '灞曠ず鍨?,
+  tbd: '寰呭畾'
 };
 
 const PHASE_LABELS = {
-  1: '第一阶段',
-  2: '第二阶段',
-  3: '第三阶段',
-  4: '第四阶段'
+  1: '绗竴闃舵',
+  2: '绗簩闃舵',
+  3: '绗笁闃舵',
+  4: '绗洓闃舵'
 };
 
 const PHASE_TITLE_LABELS = {
-  1: '二维基础研究',
-  2: '二维机构升级',
-  3: '三维扩展验证',
-  4: '硬件落地'
+  1: '浜岀淮鍩虹鐮旂┒',
+  2: '浜岀淮鏈烘瀯鍗囩骇',
+  3: '涓夌淮鎵╁睍楠岃瘉',
+  4: '纭欢钀藉湴'
 };
 
 const TAG_LABELS = {
   'mujoco': 'MuJoCo',
-  'contact': '接触',
-  'baseline': '基线',
-  'limit-cycle': '极限环',
-  'pure-passive': '纯被动',
-  'theory': '理论',
+  'contact': '鎺ヨЕ',
+  'baseline': '鍩虹嚎',
+  'limit-cycle': '鏋侀檺鐜?,
+  'pure-passive': '绾鍔?,
+  'theory': '鐞嗚',
   'poincare': 'Poincare',
-  'knee': '膝关节',
-  'proof': '证明',
-  'hybrid-dynamics': '混合动力学',
-  'key-evidence': '关键证据',
-  'presentation': '展示',
-  'real-contact': '真实接触',
-  'failure-analysis': '失败分析',
-  'quasi-passive': '准被动',
-  'assist': '辅助',
-  'stable': '稳定',
-  'ankle': '踝关节',
-  'rolling-foot': '滚动足',
-  'terrain': '地形',
-  'robustness': '鲁棒性',
-  'basin-scan': '吸引域扫描',
-  'energy': '能量',
+  'knee': '鑶濆叧鑺?,
+  'proof': '璇佹槑',
+  'hybrid-dynamics': '娣峰悎鍔ㄥ姏瀛?,
+  'key-evidence': '鍏抽敭璇佹嵁',
+  'presentation': '灞曠ず',
+  'real-contact': '鐪熷疄鎺ヨЕ',
+  'failure-analysis': '澶辫触鍒嗘瀽',
+  'quasi-passive': '鍑嗚鍔?,
+  'assist': '杈呭姪',
+  'stable': '绋冲畾',
+  'ankle': '韪濆叧鑺?,
+  'rolling-foot': '婊氬姩瓒?,
+  'terrain': '鍦板舰',
+  'robustness': '椴佹鎬?,
+  'basin-scan': '鍚稿紩鍩熸壂鎻?,
+  'energy': '鑳介噺',
   'floquet': 'Floquet',
-  'analysis': '分析',
-  'sensitivity': '敏感性',
-  'tolerance': '容差',
-  'decision-gate': '决策门',
-  'control': '控制',
-  'archived': '已归档',
-  'lessons': '经验',
+  'analysis': '鍒嗘瀽',
+  'sensitivity': '鏁忔劅鎬?,
+  'tolerance': '瀹瑰樊',
+  'decision-gate': '鍐崇瓥闂?,
+  'control': '鎺у埗',
+  'archived': '宸插綊妗?,
+  'lessons': '缁忛獙',
   'bang-bang': 'Bang-Bang',
-  'energy-target': '能量目标',
-  'key-result': '关键结果',
-  'grid-search': '网格搜索',
-  'optimization': '优化',
-  'arms': '摆臂',
-  'mechanism': '机构',
-  'recovery': '恢复',
-  'root-cause': '根因',
-  'monotonicity': '单调性',
-  'spring': '弹簧',
-  'elastic': '弹性',
-  'direct-drive': '直驱',
-  'resonance': '共振',
-  'motor': '电机',
-  'dynamics': '动力学',
-  'friction': '摩擦',
-  'compensation': '补偿',
-  'sensor': '传感器',
-  'estimation': '状态估计',
-  'next-up': '下一步',
-  'lateral': '侧向',
-  'coronal-plane': '冠状面',
-  'negative-result': '负结果',
-  'abduction': '外展',
-  'active-lateral': '主动侧向',
-  'step-width': '步宽',
-  'perturbation': '扰动',
-  'hardware': '硬件',
-  'motor-selection': '电机选型',
-  'parameter-estimation': '参数辨识',
-  'domain-randomization': '域随机化',
-  'transfer': '迁移',
-  'field-test': '实地测试',
-  'final': '最终验证'
+  'energy-target': '鑳介噺鐩爣',
+  'key-result': '鍏抽敭缁撴灉',
+  'grid-search': '缃戞牸鎼滅储',
+  'optimization': '浼樺寲',
+  'arms': '鎽嗚噦',
+  'mechanism': '鏈烘瀯',
+  'recovery': '鎭㈠',
+  'root-cause': '鏍瑰洜',
+  'monotonicity': '鍗曡皟鎬?,
+  'spring': '寮圭哀',
+  'elastic': '寮规€?,
+  'direct-drive': '鐩撮┍',
+  'resonance': '鍏辨尟',
+  'motor': '鐢垫満',
+  'dynamics': '鍔ㄥ姏瀛?,
+  'friction': '鎽╂摝',
+  'compensation': '琛ュ伩',
+  'sensor': '浼犳劅鍣?,
+  'estimation': '鐘舵€佷及璁?,
+  'next-up': '涓嬩竴姝?,
+  'lateral': '渚у悜',
+  'coronal-plane': '鍐犵姸闈?,
+  'negative-result': '璐熺粨鏋?,
+  'abduction': '澶栧睍',
+  'active-lateral': '涓诲姩渚у悜',
+  'step-width': '姝ュ',
+  'perturbation': '鎵板姩',
+  'hardware': '纭欢',
+  'motor-selection': '鐢垫満閫夊瀷',
+  'parameter-estimation': '鍙傛暟杈ㄨ瘑',
+  'domain-randomization': '鍩熼殢鏈哄寲',
+  'transfer': '杩佺Щ',
+  'field-test': '瀹炲湴娴嬭瘯',
+  'final': '鏈€缁堥獙璇?
 };
 
 const VERSION_TITLE_LABELS = {
-  V01: 'MuJoCo 指南针步态初始搭建',
-  V02: '无膝轮极限环对照',
-  V03: '指南针步态极限环对照',
-  V04: '带膝行走器极限环',
-  V05: '混合动力学纯被动证明',
-  V06: 'MVE 最小机械表达',
-  V07: '真实接触纯被动探索',
-  V08: '准被动弱补能探索',
-  V09: '准被动稳定行走',
-  V10: '滚动足仿生步态',
-  V11: '地形与扰动鲁棒性',
-  V12: '能量与 CoT 横向分析',
-  V13: '参数敏感性图谱',
-  'V13.5': '髋部控制律重设计（已归档）',
-  V13b: 'Floquet 长程极限环辨识',
-  'V13.6': '事件驱动 FSM 髋部控制',
-  'V13.6.1': 'FSM 阶段参数搜索',
-  V14: '被动摆臂（孤立点验证）',
-  V14b: 'FSM + 被动摆臂回流',
-  V14c: '摆臂质量减重扫描',
-  V15: '髋部 SEA / 弹性肌腱',
-  'V15.1': 'SEA 直驱实现',
-  V16: '一阶电机动力学（L1）',
-  'V13.7': '前馈摩擦补偿',
-  V17: '传感器闭环 / 状态估计',
-  V18: '三维侧向被动稳定探索',
-  V19: '髋外展辅助',
-  V20: '步宽调节控制',
-  V21: '三维扰动鲁棒性量化',
-  V22: '硬件设计 v1',
-  V23: '系统辨识',
-  V24: '仿真到现实迁移',
-  V25: '实地行走验证'
+  V01: 'MuJoCo 鎸囧崡閽堟鎬佸垵濮嬫惌寤?,
+  V02: '鏃犺啙杞瀬闄愮幆瀵圭収',
+  V03: '鎸囧崡閽堟鎬佹瀬闄愮幆瀵圭収',
+  V04: '甯﹁啙琛岃蛋鍣ㄦ瀬闄愮幆',
+  V05: '娣峰悎鍔ㄥ姏瀛︾函琚姩璇佹槑',
+  V06: 'MVE 鏈€灏忔満姊拌〃杈?,
+  V07: '鐪熷疄鎺ヨЕ绾鍔ㄦ帰绱?,
+  V08: '鍑嗚鍔ㄥ急琛ヨ兘鎺㈢储',
+  V09: '鍑嗚鍔ㄧǔ瀹氳璧?,
+  V10: '婊氬姩瓒充豢鐢熸鎬?,
+  V11: '鍦板舰涓庢壈鍔ㄩ瞾妫掓€?,
+  V12: '鑳介噺涓?CoT 妯悜鍒嗘瀽',
+  V13: '鍙傛暟鏁忔劅鎬у浘璋?,
+  'V13.5': '楂嬮儴鎺у埗寰嬮噸璁捐锛堝凡褰掓。锛?,
+  V13b: 'Floquet 闀跨▼鏋侀檺鐜鲸璇?,
+  'V13.6': '浜嬩欢椹卞姩 FSM 楂嬮儴鎺у埗',
+  'V13.6.1': 'FSM 闃舵鍙傛暟鎼滅储',
+  V14: '琚姩鎽嗚噦锛堝绔嬬偣楠岃瘉锛?,
+  V14b: 'FSM + 琚姩鎽嗚噦鍥炴祦',
+  V14c: '鎽嗚噦璐ㄩ噺鍑忛噸鎵弿',
+  V15: '楂嬮儴 SEA / 寮规€ц倢鑵?,
+  'V15.1': 'SEA 鐩撮┍瀹炵幇',
+  V16: '涓€闃剁數鏈哄姩鍔涘锛圠1锛?,
+  'V13.7': '鍓嶉鎽╂摝琛ュ伩',
+  V17: '浼犳劅鍣ㄩ棴鐜?/ 鐘舵€佷及璁?,
+  V18: '涓夌淮渚у悜琚姩绋冲畾鎺㈢储',
+  V19: '楂嬪灞曡緟鍔?,
+  V20: '姝ュ璋冭妭鎺у埗',
+  V21: '涓夌淮鎵板姩椴佹鎬ч噺鍖?,
+  V22: '纭欢璁捐 v1',
+  V23: '绯荤粺杈ㄨ瘑',
+  V24: '浠跨湡鍒扮幇瀹炶縼绉?,
+  V25: '瀹炲湴琛岃蛋楠岃瘉'
 };
 
 function statusLabel(status) {
-  return STATUS_LABELS[status] || status || '未知';
+  return STATUS_LABELS[status] || status || '鏈煡';
 }
 
 function passiveLabel(passive) {
-  return PASSIVE_LABELS[passive] || passive || '未知';
+  return PASSIVE_LABELS[passive] || passive || '鏈煡';
 }
 
 function phaseLabel(phase) {
-  return PHASE_LABELS[phase.id || phase] || `第${phase.id || phase}阶段`;
+  return PHASE_LABELS[phase.id || phase] || `绗?{phase.id || phase}闃舵`;
 }
 
 function phaseTitle(phase) {
@@ -222,7 +222,7 @@ function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const toggle = document.getElementById('sidebar-toggle');
   sidebar.classList.toggle('collapsed');
-  toggle.textContent = sidebar.classList.contains('collapsed') ? '▶' : '◀';
+  toggle.textContent = sidebar.classList.contains('collapsed') ? '鈻? : '鈼€';
 }
 
 window.toggleSidebar = toggleSidebar;
@@ -336,7 +336,7 @@ function updatePhaseProgress() {
             <span class="phase-dot" style="background: ${phase.color}"></span>
             ${phaseLabel(phase)}
           </div>
-          <div class="phase-count">${done}/${phaseVersions.length} · ${progress}%</div>
+          <div class="phase-count">${done}/${phaseVersions.length} 路 ${progress}%</div>
         </div>
         <div class="phase-bar">
           <div class="phase-bar-fill" style="width: ${progress}%; background: ${phase.color}"></div>
@@ -379,7 +379,7 @@ function renderGridView(versions) {
   const container = document.getElementById('grid-view');
 
   if (versions.length === 0) {
-    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">没有符合当前筛选条件的版本</div>';
+    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">娌℃湁绗﹀悎褰撳墠绛涢€夋潯浠剁殑鐗堟湰</div>';
     return;
   }
 
@@ -395,7 +395,7 @@ function renderGridView(versions) {
       if (match) keyMetric = `CoT: ${match[1]}`;
     } else if (v.findings.match(/(\d+)\/(\d+)/)) {
       const match = v.findings.match(/(\d+)\/(\d+)/);
-      if (match) keyMetric = `成功率: ${match[1]}/${match[2]}`;
+      if (match) keyMetric = `鎴愬姛鐜? ${match[1]}/${match[2]}`;
     }
 
     return `
@@ -410,14 +410,14 @@ function renderGridView(versions) {
 
         <div class="card-meta">
           <div class="card-meta-item">
-            <span>📅</span> ${v.date}
+            <span>馃搮</span> ${v.date}
           </div>
           <div class="card-meta-item">
-            <span>📍</span> ${phaseLabel(phase)}
+            <span>馃搷</span> ${phaseLabel(phase)}
           </div>
           ${v.passive !== 'tbd' ? `
             <div class="card-meta-item">
-              <span>${v.passive === 'yes' ? '✅' : v.passive === 'no' ? '⚙️' : '⚡'}</span> ${passiveLabel(v.passive)}
+              <span>${v.passive === 'yes' ? '鉁? : v.passive === 'no' ? '鈿欙笍' : '鈿?}</span> ${passiveLabel(v.passive)}
             </div>
           ` : ''}
           ${keyMetric ? `
@@ -433,12 +433,12 @@ function renderGridView(versions) {
         </div>
 
         <div class="card-actions">
-          <a class="inline-action" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="打开 ${v.id} 的 MuJoCo 仿真入口">MuJoCo 仿真</a>
+          <a class="inline-action" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="鎵撳紑 ${v.id} 鐨?MuJoCo 浠跨湡鍏ュ彛">MuJoCo 浠跨湡</a>
         </div>
 
         ${v.status === 'done' && v.findings ? `
           <div class="key-finding">
-            <strong style="color: var(--accent)">💡</strong> ${v.findings}
+            <strong style="color: var(--accent)">馃挕</strong> ${v.findings}
           </div>
         ` : ''}
       </div>
@@ -451,7 +451,7 @@ function renderTimelineView(versions) {
   const container = document.getElementById('timeline-view');
 
   if (versions.length === 0) {
-    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">没有符合当前筛选条件的版本</div>';
+    container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px">娌℃湁绗﹀悎褰撳墠绛涢€夋潯浠剁殑鐗堟湰</div>';
     return;
   }
 
@@ -483,12 +483,12 @@ function renderTimelineView(versions) {
                     <div class="version-id" style="color: ${phase.color}">${v.id}</div>
                     <div class="version-title" style="flex: 1">${versionTitle(v)}</div>
                     <div style="font-size: 0.7rem; color: var(--text-dim)">${v.date}</div>
-                    <a class="inline-action compact" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="打开 ${v.id} 的 MuJoCo 仿真入口">MuJoCo</a>
+                    <a class="inline-action compact" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="鎵撳紑 ${v.id} 鐨?MuJoCo 浠跨湡鍏ュ彛">MuJoCo</a>
                   </div>
                   <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">${v.desc}</div>
                   ${v.status === 'done' ? `
                     <div style="font-size: 0.7rem; color: var(--text-muted); padding: 8px; background: var(--surface2); border-radius: 4px;">
-                      <strong style="color: var(--accent)">关键发现：</strong> ${v.findings}
+                      <strong style="color: var(--accent)">鍏抽敭鍙戠幇锛?/strong> ${v.findings}
                     </div>
                   ` : ''}
                   <div style="display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap;">
@@ -633,8 +633,7 @@ function saveGraphState() {
       updatedAt: new Date().toISOString()
     }));
   } catch (err) {
-    // localStorage 不可用时只保持当前会话状态。
-  }
+    // localStorage 涓嶅彲鐢ㄦ椂鍙繚鎸佸綋鍓嶄細璇濈姸鎬併€?  }
 }
 
 function updateGraphLegend() {
@@ -643,8 +642,8 @@ function updateGraphLegend() {
   if (!legend || !toggle) return;
 
   legend.classList.toggle('collapsed', graphState.legendCollapsed);
-  toggle.textContent = graphState.legendCollapsed ? '▸' : '▾';
-  toggle.title = graphState.legendCollapsed ? '展开图例' : '收起图例';
+  toggle.textContent = graphState.legendCollapsed ? '鈻? : '鈻?;
+  toggle.title = graphState.legendCollapsed ? '灞曞紑鍥句緥' : '鏀惰捣鍥句緥';
   toggle.setAttribute('aria-expanded', String(!graphState.legendCollapsed));
 }
 
@@ -665,8 +664,8 @@ function updateGraphToolbar() {
   if (!toolbar || !toggle) return;
 
   toolbar.classList.toggle('collapsed', graphState.controlsCollapsed);
-  toggle.textContent = graphState.controlsCollapsed ? '⋯' : '⌄';
-  toggle.title = graphState.controlsCollapsed ? '展开路径图工具' : '收起路径图工具';
+  toggle.textContent = graphState.controlsCollapsed ? '鈰? : '鈱?;
+  toggle.title = graphState.controlsCollapsed ? '灞曞紑璺緞鍥惧伐鍏? : '鏀惰捣璺緞鍥惧伐鍏?;
   toggle.setAttribute('aria-expanded', String(!graphState.controlsCollapsed));
 }
 
@@ -783,9 +782,9 @@ function updateGraphPhaseControls(versions = VERSIONS) {
     btn.type = 'button';
     btn.className = `graph-phase-btn${collapsed ? ' collapsed' : ''}`;
     btn.disabled = phaseVersions.length === 0;
-    btn.textContent = collapsed ? '▸' : '▾';
-    btn.title = `${collapsed ? '展开' : '收起'}${phaseLabel(phase)}`;
-    btn.setAttribute('aria-label', `${collapsed ? '展开' : '收起'}${phaseLabel(phase)}`);
+    btn.textContent = collapsed ? '鈻? : '鈻?;
+    btn.title = `${collapsed ? '灞曞紑' : '鏀惰捣'}${phaseLabel(phase)}`;
+    btn.setAttribute('aria-label', `${collapsed ? '灞曞紑' : '鏀惰捣'}${phaseLabel(phase)}`);
     btn.style.setProperty('--phase-color', phase.color);
     btn.addEventListener('click', e => toggleGraphPhase(phase.id, e));
     container.appendChild(btn);
@@ -810,7 +809,7 @@ function renderGraphView(versions) {
   updateGraphToolbar();
 
   if (graphVersions.length === 0) {
-    svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="var(--text-muted)">没有符合当前筛选条件的版本</text>';
+    svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="var(--text-muted)">娌℃湁绗﹀悎褰撳墠绛涢€夋潯浠剁殑鐗堟湰</text>';
     return;
   }
 
@@ -859,7 +858,7 @@ function renderGraphView(versions) {
   markerP.setAttribute('orient', 'auto');
   const pathP = document.createElementNS(NS, 'path');
   pathP.setAttribute('d', 'M0,0 L6,3 L0,6 Z');
-  pathP.setAttribute('fill', '#4a5568');
+  pathP.setAttribute('fill', '#9CA3AF');
   pathP.setAttribute('opacity', '0.5');
   markerP.appendChild(pathP);
   defs.appendChild(markerP);
@@ -940,7 +939,7 @@ function renderGraphView(versions) {
         const tx = tp.x;
         const ty = tp.y + NH / 2;
 
-        const color = v.status === 'planned' ? '#4a5568' : PHASE_COLORS[v.phase];
+        const color = v.status === 'planned' ? '#9CA3AF' : PHASE_COLORS[v.phase];
         const opacity = v.status === 'planned' ? 0.3 : (v.status === 'next' ? 0.85 : 0.58);
         const arrowId = v.status === 'planned' ? 'arrP' : `arr${v.phase}`;
 
@@ -994,12 +993,12 @@ function renderGraphView(versions) {
       grp.appendChild(poly);
 
       const lt = document.createElementNS(NS, 'text');
-      lt.textContent = g.status === 'passed' ? '✓' : '?';
+      lt.textContent = g.status === 'passed' ? '鉁? : '?';
       lt.setAttribute('x', gx);
       lt.setAttribute('y', gy + 3);
       lt.setAttribute('text-anchor', 'middle');
       lt.setAttribute('font-size', '8');
-      lt.setAttribute('fill', '#0a0e14');
+      lt.setAttribute('fill', '#FFFFFF');
       lt.setAttribute('font-weight', '700');
       lt.setAttribute('pointer-events', 'none');
       grp.appendChild(lt);
@@ -1097,7 +1096,7 @@ function renderGraphView(versions) {
     rect.setAttribute('width', NW);
     rect.setAttribute('height', NH);
     rect.setAttribute('rx', '6');
-    rect.setAttribute('fill', 'rgba(18, 22, 31, 0.96)');
+    rect.setAttribute('fill', '#FFFFFF');
     rect.setAttribute('stroke', phase.color);
     rect.setAttribute('stroke-width', '2');
     rect.setAttribute('stroke-dasharray', '5,3');
@@ -1128,17 +1127,17 @@ function renderGraphView(versions) {
     grp.appendChild(tid);
 
     const ttl = document.createElementNS(NS, 'text');
-    ttl.textContent = `${node.versions.length} 个版本`;
+    ttl.textContent = `${node.versions.length} 涓増鏈琡;
     ttl.setAttribute('x', p.x + 8);
     ttl.setAttribute('y', p.y + 28);
     ttl.setAttribute('font-size', '7.5');
-    ttl.setAttribute('fill', '#8892a4');
+    ttl.setAttribute('fill', '#6B7280');
     ttl.setAttribute('pointer-events', 'none');
     ttl.classList.add('node-title-label');
     grp.appendChild(ttl);
 
     const st = document.createElementNS(NS, 'text');
-    st.textContent = '展开';
+    st.textContent = '灞曞紑';
     st.setAttribute('x', p.x + NW - 8);
     st.setAttribute('y', p.y + 30);
     st.setAttribute('text-anchor', 'end');
@@ -1150,7 +1149,7 @@ function renderGraphView(versions) {
     grp.appendChild(st);
 
     const nodeTitle = document.createElementNS(NS, 'title');
-    nodeTitle.textContent = `${phaseLabel(phase)}已收起，包含 ${node.versions.length} 个版本。点击展开。`;
+    nodeTitle.textContent = `${phaseLabel(phase)}宸叉敹璧凤紝鍖呭惈 ${node.versions.length} 涓増鏈€傜偣鍑诲睍寮€銆俙;
     grp.appendChild(nodeTitle);
 
     grp.addEventListener('click', e => {
@@ -1184,8 +1183,8 @@ function renderGraphView(versions) {
     rect.setAttribute('width', NW);
     rect.setAttribute('height', NH);
     rect.setAttribute('rx', '6');
-    rect.setAttribute('fill', isPlanned ? '#161b27' : (isNext ? '#26220f' : '#1e2433'));
-    rect.setAttribute('stroke', isNext ? '#fbbf24' : isPlanned ? '#3d4460' : pc);
+    rect.setAttribute('fill', isPlanned ? '#FFFFFF' : (isNext ? '#FFFBF5' : '#F9F8F6'));
+    rect.setAttribute('stroke', isNext ? '#D4700A' : isPlanned ? '#DDD9CF' : pc);
     rect.setAttribute('stroke-width', isNext ? '2.6' : '1.5');
     if (isPlanned) rect.setAttribute('stroke-dasharray', '4,3');
     rect.classList.add('node-body');
@@ -1216,26 +1215,26 @@ function renderGraphView(versions) {
     grp.appendChild(tid);
 
     const title = versionTitle(v);
-    const short = title.length > 14 ? title.slice(0, 12) + '…' : title;
+    const short = title.length > 14 ? title.slice(0, 12) + '鈥? : title;
     const ttl = document.createElementNS(NS, 'text');
     ttl.textContent = short;
     ttl.setAttribute('x', p.x + 8);
     ttl.setAttribute('y', p.y + 28);
     ttl.setAttribute('font-size', '7.5');
-    ttl.setAttribute('fill', '#8892a4');
+    ttl.setAttribute('fill', '#6B7280');
     ttl.setAttribute('pointer-events', 'none');
     ttl.classList.add('node-title-label');
     grp.appendChild(ttl);
 
     if (v.status !== 'done') {
       const st = document.createElementNS(NS, 'text');
-      st.textContent = v.status === 'next' ? '进行中' : '计划';
+      st.textContent = v.status === 'next' ? '杩涜涓? : '璁″垝';
       st.setAttribute('x', p.x + NW - 8);
       st.setAttribute('y', p.y + 30);
       st.setAttribute('text-anchor', 'end');
       st.setAttribute('font-size', '7');
       st.setAttribute('font-weight', '700');
-      st.setAttribute('fill', STATUS_COLORS[v.status] || '#8892a4');
+      st.setAttribute('fill', STATUS_COLORS[v.status] || '#6B7280');
       st.setAttribute('pointer-events', 'none');
       st.classList.add('node-status-label');
       grp.appendChild(st);
@@ -1258,7 +1257,7 @@ function renderGraphView(versions) {
     simBtn.appendChild(simRect);
 
     const simText = document.createElementNS(NS, 'text');
-    simText.textContent = '仿真';
+    simText.textContent = '浠跨湡';
     simText.setAttribute('x', p.x + NW - 17);
     simText.setAttribute('y', p.y + 13);
     simText.setAttribute('text-anchor', 'middle');
@@ -1275,7 +1274,7 @@ function renderGraphView(versions) {
     grp.appendChild(simBtn);
 
     const nodeTitle = document.createElementNS(NS, 'title');
-    nodeTitle.textContent = `${v.id} · ${statusLabel(v.status)} · ${versionTitle(v)}`;
+    nodeTitle.textContent = `${v.id} 路 ${statusLabel(v.status)} 路 ${versionTitle(v)}`;
     grp.appendChild(nodeTitle);
 
     grp.addEventListener('click', (e) => {
@@ -1460,49 +1459,49 @@ function openDetail(id) {
       <div style="display: inline-block; padding: 4px 10px; background: ${statusColor}; color: ${v.status === 'planned' ? 'var(--text)' : '#000'}; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px;">
         ${statusLabel(v.status)}
       </div>
-      <a class="inline-action" style="margin-left: 8px;" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail>打开 MuJoCo 仿真</a>
+      <a class="inline-action" style="margin-left: 8px;" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail>鎵撳紑 MuJoCo 浠跨湡</a>
     </div>
 
     <div class="detail-section">
-      <h4>版本描述</h4>
+      <h4>鐗堟湰鎻忚堪</h4>
       <p>${v.desc}</p>
     </div>
 
     ${v.findings ? `
       <div class="detail-section">
-        <h4>关键发现</h4>
+        <h4>鍏抽敭鍙戠幇</h4>
         <p style="background: var(--surface2); padding: 12px; border-left: 3px solid var(--accent); border-radius: 4px;">${v.findings}</p>
       </div>
     ` : ''}
 
     <div class="detail-section">
-      <h4>元数据</h4>
+      <h4>鍏冩暟鎹?/h4>
       <table class="detail-table">
         <tr>
-          <td>阶段</td>
-          <td><span style="color: ${phaseColor}; font-weight: 600">${phaseLabel(phase)}</span> — ${phaseTitle(phase)}</td>
+          <td>闃舵</td>
+          <td><span style="color: ${phaseColor}; font-weight: 600">${phaseLabel(phase)}</span> 鈥?${phaseTitle(phase)}</td>
         </tr>
         <tr>
-          <td>被动性</td>
+          <td>琚姩鎬?/td>
           <td>${passiveLabel(v.passive)}</td>
         </tr>
         <tr>
-          <td>日期</td>
+          <td>鏃ユ湡</td>
           <td>${v.date}</td>
         </tr>
         <tr>
-          <td>目录</td>
-          <td><code style="font-size: 0.75rem">${getVersionFolder(v) || '—'}</code></td>
+          <td>鐩綍</td>
+          <td><code style="font-size: 0.75rem">${getVersionFolder(v) || '鈥?}</code></td>
         </tr>
         <tr>
-          <td>依赖</td>
-          <td>${v.deps.length ? v.deps.map(d => `<span style="color: var(--accent); cursor: pointer;" onclick="openDetail('${d}')">${d}</span>`).join(', ') : '—'}</td>
+          <td>渚濊禆</td>
+          <td>${v.deps.length ? v.deps.map(d => `<span style="color: var(--accent); cursor: pointer;" onclick="openDetail('${d}')">${d}</span>`).join(', ') : '鈥?}</td>
         </tr>
       </table>
     </div>
 
     <div class="detail-section">
-      <h4>标签</h4>
+      <h4>鏍囩</h4>
       <div style="display: flex; flex-wrap: wrap; gap: 6px;">
         ${v.tags.map(tag => `<span class="tag">${tagLabel(tag)}</span>`).join('')}
       </div>
@@ -1510,7 +1509,7 @@ function openDetail(id) {
 
     ${v.deps.length > 0 ? `
       <div class="detail-section">
-        <h4>依赖链</h4>
+        <h4>渚濊禆閾?/h4>
         <div style="font-size: 0.8rem; color: var(--text-muted);">
           ${buildDependencyChain(v.id).map(step => `<div style="padding: 4px 0;">${step}</div>`).join('')}
         </div>
@@ -1536,7 +1535,7 @@ function buildDependencyChain(id) {
     const v = VERSIONS.find(ver => ver.id === vId);
     if (!v) return;
 
-    const indent = '→ '.repeat(level);
+    const indent = '鈫?'.repeat(level);
     chain.push(`${indent}<span style="color: ${PHASE_COLORS[v.phase]}">${v.id}</span> ${versionTitle(v)}`);
 
     v.deps.forEach(depId => trace(depId, level + 1));
@@ -1566,36 +1565,36 @@ function renderCompareView() {
   container.innerHTML = `
     <div class="compare-view">
       <div class="compare-header">
-        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">版本对比</h2>
-        <p style="color: var(--text-muted); font-size: 0.85rem;">选择 2-4 个已完成版本进行并排比较</p>
+        <h2 style="font-size: 1.5rem; margin-bottom: 8px;">鐗堟湰瀵规瘮</h2>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">閫夋嫨 2-4 涓凡瀹屾垚鐗堟湰杩涜骞舵帓姣旇緝</p>
       </div>
 
       <div class="compare-selector">
         <div class="version-selector">
-          <label>版本 1</label>
+          <label>鐗堟湰 1</label>
           <select id="compare-v1" onchange="updateCompare()">
-            <option value="">请选择</option>
+            <option value="">璇烽€夋嫨</option>
             ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
         <div class="version-selector">
-          <label>版本 2</label>
+          <label>鐗堟湰 2</label>
           <select id="compare-v2" onchange="updateCompare()">
-            <option value="">请选择</option>
+            <option value="">璇烽€夋嫨</option>
             ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
         <div class="version-selector">
-          <label>版本 3（可选）</label>
+          <label>鐗堟湰 3锛堝彲閫夛級</label>
           <select id="compare-v3" onchange="updateCompare()">
-            <option value="">请选择</option>
+            <option value="">璇烽€夋嫨</option>
             ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
         <div class="version-selector">
-          <label>版本 4（可选）</label>
+          <label>鐗堟湰 4锛堝彲閫夛級</label>
           <select id="compare-v4" onchange="updateCompare()">
-            <option value="">请选择</option>
+            <option value="">璇烽€夋嫨</option>
             ${doneVersions.map(v => `<option value="${v.id}">${v.id} - ${versionTitle(v)}</option>`).join('')}
           </select>
         </div>
@@ -1614,7 +1613,7 @@ function updateCompare() {
   const resultsDiv = document.getElementById('compare-results');
 
   if (ids.length < 2) {
-    resultsDiv.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">请至少选择 2 个版本进行对比</p>';
+    resultsDiv.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 40px;">璇疯嚦灏戦€夋嫨 2 涓増鏈繘琛屽姣?/p>';
     return;
   }
 
@@ -1631,23 +1630,23 @@ function updateCompare() {
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
             <div class="version-id" style="color: ${phaseColor}">${v.id}</div>
             <div style="font-weight: 600; font-size: 0.9rem;">${versionTitle(v)}</div>
-            <a class="inline-action compact" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="打开 ${v.id} 的 MuJoCo 仿真入口">MuJoCo</a>
+            <a class="inline-action compact" href="${mujocoPageHref(v.id)}" data-mujoco-id="${v.id}" data-no-detail title="鎵撳紑 ${v.id} 鐨?MuJoCo 浠跨湡鍏ュ彛">MuJoCo</a>
           </div>
           <div style="font-size: 0.75rem; color: var(--text-muted);">${v.desc}</div>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">阶段</span>
+          <span class="compare-metric-label">闃舵</span>
           <span class="compare-metric-value" style="color: ${phaseColor}">${phaseLabel(phase)}</span>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">日期</span>
+          <span class="compare-metric-label">鏃ユ湡</span>
           <span class="compare-metric-value">${v.date}</span>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">被动性</span>
+          <span class="compare-metric-label">琚姩鎬?/span>
           <span class="compare-metric-value">${passiveLabel(v.passive)}</span>
         </div>
 
@@ -1660,38 +1659,38 @@ function updateCompare() {
 
         ${metrics.successRate ? `
           <div class="compare-metric">
-            <span class="compare-metric-label">成功率</span>
+            <span class="compare-metric-label">鎴愬姛鐜?/span>
             <span class="compare-metric-value" style="color: var(--next)">${metrics.successRate}</span>
           </div>
         ` : ''}
 
         ${metrics.floquet ? `
           <div class="compare-metric">
-            <span class="compare-metric-label">最大 Floquet</span>
+            <span class="compare-metric-label">鏈€澶?Floquet</span>
             <span class="compare-metric-value" style="color: var(--accent)">${metrics.floquet}</span>
           </div>
         ` : ''}
 
         ${metrics.forward ? `
           <div class="compare-metric">
-            <span class="compare-metric-label">前进距离</span>
+            <span class="compare-metric-label">鍓嶈繘璺濈</span>
             <span class="compare-metric-value">${metrics.forward}</span>
           </div>
         ` : ''}
 
         <div class="compare-metric">
-          <span class="compare-metric-label">依赖数</span>
-          <span class="compare-metric-value">${v.deps.length || '无'}</span>
+          <span class="compare-metric-label">渚濊禆鏁?/span>
+          <span class="compare-metric-value">${v.deps.length || '鏃?}</span>
         </div>
 
         <div class="compare-metric">
-          <span class="compare-metric-label">标签</span>
-          <span class="compare-metric-value" style="font-size: 0.7rem;">${v.tags.slice(0, 3).map(tagLabel).join('、')}${v.tags.length > 3 ? '...' : ''}</span>
+          <span class="compare-metric-label">鏍囩</span>
+          <span class="compare-metric-value" style="font-size: 0.7rem;">${v.tags.slice(0, 3).map(tagLabel).join('銆?)}${v.tags.length > 3 ? '...' : ''}</span>
         </div>
 
         ${v.findings ? `
           <div style="margin-top: 16px; padding: 12px; background: var(--surface2); border-radius: 6px; border-left: 3px solid var(--accent);">
-            <div style="font-size: 0.7rem; font-weight: 600; color: var(--accent); margin-bottom: 4px;">关键发现</div>
+            <div style="font-size: 0.7rem; font-weight: 600; color: var(--accent); margin-bottom: 4px;">鍏抽敭鍙戠幇</div>
             <div style="font-size: 0.75rem; line-height: 1.5; color: var(--text-muted);">${v.findings}</div>
           </div>
         ` : ''}
@@ -1730,8 +1729,7 @@ function extractMetrics(version) {
 function renderTrendsView() {
   const container = document.getElementById('trends-view');
 
-  // 提取带有 CoT 指标的版本
-  const cotData = VERSIONS
+  // 鎻愬彇甯︽湁 CoT 鎸囨爣鐨勭増鏈?  const cotData = VERSIONS
     .filter(v => v.status === 'done' && v.findings)
     .map(v => {
       const metrics = extractMetrics(v);
@@ -1739,7 +1737,7 @@ function renderTrendsView() {
     })
     .filter(v => v);
 
-  // 提取带有成功率指标的版本
+  // 鎻愬彇甯︽湁鎴愬姛鐜囨寚鏍囩殑鐗堟湰
   const successData = VERSIONS
     .filter(v => v.status === 'done' && v.findings)
     .map(v => {
@@ -1754,24 +1752,24 @@ function renderTrendsView() {
 
   container.innerHTML = `
     <div class="trends-view">
-      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">能耗与性能趋势</h2>
+      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">鑳借€椾笌鎬ц兘瓒嬪娍</h2>
 
       ${cotData.length > 0 ? `
         <div class="chart-container">
-          <div class="chart-title">运输成本（CoT）演化</div>
+          <div class="chart-title">杩愯緭鎴愭湰锛圕oT锛夋紨鍖?/div>
           <div class="chart-canvas" id="cot-chart"></div>
         </div>
       ` : ''}
 
       ${successData.length > 0 ? `
         <div class="chart-container">
-          <div class="chart-title">各版本成功率</div>
+          <div class="chart-title">鍚勭増鏈垚鍔熺巼</div>
           <div class="chart-canvas" id="success-chart"></div>
         </div>
       ` : ''}
 
       <div class="chart-container">
-        <div class="chart-title">各阶段已完成版本数</div>
+        <div class="chart-title">鍚勯樁娈靛凡瀹屾垚鐗堟湰鏁?/div>
         <div class="chart-canvas" id="timeline-chart"></div>
       </div>
     </div>
@@ -1810,25 +1808,25 @@ function renderCotChart(data) {
         </linearGradient>
       </defs>
 
-      <!-- 坐标轴 -->
+      <!-- 鍧愭爣杞?-->
       <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"
-            stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
+            stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
       <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"
-            stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
+            stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
 
-      <!-- Y 轴标签 -->
-      <text x="${padding.left - 10}" y="${padding.top}" text-anchor="end" fill="#8892a4" font-size="11">${maxCot.toFixed(3)}</text>
-      <text x="${padding.left - 10}" y="${height - padding.bottom}" text-anchor="end" fill="#8892a4" font-size="11">${minCot.toFixed(3)}</text>
-      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">运输成本 CoT</text>
+      <!-- Y 杞存爣绛?-->
+      <text x="${padding.left - 10}" y="${padding.top}" text-anchor="end" fill="#6B7280" font-size="11">${maxCot.toFixed(3)}</text>
+      <text x="${padding.left - 10}" y="${height - padding.bottom}" text-anchor="end" fill="#6B7280" font-size="11">${minCot.toFixed(3)}</text>
+      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">杩愯緭鎴愭湰 CoT</text>
 
-      <!-- 网格线 -->
+      <!-- 缃戞牸绾?-->
       ${[0, 0.25, 0.5, 0.75, 1].map(frac => {
         const y = padding.top + chartHeight * frac;
-        return `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(45, 53, 72, 0.3)" stroke-width="1" stroke-dasharray="4,4"/>`;
+        return `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="rgba(0,0,0,0.07)" stroke-width="1" stroke-dasharray="4,4"/>`;
       }).join('')}
   `;
 
-  // 绘制数据点和折线
+  // 缁樺埗鏁版嵁鐐瑰拰鎶樼嚎
   const xDivisor = Math.max(data.length - 1, 1);
   const points = data.map((d, i) => {
     const x = data.length === 1
@@ -1838,30 +1836,28 @@ function renderCotChart(data) {
     return { x, y, d };
   });
 
-  // 面积填充
+  // 闈㈢Н濉厖
   const areaPath = `M ${points[0].x},${height - padding.bottom} ` +
     points.map(p => `L ${p.x},${p.y}`).join(' ') +
     ` L ${points[points.length - 1].x},${height - padding.bottom} Z`;
   html += `<path d="${areaPath}" fill="url(#cotGrad)" opacity="0.5"/>`;
 
-  // 折线
+  // 鎶樼嚎
   const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`).join(' ');
   html += `<path d="${linePath}" fill="none" stroke="#60a5fa" stroke-width="3"/>`;
 
-  // 数据点
-  points.forEach(p => {
+  // 鏁版嵁鐐?  points.forEach(p => {
     const color = PHASE_COLORS[p.d.phase];
     html += `
-      <circle cx="${p.x}" cy="${p.y}" r="6" fill="${color}" stroke="#0a0e14" stroke-width="2">
+      <circle cx="${p.x}" cy="${p.y}" r="6" fill="${color}" stroke="#FFFFFF" stroke-width="2">
         <title>${p.d.id}: CoT=${p.d.cot}</title>
       </circle>
     `;
   });
 
-  // X 轴标签
-  points.forEach((p, i) => {
+  // X 杞存爣绛?  points.forEach((p, i) => {
     html += `
-      <text x="${p.x}" y="${height - padding.bottom + 20}" text-anchor="middle" fill="#8892a4" font-size="10" font-weight="600">${p.d.id}</text>
+      <text x="${p.x}" y="${height - padding.bottom + 20}" text-anchor="middle" fill="#6B7280" font-size="10" font-weight="600">${p.d.id}</text>
     `;
   });
 
@@ -1881,20 +1877,19 @@ function renderSuccessChart(data) {
 
   let html = `
     <svg width="${width}" height="${height}" style="background: transparent;">
-      <!-- 坐标轴 -->
+      <!-- 鍧愭爣杞?-->
       <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}"
-            stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
+            stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
       <line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"
-            stroke="rgba(45, 53, 72, 0.8)" stroke-width="2"/>
+            stroke="rgba(0,0,0,0.12)" stroke-width="2"/>
 
-      <!-- Y 轴标签 -->
-      <text x="${padding.left - 10}" y="${padding.top}" text-anchor="end" fill="#8892a4" font-size="11">100%</text>
-      <text x="${padding.left - 10}" y="${height - padding.bottom}" text-anchor="end" fill="#8892a4" font-size="11">0%</text>
-      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">成功率</text>
+      <!-- Y 杞存爣绛?-->
+      <text x="${padding.left - 10}" y="${padding.top}" text-anchor="end" fill="#6B7280" font-size="11">100%</text>
+      <text x="${padding.left - 10}" y="${height - padding.bottom}" text-anchor="end" fill="#6B7280" font-size="11">0%</text>
+      <text x="${padding.left - 45}" y="${height / 2}" text-anchor="middle" fill="#e8ecf4" font-size="13" font-weight="600" transform="rotate(-90, ${padding.left - 45}, ${height / 2})">鎴愬姛鐜?/text>
   `;
 
-  // 柱状图
-  const barWidth = Math.min(40, chartWidth / data.length * 0.8);
+  // 鏌辩姸鍥?  const barWidth = Math.min(40, chartWidth / data.length * 0.8);
   data.forEach((d, i) => {
     const x = padding.left + (chartWidth / data.length) * i + (chartWidth / data.length - barWidth) / 2;
     const barHeight = (chartHeight * d.rate / 100);
@@ -1907,7 +1902,7 @@ function renderSuccessChart(data) {
         <title>${d.id}: ${d.rate.toFixed(1)}%</title>
       </rect>
       <text x="${x + barWidth / 2}" y="${y - 5}" text-anchor="middle" fill="${color}" font-size="11" font-weight="700">${d.rate.toFixed(0)}%</text>
-      <text x="${x + barWidth / 2}" y="${height - padding.bottom + 20}" text-anchor="middle" fill="#8892a4" font-size="10" font-weight="600">${d.id}</text>
+      <text x="${x + barWidth / 2}" y="${height - padding.bottom + 20}" text-anchor="middle" fill="#6B7280" font-size="10" font-weight="600">${d.id}</text>
     `;
   });
 
@@ -1946,15 +1941,14 @@ function renderTimelineChart() {
       <text x="${padding.left - 10}" y="${y + barHeight / 2 + 5}" text-anchor="end" fill="${phase.color}" font-size="12" font-weight="700">${phaseLabel(phase)}</text>
       <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight}"
             fill="${phase.color}" opacity="0.3" rx="6"/>
-      <text x="${padding.left + barWidth + 10}" y="${y + barHeight / 2 + 5}" fill="#e8ecf4" font-size="13" font-weight="600">${phase.versions.length} 个版本</text>
+      <text x="${padding.left + barWidth + 10}" y="${y + barHeight / 2 + 5}" fill="#e8ecf4" font-size="13" font-weight="600">${phase.versions.length} 涓増鏈?/text>
     `;
 
-    // 版本点
-    phase.versions.forEach((v, j) => {
+    // 鐗堟湰鐐?    phase.versions.forEach((v, j) => {
       const cx = padding.left + (barWidth / phase.versions.length) * (j + 0.5);
       const cy = y + barHeight / 2;
       html += `
-        <circle cx="${cx}" cy="${cy}" r="6" fill="${phase.color}" stroke="#0a0e14" stroke-width="2">
+        <circle cx="${cx}" cy="${cy}" r="6" fill="${phase.color}" stroke="#FFFFFF" stroke-width="2">
           <title>${v.id}: ${versionTitle(v)}</title>
         </circle>
       `;
@@ -1971,74 +1965,70 @@ function renderHeatmapView() {
 
   container.innerHTML = `
     <div class="heatmap-view">
-      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">参数敏感性分析</h2>
+      <h2 style="font-size: 1.5rem; margin-bottom: 24px;">鍙傛暟鏁忔劅鎬у垎鏋?/h2>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V13 参数空间成功率（切片 C：6x6 网格）</div>
+        <div class="heatmap-title">V13 鍙傛暟绌洪棿鎴愬姛鐜囷紙鍒囩墖 C锛?x6 缃戞牸锛?/div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          足半径 × 腿长参数扫描，成功率 16.7%（6/36 个网格）
+          瓒冲崐寰?脳 鑵块暱鍙傛暟鎵弿锛屾垚鍔熺巼 16.7%锛?/36 涓綉鏍硷級
         </p>
         <div id="heatmap-v13"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">失败</span>
+          <span style="color: var(--text-muted);">澶辫触</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">成功</span>
+          <span style="color: var(--text-muted);">鎴愬姛</span>
         </div>
       </div>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V13.6 FSM 控制器成功率（切片 C：6x6 网格）</div>
+        <div class="heatmap-title">V13.6 FSM 鎺у埗鍣ㄦ垚鍔熺巼锛堝垏鐗?C锛?x6 缃戞牸锛?/div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          同一参数空间切换为事件驱动 FSM 后，成功率 11.1%（4/36 个网格）
+          鍚屼竴鍙傛暟绌洪棿鍒囨崲涓轰簨浠堕┍鍔?FSM 鍚庯紝鎴愬姛鐜?11.1%锛?/36 涓綉鏍硷級
         </p>
         <div id="heatmap-v136"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">失败</span>
+          <span style="color: var(--text-muted);">澶辫触</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">成功</span>
+          <span style="color: var(--text-muted);">鎴愬姛</span>
         </div>
       </div>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V14c 摆臂质量敏感性（6x6 网格）</div>
+        <div class="heatmap-title">V14c 鎽嗚噦璐ㄩ噺鏁忔劅鎬э紙6x6 缃戞牸锛?/div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          摆臂质量与参数联合扫描，显示质量增加会单调削弱稳定性
-        </p>
+          鎽嗚噦璐ㄩ噺涓庡弬鏁拌仈鍚堟壂鎻忥紝鏄剧ず璐ㄩ噺澧炲姞浼氬崟璋冨墛寮辩ǔ瀹氭€?        </p>
         <div id="heatmap-v14c"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">失败</span>
+          <span style="color: var(--text-muted);">澶辫触</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">成功</span>
+          <span style="color: var(--text-muted);">鎴愬姛</span>
         </div>
       </div>
 
       <div class="heatmap-container">
-        <div class="heatmap-title">V16 电机库仑摩擦 τ_C 共振模式</div>
+        <div class="heatmap-title">V16 鐢垫満搴撲粦鎽╂摝 蟿_C 鍏辨尟妯″紡</div>
         <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px;">
-          库仑摩擦扫描呈非单调共振：成功带 {0, 0.034, 0.27+}，失败带 [0.013, 0.20]
+          搴撲粦鎽╂摝鎵弿鍛堥潪鍗曡皟鍏辨尟锛氭垚鍔熷甫 {0, 0.034, 0.27+}锛屽け璐ュ甫 [0.013, 0.20]
         </p>
         <div id="heatmap-v16"></div>
         <div class="heatmap-legend">
-          <span style="color: var(--text-muted);">失败</span>
+          <span style="color: var(--text-muted);">澶辫触</span>
           <div class="heatmap-legend-gradient"></div>
-          <span style="color: var(--text-muted);">成功</span>
+          <span style="color: var(--text-muted);">鎴愬姛</span>
         </div>
       </div>
     </div>
   `;
 
-  // 根据关键发现绘制示意热力图
-  renderHeatmap('heatmap-v13', generateV13Data());
+  // 鏍规嵁鍏抽敭鍙戠幇缁樺埗绀烘剰鐑姏鍥?  renderHeatmap('heatmap-v13', generateV13Data());
   renderHeatmap('heatmap-v136', generateV136Data());
   renderHeatmap('heatmap-v14c', generateV14cData());
   renderHeatmap('heatmap-v16', generateV16Data());
 }
 
 function generateV13Data() {
-  // V13：6/36 成功，集中在角落带
-  const data = Array(6).fill(0).map(() => Array(6).fill(0));
-  // 成功格集中在角落和边缘
-  data[0][5] = 1;
+  // V13锛?/36 鎴愬姛锛岄泦涓湪瑙掕惤甯?  const data = Array(6).fill(0).map(() => Array(6).fill(0));
+  // 鎴愬姛鏍奸泦涓湪瑙掕惤鍜岃竟缂?  data[0][5] = 1;
   data[1][4] = 1;
   data[1][5] = 1;
   data[2][4] = 1;
@@ -2048,7 +2038,7 @@ function generateV13Data() {
 }
 
 function generateV136Data() {
-  // V13.6：4/36 成功，向中心移动
+  // V13.6锛?/36 鎴愬姛锛屽悜涓績绉诲姩
   const data = Array(6).fill(0).map(() => Array(6).fill(0));
   data[2][2] = 1;
   data[2][3] = 1;
@@ -2058,31 +2048,26 @@ function generateV136Data() {
 }
 
 function generateV14cData() {
-  // V14c：5/36 成功，随摆臂质量单调下降
+  // V14c锛?/36 鎴愬姛锛岄殢鎽嗚噦璐ㄩ噺鍗曡皟涓嬮檷
   const data = Array(6).fill(0).map(() => Array(6).fill(0));
-  // 第 0 行质量最低，成功最多
-  data[0][1] = 1;
+  // 绗?0 琛岃川閲忔渶浣庯紝鎴愬姛鏈€澶?  data[0][1] = 1;
   data[0][2] = 1;
   data[0][3] = 1;
   data[0][4] = 1;
-  // 第 1 行仍有少量成功
-  data[1][2] = 1;
+  // 绗?1 琛屼粛鏈夊皯閲忔垚鍔?  data[1][2] = 1;
   return data;
 }
 
 function generateV16Data() {
-  // V16：非单调共振模式
+  // V16锛氶潪鍗曡皟鍏辨尟妯″紡
   const data = Array(1).fill(0).map(() => Array(10).fill(0));
-  // 成功带：0、0.034、0.27+
-  data[0][0] = 1; // τ_C = 0
-  data[0][1] = 1; // τ_C = 0.034
-  data[0][2] = 0; // 失败带起点
-  data[0][3] = 0;
+  // 鎴愬姛甯︼細0銆?.034銆?.27+
+  data[0][0] = 1; // 蟿_C = 0
+  data[0][1] = 1; // 蟿_C = 0.034
+  data[0][2] = 0; // 澶辫触甯﹁捣鐐?  data[0][3] = 0;
   data[0][4] = 0;
   data[0][5] = 0;
-  data[0][6] = 0; // 失败带终点（0.20）
-  data[0][7] = 1; // 0.27+ 成功带
-  data[0][8] = 1;
+  data[0][6] = 0; // 澶辫触甯︾粓鐐癸紙0.20锛?  data[0][7] = 1; // 0.27+ 鎴愬姛甯?  data[0][8] = 1;
   data[0][9] = 1;
   return data;
 }
@@ -2102,9 +2087,9 @@ function renderHeatmap(containerId, data) {
         const color = val === 1
           ? 'rgba(52, 211, 153, 0.8)'
           : 'rgba(220, 38, 38, 0.8)';
-        const label = val === 1 ? '✓' : '✗';
+        const label = val === 1 ? '鉁? : '鉁?;
         return `
-          <div class="heatmap-cell" style="background: ${color};" title="[${row},${col}]: ${val === 1 ? '成功' : '失败'}">
+          <div class="heatmap-cell" style="background: ${color};" title="[${row},${col}]: ${val === 1 ? '鎴愬姛' : '澶辫触'}">
             ${label}
           </div>
         `;
