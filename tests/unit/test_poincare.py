@@ -127,13 +127,15 @@ class TestFloquetMultipliers:
         assert result["n_pairs"] == 0
         assert np.all(np.isnan(result["jacobian"]))
 
-    def test_two_points_minimum(self):
-        """两点是最小可估计情况。"""
+    def test_two_points_are_underdetermined_in_two_dimensions(self):
+        """二维系统的一对样本不足以估计 Jacobian，必须返回 NaN。"""
         pts = np.array([[0.1, 0.2], [0.15, 0.25]])
         result = floquet_multipliers(pts)
         assert result["n_pairs"] == 1
         assert result["jacobian"].shape == (2, 2)
-        assert not np.any(np.isnan(result["jacobian"]))
+        assert np.all(np.isnan(result["jacobian"]))
+        assert np.all(np.isnan(result["eigvals"]))
+        np.testing.assert_allclose(result["fixed_point"], pts.mean(axis=0))
 
     def test_stable_fixed_point(self):
         """稳定不动点：所有特征值模小于 1。"""
@@ -301,7 +303,7 @@ class TestIntegration:
         t = 0.0
         dt = 0.001
 
-        for i in range(2000):
+        for i in range(3000):
             support = "left" if (i // 500) % 2 == 0 else "right"
             theta1 = 0.3 * np.sin(2 * np.pi * t / 0.5)
             theta2 = 0.2 * np.cos(2 * np.pi * t / 0.5)
@@ -323,7 +325,7 @@ class TestIntegration:
         # 估计 Floquet 乘子
         result = floquet_multipliers(pts, skip_head=1)
 
-        assert result["n_pairs"] > 0
+        assert result["n_pairs"] >= pts.shape[1]
         assert result["jacobian"].shape == (2, 2)
         assert not np.any(np.isnan(result["eigvals"]))
 

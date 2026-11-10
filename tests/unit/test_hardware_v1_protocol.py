@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from hardware_v1_detection.pc_receiver.protocol import (
     BMI_SENSOR_NAMES,
@@ -6,6 +7,7 @@ from hardware_v1_detection.pc_receiver.protocol import (
     FrameParser,
     Imu6,
     NODE_DEBUG_PAYLOAD_SIZE,
+    NODE_DEBUG_PAYLOAD_SIZE_V1,
     SAMPLE_PAYLOAD_SIZE,
     SAMPLE_VALUE_COUNT,
     SENSOR_NAMES,
@@ -100,7 +102,8 @@ def test_status_bits_include_thighs_and_pelvis():
     ]
 
 
-def test_node_debug_frame_round_trip():
+@pytest.mark.parametrize("temp_centi_c,payload_size", [(None, 36), (2534, 38), (-32768, 38)])
+def test_node_debug_frame_round_trip(temp_centi_c, payload_size):
     imu = Imu6(ax=1, ay=2, az=3, gx=4, gy=5, gz=6)
     packet = encode_node_debug_frame(
         seq=99,
@@ -113,12 +116,15 @@ def test_node_debug_frame_round_trip():
         c3_ts_us=100000,
         s3_rx_ts_us=120000,
         imu=imu,
+        temp_centi_c=temp_centi_c,
     )
 
     parser = FrameParser()
     frames = parser.feed(packet)
 
-    assert NODE_DEBUG_PAYLOAD_SIZE == 36
+    assert NODE_DEBUG_PAYLOAD_SIZE_V1 == 36
+    assert NODE_DEBUG_PAYLOAD_SIZE == 38
+    assert int.from_bytes(packet[4:6], "little") == payload_size
     assert len(frames) == 1
     frame = frames[0]
     assert frame.node_id == 1
@@ -126,6 +132,8 @@ def test_node_debug_frame_round_trip():
     assert frame.age_ms == 7
     assert frame.c3_seq == 42
     assert frame.imu == imu
+    assert frame.temp_centi_c == temp_centi_c
+    assert frame.temp_c == (25.34 if temp_centi_c == 2534 else None)
     assert parser.stats.node_debug_frames == 1
 
 
