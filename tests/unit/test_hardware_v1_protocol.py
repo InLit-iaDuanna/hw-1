@@ -3,14 +3,14 @@ import pytest
 
 from hardware_v1_detection.pc_receiver.protocol import (
     BMI_SENSOR_NAMES,
-    CaptureStats,
-    FrameParser,
-    Imu6,
     NODE_DEBUG_PAYLOAD_SIZE,
     NODE_DEBUG_PAYLOAD_SIZE_V1,
     SAMPLE_PAYLOAD_SIZE,
     SAMPLE_VALUE_COUNT,
     SENSOR_NAMES,
+    CaptureStats,
+    FrameParser,
+    Imu6,
     crc16_ccitt,
     encode_node_debug_frame,
     encode_sample_frame,
@@ -73,10 +73,9 @@ def test_capture_stats_detects_dropped_seq_and_jitter():
     parser = FrameParser()
     stats = CaptureStats()
     values = [0] * SAMPLE_VALUE_COUNT
-    packets = (
-        encode_sample_frame(seq=10, ts_us=0, status=0, values=values)
-        + encode_sample_frame(seq=12, ts_us=5000, status=1, values=values)
-    )
+    packets = encode_sample_frame(
+        seq=10, ts_us=0, status=0, values=values
+    ) + encode_sample_frame(seq=12, ts_us=5000, status=1, values=values)
 
     frames = parser.feed(packets)
     for idx, frame in enumerate(frames):
@@ -93,7 +92,9 @@ def test_status_bits_include_thighs_and_pelvis():
     parser = FrameParser()
     values = [0] * SAMPLE_VALUE_COUNT
     status = (1 << 4) | (1 << 5) | (1 << 6)
-    frame = parser.feed(encode_sample_frame(seq=1, ts_us=0, status=status, values=values))[0]
+    frame = parser.feed(
+        encode_sample_frame(seq=1, ts_us=0, status=status, values=values)
+    )[0]
 
     assert frame.status_names() == [
         "left_thigh_fail",
@@ -102,7 +103,9 @@ def test_status_bits_include_thighs_and_pelvis():
     ]
 
 
-@pytest.mark.parametrize("temp_centi_c,payload_size", [(None, 36), (2534, 38), (-32768, 38)])
+@pytest.mark.parametrize(
+    "temp_centi_c,payload_size", [(None, 36), (2534, 38), (-32768, 38)]
+)
 def test_node_debug_frame_round_trip(temp_centi_c, payload_size):
     imu = Imu6(ax=1, ay=2, az=3, gx=4, gy=5, gz=6)
     packet = encode_node_debug_frame(
