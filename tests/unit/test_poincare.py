@@ -127,13 +127,15 @@ class TestFloquetMultipliers:
         assert result["n_pairs"] == 0
         assert np.all(np.isnan(result["jacobian"]))
 
-    def test_two_points_minimum(self):
-        """两点是最小可估计情况。"""
+    def test_two_points_are_underdetermined_in_two_dimensions(self):
+        """二维系统的一对样本不足以估计 Jacobian，必须返回 NaN。"""
         pts = np.array([[0.1, 0.2], [0.15, 0.25]])
         result = floquet_multipliers(pts)
         assert result["n_pairs"] == 1
         assert result["jacobian"].shape == (2, 2)
-        assert not np.any(np.isnan(result["jacobian"]))
+        assert np.all(np.isnan(result["jacobian"]))
+        assert np.all(np.isnan(result["eigvals"]))
+        np.testing.assert_allclose(result["fixed_point"], pts.mean(axis=0))
 
     def test_stable_fixed_point(self):
         """稳定不动点：所有特征值模小于 1。"""
@@ -199,13 +201,15 @@ class TestFloquetMultipliers:
     def test_skip_head_transient(self):
         """skip_head 应跳过暂态点。"""
         # 前几个点有大扰动
-        pts = np.array([
-            [10.0, 5.0],  # 暂态
-            [8.0, 4.0],   # 暂态
-            [1.1, 0.5],
-            [1.0, 0.5],
-            [0.9, 0.5],
-        ])
+        pts = np.array(
+            [
+                [10.0, 5.0],  # 暂态
+                [8.0, 4.0],  # 暂态
+                [1.1, 0.5],
+                [1.0, 0.5],
+                [0.9, 0.5],
+            ]
+        )
 
         result_full = floquet_multipliers(pts, skip_head=0)
         result_skip = floquet_multipliers(pts, skip_head=2)
@@ -245,7 +249,8 @@ class TestPlotSection:
     def test_plot_with_empty_data(self):
         """空数据应显示提示信息。"""
         import matplotlib
-        matplotlib.use('Agg')  # 使用非交互式后端
+
+        matplotlib.use("Agg")  # 使用非交互式后端
         import matplotlib.pyplot as plt
 
         fig, ax = plt.subplots()
@@ -259,7 +264,8 @@ class TestPlotSection:
     def test_plot_with_data(self):
         """有数据时应正常绘图。"""
         import matplotlib
-        matplotlib.use('Agg')  # 使用非交互式后端
+
+        matplotlib.use("Agg")  # 使用非交互式后端
         import matplotlib.pyplot as plt
 
         fig, ax = plt.subplots()
@@ -277,7 +283,8 @@ class TestPlotSection:
     def test_plot_without_title(self):
         """无标题时应正常绘图。"""
         import matplotlib
-        matplotlib.use('Agg')  # 使用非交互式后端
+
+        matplotlib.use("Agg")  # 使用非交互式后端
         import matplotlib.pyplot as plt
 
         fig, ax = plt.subplots()
@@ -301,17 +308,19 @@ class TestIntegration:
         t = 0.0
         dt = 0.001
 
-        for i in range(2000):
+        for i in range(3000):
             support = "left" if (i // 500) % 2 == 0 else "right"
             theta1 = 0.3 * np.sin(2 * np.pi * t / 0.5)
             theta2 = 0.2 * np.cos(2 * np.pi * t / 0.5)
 
-            rows.append({
-                "time": t,
-                "support_foot": support,
-                "hip_angle": theta1,
-                "knee_angle": theta2,
-            })
+            rows.append(
+                {
+                    "time": t,
+                    "support_foot": support,
+                    "hip_angle": theta1,
+                    "knee_angle": theta2,
+                }
+            )
             t += dt
 
         # 采集截面
@@ -323,7 +332,7 @@ class TestIntegration:
         # 估计 Floquet 乘子
         result = floquet_multipliers(pts, skip_head=1)
 
-        assert result["n_pairs"] > 0
+        assert result["n_pairs"] >= pts.shape[1]
         assert result["jacobian"].shape == (2, 2)
         assert not np.any(np.isnan(result["eigvals"]))
 
@@ -336,7 +345,9 @@ class TestIntegration:
 
         np.testing.assert_array_almost_equal(result1["jacobian"], result2["jacobian"])
         np.testing.assert_array_almost_equal(result1["eigvals"], result2["eigvals"])
-        np.testing.assert_array_almost_equal(result1["fixed_point"], result2["fixed_point"])
+        np.testing.assert_array_almost_equal(
+            result1["fixed_point"], result2["fixed_point"]
+        )
 
     def test_goswami_method_consistency(self):
         """验证 Goswami 方法的一致性（线性系统）。"""

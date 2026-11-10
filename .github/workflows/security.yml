@@ -38,10 +38,7 @@ jobs:
         safety check || echo "Safety check found issues"
 
     - name: Audit dependencies with pip-audit
-      continue-on-error: true
-      run: |
-        pip-audit --desc --format json --output pip-audit-report.json || true
-        pip-audit --desc || echo "Pip-audit found issues"
+      run: pip-audit -r requirements.txt --desc --format json --output pip-audit-report.json
 
     - name: Security check with Bandit
       continue-on-error: true

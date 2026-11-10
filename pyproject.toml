@@ -7,7 +7,7 @@ name = "hw-1"
 version = "1.0.0"
 description = "步态训练辅助设备仿真研究 - 被动动态步行与准被动仿生机构"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 authors = [
     {name = "段泽琪", email = "2024211317@buct.edu.cn"}
@@ -19,7 +19,6 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Physics",
     "Topic :: Scientific/Engineering :: Robotics",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
 ]

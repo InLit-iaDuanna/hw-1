@@ -33,9 +33,11 @@ jobs:
       id: coverage
       run: |
         pytest --cov=common --cov-report=json --cov-report=term
-        $coverage = (Get-Content coverage.json | ConvertFrom-Json).totals.percent_covered
+        $testExitCode = $LASTEXITCODE
+        $coverage = (Get-Content coverage.json -Raw | ConvertFrom-Json -AsHashtable).totals.percent_covered
         Write-Output "coverage=$coverage" >> $env:GITHUB_OUTPUT
         Write-Output "Current test coverage: $coverage%"
+        exit $testExitCode
 
     - name: Check code complexity
       id: complexity
@@ -48,7 +50,7 @@ jobs:
       id: todos
       shell: pwsh
       run: |
-        $todoCount = (Select-String -Path "common/*.py" -Pattern "TODO|FIXME|HACK" -Recursive).Count
+        $todoCount = @(Get-ChildItem -Path common -Filter *.py -File -Recurse | Select-String -Pattern "TODO|FIXME|HACK").Count
         Write-Output "todo_count=$todoCount" >> $env:GITHUB_OUTPUT
         Write-Output "Found $todoCount TODO/FIXME/HACK comments"
 
@@ -86,6 +88,7 @@ jobs:
 
         Write-Output $report
         $report | Out-File -FilePath health-report.md -Encoding utf8
+        $report | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
 
     - name: Upload health report
       uses: actions/upload-artifact@v4
@@ -93,18 +96,7 @@ jobs:
         name: health-report-${{ github.run_number }}
         path: health-report.md
 
-    - name: Create issue if health degraded
-      if: steps.coverage.outputs.coverage < 70
-      uses: actions/github-script@v7
-      with:
-        script: |
-          const fs = require('fs');
-          const report = fs.readFileSync('health-report.md', 'utf8');
-
-          github.rest.issues.create({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            title: '项目健康警告：测试覆盖率低于 70%',
-            body: report,
-            labels: ['health', 'coverage', 'automated']
-          });
+    - name: Report low coverage
+      if: fromJSON(steps.coverage.outputs.coverage) < 70
+      shell: pwsh
+      run: Write-Output "::warning::Test coverage is below 70%; see the health report in the job summary."
