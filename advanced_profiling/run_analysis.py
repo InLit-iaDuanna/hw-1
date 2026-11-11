@@ -256,7 +256,9 @@ def generate_comprehensive_report(
         summary_lines.append(f"内存峰值: {peak_mb:.2f} MB")
 
         if "leak_detection" in memory_analysis:
-            has_leak = memory_analysis["leak_detection"].get("has_potential_leak", False)
+            has_leak = memory_analysis["leak_detection"].get(
+                "has_potential_leak", False
+            )
             summary_lines.append(f"潜在内存泄漏: {'是' if has_leak else '否'}")
 
         if "preallocation" in memory_analysis:
@@ -400,9 +402,7 @@ def main():
     # 1. 热点分析
     hotspot_analysis = None
     if not args.skip_hotspot:
-        hotspot_analysis = run_hotspot_analysis(
-            args.version, config, params, sample_hz
-        )
+        hotspot_analysis = run_hotspot_analysis(args.version, config, params, sample_hz)
 
     # 2. 内存分析
     memory_analysis = {}

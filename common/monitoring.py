@@ -282,9 +282,7 @@ class SystemMonitor:
         mem_pct_values = [s.memory_percent for s in self.snapshots]
 
         report = {
-            "duration": (
-                time.time() - self.start_time if self.start_time else 0.0
-            ),
+            "duration": (time.time() - self.start_time if self.start_time else 0.0),
             "snapshots_count": len(self.snapshots),
             "alerts_count": len(self.alerts),
             "cpu": {

@@ -10,7 +10,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 import matplotlib
-matplotlib.use('Agg')  # Use non-interactive backend for testing
+
+matplotlib.use("Agg")  # Use non-interactive backend for testing
 import matplotlib.pyplot as plt
 
 # Add project root to path
@@ -114,7 +115,8 @@ class TestPhasePortraitVisualizer:
             return -x
 
         vis.add_vector_field(
-            dx_dt, dy_dt,
+            dx_dt,
+            dy_dt,
             x_range=(-2, 2),
             y_range=(-2, 2),
             density=10,
@@ -175,7 +177,7 @@ class TestPhasePortraitVisualizer:
         vis.plot(ax=ax, xlabel="x", ylabel="y")
 
         # 检查标注是否被添加（通过检查 scatter 集合）
-        collections = [c for c in ax.collections if hasattr(c, 'get_sizes')]
+        collections = [c for c in ax.collections if hasattr(c, "get_sizes")]
         assert len(collections) >= 3  # 至少有 3 个标注点
 
         plt.close(fig)
@@ -192,7 +194,7 @@ class TestPhasePortraitVisualizer:
         vis.add_trajectory(x, y, z, label="Helix")
 
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
+        ax = fig.add_subplot(111, projection="3d")
         result_ax = vis.plot(
             ax=ax,
             xlabel="x",
@@ -314,7 +316,8 @@ class TestQuickPhasePortrait:
         y = np.sin(x)
 
         fig, ax = quick_phase_portrait(
-            x, y,
+            x,
+            y,
             xlabel="Position",
             ylabel="Velocity",
             title="Quick Plot Test",

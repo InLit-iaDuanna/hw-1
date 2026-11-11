@@ -48,6 +48,7 @@ import mujoco
 @dataclass
 class PhaseGatedParams:
     """8D phase-gated residual parameters."""
+
     # Left hip torques per phase (N·m)
     left_stance_early: float
     left_stance_late: float
@@ -61,15 +62,21 @@ class PhaseGatedParams:
     right_swing_retract: float
 
     def to_array(self) -> np.ndarray:
-        return np.array([
-            self.left_stance_early, self.left_stance_late,
-            self.left_swing_thrust, self.left_swing_retract,
-            self.right_stance_early, self.right_stance_late,
-            self.right_swing_thrust, self.right_swing_retract,
-        ])
+        return np.array(
+            [
+                self.left_stance_early,
+                self.left_stance_late,
+                self.left_swing_thrust,
+                self.left_swing_retract,
+                self.right_stance_early,
+                self.right_stance_late,
+                self.right_swing_thrust,
+                self.right_swing_retract,
+            ]
+        )
 
     @classmethod
-    def from_array(cls, arr: np.ndarray) -> 'PhaseGatedParams':
+    def from_array(cls, arr: np.ndarray) -> "PhaseGatedParams":
         return cls(
             left_stance_early=float(arr[0]),
             left_stance_late=float(arr[1]),
@@ -154,6 +161,7 @@ def evaluate_phase_gated(
     # Setup V13.7 params
     base_params = PassiveArmsParams()
     from dataclasses import replace
+
     base_params = replace(
         base_params,
         duration=duration,
@@ -206,10 +214,18 @@ def evaluate_phase_gated(
 
         # Joint address lookup
         qvel_addr = {
-            "left_hip": mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "left_hip_joint"),
-            "left_knee": mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "left_knee_joint"),
-            "right_hip": mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "right_hip_joint"),
-            "right_knee": mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "right_knee_joint"),
+            "left_hip": mujoco.mj_name2id(
+                model, mujoco.mjtObj.mjOBJ_JOINT, "left_hip_joint"
+            ),
+            "left_knee": mujoco.mj_name2id(
+                model, mujoco.mjtObj.mjOBJ_JOINT, "left_knee_joint"
+            ),
+            "right_hip": mujoco.mj_name2id(
+                model, mujoco.mjtObj.mjOBJ_JOINT, "right_hip_joint"
+            ),
+            "right_knee": mujoco.mj_name2id(
+                model, mujoco.mjtObj.mjOBJ_JOINT, "right_knee_joint"
+            ),
         }
 
         last_contact_t = -1.0
@@ -236,7 +252,10 @@ def evaluate_phase_gated(
                     if candidate_start_t[foot] is None:
                         candidate_start_t[foot] = t
                         contact_reported[foot] = False
-                    elif t - candidate_start_t[foot] >= base_params.contact_latch_duration:
+                    elif (
+                        t - candidate_start_t[foot]
+                        >= base_params.contact_latch_duration
+                    ):
                         if not contact_reported[foot]:
                             support_foot = foot
                             burst_start_t = t
@@ -249,7 +268,9 @@ def evaluate_phase_gated(
 
             # V13.6 FSM control
             E_current = _mechanical_energy(base_params, data)
-            tau = control_v136(fsm_params, data, t, support_foot, burst_start_t, E_current)
+            tau = control_v136(
+                fsm_params, data, t, support_foot, burst_start_t, E_current
+            )
 
             l_hip_des, l_knee_des = tau[0], tau[1]
             r_hip_des, r_knee_des = tau[2], tau[3]
@@ -384,9 +405,8 @@ def main():
     except ImportError:
         print("ERROR: cma package not found. Installing...")
         import subprocess
-        subprocess.check_call([
-            sys.executable, "-m", "pip", "install", "cma"
-        ])
+
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "cma"])
         import cma
 
     # Initial guess: start from constant best [0.5, 1.0]
@@ -400,16 +420,16 @@ def main():
 
     # CMA-ES options
     opts = {
-        'bounds': [[-0.5] * 8, [0.5] * 8],
-        'popsize': 12,
-        'maxiter': 30,  # Reduced for faster iteration
-        'verb_disp': 1,
-        'verb_log': 0,
+        "bounds": [[-0.5] * 8, [0.5] * 8],
+        "popsize": 12,
+        "maxiter": 30,  # Reduced for faster iteration
+        "verb_disp": 1,
+        "verb_log": 0,
     }
 
     es = cma.CMAEvolutionStrategy(initial_guess, sigma, opts)
 
-    best_score = float('inf')
+    best_score = float("inf")
     best_params = None
     iteration = 0
 
@@ -430,7 +450,9 @@ def main():
             result = evaluate_phase_gated(best_params, episodes=10, verbose=False)
 
             print(f"Iter {iteration}: New best score={-best_score:.3f}")
-            print(f"  Distance: {result['mean_distance']:.3f} ± {result['std_distance']:.3f}m")
+            print(
+                f"  Distance: {result['mean_distance']:.3f} ± {result['std_distance']:.3f}m"
+            )
             print(f"  Failure rate: {result['failure_rate']*100:.0f}%")
             print(f"  Params: {best_params}")
             print()
@@ -448,16 +470,22 @@ def main():
     print("=" * 80)
     print("RESULTS")
     print("=" * 80)
-    print(f"Best distance: {final_result['mean_distance']:.3f} ± {final_result['std_distance']:.3f}m")
+    print(
+        f"Best distance: {final_result['mean_distance']:.3f} ± {final_result['std_distance']:.3f}m"
+    )
     print(f"Failure rate: {final_result['failure_rate']*100:.0f}%")
     print(f"Energy cost: {final_result['mean_energy']:.3f} J")
     print()
     print("Best 8D parameters:")
     phase_params = PhaseGatedParams.from_array(best_params)
-    print(f"  Left:  early={phase_params.left_stance_early:.3f}, late={phase_params.left_stance_late:.3f}, "
-          f"thrust={phase_params.left_swing_thrust:.3f}, retract={phase_params.left_swing_retract:.3f}")
-    print(f"  Right: early={phase_params.right_stance_early:.3f}, late={phase_params.right_stance_late:.3f}, "
-          f"thrust={phase_params.right_swing_thrust:.3f}, retract={phase_params.right_swing_retract:.3f}")
+    print(
+        f"  Left:  early={phase_params.left_stance_early:.3f}, late={phase_params.left_stance_late:.3f}, "
+        f"thrust={phase_params.left_swing_thrust:.3f}, retract={phase_params.left_swing_retract:.3f}"
+    )
+    print(
+        f"  Right: early={phase_params.right_stance_early:.3f}, late={phase_params.right_stance_late:.3f}, "
+        f"thrust={phase_params.right_swing_thrust:.3f}, retract={phase_params.right_swing_retract:.3f}"
+    )
     print()
     print("Comparison:")
     print(f"  Constant best:    4.973m")
@@ -465,13 +493,15 @@ def main():
     print(f"  Phase-gated 8D:   {final_result['mean_distance']:.3f}m")
     print()
 
-    improvement_vs_constant = final_result['mean_distance'] - 4.973
-    improvement_vs_rl = final_result['mean_distance'] - 4.779
+    improvement_vs_constant = final_result["mean_distance"] - 4.973
+    improvement_vs_rl = final_result["mean_distance"] - 4.779
 
-    if final_result['mean_distance'] > 4.973:
+    if final_result["mean_distance"] > 4.973:
         print("[SUCCESS] Phase-gated residual surpassed constant baseline!")
-        print(f"  Improvement: +{improvement_vs_constant:.3f}m ({improvement_vs_constant/4.973*100:.1f}%)")
-    elif final_result['mean_distance'] > 4.779:
+        print(
+            f"  Improvement: +{improvement_vs_constant:.3f}m ({improvement_vs_constant/4.973*100:.1f}%)"
+        )
+    elif final_result["mean_distance"] > 4.779:
         print("[PARTIAL] Better than RL, but not yet surpassing constant.")
         print(f"  vs RL: +{improvement_vs_rl:.3f}m")
         print(f"  vs constant: {improvement_vs_constant:.3f}m")
@@ -482,10 +512,10 @@ def main():
     # Save results
     report = {
         "best_params": best_params.tolist(),
-        "best_distance": final_result['mean_distance'],
-        "std_distance": final_result['std_distance'],
-        "failure_rate": final_result['failure_rate'],
-        "energy_cost": final_result['mean_energy'],
+        "best_distance": final_result["mean_distance"],
+        "std_distance": final_result["std_distance"],
+        "failure_rate": final_result["failure_rate"],
+        "energy_cost": final_result["mean_energy"],
         "phase_params": {
             "left_stance_early": phase_params.left_stance_early,
             "left_stance_late": phase_params.left_stance_late,
@@ -499,7 +529,7 @@ def main():
         "comparison": {
             "constant_best": 4.973,
             "rl_100k": 4.779,
-            "phase_gated_8d": final_result['mean_distance'],
+            "phase_gated_8d": final_result["mean_distance"],
             "improvement_vs_constant": improvement_vs_constant,
             "improvement_vs_rl": improvement_vs_rl,
         },
@@ -507,11 +537,13 @@ def main():
             "initial_guess": initial_guess.tolist(),
             "sigma": sigma,
             "iterations": iteration,
-            "popsize": opts['popsize'],
+            "popsize": opts["popsize"],
         },
     }
 
-    report_path = HW1_ROOT / "logs" / "residual_rl_v2" / "phase_gated_search_result.json"
+    report_path = (
+        HW1_ROOT / "logs" / "residual_rl_v2" / "phase_gated_search_result.json"
+    )
     report_path.parent.mkdir(parents=True, exist_ok=True)
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)

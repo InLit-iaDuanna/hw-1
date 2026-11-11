@@ -132,8 +132,12 @@ class PerformanceMonitor:
                 current_test = current_tests[test_name]
                 current_value = current_test.get("value")
 
-                if current_value is not None and isinstance(baseline_value, (int, float)):
-                    change_pct = ((current_value - baseline_value) / baseline_value) * 100
+                if current_value is not None and isinstance(
+                    baseline_value, (int, float)
+                ):
+                    change_pct = (
+                        (current_value - baseline_value) / baseline_value
+                    ) * 100
 
                     comparison_item = {
                         "test": test_name,
@@ -170,13 +174,9 @@ class PerformanceMonitor:
         if perf_results["status"] == "success":
             for test in perf_results["tests"]:
                 if test["status"] == "pass":
-                    print(
-                        f"   ✓ {test['name']}: {test['value']} {test['unit']}"
-                    )
+                    print(f"   ✓ {test['name']}: {test['value']} {test['unit']}")
                 elif test["status"] == "slow":
-                    print(
-                        f"   ⚠ {test['name']}: {test['value']} {test['unit']} (慢)"
-                    )
+                    print(f"   ⚠ {test['name']}: {test['value']} {test['unit']} (慢)")
                 elif test["status"] == "error":
                     print(f"   ✗ {test['name']}: {test.get('error', 'N/A')}")
 

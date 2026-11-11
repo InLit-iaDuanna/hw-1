@@ -18,7 +18,8 @@ import json
 from pathlib import Path
 from typing import Dict, Tuple, List
 import matplotlib
-matplotlib.use('Agg')  # Non-interactive backend
+
+matplotlib.use("Agg")  # Non-interactive backend
 
 
 class GaitOptimizationProblem(Problem):
@@ -47,7 +48,7 @@ class GaitOptimizationProblem(Problem):
             n_obj=2,  # 2 objectives
             n_constr=0,  # No constraints
             xl=np.array([0.5, 0.3, 0.1, 0.5]),  # Lower bounds
-            xu=np.array([2.0, 0.7, 0.5, 1.5])   # Upper bounds
+            xu=np.array([2.0, 0.7, 0.5, 1.5]),  # Upper bounds
         )
         self.simulation_func = simulation_func or self._surrogate_model
         self.evaluation_count = 0
@@ -57,28 +58,28 @@ class GaitOptimizationProblem(Problem):
         Surrogate model for testing (replace with actual simulation)
         Models realistic trade-offs between distance and energy
         """
-        tg = params['torque_gain']
-        pt = params['phase_threshold']
-        dc = params['damping_coeff']
-        sg = params['stiffness_gain']
+        tg = params["torque_gain"]
+        pt = params["phase_threshold"]
+        dc = params["damping_coeff"]
+        sg = params["stiffness_gain"]
 
         # Distance model: increases with torque, optimal phase threshold around 0.5
         distance = (
-            50 * tg +
-            100 * (1 - abs(pt - 0.5)) +
-            30 * sg -
-            20 * dc +
-            np.random.normal(0, 5)  # Add noise
+            50 * tg
+            + 100 * (1 - abs(pt - 0.5))
+            + 30 * sg
+            - 20 * dc
+            + np.random.normal(0, 5)  # Add noise
         )
         distance = max(0, distance)
 
         # Energy model: increases with torque and stiffness
         energy = (
-            100 * tg**1.5 +
-            50 * sg**1.2 +
-            30 * (1 - dc) +
-            20 * abs(pt - 0.5)**0.5 +
-            np.random.normal(0, 10)
+            100 * tg**1.5
+            + 50 * sg**1.2
+            + 30 * (1 - dc)
+            + 20 * abs(pt - 0.5) ** 0.5
+            + np.random.normal(0, 10)
         )
         energy = max(1, energy)
 
@@ -98,21 +99,23 @@ class GaitOptimizationProblem(Problem):
 
         for i in range(n_pop):
             params = {
-                'torque_gain': X[i, 0],
-                'phase_threshold': X[i, 1],
-                'damping_coeff': X[i, 2],
-                'stiffness_gain': X[i, 3]
+                "torque_gain": X[i, 0],
+                "phase_threshold": X[i, 1],
+                "damping_coeff": X[i, 2],
+                "stiffness_gain": X[i, 3],
             }
 
             distance, energy, cot = self.simulation_func(params)
 
             f1[i] = -distance  # Minimize negative distance = maximize distance
-            f2[i] = cot        # Minimize CoT
+            f2[i] = cot  # Minimize CoT
 
             self.evaluation_count += 1
 
             if self.evaluation_count % 50 == 0:
-                print(f"Evaluation {self.evaluation_count}: dist={distance:.2f}, CoT={cot:.4f}")
+                print(
+                    f"Evaluation {self.evaluation_count}: dist={distance:.2f}, CoT={cot:.4f}"
+                )
 
         out["F"] = np.column_stack([f1, f2])
 
@@ -179,7 +182,7 @@ def run_optimization(
     pop_size: int = 100,
     n_gen: int = 50,
     simulation_func=None,
-    output_dir: str = "D:\\Dunna\\Documents\\hw-1\\parameter_tuning\\results"
+    output_dir: str = "D:\\Dunna\\Documents\\hw-1\\parameter_tuning\\results",
 ) -> Dict:
     """
     Run multi-objective optimization
@@ -213,7 +216,7 @@ def run_optimization(
         sampling=FloatRandomSampling(),
         crossover=SBX(prob=0.9, eta=15),
         mutation=PM(eta=20),
-        eliminate_duplicates=True
+        eliminate_duplicates=True,
     )
 
     # Run optimization
@@ -224,7 +227,7 @@ def run_optimization(
         termination=get_termination("n_gen", n_gen),
         seed=42,
         verbose=True,
-        save_history=True
+        save_history=True,
     )
 
     print(f"\nOptimization complete! Total evaluations: {problem.evaluation_count}")
@@ -257,33 +260,30 @@ def run_optimization(
 
     # Save results
     results = {
-        'pareto_front': {
-            'decision_variables': pareto_X.tolist(),
-            'distance': distance.tolist(),
-            'cot': cot.tolist()
+        "pareto_front": {
+            "decision_variables": pareto_X.tolist(),
+            "distance": distance.tolist(),
+            "cot": cot.tolist(),
         },
-        'knee_point': {
-            'index': int(knee_idx),
-            'parameters': {
-                'torque_gain': float(knee_params[0]),
-                'phase_threshold': float(knee_params[1]),
-                'damping_coeff': float(knee_params[2]),
-                'stiffness_gain': float(knee_params[3])
+        "knee_point": {
+            "index": int(knee_idx),
+            "parameters": {
+                "torque_gain": float(knee_params[0]),
+                "phase_threshold": float(knee_params[1]),
+                "damping_coeff": float(knee_params[2]),
+                "stiffness_gain": float(knee_params[3]),
             },
-            'objectives': {
-                'distance': float(knee_distance),
-                'cot': float(knee_cot)
-            }
+            "objectives": {"distance": float(knee_distance), "cot": float(knee_cot)},
         },
-        'optimization_config': {
-            'pop_size': pop_size,
-            'n_gen': n_gen,
-            'total_evaluations': problem.evaluation_count
-        }
+        "optimization_config": {
+            "pop_size": pop_size,
+            "n_gen": n_gen,
+            "total_evaluations": problem.evaluation_count,
+        },
     }
 
     results_file = output_path / "multi_objective_results.json"
-    with open(results_file, 'w') as f:
+    with open(results_file, "w") as f:
         json.dump(results, f, indent=2)
     print(f"\nResults saved to: {results_file}")
 
@@ -294,10 +294,7 @@ def run_optimization(
 
 
 def visualize_results(
-    distance: np.ndarray,
-    cot: np.ndarray,
-    knee_idx: int,
-    output_path: Path
+    distance: np.ndarray, cot: np.ndarray, knee_idx: int, output_path: Path
 ):
     """
     Create visualization of Pareto front and trade-offs
@@ -306,24 +303,37 @@ def visualize_results(
 
     # Plot 1: Pareto front
     ax1 = axes[0]
-    ax1.scatter(distance, cot, c='blue', alpha=0.6, s=50, label='Pareto Solutions')
-    ax1.scatter(distance[knee_idx], cot[knee_idx],
-                c='red', s=200, marker='*',
-                edgecolors='black', linewidths=2,
-                label='Knee Point', zorder=5)
-    ax1.set_xlabel('Walking Distance (m)', fontsize=12)
-    ax1.set_ylabel('Cost of Transport', fontsize=12)
-    ax1.set_title('Pareto Front: Distance vs Energy Efficiency', fontsize=14, fontweight='bold')
+    ax1.scatter(distance, cot, c="blue", alpha=0.6, s=50, label="Pareto Solutions")
+    ax1.scatter(
+        distance[knee_idx],
+        cot[knee_idx],
+        c="red",
+        s=200,
+        marker="*",
+        edgecolors="black",
+        linewidths=2,
+        label="Knee Point",
+        zorder=5,
+    )
+    ax1.set_xlabel("Walking Distance (m)", fontsize=12)
+    ax1.set_ylabel("Cost of Transport", fontsize=12)
+    ax1.set_title(
+        "Pareto Front: Distance vs Energy Efficiency", fontsize=14, fontweight="bold"
+    )
     ax1.grid(True, alpha=0.3)
     ax1.legend(fontsize=10)
 
     # Add annotations
-    ax1.annotate('Best Trade-off',
-                 xy=(distance[knee_idx], cot[knee_idx]),
-                 xytext=(20, 20), textcoords='offset points',
-                 fontsize=10, fontweight='bold',
-                 bbox=dict(boxstyle='round,pad=0.5', fc='yellow', alpha=0.7),
-                 arrowprops=dict(arrowstyle='->', lw=2, color='red'))
+    ax1.annotate(
+        "Best Trade-off",
+        xy=(distance[knee_idx], cot[knee_idx]),
+        xytext=(20, 20),
+        textcoords="offset points",
+        fontsize=10,
+        fontweight="bold",
+        bbox=dict(boxstyle="round,pad=0.5", fc="yellow", alpha=0.7),
+        arrowprops=dict(arrowstyle="->", lw=2, color="red"),
+    )
 
     # Plot 2: Trade-off analysis
     ax2 = axes[1]
@@ -335,32 +345,51 @@ def visualize_results(
 
     ax2_twin = ax2.twinx()
 
-    line1 = ax2.plot(range(len(sorted_dist)), sorted_dist,
-                     'bo-', linewidth=2, markersize=6, label='Distance')
-    line2 = ax2_twin.plot(range(len(sorted_cot)), sorted_cot,
-                          'ro-', linewidth=2, markersize=6, label='CoT')
+    line1 = ax2.plot(
+        range(len(sorted_dist)),
+        sorted_dist,
+        "bo-",
+        linewidth=2,
+        markersize=6,
+        label="Distance",
+    )
+    line2 = ax2_twin.plot(
+        range(len(sorted_cot)),
+        sorted_cot,
+        "ro-",
+        linewidth=2,
+        markersize=6,
+        label="CoT",
+    )
 
     # Mark knee point
     knee_pos = np.where(sorted_idx == knee_idx)[0][0]
-    ax2.axvline(knee_pos, color='green', linestyle='--', linewidth=2, alpha=0.7, label='Knee Point')
+    ax2.axvline(
+        knee_pos,
+        color="green",
+        linestyle="--",
+        linewidth=2,
+        alpha=0.7,
+        label="Knee Point",
+    )
 
-    ax2.set_xlabel('Solution Index (sorted by distance)', fontsize=12)
-    ax2.set_ylabel('Distance (m)', fontsize=12, color='blue')
-    ax2_twin.set_ylabel('Cost of Transport', fontsize=12, color='red')
-    ax2.set_title('Trade-off Analysis', fontsize=14, fontweight='bold')
-    ax2.tick_params(axis='y', labelcolor='blue')
-    ax2_twin.tick_params(axis='y', labelcolor='red')
+    ax2.set_xlabel("Solution Index (sorted by distance)", fontsize=12)
+    ax2.set_ylabel("Distance (m)", fontsize=12, color="blue")
+    ax2_twin.set_ylabel("Cost of Transport", fontsize=12, color="red")
+    ax2.set_title("Trade-off Analysis", fontsize=14, fontweight="bold")
+    ax2.tick_params(axis="y", labelcolor="blue")
+    ax2_twin.tick_params(axis="y", labelcolor="red")
     ax2.grid(True, alpha=0.3)
 
     # Combine legends
     lines = line1 + line2 + [ax2.get_lines()[-1]]
     labels = [l.get_label() for l in lines]
-    ax2.legend(lines, labels, fontsize=10, loc='upper left')
+    ax2.legend(lines, labels, fontsize=10, loc="upper left")
 
     plt.tight_layout()
 
     plot_file = output_path / "pareto_front.png"
-    plt.savefig(plot_file, dpi=300, bbox_inches='tight')
+    plt.savefig(plot_file, dpi=300, bbox_inches="tight")
     print(f"Plot saved to: {plot_file}")
     plt.close()
 
@@ -370,10 +399,7 @@ def visualize_results(
 
 
 def create_3d_visualization(
-    distance: np.ndarray,
-    cot: np.ndarray,
-    knee_idx: int,
-    output_path: Path
+    distance: np.ndarray, cot: np.ndarray, knee_idx: int, output_path: Path
 ):
     """
     Create 3D scatter plot with solution quality metric
@@ -386,24 +412,32 @@ def create_3d_visualization(
     quality = dist_norm - cot_norm  # Higher distance, lower CoT = better
 
     fig = plt.figure(figsize=(10, 8))
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection="3d")
 
-    scatter = ax.scatter(distance, cot, quality,
-                        c=quality, cmap='viridis',
-                        s=50, alpha=0.6)
-    ax.scatter(distance[knee_idx], cot[knee_idx], quality[knee_idx],
-              c='red', s=300, marker='*',
-              edgecolors='black', linewidths=2, zorder=5)
+    scatter = ax.scatter(
+        distance, cot, quality, c=quality, cmap="viridis", s=50, alpha=0.6
+    )
+    ax.scatter(
+        distance[knee_idx],
+        cot[knee_idx],
+        quality[knee_idx],
+        c="red",
+        s=300,
+        marker="*",
+        edgecolors="black",
+        linewidths=2,
+        zorder=5,
+    )
 
-    ax.set_xlabel('Distance (m)', fontsize=11)
-    ax.set_ylabel('Cost of Transport', fontsize=11)
-    ax.set_zlabel('Quality Score', fontsize=11)
-    ax.set_title('3D Solution Space', fontsize=14, fontweight='bold')
+    ax.set_xlabel("Distance (m)", fontsize=11)
+    ax.set_ylabel("Cost of Transport", fontsize=11)
+    ax.set_zlabel("Quality Score", fontsize=11)
+    ax.set_title("3D Solution Space", fontsize=14, fontweight="bold")
 
-    plt.colorbar(scatter, ax=ax, label='Quality Score', pad=0.1)
+    plt.colorbar(scatter, ax=ax, label="Quality Score", pad=0.1)
 
     plot_file = output_path / "solution_space_3d.png"
-    plt.savefig(plot_file, dpi=300, bbox_inches='tight')
+    plt.savefig(plot_file, dpi=300, bbox_inches="tight")
     print(f"3D plot saved to: {plot_file}")
     plt.close()
 
@@ -412,11 +446,11 @@ def compare_solutions(results: Dict, baseline_params: Dict = None):
     """
     Compare knee point solution with baseline or extreme solutions
     """
-    knee = results['knee_point']
-    pareto = results['pareto_front']
+    knee = results["knee_point"]
+    pareto = results["pareto_front"]
 
-    distance_arr = np.array(pareto['distance'])
-    cot_arr = np.array(pareto['cot'])
+    distance_arr = np.array(pareto["distance"])
+    cot_arr = np.array(pareto["cot"])
 
     max_dist_idx = np.argmax(distance_arr)
     min_cot_idx = np.argmin(cot_arr)
@@ -448,17 +482,15 @@ def compare_solutions(results: Dict, baseline_params: Dict = None):
 if __name__ == "__main__":
     # Run optimization with surrogate model
     results = run_optimization(
-        pop_size=100,
-        n_gen=50,
-        simulation_func=None  # Uses surrogate model
+        pop_size=100, n_gen=50, simulation_func=None  # Uses surrogate model
     )
 
     # Compare solutions
     baseline = {
-        'torque_gain': 1.0,
-        'phase_threshold': 0.5,
-        'damping_coeff': 0.3,
-        'stiffness_gain': 1.0
+        "torque_gain": 1.0,
+        "phase_threshold": 0.5,
+        "damping_coeff": 0.3,
+        "stiffness_gain": 1.0,
     }
     compare_solutions(results, baseline)
 

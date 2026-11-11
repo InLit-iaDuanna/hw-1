@@ -12,6 +12,7 @@ from enum import Enum
 
 class GaitPhase(Enum):
     """Gait phase enumeration for gain scheduling."""
+
     STANCE = 0
     SWING = 1
     UNKNOWN = 2
@@ -32,7 +33,7 @@ class PDController:
         kp_swing: float = 40.0,
         kd_swing: float = 4.0,
         torque_limit: float = 6.0,
-        enable_logging: bool = False
+        enable_logging: bool = False,
     ):
         """
         Initialize PD controller with phase-dependent gains.
@@ -61,12 +62,7 @@ class PDController:
         self._log_buffer: list = []
         self._log_counter = 0
 
-    def compute_torque(
-        self,
-        e_pos: float,
-        e_vel: float,
-        phase: GaitPhase
-    ) -> float:
+    def compute_torque(self, e_pos: float, e_vel: float, phase: GaitPhase) -> float:
         """
         Compute control torque based on position/velocity error and gait phase.
 
@@ -112,7 +108,7 @@ class PDController:
         phase_left: GaitPhase,
         e_pos_right: float,
         e_vel_right: float,
-        phase_right: GaitPhase
+        phase_right: GaitPhase,
     ) -> Tuple[float, float]:
         """
         Compute bilateral control torques for left and right actuators.
@@ -138,7 +134,7 @@ class PDController:
         kp_stance: Optional[float] = None,
         kd_stance: Optional[float] = None,
         kp_swing: Optional[float] = None,
-        kd_swing: Optional[float] = None
+        kd_swing: Optional[float] = None,
     ) -> None:
         """
         Update controller gains for online tuning.
@@ -169,11 +165,11 @@ class PDController:
             Dictionary with 'kp' and 'kd' keys
         """
         if phase == GaitPhase.STANCE:
-            return {'kp': self.kp_stance, 'kd': self.kd_stance}
+            return {"kp": self.kp_stance, "kd": self.kd_stance}
         elif phase == GaitPhase.SWING:
-            return {'kp': self.kp_swing, 'kd': self.kd_swing}
+            return {"kp": self.kp_swing, "kd": self.kd_swing}
         else:
-            return {'kp': self.kp_swing, 'kd': self.kd_swing}
+            return {"kp": self.kp_swing, "kd": self.kd_swing}
 
     def set_torque_limit(self, limit: float) -> None:
         """
@@ -194,19 +190,19 @@ class PDController:
         kp: float,
         kd: float,
         tau_raw: float,
-        tau_sat: float
+        tau_sat: float,
     ) -> None:
         """Internal logging method."""
         log_entry = {
-            'step': self._log_counter,
-            'e_pos': e_pos,
-            'e_vel': e_vel,
-            'phase': phase.name,
-            'kp': kp,
-            'kd': kd,
-            'tau_raw': tau_raw,
-            'tau_saturated': tau_sat,
-            'saturation_active': abs(tau_raw) > self.torque_limit
+            "step": self._log_counter,
+            "e_pos": e_pos,
+            "e_vel": e_vel,
+            "phase": phase.name,
+            "kp": kp,
+            "kd": kd,
+            "tau_raw": tau_raw,
+            "tau_saturated": tau_sat,
+            "saturation_active": abs(tau_raw) > self.torque_limit,
         }
         self._log_buffer.append(log_entry)
         self._log_counter += 1
@@ -234,34 +230,34 @@ class PDController:
         """
         if not self._log_buffer:
             return 0.0
-        saturated_count = sum(1 for log in self._log_buffer if log['saturation_active'])
+        saturated_count = sum(1 for log in self._log_buffer if log["saturation_active"])
         return saturated_count / len(self._log_buffer)
 
 
 # V13.7 Default Gain Presets
 GAINS_V13_CONSERVATIVE = {
-    'kp_stance': 60.0,
-    'kd_stance': 6.0,
-    'kp_swing': 30.0,
-    'kd_swing': 3.0,
+    "kp_stance": 60.0,
+    "kd_stance": 6.0,
+    "kp_swing": 30.0,
+    "kd_swing": 3.0,
 }
 
 GAINS_V13_NOMINAL = {
-    'kp_stance': 80.0,
-    'kd_stance': 8.0,
-    'kp_swing': 40.0,
-    'kd_swing': 4.0,
+    "kp_stance": 80.0,
+    "kd_stance": 8.0,
+    "kp_swing": 40.0,
+    "kd_swing": 4.0,
 }
 
 GAINS_V13_AGGRESSIVE = {
-    'kp_stance': 100.0,
-    'kd_stance': 10.0,
-    'kp_swing': 50.0,
-    'kd_swing': 5.0,
+    "kp_stance": 100.0,
+    "kd_stance": 10.0,
+    "kp_swing": 50.0,
+    "kd_swing": 5.0,
 }
 
 
-def create_controller(preset: str = 'nominal', **kwargs) -> PDController:
+def create_controller(preset: str = "nominal", **kwargs) -> PDController:
     """
     Factory function for creating PD controller with preset gains.
 
@@ -277,13 +273,15 @@ def create_controller(preset: str = 'nominal', **kwargs) -> PDController:
         >>> tau = controller.compute_torque(0.1, 0.05, GaitPhase.STANCE)
     """
     preset_map = {
-        'conservative': GAINS_V13_CONSERVATIVE,
-        'nominal': GAINS_V13_NOMINAL,
-        'aggressive': GAINS_V13_AGGRESSIVE,
+        "conservative": GAINS_V13_CONSERVATIVE,
+        "nominal": GAINS_V13_NOMINAL,
+        "aggressive": GAINS_V13_AGGRESSIVE,
     }
 
     if preset not in preset_map:
-        raise ValueError(f"Unknown preset '{preset}'. Choose from {list(preset_map.keys())}")
+        raise ValueError(
+            f"Unknown preset '{preset}'. Choose from {list(preset_map.keys())}"
+        )
 
     gains = preset_map[preset].copy()
     gains.update(kwargs)

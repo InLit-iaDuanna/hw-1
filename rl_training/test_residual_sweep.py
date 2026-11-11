@@ -34,6 +34,7 @@ from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 @dataclass
 class SweepResult:
     """Sweep测试结果"""
+
     strategy: str
     left_hip_residual: float
     right_hip_residual: float
@@ -43,7 +44,9 @@ class SweepResult:
     improvement_pct: float
 
 
-def get_phase_gated_action(env: ResidualRLEnvV2, strategy: str, residual: float) -> np.ndarray:
+def get_phase_gated_action(
+    env: ResidualRLEnvV2, strategy: str, residual: float
+) -> np.ndarray:
     """根据策略生成phase-gated action。
 
     Args:
@@ -95,10 +98,7 @@ def get_phase_gated_action(env: ResidualRLEnvV2, strategy: str, residual: float)
 
 
 def test_residual_combination(
-    strategy: str,
-    left_residual: float,
-    right_residual: float,
-    num_episodes: int = 5
+    strategy: str, left_residual: float, right_residual: float, num_episodes: int = 5
 ) -> SweepResult:
     """测试单个residual组合。
 
@@ -187,13 +187,15 @@ def test_residual_sweep() -> dict:
 
     for left_res in residual_values:
         for right_res in residual_values:
-            print(f"  Testing: left={left_res:+.2f}, right={right_res:+.2f}...", end=" ")
+            print(
+                f"  Testing: left={left_res:+.2f}, right={right_res:+.2f}...", end=" "
+            )
 
             result = test_residual_combination(
                 strategy="constant",
                 left_residual=left_res,
                 right_residual=right_res,
-                num_episodes=5
+                num_episodes=5,
             )
             results.append(result)
 
@@ -224,10 +226,7 @@ def test_residual_sweep() -> dict:
             print(f"  Testing: {strategy}, residual={res:+.2f}...", end=" ")
 
             result = test_residual_combination(
-                strategy=strategy,
-                left_residual=res,
-                right_residual=res,
-                num_episodes=5
+                strategy=strategy, left_residual=res, right_residual=res, num_episodes=5
             )
             results.append(result)
 
@@ -270,7 +269,9 @@ def test_residual_sweep() -> dict:
 
     if len(good_results) > 0:
         print(f"[PASS] Found {len(good_results)} configurations with +3% improvement!")
-        print(f"  Best: {best_result.strategy} with {best_result.improvement_pct:+.1f}%")
+        print(
+            f"  Best: {best_result.strategy} with {best_result.improvement_pct:+.1f}%"
+        )
         print(f"  Distance: {best_result.avg_distance:.3f}m vs baseline 4.63m")
         print()
         print("Conclusion: Residual control shows clear potential for improvement.")
@@ -278,7 +279,9 @@ def test_residual_sweep() -> dict:
         diagnosis = "PASS"
     else:
         print(f"[FAIL] No configuration achieved +3% improvement")
-        print(f"  Best: {best_result.strategy} with {best_result.improvement_pct:+.1f}%")
+        print(
+            f"  Best: {best_result.strategy} with {best_result.improvement_pct:+.1f}%"
+        )
         print(f"  Distance: {best_result.avg_distance:.3f}m vs baseline 4.63m")
         print()
         print("Possible causes:")
@@ -305,9 +308,15 @@ def test_residual_sweep() -> dict:
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Sweep residual combinations for V2 environment")
-    parser.add_argument("--save", type=str, default="test_residual_sweep_v2_report.json",
-                        help="Save path for results")
+    parser = argparse.ArgumentParser(
+        description="Sweep residual combinations for V2 environment"
+    )
+    parser.add_argument(
+        "--save",
+        type=str,
+        default="test_residual_sweep_v2_report.json",
+        help="Save path for results",
+    )
 
     args = parser.parse_args()
 

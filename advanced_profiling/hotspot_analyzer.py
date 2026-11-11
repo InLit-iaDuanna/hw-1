@@ -24,9 +24,7 @@ class HotspotAnalyzer:
 
     def __init__(self):
         if LineProfiler is None:
-            raise ImportError(
-                "line_profiler 未安装。请运行: pip install line_profiler"
-            )
+            raise ImportError("line_profiler 未安装。请运行: pip install line_profiler")
         self.profiler = LineProfiler()
         self.results: dict[str, Any] = {}
 
@@ -139,7 +137,9 @@ class HotspotAnalyzer:
         print(f"\n前 {top_n} 个最耗时的函数:\n")
 
         for i, hotspot in enumerate(analysis["top_10_functions"][:top_n], 1):
-            print(f"{i}. {hotspot['function']} - {hotspot['total_time_ms']:.2f}ms ({hotspot['percent']:.1f}%)")
+            print(
+                f"{i}. {hotspot['function']} - {hotspot['total_time_ms']:.2f}ms ({hotspot['percent']:.1f}%)"
+            )
             print(f"   文件: {hotspot['file']}:{hotspot['start_line']}")
 
             if hotspot["top_lines"]:

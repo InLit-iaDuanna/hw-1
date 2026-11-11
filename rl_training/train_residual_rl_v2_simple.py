@@ -120,12 +120,17 @@ class ResidualRLEnvV2Simple(gym.Env):
         self.start_x = 0.0
         self.support_foot = "left"
         self.accepted_contact = ""
-        self.candidate_start_t: Dict[str, Optional[float]] = {"left": None, "right": None}
+        self.candidate_start_t: Dict[str, Optional[float]] = {
+            "left": None,
+            "right": None,
+        }
         self.contact_reported = {"left": False, "right": False}
         self.last_event_t = -1.0
         self.burst_start_t = 0.0
 
-    def reset(self, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None):
+    def reset(
+        self, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
+    ):
         super().reset(seed=seed)
 
         p = self.params.base
@@ -163,21 +168,47 @@ class ResidualRLEnvV2Simple(gym.Env):
         E_current = _mechanical_energy(p, self.data)
 
         # V13.6 FSM控制律（与Identity Test完全一致）
-        tau = control_v136(fsm, self.data, t, self.support_foot, self.burst_start_t, E_current)
+        tau = control_v136(
+            fsm, self.data, t, self.support_foot, self.burst_start_t, E_current
+        )
         l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau[0], tau[1], tau[2], tau[3]
 
         # V13.7摩擦补偿
         if self.params.compensate_friction:
-            l_hip_des = _compensate(l_hip_des, float(self.data.qvel[self.qvel_addr["left_hip"]]), self.params.hip_motor)
-            l_knee_des = _compensate(l_knee_des, float(self.data.qvel[self.qvel_addr["left_knee"]]), self.params.knee_motor)
-            r_hip_des = _compensate(r_hip_des, float(self.data.qvel[self.qvel_addr["right_hip"]]), self.params.hip_motor)
-            r_knee_des = _compensate(r_knee_des, float(self.data.qvel[self.qvel_addr["right_knee"]]), self.params.knee_motor)
+            l_hip_des = _compensate(
+                l_hip_des,
+                float(self.data.qvel[self.qvel_addr["left_hip"]]),
+                self.params.hip_motor,
+            )
+            l_knee_des = _compensate(
+                l_knee_des,
+                float(self.data.qvel[self.qvel_addr["left_knee"]]),
+                self.params.knee_motor,
+            )
+            r_hip_des = _compensate(
+                r_hip_des,
+                float(self.data.qvel[self.qvel_addr["right_hip"]]),
+                self.params.hip_motor,
+            )
+            r_knee_des = _compensate(
+                r_knee_des,
+                float(self.data.qvel[self.qvel_addr["right_knee"]]),
+                self.params.knee_motor,
+            )
 
         # L1电机模型
-        l_hip_out, _ = self.actuators["left_hip"].compute_actual_torque(l_hip_des, float(self.data.qvel[self.qvel_addr["left_hip"]]))
-        l_knee_out, _ = self.actuators["left_knee"].compute_actual_torque(l_knee_des, float(self.data.qvel[self.qvel_addr["left_knee"]]))
-        r_hip_out, _ = self.actuators["right_hip"].compute_actual_torque(r_hip_des, float(self.data.qvel[self.qvel_addr["right_hip"]]))
-        r_knee_out, _ = self.actuators["right_knee"].compute_actual_torque(r_knee_des, float(self.data.qvel[self.qvel_addr["right_knee"]]))
+        l_hip_out, _ = self.actuators["left_hip"].compute_actual_torque(
+            l_hip_des, float(self.data.qvel[self.qvel_addr["left_hip"]])
+        )
+        l_knee_out, _ = self.actuators["left_knee"].compute_actual_torque(
+            l_knee_des, float(self.data.qvel[self.qvel_addr["left_knee"]])
+        )
+        r_hip_out, _ = self.actuators["right_hip"].compute_actual_torque(
+            r_hip_des, float(self.data.qvel[self.qvel_addr["right_hip"]])
+        )
+        r_knee_out, _ = self.actuators["right_knee"].compute_actual_torque(
+            r_knee_des, float(self.data.qvel[self.qvel_addr["right_knee"]])
+        )
 
         # TODO: 添加residual（当前是zero residual）
         self.data.ctrl[:] = (l_hip_out, l_knee_out, r_hip_out, r_knee_out)
@@ -262,14 +293,20 @@ if __name__ == "__main__":
         obs, reward, terminated, truncated, info = env.step(action)
 
         if step % 1000 == 0:
-            print(f"Step {step}, t={info['sim_time']:.3f}s, distance={info['episode_distance']:.3f}m")
+            print(
+                f"Step {step}, t={info['sim_time']:.3f}s, distance={info['episode_distance']:.3f}m"
+            )
 
         if terminated:
-            print(f"\n[TERMINATED] at t={info['sim_time']:.3f}s, distance={info['episode_distance']:.3f}m")
+            print(
+                f"\n[TERMINATED] at t={info['sim_time']:.3f}s, distance={info['episode_distance']:.3f}m"
+            )
             break
 
         if truncated:
-            print(f"\n[COMPLETED] t={info['sim_time']:.3f}s, distance={info['episode_distance']:.3f}m")
+            print(
+                f"\n[COMPLETED] t={info['sim_time']:.3f}s, distance={info['episode_distance']:.3f}m"
+            )
             break
 
     env.close()

@@ -24,10 +24,14 @@ except ImportError:
     # Fallback mock for development
     class PortHandler:
         @staticmethod
-        def getPortHandler(port): return None
+        def getPortHandler(port):
+            return None
+
     class PacketHandler:
         @staticmethod
-        def getPacketHandler(version): return None
+        def getPacketHandler(version):
+            return None
+
     COMM_SUCCESS = 0
     DXL_LOBYTE = lambda x: x & 0xFF
     DXL_LOWORD = lambda x: x & 0xFFFF
@@ -72,14 +76,18 @@ class RaspberryPiInterface(HardwareInterface):
         # Dynamixel setup
         self.port_handler: Optional[PortHandler] = None
         self.packet_handler: Optional[PacketHandler] = None
-        self.motor_ids = config.motor_ids if hasattr(config, 'motor_ids') else [1, 2]
+        self.motor_ids = config.motor_ids if hasattr(config, "motor_ids") else [1, 2]
 
         # SPI encoder setup
         self.spi: Optional[spidev.SpiDev] = None
-        self.encoder_channels = config.encoder_channels if hasattr(config, 'encoder_channels') else [0, 1]
+        self.encoder_channels = (
+            config.encoder_channels if hasattr(config, "encoder_channels") else [0, 1]
+        )
 
         # GPIO sensor setup
-        self.contact_pins = config.contact_pins if hasattr(config, 'contact_pins') else [17, 27]
+        self.contact_pins = (
+            config.contact_pins if hasattr(config, "contact_pins") else [17, 27]
+        )
 
         # State tracking
         self._last_positions = np.zeros(len(self.motor_ids))
@@ -91,7 +99,7 @@ class RaspberryPiInterface(HardwareInterface):
         self._initialized = False
 
         # Error tracking
-        self._error_counts = {'motor': 0, 'encoder': 0, 'gpio': 0}
+        self._error_counts = {"motor": 0, "encoder": 0, "gpio": 0}
         self._max_errors = 10
 
     def initialize(self) -> bool:
@@ -127,8 +135,14 @@ class RaspberryPiInterface(HardwareInterface):
     def _init_dynamixel(self) -> bool:
         """Initialize Dynamixel motor communication."""
         try:
-            device_name = self.config.device_name if hasattr(self.config, 'device_name') else '/dev/ttyUSB0'
-            baudrate = self.config.baudrate if hasattr(self.config, 'baudrate') else 57600
+            device_name = (
+                self.config.device_name
+                if hasattr(self.config, "device_name")
+                else "/dev/ttyUSB0"
+            )
+            baudrate = (
+                self.config.baudrate if hasattr(self.config, "baudrate") else 57600
+            )
             protocol_version = 2.0
 
             self.port_handler = PortHandler(device_name)
@@ -148,7 +162,9 @@ class RaspberryPiInterface(HardwareInterface):
                 self._write_dynamixel(motor_id, self.ADDR_TORQUE_ENABLE, 0, 1)
 
                 # Set to current-based position control mode
-                self._write_dynamixel(motor_id, self.ADDR_OPERATING_MODE, self.MODE_CURRENT_POSITION, 1)
+                self._write_dynamixel(
+                    motor_id, self.ADDR_OPERATING_MODE, self.MODE_CURRENT_POSITION, 1
+                )
 
                 # Enable torque
                 self._write_dynamixel(motor_id, self.ADDR_TORQUE_ENABLE, 1, 1)
@@ -213,17 +229,19 @@ class RaspberryPiInterface(HardwareInterface):
         """Set real-time thread priority for deterministic control."""
         try:
             import os
+
             # Set nice value for higher scheduling priority
             os.nice(-10)
 
             # Attempt to set real-time scheduling (requires root)
             try:
                 import ctypes
-                libc = ctypes.CDLL('libc.so.6')
+
+                libc = ctypes.CDLL("libc.so.6")
                 SCHED_FIFO = 1
 
                 class SchedParam(ctypes.Structure):
-                    _fields_ = [('sched_priority', ctypes.c_int)]
+                    _fields_ = [("sched_priority", ctypes.c_int)]
 
                 param = SchedParam()
                 param.sched_priority = 50  # RT priority 50
@@ -249,14 +267,18 @@ class RaspberryPiInterface(HardwareInterface):
                     raw_angle = self._read_encoder_raw(channel)
                     if raw_angle >= 0:
                         # Convert 14-bit value to radians
-                        positions[i] = (raw_angle / 16384.0) * 2 * np.pi - self._position_offsets[i]
-                        self._error_counts['encoder'] = 0
+                        positions[i] = (
+                            raw_angle / 16384.0
+                        ) * 2 * np.pi - self._position_offsets[i]
+                        self._error_counts["encoder"] = 0
                     else:
                         # Use last known position on error
                         positions[i] = self._last_positions[i]
-                        self._error_counts['encoder'] += 1
-                        if self._error_counts['encoder'] > self._max_errors:
-                            raise RuntimeError("Encoder read failures exceeded threshold")
+                        self._error_counts["encoder"] += 1
+                        if self._error_counts["encoder"] > self._max_errors:
+                            raise RuntimeError(
+                                "Encoder read failures exceeded threshold"
+                            )
 
                 self._last_positions = positions.copy()
                 return positions
@@ -272,15 +294,17 @@ class RaspberryPiInterface(HardwareInterface):
                 velocities = np.zeros(len(self.motor_ids))
 
                 for i, motor_id in enumerate(self.motor_ids):
-                    raw_vel = self._read_dynamixel(motor_id, self.ADDR_PRESENT_VELOCITY, 4)
+                    raw_vel = self._read_dynamixel(
+                        motor_id, self.ADDR_PRESENT_VELOCITY, 4
+                    )
                     if raw_vel is not None:
                         # Convert Dynamixel velocity units to rad/s
                         # Dynamixel velocity unit: 0.229 rpm
                         velocities[i] = (raw_vel * 0.229 * 2 * np.pi) / 60.0
-                        self._error_counts['motor'] = 0
+                        self._error_counts["motor"] = 0
                     else:
                         velocities[i] = self._last_velocities[i]
-                        self._error_counts['motor'] += 1
+                        self._error_counts["motor"] += 1
 
                 self._last_velocities = velocities.copy()
                 return velocities
@@ -304,7 +328,7 @@ class RaspberryPiInterface(HardwareInterface):
 
         except Exception as e:
             print(f"Contact read error: {e}")
-            self._error_counts['gpio'] += 1
+            self._error_counts["gpio"] += 1
             return np.zeros(len(self.contact_pins), dtype=bool)
 
     def write_motor_torques(self, torques: np.ndarray) -> bool:
@@ -318,14 +342,11 @@ class RaspberryPiInterface(HardwareInterface):
                     current_value = max(-2047, min(2047, current_mA))
 
                     success = self._write_dynamixel(
-                        motor_id,
-                        self.ADDR_GOAL_CURRENT,
-                        current_value,
-                        2
+                        motor_id, self.ADDR_GOAL_CURRENT, current_value, 2
                     )
                     if not success:
-                        self._error_counts['motor'] += 1
-                        if self._error_counts['motor'] > self._max_errors:
+                        self._error_counts["motor"] += 1
+                        if self._error_counts["motor"] > self._max_errors:
                             return False
 
                 return True
@@ -341,8 +362,10 @@ class RaspberryPiInterface(HardwareInterface):
                 return -1
 
             # Send read command for angle register
-            cmd = [(self.AS5048_CMD_READ | self.AS5048_ANGLE_REG) >> 8,
-                   (self.AS5048_CMD_READ | self.AS5048_ANGLE_REG) & 0xFF]
+            cmd = [
+                (self.AS5048_CMD_READ | self.AS5048_ANGLE_REG) >> 8,
+                (self.AS5048_CMD_READ | self.AS5048_ANGLE_REG) & 0xFF,
+            ]
 
             response = self.spi.xfer2(cmd)
 
@@ -354,7 +377,9 @@ class RaspberryPiInterface(HardwareInterface):
             print(f"Encoder read error (channel {channel}): {e}")
             return -1
 
-    def _read_dynamixel(self, motor_id: int, address: int, length: int) -> Optional[int]:
+    def _read_dynamixel(
+        self, motor_id: int, address: int, length: int
+    ) -> Optional[int]:
         """Read data from Dynamixel motor."""
         try:
             if length == 1:
@@ -373,7 +398,9 @@ class RaspberryPiInterface(HardwareInterface):
                 return None
 
             if result != COMM_SUCCESS:
-                print(f"Dynamixel read error: {self.packet_handler.getTxRxResult(result)}")
+                print(
+                    f"Dynamixel read error: {self.packet_handler.getTxRxResult(result)}"
+                )
                 return None
 
             return value
@@ -382,7 +409,9 @@ class RaspberryPiInterface(HardwareInterface):
             print(f"Dynamixel read exception: {e}")
             return None
 
-    def _write_dynamixel(self, motor_id: int, address: int, value: int, length: int) -> bool:
+    def _write_dynamixel(
+        self, motor_id: int, address: int, value: int, length: int
+    ) -> bool:
         """Write data to Dynamixel motor."""
         try:
             if length == 1:
@@ -401,7 +430,9 @@ class RaspberryPiInterface(HardwareInterface):
                 return False
 
             if result != COMM_SUCCESS:
-                print(f"Dynamixel write error: {self.packet_handler.getTxRxResult(result)}")
+                print(
+                    f"Dynamixel write error: {self.packet_handler.getTxRxResult(result)}"
+                )
                 return False
 
             return True
@@ -433,7 +464,7 @@ class RaspberryPiInterface(HardwareInterface):
             time.sleep(0.1)
 
             # Reset error counters
-            self._error_counts = {'motor': 0, 'encoder': 0, 'gpio': 0}
+            self._error_counts = {"motor": 0, "encoder": 0, "gpio": 0}
 
             # Re-enable torques
             for motor_id in self.motor_ids:
@@ -475,12 +506,16 @@ class RaspberryPiInterface(HardwareInterface):
     def get_hardware_info(self) -> dict:
         """Get hardware status and diagnostic information."""
         return {
-            'initialized': self._initialized,
-            'motor_ids': self.motor_ids,
-            'encoder_channels': self.encoder_channels,
-            'contact_pins': self.contact_pins,
-            'error_counts': self._error_counts.copy(),
-            'dynamixel_connected': self.port_handler is not None and self.port_handler.is_open if self.port_handler else False,
-            'spi_connected': self.spi is not None,
-            'gpio_available': GPIO is not None
+            "initialized": self._initialized,
+            "motor_ids": self.motor_ids,
+            "encoder_channels": self.encoder_channels,
+            "contact_pins": self.contact_pins,
+            "error_counts": self._error_counts.copy(),
+            "dynamixel_connected": (
+                self.port_handler is not None and self.port_handler.is_open
+                if self.port_handler
+                else False
+            ),
+            "spi_connected": self.spi is not None,
+            "gpio_available": GPIO is not None,
         }

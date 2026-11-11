@@ -18,7 +18,7 @@ class ErrorSignature:
         error_type: str,
         patterns: list[str],
         data_checks: list[tuple[str, Any]] | None = None,
-        severity: str = "medium"
+        severity: str = "medium",
     ):
         self.error_type = error_type
         self.patterns = [re.compile(p, re.IGNORECASE) for p in patterns]
@@ -55,101 +55,77 @@ ERROR_SIGNATURES = [
             r"qpos.*NaN",
             r"qvel.*NaN",
             r"integration error",
-            r"contains NaN"
+            r"contains NaN",
         ],
-        data_checks=[
-            ("has_nan", True),
-            ("failure", "nan_or_unstable")
-        ],
-        severity="critical"
+        data_checks=[("has_nan", True), ("failure", "nan_or_unstable")],
+        severity="critical",
     ),
     ErrorSignature(
         "fall_down",
-        patterns=[
-            r"fall[_\s]?down",
-            r"hip.*height.*low",
-            r"trunk.*pitch.*exceed"
-        ],
+        patterns=[r"fall[_\s]?down", r"hip.*height.*low", r"trunk.*pitch.*exceed"],
         data_checks=[
             ("failure", "fall_down"),
-            ("hip_height", lambda x: x < 0.5 if isinstance(x, (int, float)) else False)
+            ("hip_height", lambda x: x < 0.5 if isinstance(x, (int, float)) else False),
         ],
-        severity="high"
+        severity="high",
     ),
     ErrorSignature(
         "fly_away",
-        patterns=[
-            r"fly[_\s]?away",
-            r"hip.*height.*exceed",
-            r"explosive.*contact"
-        ],
+        patterns=[r"fly[_\s]?away", r"hip.*height.*exceed", r"explosive.*contact"],
         data_checks=[
             ("failure", "fly_away"),
-            ("hip_height", lambda x: x > 3.0 if isinstance(x, (int, float)) else False)
+            ("hip_height", lambda x: x > 3.0 if isinstance(x, (int, float)) else False),
         ],
-        severity="critical"
+        severity="critical",
     ),
     ErrorSignature(
         "penetration",
-        patterns=[
-            r"penetration",
-            r"excessive.*contact.*force",
-            r"geom.*overlap"
-        ],
-        data_checks=[
-            ("failure", "penetration")
-        ],
-        severity="medium"
+        patterns=[r"penetration", r"excessive.*contact.*force", r"geom.*overlap"],
+        data_checks=[("failure", "penetration")],
+        severity="medium",
     ),
     ErrorSignature(
         "no_alternation",
-        patterns=[
-            r"insufficient.*alternation",
-            r"stuck.*stance",
-            r"no.*gait.*cycle"
-        ],
+        patterns=[r"insufficient.*alternation", r"stuck.*stance", r"no.*gait.*cycle"],
         data_checks=[
             ("alternation_count", lambda x: x <= 1 if isinstance(x, int) else False),
-            ("failure", "insufficient_alternations")
+            ("failure", "insufficient_alternations"),
         ],
-        severity="high"
+        severity="high",
     ),
     ErrorSignature(
         "mujoco_not_found",
         patterns=[
             r"ModuleNotFoundError.*mujoco",
             r"No module named.*mujoco",
-            r"import mujoco.*fail"
+            r"import mujoco.*fail",
         ],
-        severity="critical"
+        severity="critical",
     ),
     ErrorSignature(
         "model_file_not_found",
         patterns=[
             r"FileNotFoundError.*xml",
             r"model.*not found",
-            r"path.*does not exist"
+            r"path.*does not exist",
         ],
-        severity="high"
+        severity="high",
     ),
     ErrorSignature(
         "common_import_error",
-        patterns=[
-            r"ModuleNotFoundError.*common",
-            r"No module named.*common"
-        ],
-        severity="medium"
+        patterns=[r"ModuleNotFoundError.*common", r"No module named.*common"],
+        severity="medium",
     ),
     ErrorSignature(
         "invalid_timestep",
-        patterns=[
-            r"invalid.*timestep",
-            r"timestep.*out of range"
-        ],
+        patterns=[r"invalid.*timestep", r"timestep.*out of range"],
         data_checks=[
-            ("dt", lambda x: x <= 0 or x > 0.01 if isinstance(x, (int, float)) else False)
+            (
+                "dt",
+                lambda x: x <= 0 or x > 0.01 if isinstance(x, (int, float)) else False,
+            )
         ],
-        severity="critical"
+        severity="critical",
     ),
 ]
 
@@ -215,7 +191,7 @@ class ErrorDetector:
         self,
         qpos: np.ndarray | None = None,
         qvel: np.ndarray | None = None,
-        ctrl: np.ndarray | None = None
+        ctrl: np.ndarray | None = None,
     ) -> list[tuple[str, str]]:
         """从时间序列数据检测错误。"""
         detected = []
@@ -243,9 +219,7 @@ class ErrorDetector:
         return detected
 
     def analyze_simulation_result(
-        self,
-        result: dict[str, Any],
-        timeseries_path: Path | str | None = None
+        self, result: dict[str, Any], timeseries_path: Path | str | None = None
     ) -> dict[str, Any]:
         """综合分析仿真结果。
 
@@ -267,6 +241,7 @@ class ErrorDetector:
             if ts_path.exists() and ts_path.suffix == ".csv":
                 try:
                     import pandas as pd
+
                     df = pd.read_csv(ts_path)
 
                     # 检测时间序列错误
@@ -285,17 +260,18 @@ class ErrorDetector:
             "has_errors": len(unique_errors) > 0,
             "error_count": len(unique_errors),
             "errors": [
-                {"type": err_type, "severity": sev}
-                for err_type, sev in unique_errors
+                {"type": err_type, "severity": sev} for err_type, sev in unique_errors
             ],
             "primary_error": unique_errors[0][0] if unique_errors else None,
-            "severity": unique_errors[0][1] if unique_errors else "none"
+            "severity": unique_errors[0][1] if unique_errors else "none",
         }
 
         return report
 
 
-def detect_errors_in_directory(directory: Path | str, pattern: str = "*.json") -> dict[str, Any]:
+def detect_errors_in_directory(
+    directory: Path | str, pattern: str = "*.json"
+) -> dict[str, Any]:
     """批量检测目录中所有匹配文件的错误。
 
     Args:
@@ -315,7 +291,7 @@ def detect_errors_in_directory(directory: Path | str, pattern: str = "*.json") -
             if report:
                 results[file_path.name] = {
                     "errors": [{"type": t, "severity": s} for t, s in report],
-                    "error_count": len(report)
+                    "error_count": len(report),
                 }
         except Exception as e:
             results[file_path.name] = {"error": str(e)}
@@ -333,7 +309,7 @@ if __name__ == "__main__":
         "failure": "fall_down",
         "hip_height": 0.3,
         "forward": 0.5,
-        "alternation_count": 2
+        "alternation_count": 2,
     }
 
     errors = detector.detect_from_data(test_data)

@@ -93,7 +93,7 @@ def monitor_stage(file_to_check: Path, stage_name: str, check_interval: int = 30
 
     while not file_to_check.exists():
         elapsed = time.time() - start_time
-        print(f"等待中... (已等待 {elapsed/60:.1f} 分钟)", end='\r')
+        print(f"等待中... (已等待 {elapsed/60:.1f} 分钟)", end="\r")
         time.sleep(check_interval)
 
     # 文件存在后，继续监控大小变化
@@ -109,7 +109,7 @@ def monitor_stage(file_to_check: Path, stage_name: str, check_interval: int = 30
         else:
             stable_count = 0
 
-        print(f"文件大小: {current_size:.2f} MB (稳定计数: {stable_count}/3)", end='\r')
+        print(f"文件大小: {current_size:.2f} MB (稳定计数: {stable_count}/3)", end="\r")
         last_size = current_size
         time.sleep(check_interval)
 
@@ -141,13 +141,15 @@ def main():
         # 检查是否需要启动
         response = input("阶段1是否已在后台运行? [Y/n]: ").strip().lower()
 
-        if response in ['n', 'no']:
+        if response in ["n", "no"]:
             # 启动阶段1
             cmd = [
                 sys.executable,
                 str(RL_TRAINING_DIR / "collect_expert_trajectories.py"),
-                "--episodes", "50",
-                "--max-steps", "600"
+                "--episodes",
+                "50",
+                "--max-steps",
+                "600",
             ]
             if not run_command_blocking(cmd, "阶段1: 收集专家轨迹"):
                 print("\n流程终止")
@@ -156,7 +158,9 @@ def main():
             # 监控后台任务
             monitor_stage(stage1_output, "阶段1: 收集专家轨迹")
     else:
-        print(f"\n[跳过] 阶段1: 专家轨迹已存在 ({get_file_size_mb(stage1_output):.2f} MB)")
+        print(
+            f"\n[跳过] 阶段1: 专家轨迹已存在 ({get_file_size_mb(stage1_output):.2f} MB)"
+        )
 
     # 加载阶段1统计信息
     stage1_stats_path = RL_TRAINING_DIR / "v137_expert_trajectories.json"
@@ -176,15 +180,20 @@ def main():
         cmd = [
             sys.executable,
             str(RL_TRAINING_DIR / "train_behavioral_cloning.py"),
-            "--epochs", "50",
-            "--batch-size", "256",
-            "--lr", "0.001"
+            "--epochs",
+            "50",
+            "--batch-size",
+            "256",
+            "--lr",
+            "0.001",
         ]
         if not run_command_blocking(cmd, "阶段2: 行为克隆训练"):
             print("\n流程终止")
             return
     else:
-        print(f"\n[跳过] 阶段2: BC模型已存在 ({get_file_size_mb(stage2_output):.2f} MB)")
+        print(
+            f"\n[跳过] 阶段2: BC模型已存在 ({get_file_size_mb(stage2_output):.2f} MB)"
+        )
 
     # 加载阶段2统计信息
     stage2_stats_path = RL_TRAINING_DIR / "bc_training_history.json"
@@ -197,11 +206,13 @@ def main():
         print(f"  训练样本数: {stage2_stats['n_train']}")
 
     # ========== 阶段3: PPO训练 (后台) ==========
-    stage3_output = RL_TRAINING_DIR / "models_bc_warmstart" / "ppo_bc_warmstart_final.zip"
+    stage3_output = (
+        RL_TRAINING_DIR / "models_bc_warmstart" / "ppo_bc_warmstart_final.zip"
+    )
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("阶段3: PPO Warm-Start训练")
-    print("="*80)
+    print("=" * 80)
     print("此阶段将在后台运行（预计耗时: 2-4小时，取决于硬件）")
     print("训练参数:")
     print("  - 总步数: 5,000,000")
@@ -211,13 +222,16 @@ def main():
 
     response = input("是否启动阶段3训练? [Y/n]: ").strip().lower()
 
-    if response not in ['n', 'no']:
+    if response not in ["n", "no"]:
         cmd = [
             sys.executable,
             str(RL_TRAINING_DIR / "train_ppo_with_bc_init.py"),
-            "--timesteps", "5000000",
-            "--envs", "8",
-            "--lr", "0.0003"
+            "--timesteps",
+            "5000000",
+            "--envs",
+            "8",
+            "--lr",
+            "0.0003",
         ]
 
         print(f"\n启动命令: {' '.join(cmd)}")
@@ -232,10 +246,7 @@ def main():
         log_file = RL_TRAINING_DIR / "ppo_training.log"
         with open(log_file, "w") as f:
             subprocess.Popen(
-                cmd,
-                stdout=f,
-                stderr=subprocess.STDOUT,
-                cwd=RL_TRAINING_DIR
+                cmd, stdout=f, stderr=subprocess.STDOUT, cwd=RL_TRAINING_DIR
             )
 
         print(f"[OK] PPO训练已在后台启动")
@@ -263,7 +274,8 @@ def main():
         cmd = [
             sys.executable,
             str(RL_TRAINING_DIR / "evaluate_and_compare.py"),
-            "--episodes", "20"
+            "--episodes",
+            "20",
         ]
         run_command_blocking(cmd, "阶段4: 模型对比评估")
     else:
@@ -272,9 +284,9 @@ def main():
     # ========== 完成总结 ==========
     pipeline_elapsed = time.time() - pipeline_start
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("流水线执行完毕")
-    print("="*80)
+    print("=" * 80)
     print(f"总耗时: {pipeline_elapsed/3600:.2f} 小时")
     print(f"完成时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print()
@@ -285,7 +297,10 @@ def main():
         ("BC模型", RL_TRAINING_DIR / "best_bc_policy_weights.pth"),
         ("BC训练曲线", RL_TRAINING_DIR / "bc_training_curve.png"),
         ("PPO模型", stage3_output),
-        ("评估结果", RL_TRAINING_DIR / "evaluation_results" / "comparison_results.json"),
+        (
+            "评估结果",
+            RL_TRAINING_DIR / "evaluation_results" / "comparison_results.json",
+        ),
     ]
 
     for name, path in files_to_check:

@@ -59,6 +59,7 @@ class ControllerResult:
         metadata: Additional information (parameters, configuration, etc.)
         convergence_curve: Optimization convergence history (if applicable)
     """
+
     name: str
     metrics: dict[str, float] = field(default_factory=dict)
     time_series: dict[str, np.ndarray] = field(default_factory=dict)
@@ -78,6 +79,7 @@ class MetricSpec:
         threshold_good: Value above/below which metric is considered good
         threshold_warn: Value above/below which metric is considered warning
     """
+
     name: str
     unit: str = ""
     format_str: str = ".3f"
@@ -129,57 +131,75 @@ class ComparisonTool:
 
     def _register_default_metrics(self) -> None:
         """Register common metric specifications."""
-        self.register_metric("forward_distance", MetricSpec(
-            name="Forward Distance",
-            unit="m",
-            format_str=".2f",
-            higher_is_better=True,
-            threshold_good=5.0,
-            threshold_warn=3.0
-        ))
+        self.register_metric(
+            "forward_distance",
+            MetricSpec(
+                name="Forward Distance",
+                unit="m",
+                format_str=".2f",
+                higher_is_better=True,
+                threshold_good=5.0,
+                threshold_warn=3.0,
+            ),
+        )
 
-        self.register_metric("cot", MetricSpec(
-            name="Cost of Transport",
-            unit="",
-            format_str=".4f",
-            higher_is_better=False,
-            threshold_good=0.10,
-            threshold_warn=0.15
-        ))
+        self.register_metric(
+            "cot",
+            MetricSpec(
+                name="Cost of Transport",
+                unit="",
+                format_str=".4f",
+                higher_is_better=False,
+                threshold_good=0.10,
+                threshold_warn=0.15,
+            ),
+        )
 
-        self.register_metric("success_rate", MetricSpec(
-            name="Success Rate",
-            unit="%",
-            format_str=".1f",
-            higher_is_better=True,
-            threshold_good=80.0,
-            threshold_warn=50.0
-        ))
+        self.register_metric(
+            "success_rate",
+            MetricSpec(
+                name="Success Rate",
+                unit="%",
+                format_str=".1f",
+                higher_is_better=True,
+                threshold_good=80.0,
+                threshold_warn=50.0,
+            ),
+        )
 
-        self.register_metric("alternations", MetricSpec(
-            name="Alternations",
-            unit="steps",
-            format_str=".0f",
-            higher_is_better=True,
-            threshold_good=8.0,
-            threshold_warn=5.0
-        ))
+        self.register_metric(
+            "alternations",
+            MetricSpec(
+                name="Alternations",
+                unit="steps",
+                format_str=".0f",
+                higher_is_better=True,
+                threshold_good=8.0,
+                threshold_warn=5.0,
+            ),
+        )
 
-        self.register_metric("simulated_time", MetricSpec(
-            name="Simulation Time",
-            unit="s",
-            format_str=".2f",
-            higher_is_better=True,
-        ))
+        self.register_metric(
+            "simulated_time",
+            MetricSpec(
+                name="Simulation Time",
+                unit="s",
+                format_str=".2f",
+                higher_is_better=True,
+            ),
+        )
 
-        self.register_metric("energy_efficiency", MetricSpec(
-            name="Energy Efficiency",
-            unit="J/m",
-            format_str=".2f",
-            higher_is_better=False,
-            threshold_good=10.0,
-            threshold_warn=20.0
-        ))
+        self.register_metric(
+            "energy_efficiency",
+            MetricSpec(
+                name="Energy Efficiency",
+                unit="J/m",
+                format_str=".2f",
+                higher_is_better=False,
+                threshold_good=10.0,
+                threshold_warn=20.0,
+            ),
+        )
 
     def register_metric(self, key: str, spec: MetricSpec) -> None:
         """Register a metric specification.
@@ -207,9 +227,7 @@ class ComparisonTool:
         self.results.extend(results)
 
     def generate_comparison_table(
-        self,
-        save_csv: bool = True,
-        show_ranking: bool = True
+        self, save_csv: bool = True, show_ranking: bool = True
     ) -> pd.DataFrame:
         """Generate comparison table with all metrics.
 
@@ -263,7 +281,9 @@ class ComparisonTool:
                 values = []
                 for result in self.results:
                     val = result.metrics.get(key)
-                    if val is not None and not (isinstance(val, float) and np.isnan(val)):
+                    if val is not None and not (
+                        isinstance(val, float) and np.isnan(val)
+                    ):
                         values.append(val)
                     else:
                         values.append(None)
@@ -290,9 +310,7 @@ class ComparisonTool:
         return df
 
     def _compute_rankings(
-        self,
-        values: list[float | None],
-        higher_is_better: bool
+        self, values: list[float | None], higher_is_better: bool
     ) -> list[int | None]:
         """Compute rankings for a list of values.
 
@@ -312,25 +330,22 @@ class ComparisonTool:
         # Sort and get rankings
         if higher_is_better:
             sorted_indices = sorted(
-                range(len(valid_values)),
-                key=lambda i: valid_values[i],
-                reverse=True
+                range(len(valid_values)), key=lambda i: valid_values[i], reverse=True
             )
         else:
             sorted_indices = sorted(
-                range(len(valid_values)),
-                key=lambda i: valid_values[i]
+                range(len(valid_values)), key=lambda i: valid_values[i]
             )
 
         # Create ranking map
-        rank_map = {valid_indices[sorted_indices[i]]: i + 1 for i in range(len(sorted_indices))}
+        rank_map = {
+            valid_indices[sorted_indices[i]]: i + 1 for i in range(len(sorted_indices))
+        }
 
         return [rank_map.get(i) for i in range(len(values))]
 
     def plot_metrics_comparison(
-        self,
-        metrics: list[str] | None = None,
-        figsize: tuple[int, int] = (14, 6)
+        self, metrics: list[str] | None = None, figsize: tuple[int, int] = (14, 6)
     ) -> None:
         """Plot bar chart comparison of metrics.
 
@@ -351,11 +366,10 @@ class ComparisonTool:
 
         # Filter to metrics that have specs and data
         metrics = [
-            m for m in metrics
-            if m in self.metric_specs and any(
-                m in r.metrics and r.metrics[m] is not None
-                for r in self.results
-            )
+            m
+            for m in metrics
+            if m in self.metric_specs
+            and any(m in r.metrics and r.metrics[m] is not None for r in self.results)
         ]
 
         if not metrics:
@@ -392,25 +406,27 @@ class ComparisonTool:
                     values.append(0)
 
             # Plot bars
-            bars = ax.bar(range(len(values)), values, color=colors, alpha=0.8, edgecolor='black')
+            bars = ax.bar(
+                range(len(values)), values, color=colors, alpha=0.8, edgecolor="black"
+            )
 
             # Color code based on thresholds
             if spec.threshold_good is not None and spec.threshold_warn is not None:
                 for i, (bar, val) in enumerate(zip(bars, values)):
                     if spec.higher_is_better:
                         if val >= spec.threshold_good:
-                            bar.set_color('#2ecc71')  # Green
+                            bar.set_color("#2ecc71")  # Green
                         elif val >= spec.threshold_warn:
-                            bar.set_color('#f39c12')  # Orange
+                            bar.set_color("#f39c12")  # Orange
                         else:
-                            bar.set_color('#e74c3c')  # Red
+                            bar.set_color("#e74c3c")  # Red
                     else:
                         if val <= spec.threshold_good:
-                            bar.set_color('#2ecc71')  # Green
+                            bar.set_color("#2ecc71")  # Green
                         elif val <= spec.threshold_warn:
-                            bar.set_color('#f39c12')  # Orange
+                            bar.set_color("#f39c12")  # Orange
                         else:
-                            bar.set_color('#e74c3c')  # Red
+                            bar.set_color("#e74c3c")  # Red
 
             # Add value labels on bars
             for i, (bar, val) in enumerate(zip(bars, values)):
@@ -420,27 +436,27 @@ class ComparisonTool:
                         bar.get_x() + bar.get_width() / 2.0,
                         height,
                         f"{val:{spec.format_str}}",
-                        ha='center',
-                        va='bottom',
-                        fontsize=9
+                        ha="center",
+                        va="bottom",
+                        fontsize=9,
                     )
 
             # Styling
             ax.set_xticks(range(len(controller_names)))
-            ax.set_xticklabels(controller_names, rotation=45, ha='right', fontsize=9)
+            ax.set_xticklabels(controller_names, rotation=45, ha="right", fontsize=9)
 
             unit_str = f" ({spec.unit})" if spec.unit else ""
             ax.set_ylabel(f"{spec.name}{unit_str}", fontsize=10)
-            ax.set_title(spec.name, fontsize=11, fontweight='bold')
-            ax.grid(axis='y', alpha=0.3)
+            ax.set_title(spec.name, fontsize=11, fontweight="bold")
+            ax.grid(axis="y", alpha=0.3)
 
         # Hide unused subplots
         for idx in range(n_metrics, len(axes)):
-            axes[idx].axis('off')
+            axes[idx].axis("off")
 
         plt.tight_layout()
         out_path = self.output_dir / "metrics_comparison.png"
-        plt.savefig(out_path, dpi=300, bbox_inches='tight')
+        plt.savefig(out_path, dpi=300, bbox_inches="tight")
         print(f"[OK] Saved metrics comparison plot: {out_path}")
         plt.close()
 
@@ -448,7 +464,7 @@ class ComparisonTool:
         self,
         metrics: list[str] | None = None,
         normalize: bool = True,
-        figsize: tuple[int, int] = (10, 10)
+        figsize: tuple[int, int] = (10, 10),
     ) -> None:
         """Plot radar chart for multi-dimensional comparison.
 
@@ -470,11 +486,10 @@ class ComparisonTool:
 
         # Filter valid metrics
         metrics = [
-            m for m in metrics
-            if m in self.metric_specs and all(
-                m in r.metrics and r.metrics[m] is not None
-                for r in self.results
-            )
+            m
+            for m in metrics
+            if m in self.metric_specs
+            and all(m in r.metrics and r.metrics[m] is not None for r in self.results)
         ]
 
         if len(metrics) < 3:
@@ -507,14 +522,16 @@ class ComparisonTool:
         angles = np.linspace(0, 2 * np.pi, len(metrics), endpoint=False).tolist()
         angles += angles[:1]  # Close the circle
 
-        fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(projection='polar'))
+        fig, ax = plt.subplots(figsize=figsize, subplot_kw=dict(projection="polar"))
 
         colors = plt.cm.Set2(np.linspace(0, 1, len(self.results)))
 
         for i, result in enumerate(self.results):
             values = data[i].tolist()
             values += values[:1]  # Close the circle
-            ax.plot(angles, values, 'o-', linewidth=2, label=result.name, color=colors[i])
+            ax.plot(
+                angles, values, "o-", linewidth=2, label=result.name, color=colors[i]
+            )
             ax.fill(angles, values, alpha=0.15, color=colors[i])
 
         # Set labels
@@ -526,22 +543,19 @@ class ComparisonTool:
         ax.set_title(
             f"{self.name} - Radar Chart" + (" (Normalized)" if normalize else ""),
             fontsize=14,
-            fontweight='bold',
-            pad=20
+            fontweight="bold",
+            pad=20,
         )
-        ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=10)
+        ax.legend(loc="upper right", bbox_to_anchor=(1.3, 1.1), fontsize=10)
         ax.grid(True, alpha=0.3)
 
         plt.tight_layout()
         out_path = self.output_dir / "radar_chart.png"
-        plt.savefig(out_path, dpi=300, bbox_inches='tight')
+        plt.savefig(out_path, dpi=300, bbox_inches="tight")
         print(f"[OK] Saved radar chart: {out_path}")
         plt.close()
 
-    def plot_convergence_curves(
-        self,
-        figsize: tuple[int, int] = (12, 6)
-    ) -> None:
+    def plot_convergence_curves(self, figsize: tuple[int, int] = (12, 6)) -> None:
         """Plot optimization convergence curves (if available).
 
         Args:
@@ -564,22 +578,22 @@ class ComparisonTool:
             ax.plot(
                 range(1, len(curve) + 1),
                 curve,
-                marker='o',
+                marker="o",
                 markersize=3,
                 linewidth=2,
                 label=result.name,
-                color=colors[i]
+                color=colors[i],
             )
 
         ax.set_xlabel("Evaluation Number", fontsize=12)
         ax.set_ylabel("Best Objective Value", fontsize=12)
-        ax.set_title("Convergence Curves Comparison", fontsize=14, fontweight='bold')
+        ax.set_title("Convergence Curves Comparison", fontsize=14, fontweight="bold")
         ax.legend(fontsize=10)
         ax.grid(alpha=0.3)
 
         plt.tight_layout()
         out_path = self.output_dir / "convergence_curves.png"
-        plt.savefig(out_path, dpi=300, bbox_inches='tight')
+        plt.savefig(out_path, dpi=300, bbox_inches="tight")
         print(f"[OK] Saved convergence curves: {out_path}")
         plt.close()
 
@@ -587,7 +601,7 @@ class ComparisonTool:
         self,
         series_key: str,
         ylabel: str | None = None,
-        figsize: tuple[int, int] = (12, 6)
+        figsize: tuple[int, int] = (12, 6),
     ) -> None:
         """Plot time series comparison for a specific metric.
 
@@ -597,7 +611,8 @@ class ComparisonTool:
             figsize: Figure size
         """
         results_with_series = [
-            r for r in self.results
+            r
+            for r in self.results
             if series_key in r.time_series and r.time_series[series_key] is not None
         ]
 
@@ -612,17 +627,24 @@ class ComparisonTool:
         for i, result in enumerate(results_with_series):
             series = result.time_series[series_key]
             time = np.arange(len(series)) * 0.001  # Assuming 1ms timestep
-            ax.plot(time, series, linewidth=1.5, label=result.name, color=colors[i], alpha=0.8)
+            ax.plot(
+                time,
+                series,
+                linewidth=1.5,
+                label=result.name,
+                color=colors[i],
+                alpha=0.8,
+            )
 
         ax.set_xlabel("Time (s)", fontsize=12)
         ax.set_ylabel(ylabel or series_key, fontsize=12)
-        ax.set_title(f"{series_key} Comparison", fontsize=14, fontweight='bold')
+        ax.set_title(f"{series_key} Comparison", fontsize=14, fontweight="bold")
         ax.legend(fontsize=10)
         ax.grid(alpha=0.3)
 
         plt.tight_layout()
         out_path = self.output_dir / f"timeseries_{series_key}.png"
-        plt.savefig(out_path, dpi=300, bbox_inches='tight')
+        plt.savefig(out_path, dpi=300, bbox_inches="tight")
         print(f"[OK] Saved time series comparison: {out_path}")
         plt.close()
 
@@ -637,7 +659,9 @@ class ComparisonTool:
         self.plot_convergence_curves()
 
         # Plot common time series if available
-        common_series = set(self.results[0].time_series.keys()) if self.results else set()
+        common_series = (
+            set(self.results[0].time_series.keys()) if self.results else set()
+        )
         for result in self.results[1:]:
             common_series &= set(result.time_series.keys())
 
@@ -660,14 +684,17 @@ class ComparisonTool:
             "results": [
                 {
                     "name": r.name,
-                    "metrics": {k: (float(v) if isinstance(v, (int, float)) else v) for k, v in r.metrics.items()},
+                    "metrics": {
+                        k: (float(v) if isinstance(v, (int, float)) else v)
+                        for k, v in r.metrics.items()
+                    },
                     "metadata": r.metadata,
                 }
                 for r in self.results
-            ]
+            ],
         }
 
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
         print(f"[OK] Exported to JSON: {filepath}")
@@ -779,7 +806,7 @@ class ComparisonTool:
 </html>
 """
 
-        with open(filepath, 'w', encoding='utf-8') as f:
+        with open(filepath, "w", encoding="utf-8") as f:
             f.write(html_content)
 
         print(f"[OK] Exported HTML report: {filepath}")
@@ -798,8 +825,10 @@ class ComparisonTool:
 
         for key in all_metric_keys:
             values = [
-                r.metrics[key] for r in self.results
-                if key in r.metrics and r.metrics[key] is not None
+                r.metrics[key]
+                for r in self.results
+                if key in r.metrics
+                and r.metrics[key] is not None
                 and not (isinstance(r.metrics[key], float) and np.isnan(r.metrics[key]))
             ]
 
@@ -809,7 +838,7 @@ class ComparisonTool:
                     "std": float(np.std(values)),
                     "min": float(np.min(values)),
                     "max": float(np.max(values)),
-                    "count": len(values)
+                    "count": len(values),
                 }
 
         return stats

@@ -28,7 +28,9 @@ class PoincareAnalyzer:
         self,
         rows: list[dict],
         state_keys: tuple[str, ...] | list[str],
-        section_mode: Literal["support_change", "heel_strike", "custom"] = "support_change",
+        section_mode: Literal[
+            "support_change", "heel_strike", "custom"
+        ] = "support_change",
         custom_detector: Callable[[dict, dict], bool] | None = None,
     ):
         """初始化 Poincaré 分析器。
@@ -75,7 +77,9 @@ class PoincareAnalyzer:
             self._section_pts, self._section_indices = self._detect_heel_strike()
         elif self.section_mode == "custom":
             if self.custom_detector is None:
-                raise ValueError("custom_detector must be provided when section_mode='custom'")
+                raise ValueError(
+                    "custom_detector must be provided when section_mode='custom'"
+                )
             self._section_pts, self._section_indices = self._detect_custom()
         else:
             raise ValueError(f"Unknown section_mode: {self.section_mode}")
@@ -121,7 +125,7 @@ class PoincareAnalyzer:
         indices: list[int] = []
 
         for i in range(1, len(self.rows)):
-            if self.custom_detector(self.rows[i-1], self.rows[i]):
+            if self.custom_detector(self.rows[i - 1], self.rows[i]):
                 pts.append([float(self.rows[i][k]) for k in self.state_keys])
                 indices.append(i)
 
@@ -174,8 +178,14 @@ class PoincareAnalyzer:
             fig, ax = plt.subplots(figsize=(8, 6))
 
         if pts.size == 0:
-            ax.text(0.5, 0.5, "No section points detected",
-                   ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "No section points detected",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             ax.set_xlabel(f"{self.state_keys[0]} [k]")
             ax.set_ylabel(f"{self.state_keys[0]} [k+1]")
             if title:
@@ -191,13 +201,13 @@ class PoincareAnalyzer:
         # 参考线 y=x
         if show_identity and len(x_k) > 0:
             x_range = [min(x_k.min(), x_k1.min()), max(x_k.max(), x_k1.max())]
-            ax.plot(x_range, x_range, 'k--', lw=1, alpha=0.3, label="y=x")
+            ax.plot(x_range, x_range, "k--", lw=1, alpha=0.3, label="y=x")
 
         # 不动点标注
         if show_fixed_point and self._floquet_result is not None:
             fp = self._floquet_result["fixed_point"]
             if len(fp) > 0 and not np.isnan(fp[0]):
-                ax.plot(fp[0], fp[0], 'r*', markersize=12, label="Fixed point")
+                ax.plot(fp[0], fp[0], "r*", markersize=12, label="Fixed point")
 
         ax.set_xlabel(f"{self.state_keys[0]} [k]")
         ax.set_ylabel(f"{self.state_keys[0]} [k+1]")
@@ -230,12 +240,19 @@ class PoincareAnalyzer:
             fig, ax = plt.subplots(figsize=(8, 6))
 
         if len(self.state_keys) < 2:
-            ax.text(0.5, 0.5, "Need at least 2 state variables",
-                   ha="center", va="center", transform=ax.transAxes)
+            ax.text(
+                0.5,
+                0.5,
+                "Need at least 2 state variables",
+                ha="center",
+                va="center",
+                transform=ax.transAxes,
+            )
             return ax
 
         plot_section(
-            ax, pts,
+            ax,
+            pts,
             x_label=self.state_keys[0],
             y_label=self.state_keys[1],
             title=title,
@@ -307,14 +324,18 @@ class PoincareAnalyzer:
 
         # 下半部分：稳定性报告
         ax3 = fig.add_subplot(gs[1, :])
-        ax3.axis('off')
+        ax3.axis("off")
 
         report = self.stability_report()
-        ax3.text(0.05, 0.95, report,
-                transform=ax3.transAxes,
-                fontfamily='monospace',
-                fontsize=9,
-                verticalalignment='top')
+        ax3.text(
+            0.05,
+            0.95,
+            report,
+            transform=ax3.transAxes,
+            fontfamily="monospace",
+            fontsize=9,
+            verticalalignment="top",
+        )
 
         return fig
 

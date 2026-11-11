@@ -12,6 +12,7 @@ from rl_training.test_v137_identity import V137IdentitySimulator
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 from simulate_passive_arms_v14 import contact_flags
 
+
 def debug_contact_timing():
     """对比baseline和V2在1.28-1.32s的接触检测"""
 
@@ -42,20 +43,59 @@ def debug_contact_timing():
     for step in range(1280):
         t = step * 0.001
         E_current_base = _mechanical_energy(p_base, baseline_sim.data)
-        tau_base = control_v136(fsm_base, baseline_sim.data, t, support_foot_base, burst_start_t_base, E_current_base)
+        tau_base = control_v136(
+            fsm_base,
+            baseline_sim.data,
+            t,
+            support_foot_base,
+            burst_start_t_base,
+            E_current_base,
+        )
 
-        l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau_base[0], tau_base[1], tau_base[2], tau_base[3]
+        l_hip_des, l_knee_des, r_hip_des, r_knee_des = (
+            tau_base[0],
+            tau_base[1],
+            tau_base[2],
+            tau_base[3],
+        )
 
         if baseline_sim.params.compensate_friction:
-            l_hip_des = baseline_sim._compensate(l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]), baseline_sim.params.hip_motor)
-            l_knee_des = baseline_sim._compensate(l_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]), baseline_sim.params.knee_motor)
-            r_hip_des = baseline_sim._compensate(r_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]), baseline_sim.params.hip_motor)
-            r_knee_des = baseline_sim._compensate(r_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]), baseline_sim.params.knee_motor)
+            l_hip_des = baseline_sim._compensate(
+                l_hip_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]),
+                baseline_sim.params.hip_motor,
+            )
+            l_knee_des = baseline_sim._compensate(
+                l_knee_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]),
+                baseline_sim.params.knee_motor,
+            )
+            r_hip_des = baseline_sim._compensate(
+                r_hip_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]),
+                baseline_sim.params.hip_motor,
+            )
+            r_knee_des = baseline_sim._compensate(
+                r_knee_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]),
+                baseline_sim.params.knee_motor,
+            )
 
-        l_hip_out, _ = baseline_sim.actuators["left_hip"].compute_actual_torque(l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]))
-        l_knee_out, _ = baseline_sim.actuators["left_knee"].compute_actual_torque(l_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]))
-        r_hip_out, _ = baseline_sim.actuators["right_hip"].compute_actual_torque(r_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]))
-        r_knee_out, _ = baseline_sim.actuators["right_knee"].compute_actual_torque(r_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]))
+        l_hip_out, _ = baseline_sim.actuators["left_hip"].compute_actual_torque(
+            l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]])
+        )
+        l_knee_out, _ = baseline_sim.actuators["left_knee"].compute_actual_torque(
+            l_knee_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]),
+        )
+        r_hip_out, _ = baseline_sim.actuators["right_hip"].compute_actual_torque(
+            r_hip_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]),
+        )
+        r_knee_out, _ = baseline_sim.actuators["right_knee"].compute_actual_torque(
+            r_knee_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]),
+        )
 
         baseline_sim.data.ctrl[:] = (l_hip_out, l_knee_out, r_hip_out, r_knee_out)
         mujoco.mj_step(baseline_sim.model, baseline_sim.data)
@@ -69,13 +109,20 @@ def debug_contact_timing():
                 if candidate_start_t_base[foot] is None:
                     candidate_start_t_base[foot] = t
                     contact_reported_base[foot] = False
-                if t - float(candidate_start_t_base[foot]) >= p_base.stable_contact_time:
+                if (
+                    t - float(candidate_start_t_base[foot])
+                    >= p_base.stable_contact_time
+                ):
                     stable_feet_base.append(foot)
             else:
                 candidate_start_t_base[foot] = None
                 contact_reported_base[foot] = False
         for foot in stable_feet_base:
-            if (not contact_reported_base[foot] and foot != accepted_contact_base and t - last_event_t_base > p_base.min_event_interval):
+            if (
+                not contact_reported_base[foot]
+                and foot != accepted_contact_base
+                and t - last_event_t_base > p_base.min_event_interval
+            ):
                 accepted_contact_base = foot
                 support_foot_base = foot
                 burst_start_t_base = t
@@ -101,20 +148,59 @@ def debug_contact_timing():
 
         # === BASELINE ===
         E_current_base = _mechanical_energy(p_base, baseline_sim.data)
-        tau_base = control_v136(fsm_base, baseline_sim.data, t, support_foot_base, burst_start_t_base, E_current_base)
+        tau_base = control_v136(
+            fsm_base,
+            baseline_sim.data,
+            t,
+            support_foot_base,
+            burst_start_t_base,
+            E_current_base,
+        )
 
-        l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau_base[0], tau_base[1], tau_base[2], tau_base[3]
+        l_hip_des, l_knee_des, r_hip_des, r_knee_des = (
+            tau_base[0],
+            tau_base[1],
+            tau_base[2],
+            tau_base[3],
+        )
 
         if baseline_sim.params.compensate_friction:
-            l_hip_des = baseline_sim._compensate(l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]), baseline_sim.params.hip_motor)
-            l_knee_des = baseline_sim._compensate(l_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]), baseline_sim.params.knee_motor)
-            r_hip_des = baseline_sim._compensate(r_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]), baseline_sim.params.hip_motor)
-            r_knee_des = baseline_sim._compensate(r_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]), baseline_sim.params.knee_motor)
+            l_hip_des = baseline_sim._compensate(
+                l_hip_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]),
+                baseline_sim.params.hip_motor,
+            )
+            l_knee_des = baseline_sim._compensate(
+                l_knee_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]),
+                baseline_sim.params.knee_motor,
+            )
+            r_hip_des = baseline_sim._compensate(
+                r_hip_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]),
+                baseline_sim.params.hip_motor,
+            )
+            r_knee_des = baseline_sim._compensate(
+                r_knee_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]),
+                baseline_sim.params.knee_motor,
+            )
 
-        l_hip_out, _ = baseline_sim.actuators["left_hip"].compute_actual_torque(l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]))
-        l_knee_out, _ = baseline_sim.actuators["left_knee"].compute_actual_torque(l_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]))
-        r_hip_out, _ = baseline_sim.actuators["right_hip"].compute_actual_torque(r_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]))
-        r_knee_out, _ = baseline_sim.actuators["right_knee"].compute_actual_torque(r_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]))
+        l_hip_out, _ = baseline_sim.actuators["left_hip"].compute_actual_torque(
+            l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]])
+        )
+        l_knee_out, _ = baseline_sim.actuators["left_knee"].compute_actual_torque(
+            l_knee_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]),
+        )
+        r_hip_out, _ = baseline_sim.actuators["right_hip"].compute_actual_torque(
+            r_hip_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]),
+        )
+        r_knee_out, _ = baseline_sim.actuators["right_knee"].compute_actual_torque(
+            r_knee_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]),
+        )
 
         baseline_sim.data.ctrl[:] = (l_hip_out, l_knee_out, r_hip_out, r_knee_out)
         mujoco.mj_step(baseline_sim.model, baseline_sim.data)
@@ -129,7 +215,10 @@ def debug_contact_timing():
                 if candidate_start_t_base[foot] is None:
                     candidate_start_t_base[foot] = t
                     contact_reported_base[foot] = False
-                if t - float(candidate_start_t_base[foot]) >= p_base.stable_contact_time:
+                if (
+                    t - float(candidate_start_t_base[foot])
+                    >= p_base.stable_contact_time
+                ):
                     stable_feet_base.append(foot)
             else:
                 candidate_start_t_base[foot] = None
@@ -137,7 +226,11 @@ def debug_contact_timing():
 
         switched_base = False
         for foot in stable_feet_base:
-            if (not contact_reported_base[foot] and foot != accepted_contact_base and t - last_event_t_base > p_base.min_event_interval):
+            if (
+                not contact_reported_base[foot]
+                and foot != accepted_contact_base
+                and t - last_event_t_base > p_base.min_event_interval
+            ):
                 accepted_contact_base = foot
                 support_foot_base = foot
                 burst_start_t_base = t
@@ -151,16 +244,22 @@ def debug_contact_timing():
         obs, reward, terminated, truncated, info = env_v2.step(action)
 
         from simulate_passive_arms_v14 import contact_flags as cf_v2
+
         left_c_v2, right_c_v2 = cf_v2(env_v2.model, env_v2.data)
 
         print(f"t={t:.3f}s:")
-        print(f"  Baseline: L={int(left_c_base)} R={int(right_c_base)} | candidate_R={candidate_start_t_base['right']} | support={support_foot_base} | switched={switched_base}")
-        print(f"  V2:       L={int(left_c_v2)} R={int(right_c_v2)} | candidate_R={env_v2.candidate_start_t['right']} | support={env_v2.support_foot}")
+        print(
+            f"  Baseline: L={int(left_c_base)} R={int(right_c_base)} | candidate_R={candidate_start_t_base['right']} | support={support_foot_base} | switched={switched_base}"
+        )
+        print(
+            f"  V2:       L={int(left_c_v2)} R={int(right_c_v2)} | candidate_R={env_v2.candidate_start_t['right']} | support={env_v2.support_foot}"
+        )
 
     print("-" * 80)
     print()
 
     env_v2.close()
+
 
 if __name__ == "__main__":
     debug_contact_timing()

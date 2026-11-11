@@ -44,13 +44,19 @@ class Parameter:
             是否有效
         """
         if self.param_type == ParameterType.CONTINUOUS:
-            return isinstance(value, (int, float)) and self.bounds[0] <= value <= self.bounds[1]
+            return (
+                isinstance(value, (int, float))
+                and self.bounds[0] <= value <= self.bounds[1]
+            )
         elif self.param_type == ParameterType.INTEGER:
             return isinstance(value, int) and self.bounds[0] <= value <= self.bounds[1]
         elif self.param_type == ParameterType.CATEGORICAL:
             return value in self.bounds
         elif self.param_type == ParameterType.LOG_UNIFORM:
-            return isinstance(value, (int, float)) and self.bounds[0] <= value <= self.bounds[1]
+            return (
+                isinstance(value, (int, float))
+                and self.bounds[0] <= value <= self.bounds[1]
+            )
         return False
 
     def clip(self, value: Any) -> Any:

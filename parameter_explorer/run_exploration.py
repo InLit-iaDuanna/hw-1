@@ -12,13 +12,21 @@ from typing import Any, Callable
 import numpy as np
 
 try:
-    from .optimizer import BayesianOptimizer, GeneticAlgorithmOptimizer, MultiObjectiveOptimizer
+    from .optimizer import (
+        BayesianOptimizer,
+        GeneticAlgorithmOptimizer,
+        MultiObjectiveOptimizer,
+    )
     from .response_surface import build_response_surface
     from .sensitivity_analyzer import SensitivityAnalyzer
     from .space_sampler import ParameterRange, SpaceSampler
     from .visualizer import ParameterVisualizer
 except ImportError:
-    from optimizer import BayesianOptimizer, GeneticAlgorithmOptimizer, MultiObjectiveOptimizer
+    from optimizer import (
+        BayesianOptimizer,
+        GeneticAlgorithmOptimizer,
+        MultiObjectiveOptimizer,
+    )
     from response_surface import build_response_surface
     from sensitivity_analyzer import SensitivityAnalyzer
     from space_sampler import ParameterRange, SpaceSampler
@@ -53,7 +61,9 @@ class ParameterExplorer:
         # 初始化组件
         self.sampler = SpaceSampler(param_ranges)
         self.visualizer = ParameterVisualizer(output_dir=self.output_dir)
-        self.sensitivity_analyzer = SensitivityAnalyzer(self.param_names, self.param_bounds)
+        self.sensitivity_analyzer = SensitivityAnalyzer(
+            self.param_names, self.param_bounds
+        )
 
         # 存储结果
         self.samples: np.ndarray | None = None
@@ -81,11 +91,17 @@ class ParameterExplorer:
         if method == "grid":
             self.samples, param_dicts = self.sampler.grid_sample(n_per_dim=n_samples)
         elif method == "random":
-            self.samples, param_dicts = self.sampler.random_sample(n_samples=n_samples, seed=seed)
+            self.samples, param_dicts = self.sampler.random_sample(
+                n_samples=n_samples, seed=seed
+            )
         elif method == "lhs":
-            self.samples, param_dicts = self.sampler.lhs_sample(n_samples=n_samples, seed=seed)
+            self.samples, param_dicts = self.sampler.lhs_sample(
+                n_samples=n_samples, seed=seed
+            )
         elif method == "sobol":
-            self.samples, param_dicts = self.sampler.sobol_sample(n_samples=n_samples, seed=seed)
+            self.samples, param_dicts = self.sampler.sobol_sample(
+                n_samples=n_samples, seed=seed
+            )
         else:
             raise ValueError(f"Unknown sampling method: {method}")
 
@@ -94,8 +110,12 @@ class ParameterExplorer:
 
         if self.verbose:
             print(f"Sampled {len(self.samples)} points")
-            print(f"Objective range: [{self.objectives.min():.4f}, {self.objectives.max():.4f}]")
-            print(f"Mean: {self.objectives.mean():.4f}, Std: {self.objectives.std():.4f}")
+            print(
+                f"Objective range: [{self.objectives.min():.4f}, {self.objectives.max():.4f}]"
+            )
+            print(
+                f"Mean: {self.objectives.mean():.4f}, Std: {self.objectives.std():.4f}"
+            )
 
         # 保存结果
         results = {
@@ -106,7 +126,9 @@ class ParameterExplorer:
             "param_dicts": param_dicts,
         }
 
-        with open(self.output_dir / "initial_sampling.json", "w", encoding="utf-8") as f:
+        with open(
+            self.output_dir / "initial_sampling.json", "w", encoding="utf-8"
+        ) as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
 
         # 可视化参数分布
@@ -131,13 +153,19 @@ class ParameterExplorer:
             print(f"Fitting Response Surface: {method.upper()}")
             print(f"{'='*60}")
 
-        self.response_surface = build_response_surface(self.samples, self.objectives, method=method, **kwargs)
+        self.response_surface = build_response_surface(
+            self.samples, self.objectives, method=method, **kwargs
+        )
 
         if self.verbose:
             print(f"Response surface fitted with {len(self.samples)} samples")
 
     def sensitivity_analysis(
-        self, method: str = "morris", n_samples: int = 512, calc_second_order: bool = False, seed: int | None = None
+        self,
+        method: str = "morris",
+        n_samples: int = 512,
+        calc_second_order: bool = False,
+        seed: int | None = None,
     ) -> dict[str, Any]:
         """灵敏度分析。
 
@@ -157,7 +185,10 @@ class ParameterExplorer:
 
         if method == "sobol":
             results = self.sensitivity_analyzer.sobol_analysis(
-                self.objective_func, n_samples=n_samples, calc_second_order=calc_second_order, seed=seed
+                self.objective_func,
+                n_samples=n_samples,
+                calc_second_order=calc_second_order,
+                seed=seed,
             )
             # 可视化
             self.visualizer.plot_sensitivity_bar(
@@ -170,7 +201,9 @@ class ParameterExplorer:
             )
 
             if calc_second_order:
-                interaction_matrix = self.sensitivity_analyzer.interaction_matrix(results)
+                interaction_matrix = self.sensitivity_analyzer.interaction_matrix(
+                    results
+                )
                 if interaction_matrix is not None:
                     self.visualizer.plot_interaction_heatmap(
                         interaction_matrix,
@@ -203,10 +236,13 @@ class ParameterExplorer:
 
         # 保存结果
         results["ranked_params"] = ranked
-        with open(self.output_dir / f"sensitivity_{method}.json", "w", encoding="utf-8") as f:
+        with open(
+            self.output_dir / f"sensitivity_{method}.json", "w", encoding="utf-8"
+        ) as f:
             # 转换 numpy 数组为列表
             serializable_results = {
-                k: (v.tolist() if isinstance(v, np.ndarray) else v) for k, v in results.items()
+                k: (v.tolist() if isinstance(v, np.ndarray) else v)
+                for k, v in results.items()
             }
             json.dump(serializable_results, f, indent=2, ensure_ascii=False)
 
@@ -236,9 +272,14 @@ class ParameterExplorer:
             print(f"{'='*60}")
 
         if method == "bayesian":
-            optimizer = BayesianOptimizer(self.param_names, self.param_bounds, random_state=seed)
+            optimizer = BayesianOptimizer(
+                self.param_names, self.param_bounds, random_state=seed
+            )
             results = optimizer.optimize(
-                self.objective_func, n_iterations=n_iterations, verbose=self.verbose, **kwargs
+                self.objective_func,
+                n_iterations=n_iterations,
+                verbose=self.verbose,
+                **kwargs,
             )
 
             # 绘制优化历史
@@ -255,9 +296,14 @@ class ParameterExplorer:
             )
 
         elif method == "genetic":
-            optimizer = GeneticAlgorithmOptimizer(self.param_names, self.param_bounds, seed=seed)
+            optimizer = GeneticAlgorithmOptimizer(
+                self.param_names, self.param_bounds, seed=seed
+            )
             results = optimizer.optimize(
-                self.objective_func, max_generations=n_iterations, verbose=self.verbose, **kwargs
+                self.objective_func,
+                max_generations=n_iterations,
+                verbose=self.verbose,
+                **kwargs,
             )
 
         else:
@@ -271,9 +317,12 @@ class ParameterExplorer:
                 print(f"  {name}: {value:.6f}")
 
         # 保存结果
-        with open(self.output_dir / f"optimization_{method}.json", "w", encoding="utf-8") as f:
+        with open(
+            self.output_dir / f"optimization_{method}.json", "w", encoding="utf-8"
+        ) as f:
             serializable_results = {
-                k: (v.tolist() if isinstance(v, np.ndarray) else v) for k, v in results.items()
+                k: (v.tolist() if isinstance(v, np.ndarray) else v)
+                for k, v in results.items()
             }
             json.dump(serializable_results, f, indent=2, ensure_ascii=False)
 
@@ -315,7 +364,10 @@ class ParameterExplorer:
         )
 
         results = optimizer.optimize(
-            objective_funcs, maximize=maximize, n_generations=n_generations, verbose=self.verbose
+            objective_funcs,
+            maximize=maximize,
+            n_generations=n_generations,
+            verbose=self.verbose,
         )
 
         # 可视化 Pareto 前沿（仅支持 2 个目标）
@@ -331,15 +383,20 @@ class ParameterExplorer:
             print(f"\nFound {results['n_solutions']} Pareto-optimal solutions")
 
         # 保存结果
-        with open(self.output_dir / "optimization_multiobjective.json", "w", encoding="utf-8") as f:
+        with open(
+            self.output_dir / "optimization_multiobjective.json", "w", encoding="utf-8"
+        ) as f:
             serializable_results = {
-                k: (v.tolist() if isinstance(v, np.ndarray) else v) for k, v in results.items()
+                k: (v.tolist() if isinstance(v, np.ndarray) else v)
+                for k, v in results.items()
             }
             json.dump(serializable_results, f, indent=2, ensure_ascii=False)
 
         return results
 
-    def visualize_2d_slices(self, fixed_params: dict[str, float] | None = None, n_points: int = 100) -> None:
+    def visualize_2d_slices(
+        self, fixed_params: dict[str, float] | None = None, n_points: int = 100
+    ) -> None:
         """可视化 2D 参数切片。
 
         Args:
@@ -363,7 +420,9 @@ class ParameterExplorer:
         base_params = (
             {name: self.samples[best_idx, i] for i, name in enumerate(self.param_names)}
             if self.samples is not None
-            else {pr.name: (pr.min_value + pr.max_value) / 2 for pr in self.param_ranges}
+            else {
+                pr.name: (pr.min_value + pr.max_value) / 2 for pr in self.param_ranges
+            }
         )
         base_params.update(fixed_params)
 
@@ -405,7 +464,11 @@ class ParameterExplorer:
             )
 
     def visualize_3d_surface(
-        self, param1_name: str, param2_name: str, fixed_params: dict[str, float] | None = None, n_points: int = 50
+        self,
+        param1_name: str,
+        param2_name: str,
+        fixed_params: dict[str, float] | None = None,
+        n_points: int = 50,
     ) -> None:
         """可视化 3D 响应曲面。
 
@@ -436,7 +499,9 @@ class ParameterExplorer:
         base_params = (
             {name: self.samples[best_idx, i] for i, name in enumerate(self.param_names)}
             if self.samples is not None
-            else {pr.name: (pr.min_value + pr.max_value) / 2 for pr in self.param_ranges}
+            else {
+                pr.name: (pr.min_value + pr.max_value) / 2 for pr in self.param_ranges
+            }
         )
         base_params.update(fixed_params)
 
@@ -512,8 +577,12 @@ class ParameterExplorer:
         # 采样信息
         if self.samples is not None:
             report.append(f"Samples: {len(self.samples)}")
-            report.append(f"Objective range: [{self.objectives.min():.4f}, {self.objectives.max():.4f}]")
-            report.append(f"Mean: {self.objectives.mean():.4f}, Std: {self.objectives.std():.4f}")
+            report.append(
+                f"Objective range: [{self.objectives.min():.4f}, {self.objectives.max():.4f}]"
+            )
+            report.append(
+                f"Mean: {self.objectives.mean():.4f}, Std: {self.objectives.std():.4f}"
+            )
             report.append("")
 
         # 最优参数
@@ -528,7 +597,9 @@ class ParameterExplorer:
         report_text = "\n".join(report)
 
         # 保存报告
-        with open(self.output_dir / "exploration_report.txt", "w", encoding="utf-8") as f:
+        with open(
+            self.output_dir / "exploration_report.txt", "w", encoding="utf-8"
+        ) as f:
             f.write(report_text)
 
         if self.verbose:

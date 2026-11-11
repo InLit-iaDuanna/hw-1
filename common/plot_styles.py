@@ -66,7 +66,11 @@ def set_style(dpi: int = DPI_PRINT, grid: bool = True) -> None:
 
 def create_figure(size: str | tuple[float, float] = "medium", **kwargs) -> tuple:
     """Create a Matplotlib figure using a named project size."""
-    figsize = FIGURE_SIZES.get(size, FIGURE_SIZES["medium"]) if isinstance(size, str) else size
+    figsize = (
+        FIGURE_SIZES.get(size, FIGURE_SIZES["medium"])
+        if isinstance(size, str)
+        else size
+    )
     return plt.subplots(figsize=figsize, **kwargs)
 
 

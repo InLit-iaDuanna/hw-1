@@ -104,7 +104,7 @@ class V137HoldFrequencyTester:
         # 添加小扰动
         noise = np.random.normal(0, 0.01, size=6)
         for i in range(6):
-            self.data.qpos[i+2] += noise[i]
+            self.data.qpos[i + 2] += noise[i]
 
         mujoco.mj_forward(self.model, self.data)
 
@@ -132,7 +132,7 @@ class V137HoldFrequencyTester:
             t,
             self.support_foot,
             self.burst_start_t,
-            E_current
+            E_current,
         )
         l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau[0], tau[1], tau[2], tau[3]
 
@@ -173,7 +173,9 @@ class V137HoldFrequencyTester:
             r_knee_des, float(self.data.qvel[self.qvel_addr["right_knee"]])
         )
 
-        return np.array([l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float64)
+        return np.array(
+            [l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float64
+        )
 
     def _update_contact_events(self, t: float):
         """更新触地事件检测。"""
@@ -245,7 +247,7 @@ class V137HoldFrequencyTester:
         alternating = True
         if len(self.touchdowns) >= 2:
             for i in range(1, len(self.touchdowns)):
-                if self.touchdowns[i][0] == self.touchdowns[i-1][0]:
+                if self.touchdowns[i][0] == self.touchdowns[i - 1][0]:
                     alternating = False
                     break
 
@@ -262,6 +264,7 @@ def run_ablation_study():
     """运行Hold频率消融实验。"""
     # V13.7默认参数
     from simulate_v14c import make_v14c_params
+
     base_params = make_v14c_params(slope_deg=0.0)
 
     # 创建V137Params
@@ -275,11 +278,11 @@ def run_ablation_study():
 
     # 测试配置：hold_steps -> 控制频率
     test_configs = [
-        (1, 1000),   # 1ms hold = 1kHz
-        (2, 500),    # 2ms hold = 500Hz
-        (5, 200),    # 5ms hold = 200Hz
-        (10, 100),   # 10ms hold = 100Hz
-        (20, 50),    # 20ms hold = 50Hz
+        (1, 1000),  # 1ms hold = 1kHz
+        (2, 500),  # 2ms hold = 500Hz
+        (5, 200),  # 5ms hold = 200Hz
+        (10, 100),  # 10ms hold = 100Hz
+        (20, 50),  # 20ms hold = 50Hz
     ]
 
     num_episodes = 10
@@ -289,7 +292,9 @@ def run_ablation_study():
     print("V13.7 Hold频率消融实验")
     print("=" * 80)
     print(f"每个配置运行 {num_episodes} episodes")
-    print(f"成功标准: forward ≥ {SUCCESS_FORWARD}m, time ≥ {SUCCESS_TIME}s, touchdowns ≥ {SUCCESS_TOUCHDOWNS}")
+    print(
+        f"成功标准: forward ≥ {SUCCESS_FORWARD}m, time ≥ {SUCCESS_TIME}s, touchdowns ≥ {SUCCESS_TOUCHDOWNS}"
+    )
     print("=" * 80)
 
     for hold_steps, freq_hz in test_configs:
@@ -306,7 +311,9 @@ def run_ablation_study():
         # 统计
         forward_distances = [r["forward_distance"] for r in episode_results]
         success_rate = sum(r["success"] for r in episode_results) / num_episodes
-        alternating_rate = sum(r["alternating_touchdowns"] for r in episode_results) / num_episodes
+        alternating_rate = (
+            sum(r["alternating_touchdowns"] for r in episode_results) / num_episodes
+        )
         avg_touchdowns = np.mean([r["num_touchdowns"] for r in episode_results])
 
         result_summary = {
@@ -323,7 +330,9 @@ def run_ablation_study():
         results.append(result_summary)
 
         # 打印结果
-        print(f"  平均前进距离: {result_summary['avg_forward_distance']:.2f} ± {result_summary['std_forward_distance']:.2f} m")
+        print(
+            f"  平均前进距离: {result_summary['avg_forward_distance']:.2f} ± {result_summary['std_forward_distance']:.2f} m"
+        )
         print(f"  成功率: {success_rate:.1%}")
         print(f"  交替触地率: {alternating_rate:.1%}")
         print(f"  平均触地次数: {avg_touchdowns:.1f}")
@@ -332,16 +341,21 @@ def run_ablation_study():
     print("\n" + "=" * 80)
     print("汇总结果")
     print("=" * 80)
-    print(f"{'Hold(ms)':<10} {'频率(Hz)':<10} {'平均距离(m)':<15} {'成功率':<10} {'交替触地率':<12}")
+    print(
+        f"{'Hold(ms)':<10} {'频率(Hz)':<10} {'平均距离(m)':<15} {'成功率':<10} {'交替触地率':<12}"
+    )
     print("-" * 80)
 
     for r in results:
-        print(f"{r['hold_ms']:<10} {r['freq_hz']:<10} "
-              f"{r['avg_forward_distance']:.2f}±{r['std_forward_distance']:.2f}       "
-              f"{r['success_rate']:.1%}      {r['alternating_rate']:.1%}")
+        print(
+            f"{r['hold_ms']:<10} {r['freq_hz']:<10} "
+            f"{r['avg_forward_distance']:.2f}±{r['std_forward_distance']:.2f}       "
+            f"{r['success_rate']:.1%}      {r['alternating_rate']:.1%}"
+        )
 
     # 保存结果
     import json
+
     output_file = HW1_ROOT / "rl_training" / "hold_frequency_ablation_results.json"
     with open(output_file, "w") as f:
         json.dump(results, f, indent=2)

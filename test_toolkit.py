@@ -7,6 +7,7 @@ Verify all tools are working correctly
 import sys
 from pathlib import Path
 
+
 def test_imports():
     """Test basic imports"""
     print("=" * 60)
@@ -15,6 +16,7 @@ def test_imports():
 
     try:
         import numpy as np
+
         print("[OK] NumPy:", np.__version__)
     except ImportError:
         print("[FAIL] NumPy not found")
@@ -22,6 +24,7 @@ def test_imports():
 
     try:
         import mujoco
+
         print("[OK] MuJoCo:", mujoco.__version__)
     except ImportError:
         print("[FAIL] MuJoCo not found")
@@ -29,12 +32,14 @@ def test_imports():
 
     try:
         import matplotlib
+
         print("[OK] Matplotlib:", matplotlib.__version__)
     except ImportError:
         print("[FAIL] Matplotlib not found")
         return False
 
     return True
+
 
 def test_optional_imports():
     """Test optional dependencies"""
@@ -56,6 +61,7 @@ def test_optional_imports():
             print(f"[OK] {lib:20s} - {desc}")
         except ImportError:
             print(f"[--] {lib:20s} - {desc} (not installed)")
+
 
 def test_model_files():
     """Test model files"""
@@ -81,6 +87,7 @@ def test_model_files():
             print(f"[--] {model_path}")
 
     return found_models
+
 
 def test_controller_files():
     """Test controller files"""
@@ -110,6 +117,7 @@ def test_controller_files():
 
     return all_exist
 
+
 def test_rl_files():
     """Test RL files"""
     print("\n" + "=" * 60)
@@ -136,6 +144,7 @@ def test_rl_files():
             all_exist = False
 
     return all_exist
+
 
 def test_optimization_files():
     """Test optimization files"""
@@ -167,6 +176,7 @@ def test_optimization_files():
 
     return all_exist
 
+
 def generate_summary():
     """Generate test summary"""
     print("\n" + "=" * 60)
@@ -195,6 +205,7 @@ def generate_summary():
     print("  * ALGORITHM_CHANGELOG.md")
 
     print("\n" + "=" * 60)
+
 
 if __name__ == "__main__":
     print("\n" + "=" * 60)

@@ -34,7 +34,9 @@ obs, info = env.reset(seed=0)
 print("After reset:")
 print(f"  qpos[0] (hip_x): {env.data.qpos[0]:.6f}")
 print(f"  qpos[1] (hip_z): {env.data.qpos[1]:.6f}")
-print(f"  qvel[0] (hip_vx): {env.data.qvel[0]:.6f} (expected: {env.params.base.initial_vx:.6f})")
+print(
+    f"  qvel[0] (hip_vx): {env.data.qvel[0]:.6f} (expected: {env.params.base.initial_vx:.6f})"
+)
 print(f"  qvel[1] (hip_vz): {env.data.qvel[1]:.6f}")
 print(f"  qvel[2] (left_hip): {env.data.qvel[2]:.6f}")
 print(f"  qvel[5] (right_hip): {env.data.qvel[5]:.6f}")

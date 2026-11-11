@@ -40,8 +40,8 @@ class ExpertDemonstrationDataset(Dataset):
 
         # Collect all obs and actions
         for traj in trajectories:
-            obs = np.array(traj['observations'])
-            act = np.array(traj['actions'])
+            obs = np.array(traj["observations"])
+            act = np.array(traj["actions"])
 
             # Handle different shapes
             if len(obs.shape) == 1:
@@ -77,17 +77,17 @@ class ExpertDemonstrationDataset(Dataset):
 
     def __getitem__(self, idx):
         return {
-            'observation': torch.from_numpy(self.observations[idx]),
-            'action': torch.from_numpy(self.actions[idx])
+            "observation": torch.from_numpy(self.observations[idx]),
+            "action": torch.from_numpy(self.actions[idx]),
         }
 
     def get_stats(self):
         """Return normalization statistics for deployment."""
         return {
-            'obs_mean': self.obs_mean,
-            'obs_std': self.obs_std,
-            'act_mean': self.act_mean,
-            'act_std': self.act_std
+            "obs_mean": self.obs_mean,
+            "obs_std": self.obs_std,
+            "act_mean": self.act_mean,
+            "act_std": self.act_std,
         }
 
 
@@ -126,8 +126,8 @@ class BehaviorCloningPolicy(nn.Module):
         obs_tensor = torch.from_numpy(obs).float()
 
         if normalize_stats is not None:
-            obs_mean = torch.from_numpy(normalize_stats['obs_mean']).float()
-            obs_std = torch.from_numpy(normalize_stats['obs_std']).float()
+            obs_mean = torch.from_numpy(normalize_stats["obs_mean"]).float()
+            obs_std = torch.from_numpy(normalize_stats["obs_std"]).float()
             obs_tensor = (obs_tensor - obs_mean) / obs_std
 
         with torch.no_grad():
@@ -135,7 +135,7 @@ class BehaviorCloningPolicy(nn.Module):
             act = act_tensor.squeeze(0).numpy()
 
         if normalize_stats is not None:
-            act = act * normalize_stats['act_std'] + normalize_stats['act_mean']
+            act = act * normalize_stats["act_std"] + normalize_stats["act_mean"]
 
         return act
 
@@ -167,29 +167,47 @@ def load_v13_7_demonstrations(data_dir: Path, num_episodes: int = 100) -> List[D
                 observations = []
                 actions = []
 
-                if 'time' in data and 'hip_torque' in data:
-                    time = data['time'].flatten()
-                    hip_torque = data['hip_torque'].flatten()
-                    knee_torque = data['knee_torque'].flatten() if 'knee_torque' in data else np.zeros_like(hip_torque)
+                if "time" in data and "hip_torque" in data:
+                    time = data["time"].flatten()
+                    hip_torque = data["hip_torque"].flatten()
+                    knee_torque = (
+                        data["knee_torque"].flatten()
+                        if "knee_torque" in data
+                        else np.zeros_like(hip_torque)
+                    )
 
-                    hip_angle = data.get('hip_angle', np.zeros_like(time)).flatten()
-                    knee_angle = data.get('knee_angle', np.zeros_like(time)).flatten()
-                    hip_vel = data.get('hip_velocity', np.zeros_like(time)).flatten()
-                    knee_vel = data.get('knee_velocity', np.zeros_like(time)).flatten()
-                    phase = data.get('gait_phase', np.zeros_like(time)).flatten()
+                    hip_angle = data.get("hip_angle", np.zeros_like(time)).flatten()
+                    knee_angle = data.get("knee_angle", np.zeros_like(time)).flatten()
+                    hip_vel = data.get("hip_velocity", np.zeros_like(time)).flatten()
+                    knee_vel = data.get("knee_velocity", np.zeros_like(time)).flatten()
+                    phase = data.get("gait_phase", np.zeros_like(time)).flatten()
 
                     for i in range(len(time)):
-                        obs = np.array([hip_angle[i], knee_angle[i], hip_vel[i], knee_vel[i], phase[i]])
+                        obs = np.array(
+                            [
+                                hip_angle[i],
+                                knee_angle[i],
+                                hip_vel[i],
+                                knee_vel[i],
+                                phase[i],
+                            ]
+                        )
                         act = np.array([hip_torque[i], knee_torque[i]])
                         observations.append(obs)
                         actions.append(act)
 
-                    trajectories.append({
-                        'observations': np.array(observations),
-                        'actions': np.array(actions),
-                        'rewards': data.get('reward', np.zeros(len(time))).flatten(),
-                        'episode_return': np.sum(data.get('reward', np.zeros(len(time))))
-                    })
+                    trajectories.append(
+                        {
+                            "observations": np.array(observations),
+                            "actions": np.array(actions),
+                            "rewards": data.get(
+                                "reward", np.zeros(len(time))
+                            ).flatten(),
+                            "episode_return": np.sum(
+                                data.get("reward", np.zeros(len(time)))
+                            ),
+                        }
+                    )
             except Exception as e:
                 print(f"Error loading {mat_file}: {e}")
                 continue
@@ -201,7 +219,7 @@ def load_v13_7_demonstrations(data_dir: Path, num_episodes: int = 100) -> List[D
         print(f"Loading {len(pickle_files)} pickle trajectory files...")
         for pkl_file in tqdm(pickle_files[:num_episodes]):
             try:
-                with open(pkl_file, 'rb') as f:
+                with open(pkl_file, "rb") as f:
                     traj = pickle.load(f)
                     trajectories.append(traj)
             except Exception as e:
@@ -210,7 +228,9 @@ def load_v13_7_demonstrations(data_dir: Path, num_episodes: int = 100) -> List[D
 
     # If no files found, generate synthetic demonstrations
     if not trajectories:
-        print("No V13.7 demonstration files found. Generating synthetic demonstrations...")
+        print(
+            "No V13.7 demonstration files found. Generating synthetic demonstrations..."
+        )
         trajectories = generate_synthetic_v13_7_trajectories(num_episodes)
 
     print(f"Loaded {len(trajectories)} expert demonstrations")
@@ -237,12 +257,20 @@ def generate_synthetic_v13_7_trajectories(num_episodes: int = 100) -> List[Dict]
         hip_vel = 0.3 * gait_frequency * 2 * np.pi * np.cos(phase)
 
         # Knee trajectory (different phase)
-        knee_angle = 0.5 * np.sin(phase - np.pi/3) + np.random.randn(episode_length) * 0.02
-        knee_vel = 0.5 * gait_frequency * 2 * np.pi * np.cos(phase - np.pi/3)
+        knee_angle = (
+            0.5 * np.sin(phase - np.pi / 3) + np.random.randn(episode_length) * 0.02
+        )
+        knee_vel = 0.5 * gait_frequency * 2 * np.pi * np.cos(phase - np.pi / 3)
 
         # Torques based on PD control + feedforward
-        hip_torque = -10 * (hip_angle - 0.3 * np.sin(phase)) - 2 * hip_vel + 5 * np.sin(phase)
-        knee_torque = -15 * (knee_angle - 0.5 * np.sin(phase - np.pi/3)) - 3 * knee_vel + 8 * np.sin(phase - np.pi/3)
+        hip_torque = (
+            -10 * (hip_angle - 0.3 * np.sin(phase)) - 2 * hip_vel + 5 * np.sin(phase)
+        )
+        knee_torque = (
+            -15 * (knee_angle - 0.5 * np.sin(phase - np.pi / 3))
+            - 3 * knee_vel
+            + 8 * np.sin(phase - np.pi / 3)
+        )
 
         # Add some noise
         hip_torque += np.random.randn(episode_length) * 0.5
@@ -252,18 +280,24 @@ def generate_synthetic_v13_7_trajectories(num_episodes: int = 100) -> List[Dict]
         hip_torque = np.clip(hip_torque, -50, 50)
         knee_torque = np.clip(knee_torque, -50, 50)
 
-        observations = np.stack([hip_angle, knee_angle, hip_vel, knee_vel, phase / (2*np.pi)], axis=1)
+        observations = np.stack(
+            [hip_angle, knee_angle, hip_vel, knee_vel, phase / (2 * np.pi)], axis=1
+        )
         actions = np.stack([hip_torque, knee_torque], axis=1)
 
         # Reward based on smooth motion and forward progress
-        rewards = -0.1 * (hip_angle**2 + knee_angle**2) - 0.01 * (hip_vel**2 + knee_vel**2)
+        rewards = -0.1 * (hip_angle**2 + knee_angle**2) - 0.01 * (
+            hip_vel**2 + knee_vel**2
+        )
 
-        trajectories.append({
-            'observations': observations,
-            'actions': actions,
-            'rewards': rewards,
-            'episode_return': np.sum(rewards)
-        })
+        trajectories.append(
+            {
+                "observations": observations,
+                "actions": actions,
+                "rewards": rewards,
+                "episode_return": np.sum(rewards),
+            }
+        )
 
     return trajectories
 
@@ -274,7 +308,7 @@ def train_behavior_cloning(
     num_epochs: int = 100,
     batch_size: int = 256,
     learning_rate: float = 3e-4,
-    device: str = 'cpu'
+    device: str = "cpu",
 ) -> Dict:
     """
     Train policy via behavior cloning.
@@ -288,21 +322,19 @@ def train_behavior_cloning(
 
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=0)
 
-    history = {
-        'train_loss': [],
-        'val_loss': [],
-        'epoch': []
-    }
+    history = {"train_loss": [], "val_loss": [], "epoch": []}
 
     # Split into train/val
     val_size = int(0.1 * len(dataset))
     train_size = len(dataset) - val_size
-    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
+    train_dataset, val_dataset = torch.utils.data.random_split(
+        dataset, [train_size, val_size]
+    )
 
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
-    best_val_loss = float('inf')
+    best_val_loss = float("inf")
 
     print(f"\nTraining behavior cloning policy for {num_epochs} epochs...")
     for epoch in range(num_epochs):
@@ -311,8 +343,8 @@ def train_behavior_cloning(
         train_losses = []
 
         for batch in train_loader:
-            obs = batch['observation'].to(device)
-            act_true = batch['action'].to(device)
+            obs = batch["observation"].to(device)
+            act_true = batch["action"].to(device)
 
             # Forward pass
             act_pred = policy(obs)
@@ -331,8 +363,8 @@ def train_behavior_cloning(
 
         with torch.no_grad():
             for batch in val_loader:
-                obs = batch['observation'].to(device)
-                act_true = batch['action'].to(device)
+                obs = batch["observation"].to(device)
+                act_true = batch["action"].to(device)
                 act_pred = policy(obs)
                 loss = criterion(act_pred, act_true)
                 val_losses.append(loss.item())
@@ -340,15 +372,17 @@ def train_behavior_cloning(
         train_loss = np.mean(train_losses)
         val_loss = np.mean(val_losses)
 
-        history['epoch'].append(epoch)
-        history['train_loss'].append(train_loss)
-        history['val_loss'].append(val_loss)
+        history["epoch"].append(epoch)
+        history["train_loss"].append(train_loss)
+        history["val_loss"].append(val_loss)
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
 
         if (epoch + 1) % 10 == 0:
-            print(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.6f}, Val Loss: {val_loss:.6f}")
+            print(
+                f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.6f}, Val Loss: {val_loss:.6f}"
+            )
 
     print(f"Best validation loss: {best_val_loss:.6f}")
 
@@ -394,10 +428,10 @@ def evaluate_policy(policy, env, num_episodes: int = 20, normalize_stats=None):
         episode_lengths.append(episode_length)
 
     return {
-        'mean_return': np.mean(episode_returns),
-        'std_return': np.std(episode_returns),
-        'mean_length': np.mean(episode_lengths),
-        'returns': episode_returns
+        "mean_return": np.mean(episode_returns),
+        "std_return": np.std(episode_returns),
+        "mean_length": np.mean(episode_lengths),
+        "returns": episode_returns,
     }
 
 
@@ -405,7 +439,7 @@ def fine_tune_with_rl(
     bc_policy: BehaviorCloningPolicy,
     env,
     num_timesteps: int = 100000,
-    normalize_stats=None
+    normalize_stats=None,
 ):
     """
     Fine-tune BC policy with RL (PPO or similar).
@@ -434,41 +468,46 @@ def compare_approaches(results: Dict, save_dir: Path):
     save_dir.mkdir(parents=True, exist_ok=True)
 
     approaches = list(results.keys())
-    mean_returns = [results[app]['mean_return'] for app in approaches]
-    std_returns = [results[app]['std_return'] for app in approaches]
+    mean_returns = [results[app]["mean_return"] for app in approaches]
+    std_returns = [results[app]["std_return"] for app in approaches]
 
     # Bar plot of mean returns
     fig, ax = plt.subplots(figsize=(10, 6))
     x_pos = np.arange(len(approaches))
     ax.bar(x_pos, mean_returns, yerr=std_returns, capsize=5, alpha=0.7)
-    ax.set_xlabel('Approach')
-    ax.set_ylabel('Mean Episode Return')
-    ax.set_title('Comparison: Pure RL vs Imitation+RL')
+    ax.set_xlabel("Approach")
+    ax.set_ylabel("Mean Episode Return")
+    ax.set_title("Comparison: Pure RL vs Imitation+RL")
     ax.set_xticks(x_pos)
-    ax.set_xticklabels(approaches, rotation=45, ha='right')
-    ax.grid(axis='y', alpha=0.3)
+    ax.set_xticklabels(approaches, rotation=45, ha="right")
+    ax.grid(axis="y", alpha=0.3)
 
     plt.tight_layout()
-    plt.savefig(save_dir / 'approach_comparison.png', dpi=150)
+    plt.savefig(save_dir / "approach_comparison.png", dpi=150)
     print(f"Saved comparison plot to {save_dir / 'approach_comparison.png'}")
 
     # Box plot of episode returns
     fig, ax = plt.subplots(figsize=(10, 6))
-    returns_data = [results[app]['returns'] for app in approaches]
+    returns_data = [results[app]["returns"] for app in approaches]
     ax.boxplot(returns_data, labels=approaches)
-    ax.set_xlabel('Approach')
-    ax.set_ylabel('Episode Return')
-    ax.set_title('Episode Return Distribution')
-    ax.grid(axis='y', alpha=0.3)
-    plt.xticks(rotation=45, ha='right')
+    ax.set_xlabel("Approach")
+    ax.set_ylabel("Episode Return")
+    ax.set_title("Episode Return Distribution")
+    ax.grid(axis="y", alpha=0.3)
+    plt.xticks(rotation=45, ha="right")
 
     plt.tight_layout()
-    plt.savefig(save_dir / 'return_distribution.png', dpi=150)
+    plt.savefig(save_dir / "return_distribution.png", dpi=150)
     print(f"Saved distribution plot to {save_dir / 'return_distribution.png'}")
 
     # Save numerical results
-    with open(save_dir / 'comparison_results.json', 'w') as f:
-        json.dump(results, f, indent=2, default=lambda x: float(x) if isinstance(x, np.ndarray) else x)
+    with open(save_dir / "comparison_results.json", "w") as f:
+        json.dump(
+            results,
+            f,
+            indent=2,
+            default=lambda x: float(x) if isinstance(x, np.ndarray) else x,
+        )
     print(f"Saved results to {save_dir / 'comparison_results.json'}")
 
 
@@ -484,11 +523,11 @@ def main():
     num_epochs = 100
     batch_size = 256
     learning_rate = 3e-4
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = "cuda" if torch.cuda.is_available() else "cpu"
 
-    print("="*60)
+    print("=" * 60)
     print("Imitation Learning from V13.7 Expert Demonstrations")
-    print("="*60)
+    print("=" * 60)
     print(f"Device: {device}")
     print(f"Data directory: {data_dir}")
     print(f"Output directory: {output_dir}")
@@ -516,34 +555,36 @@ def main():
         num_epochs=num_epochs,
         batch_size=batch_size,
         learning_rate=learning_rate,
-        device=device
+        device=device,
     )
 
     # Plot training curves
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.plot(training_history['epoch'], training_history['train_loss'], label='Train Loss')
-    ax.plot(training_history['epoch'], training_history['val_loss'], label='Val Loss')
-    ax.set_xlabel('Epoch')
-    ax.set_ylabel('MSE Loss')
-    ax.set_title('Behavior Cloning Training')
+    ax.plot(
+        training_history["epoch"], training_history["train_loss"], label="Train Loss"
+    )
+    ax.plot(training_history["epoch"], training_history["val_loss"], label="Val Loss")
+    ax.set_xlabel("Epoch")
+    ax.set_ylabel("MSE Loss")
+    ax.set_title("Behavior Cloning Training")
     ax.legend()
     ax.grid(alpha=0.3)
     plt.tight_layout()
-    plt.savefig(output_dir / 'bc_training_curves.png', dpi=150)
+    plt.savefig(output_dir / "bc_training_curves.png", dpi=150)
     print(f"Saved training curves to {output_dir / 'bc_training_curves.png'}")
 
     # Step 3: Save trained policy
     print("\n[3/5] Saving trained policy...")
     checkpoint = {
-        'policy_state_dict': bc_policy.state_dict(),
-        'normalize_stats': dataset.get_stats(),
-        'obs_dim': obs_dim,
-        'act_dim': act_dim,
-        'training_history': training_history,
-        'timestamp': datetime.now().isoformat()
+        "policy_state_dict": bc_policy.state_dict(),
+        "normalize_stats": dataset.get_stats(),
+        "obs_dim": obs_dim,
+        "act_dim": act_dim,
+        "training_history": training_history,
+        "timestamp": datetime.now().isoformat(),
     }
 
-    checkpoint_path = output_dir / 'bc_policy_checkpoint.pt'
+    checkpoint_path = output_dir / "bc_policy_checkpoint.pt"
     torch.save(checkpoint, checkpoint_path)
     print(f"Saved checkpoint to {checkpoint_path}")
 
@@ -564,16 +605,28 @@ def main():
 
     # Example comparison (with dummy data for demonstration)
     dummy_results = {
-        'Pure RL': {'mean_return': 150.0, 'std_return': 30.0, 'returns': np.random.randn(20)*30 + 150},
-        'BC Only': {'mean_return': 200.0, 'std_return': 20.0, 'returns': np.random.randn(20)*20 + 200},
-        'BC + RL Fine-tune': {'mean_return': 250.0, 'std_return': 15.0, 'returns': np.random.randn(20)*15 + 250}
+        "Pure RL": {
+            "mean_return": 150.0,
+            "std_return": 30.0,
+            "returns": np.random.randn(20) * 30 + 150,
+        },
+        "BC Only": {
+            "mean_return": 200.0,
+            "std_return": 20.0,
+            "returns": np.random.randn(20) * 20 + 200,
+        },
+        "BC + RL Fine-tune": {
+            "mean_return": 250.0,
+            "std_return": 15.0,
+            "returns": np.random.randn(20) * 15 + 250,
+        },
     }
 
     compare_approaches(dummy_results, output_dir)
 
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("Imitation learning pipeline complete!")
-    print("="*60)
+    print("=" * 60)
     print(f"\nOutputs saved to: {output_dir}")
     print("\nNext steps:")
     print("1. Integrate BC policy with your simulation environment")

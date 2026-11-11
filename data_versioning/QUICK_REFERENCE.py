@@ -25,16 +25,12 @@ print(f"Total: {stats['total_assets']}, Size: {stats['total_size_mb']:.2f} MB")
 
 # 注册单个文件
 tracker.register_file(
-    "out/results.csv",
-    version_tag="V13",
-    description="Simulation results"
+    "out/results.csv", version_tag="V13", description="Simulation results"
 )
 
 # 批量注册目录
 assets = tracker.register_directory(
-    "v13_floquet_long_run/out",
-    file_patterns=['*.csv', '*.json'],
-    version_tag="V13"
+    "v13_floquet_long_run/out", file_patterns=["*.csv", "*.json"], version_tag="V13"
 )
 
 # 自动注册仿真输出（在仿真脚本中使用）
@@ -45,7 +41,7 @@ auto_register_simulation_output(
     output_file="v13/out/sim_001.csv",
     version_tag="V13",
     experiment_id="floquet_test_001",
-    params={"slope": 3.0, "stiffness": 50.0}
+    params={"slope": 3.0, "stiffness": 50.0},
 )
 
 # ============================================================================
@@ -60,7 +56,7 @@ assets = tracker.get_assets_by_category("simulation_results")
 
 # 验证文件完整性
 result = tracker.verify_file_integrity("out/results.csv")
-if result['status'] == 'valid':
+if result["status"] == "valid":
     print("File is valid")
 
 # 查看文件历史
@@ -78,7 +74,7 @@ manager = SnapshotManager(project_root)
 snapshot_id = manager.create_snapshot(
     name="v13_stable_baseline",
     description="V13 stable version for paper",
-    tags=["stable", "paper", "v13"]
+    tags=["stable", "paper", "v13"],
 )
 
 # 创建特定版本的快照
@@ -86,7 +82,7 @@ snapshot_id = manager.create_snapshot(
     name="v19_3d_working",
     description="V19 3D stability",
     tags=["v19", "3d"],
-    include_versions=["V19"]
+    include_versions=["V19"],
 )
 
 # 列出所有快照
@@ -115,26 +111,19 @@ from data_versioning import DataDiffer
 differ = DataDiffer(project_root)
 
 # 对比 CSV 文件
-report = differ.compare_csv_files(
-    "v13/out/baseline.csv",
-    "v13/out/optimized.csv"
-)
+report = differ.compare_csv_files("v13/out/baseline.csv", "v13/out/optimized.csv")
 
 # 生成可读报告
 text = differ.generate_diff_report(
-    report,
-    output_path="data_versioning/diff_report.txt"
+    report, output_path="data_versioning/diff_report.txt"
 )
 
 # 对比 JSON 文件
-report = differ.compare_json_files(
-    "config_v1.json",
-    "config_v2.json"
-)
+report = differ.compare_json_files("config_v1.json", "config_v2.json")
 
 # 查看参数变化
-for change in report['changes']:
-    if change['type'] == 'value_change':
+for change in report["changes"]:
+    if change["type"] == "value_change":
         print(f"{change['path']}: {change['old_value']} -> {change['new_value']}")
 
 # ============================================================================
@@ -150,15 +139,10 @@ print(f"Corrupted: {results['summary']['corrupted']}")
 print(f"Missing: {results['summary']['missing']}")
 
 # 生成完整性报告
-report = restorer.generate_integrity_report(
-    "data_versioning/integrity_report.txt"
-)
+report = restorer.generate_integrity_report("data_versioning/integrity_report.txt")
 
 # 验证快照（不实际恢复）
-report = restorer.restore_snapshot(
-    snapshot_id,
-    verify_only=True
-)
+report = restorer.restore_snapshot(snapshot_id, verify_only=True)
 
 # ============================================================================
 # 7. 命令行使用
@@ -189,25 +173,22 @@ snapshot_id = manager.create_snapshot(
     name="paper_submission_v1",
     description="All data for paper submission",
     tags=["paper", "milestone"],
-    include_categories=["figures", "simulation_results"]
+    include_categories=["figures", "simulation_results"],
 )
 manager.mark_milestone("paper_submission", snapshot_id)
 
 # 工作流 2：版本对比分析
 differ = DataDiffer(project_root)
-report = differ.compare_csv_files(
-    "v13/out/results.csv",
-    "v14/out/results.csv"
-)
+report = differ.compare_csv_files("v13/out/results.csv", "v14/out/results.csv")
 for col, stats in report["statistical_diff"].items():
-    pct = stats.get('mean_pct_change')
+    pct = stats.get("mean_pct_change")
     if pct and abs(pct) > 5:
         print(f"{col}: {pct:+.2f}% change")
 
 # 工作流 3：定期完整性检查（每周）
 restorer = DataRestorer(project_root)
 results = restorer.verify_all_assets()
-if results['summary']['corrupted'] > 0:
+if results["summary"]["corrupted"] > 0:
     # 发送警报
     report = restorer.generate_integrity_report()
     send_alert(report)
@@ -216,7 +197,7 @@ if results['summary']['corrupted'] > 0:
 tracker = VersionTracker(project_root)
 assets = tracker.get_assets_by_version("V13")
 # 根据元数据筛选
-best_assets = [a for a in assets if a.get('metadata', {}).get('success')]
+best_assets = [a for a in assets if a.get("metadata", {}).get("success")]
 
 # ============================================================================
 # 9. CI 集成
@@ -256,7 +237,7 @@ jobs:
 
 # 问题：文件哈希不匹配
 result = tracker.verify_file_integrity("file.csv")
-if result['status'] == 'corrupted':
+if result["status"] == "corrupted":
     # 查看历史版本
     history = tracker.get_file_history("file.csv")
     for v in history:
@@ -264,13 +245,11 @@ if result['status'] == 'corrupted':
 
 # 问题：快照验证失败
 result = manager.verify_snapshot_integrity(snapshot_id)
-for corrupted in result['corrupted']:
+for corrupted in result["corrupted"]:
     print(f"Corrupted: {corrupted['file_path']}")
 
 # 问题：大量文件注册慢
 # 使用 file_patterns 过滤
 assets = tracker.register_directory(
-    "out",
-    file_patterns=['*.csv'],  # 只注册 CSV
-    recursive=False  # 不递归
+    "out", file_patterns=["*.csv"], recursive=False  # 只注册 CSV  # 不递归
 )

@@ -12,9 +12,12 @@ import time
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 
+
 def monitor_training():
     """监控训练进度。"""
-    output_file = Path("C:/Users/duanj/AppData/Local/Temp/claude/C--Users-duanj/2f34224f-2fee-4325-bb9f-283537501c5a/tasks/bj3vq4s6c.output")
+    output_file = Path(
+        "C:/Users/duanj/AppData/Local/Temp/claude/C--Users-duanj/2f34224f-2fee-4325-bb9f-283537501c5a/tasks/bj3vq4s6c.output"
+    )
 
     print("=" * 80)
     print("Residual RL训练监控")
@@ -39,13 +42,13 @@ def monitor_training():
 
     try:
         while True:
-            with open(output_file, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(output_file, "r", encoding="utf-8", errors="ignore") as f:
                 f.seek(last_position)
                 new_content = f.read()
                 last_position = f.tell()
 
                 if new_content:
-                    print(new_content, end='')
+                    print(new_content, end="")
 
             time.sleep(5)
     except KeyboardInterrupt:

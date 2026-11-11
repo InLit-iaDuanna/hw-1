@@ -2,6 +2,7 @@
 统一数据加载模块
 从不同版本的 CSV 文件加载仿真数据，提供统一接口
 """
+
 from __future__ import annotations
 
 import csv
@@ -16,6 +17,7 @@ import yaml
 @dataclass
 class GaitData:
     """步态数据容器"""
+
     version: str
     label: str
     time: np.ndarray
@@ -215,9 +217,11 @@ class DataLoader:
         raw_data = self.load_csv(csv_path)
         gait_data = self.parse_gait_data(raw_data, version, label)
 
-        print(f"  Loaded {gait_data.num_samples} samples, "
-              f"duration={gait_data.duration:.2f}s, "
-              f"rate={gait_data.sampling_rate:.1f}Hz")
+        print(
+            f"  Loaded {gait_data.num_samples} samples, "
+            f"duration={gait_data.duration:.2f}s, "
+            f"rate={gait_data.sampling_rate:.1f}Hz"
+        )
 
         return gait_data
 

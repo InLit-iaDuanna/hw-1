@@ -160,13 +160,20 @@ def example_comparison():
 
     # 贝叶斯优化
     print("运行贝叶斯优化...")
-    bayesian_opt = BayesianOptimizer(param_space, objective, dummy_simulation, n_initial_points=5)
+    bayesian_opt = BayesianOptimizer(
+        param_space, objective, dummy_simulation, n_initial_points=5
+    )
     results["bayesian"] = bayesian_opt.optimize(budget=budget, verbose=False)
 
     # 绘制收敛曲线
     plt.figure(figsize=(10, 6))
     for name, result in results.items():
-        plt.plot(range(1, len(result.convergence_curve) + 1), result.convergence_curve, marker="o", label=name)
+        plt.plot(
+            range(1, len(result.convergence_curve) + 1),
+            result.convergence_curve,
+            marker="o",
+            label=name,
+        )
 
     plt.xlabel("评估次数")
     plt.ylabel("最优值")
@@ -182,7 +189,9 @@ def example_comparison():
     # 打印对比
     print("\n对比结果:")
     for name, result in results.items():
-        print(f"  {name}: 最优值={result.best_value:.4f}, 评估次数={result.n_evaluations}")
+        print(
+            f"  {name}: 最优值={result.best_value:.4f}, 评估次数={result.n_evaluations}"
+        )
 
 
 def main():

@@ -16,7 +16,9 @@ from .events import FootEventDetector, RollingGaitMetrics, robinson_si
 from .models import ClinicalSummary, DerivedSample, JointAngles, SegmentAngles
 
 try:  # Optional reuse; dashboard must keep working if the research module changes.
-    from gait_medical_system.diagnosis.stroke_gait_classifier import StrokeGaitClassifier
+    from gait_medical_system.diagnosis.stroke_gait_classifier import (
+        StrokeGaitClassifier,
+    )
 except Exception:  # pragma: no cover - defensive dependency boundary
     StrokeGaitClassifier = None  # type: ignore[assignment]
 

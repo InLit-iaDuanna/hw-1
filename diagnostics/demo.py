@@ -28,7 +28,7 @@ def demo_error_detection():
         "forward": 0.8,
         "alternation_count": 2,
         "hip_height": 0.42,
-        "duration": 1.5
+        "duration": 1.5,
     }
 
     print("\n仿真结果:")
@@ -108,10 +108,10 @@ def demo_health_check():
     print(f"  通过: {summary['passed_checks']}")
     print(f"  失败: {summary['failed_checks']}")
 
-    if summary['failed_checks'] > 0:
+    if summary["failed_checks"] > 0:
         print("\n失败的检查项:")
-        for check in summary['checks']:
-            if not check['passed']:
+        for check in summary["checks"]:
+            if not check["passed"]:
                 print(f"  - {check['name']}: {check['details']}")
 
     # 运行 smoke test
@@ -140,7 +140,7 @@ def demo_integrated_workflow():
         "has_nan": True,
         "forward": 0.0,
         "duration": 0.3,
-        "last_valid_time": 0.28
+        "last_valid_time": 0.28,
     }
 
     print("\n场景: 仿真在 0.28 秒时出现 NaN")
@@ -152,7 +152,7 @@ def demo_integrated_workflow():
 
         # 2. 获取解决方案
         print("\n2. 查询解决方案...")
-        entry = db.get(report['primary_error'])
+        entry = db.get(report["primary_error"])
 
         if entry:
             print(f"   找到 {len(entry.solutions)} 个解决方案")

@@ -46,7 +46,8 @@ def example_1_basic_phase_portrait():
 
     # 快速绘图
     fig, ax = quick_phase_portrait(
-        x, x_dot,
+        x,
+        x_dot,
         xlabel=r"Position $x$ [m]",
         ylabel=r"Velocity $\dot{x}$ [m/s]",
         title="Simple Harmonic Oscillator Phase Portrait",
@@ -67,7 +68,9 @@ def example_2_time_encoded_trajectory():
 
     t = np.linspace(0, 6 * np.pi, 800)
     x = np.exp(-zeta * omega * t) * np.cos(omega_d * t)
-    x_dot = -zeta * omega * x - omega_d * np.exp(-zeta * omega * t) * np.sin(omega_d * t)
+    x_dot = -zeta * omega * x - omega_d * np.exp(-zeta * omega * t) * np.sin(
+        omega_d * t
+    )
 
     vis = PhasePortraitVisualizer()
     vis.add_trajectory(x, x_dot, time=t, label="Damped oscillator")
@@ -203,7 +206,9 @@ def example_4_multiple_trajectories():
     )
 
     plt.tight_layout()
-    fig.savefig(OUTPUT_DIR / "example_4_multiple_trajectories.png", dpi=300, bbox_inches="tight")
+    fig.savefig(
+        OUTPUT_DIR / "example_4_multiple_trajectories.png", dpi=300, bbox_inches="tight"
+    )
     plt.close(fig)
 
     print(f"Saved: {OUTPUT_DIR / 'example_4_multiple_trajectories.png'}")
@@ -234,7 +239,7 @@ def example_5_3d_phase_space():
     vis.add_trajectory(x, y, z, time=t, label="Lorenz attractor", colormap="plasma")
 
     fig = plt.figure(figsize=(12, 9))
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.add_subplot(111, projection="3d")
 
     vis.plot(
         ax=ax,
@@ -283,8 +288,12 @@ def example_6_multi_view_projection():
 
     vis = PhasePortraitVisualizer()
     fig = vis.create_multi_view(
-        x, y, z,
-        x_var, y_var, z_var,
+        x,
+        y,
+        z,
+        x_var,
+        y_var,
+        z_var,
         title=f"Rössler Attractor Multi-View (a={a}, b={b}, c={c})",
         figsize=(14, 10),
     )
@@ -317,7 +326,8 @@ def example_7_gait_phase_portrait():
 
     # 髋关节相位图
     vis.add_trajectory(
-        hip_angle, hip_velocity,
+        hip_angle,
+        hip_velocity,
         time=t,
         label="Hip joint",
         colormap="viridis",

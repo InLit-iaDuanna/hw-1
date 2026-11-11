@@ -25,8 +25,7 @@ import logging
 
 # Setup logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -47,7 +46,7 @@ class CMAESOptimizer:
         param_bounds: Dict[str, Tuple[float, float]],
         population_size: Optional[int] = None,
         sigma0: float = 0.3,
-        seed: Optional[int] = None
+        seed: Optional[int] = None,
     ):
         """
         Initialize CMA-ES optimizer
@@ -72,20 +71,20 @@ class CMAESOptimizer:
 
         # CMA-ES options
         self.opts = {
-            'bounds': [0, 1],
-            'seed': seed,
-            'verbose': -1,  # Suppress CMA-ES output
+            "bounds": [0, 1],
+            "seed": seed,
+            "verbose": -1,  # Suppress CMA-ES output
         }
 
         if population_size is not None:
-            self.opts['popsize'] = population_size
+            self.opts["popsize"] = population_size
 
         self.sigma0 = sigma0
 
         # Results storage
         self.history = []
         self.best_params = None
-        self.best_score = float('inf')
+        self.best_score = float("inf")
 
     def denormalize_params(self, x_norm: np.ndarray) -> Dict[str, float]:
         """Convert normalized [0,1] parameters to actual values"""
@@ -104,7 +103,7 @@ class CMAESOptimizer:
         target_score: Optional[float] = None,
         callback: Optional[Callable] = None,
         parallel: bool = True,
-        n_jobs: int = -1
+        n_jobs: int = -1,
     ) -> Tuple[Dict[str, float], float]:
         """
         Run CMA-ES optimization
@@ -122,7 +121,9 @@ class CMAESOptimizer:
             best_score: Best score achieved
         """
         logger.info(f"Starting CMA-ES optimization with {self.n_params} parameters")
-        logger.info(f"Population size: {self.opts.get('popsize', 4 + int(3 * np.log(self.n_params)))}")
+        logger.info(
+            f"Population size: {self.opts.get('popsize', 4 + int(3 * np.log(self.n_params)))}"
+        )
 
         # Initialize CMA-ES
         es = cma.CMAEvolutionStrategy(self.x0, self.sigma0, self.opts)
@@ -167,15 +168,17 @@ class CMAESOptimizer:
                     self.best_params = gen_best_params
 
                 # Record history
-                self.history.append({
-                    'generation': generation,
-                    'best_score': self.best_score,
-                    'gen_best_score': gen_best_score,
-                    'mean_score': np.mean(fitness_values),
-                    'std_score': np.std(fitness_values),
-                    'sigma': es.sigma,
-                    'params': gen_best_params
-                })
+                self.history.append(
+                    {
+                        "generation": generation,
+                        "best_score": self.best_score,
+                        "gen_best_score": gen_best_score,
+                        "mean_score": np.mean(fitness_values),
+                        "std_score": np.std(fitness_values),
+                        "sigma": es.sigma,
+                        "params": gen_best_params,
+                    }
+                )
 
                 # Logging
                 logger.info(
@@ -187,7 +190,9 @@ class CMAESOptimizer:
 
                 # Callback
                 if callback is not None:
-                    callback(generation, self.best_params, self.best_score, self.history)
+                    callback(
+                        generation, self.best_params, self.best_score, self.history
+                    )
 
                 # Early stopping
                 if target_score is not None and self.best_score <= target_score:
@@ -212,32 +217,31 @@ class CMAESOptimizer:
     def save_results(self, output_path: str):
         """Save optimization results to file"""
         results = {
-            'best_params': self.best_params,
-            'best_score': float(self.best_score),
-            'history': self.history,
-            'n_generations': len(self.history),
-            'timestamp': datetime.now().isoformat()
+            "best_params": self.best_params,
+            "best_score": float(self.best_score),
+            "history": self.history,
+            "n_generations": len(self.history),
+            "timestamp": datetime.now().isoformat(),
         }
 
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             json.dump(results, f, indent=2)
 
         logger.info(f"Results saved to {output_path}")
 
 
 def create_objective_function(
-    config: Dict,
-    test_data_path: str,
-    metric: str = 'f1_score'
+    config: Dict, test_data_path: str, metric: str = "f1_score"
 ) -> Callable:
     """
     Create objective function for CMA-ES
 
     This should be adapted to your specific evaluation pipeline
     """
+
     def objective(params: Dict[str, float]) -> float:
         """
         Objective function to minimize
@@ -266,42 +270,58 @@ def create_objective_function(
 
         except Exception as e:
             logger.error(f"Error evaluating params: {e}")
-            return float('inf')  # Penalize invalid configurations
+            return float("inf")  # Penalize invalid configurations
 
     return objective
 
 
 def load_config(config_path: str) -> Dict:
     """Load configuration from YAML file"""
-    with open(config_path, 'r') as f:
+    with open(config_path, "r") as f:
         return yaml.safe_load(f)
 
 
 def main():
-    parser = argparse.ArgumentParser(description='CMA-ES Parameter Tuning')
-    parser.add_argument('--config', type=str, required=True,
-                        help='Path to configuration YAML file')
-    parser.add_argument('--test-data', type=str, required=True,
-                        help='Path to test data')
-    parser.add_argument('--generations', type=int, default=100,
-                        help='Maximum number of generations')
-    parser.add_argument('--population-size', type=int, default=None,
-                        help='Population size (default: auto)')
-    parser.add_argument('--sigma', type=float, default=0.3,
-                        help='Initial step size')
-    parser.add_argument('--metric', type=str, default='f1_score',
-                        choices=['f1_score', 'accuracy', 'precision', 'recall'],
-                        help='Metric to optimize')
-    parser.add_argument('--target-score', type=float, default=None,
-                        help='Target score for early stopping')
-    parser.add_argument('--output', type=str, default='cma_results.json',
-                        help='Output file for results')
-    parser.add_argument('--seed', type=int, default=42,
-                        help='Random seed')
-    parser.add_argument('--no-parallel', action='store_true',
-                        help='Disable parallel evaluation')
-    parser.add_argument('--n-jobs', type=int, default=-1,
-                        help='Number of parallel jobs (-1 for all)')
+    parser = argparse.ArgumentParser(description="CMA-ES Parameter Tuning")
+    parser.add_argument(
+        "--config", type=str, required=True, help="Path to configuration YAML file"
+    )
+    parser.add_argument(
+        "--test-data", type=str, required=True, help="Path to test data"
+    )
+    parser.add_argument(
+        "--generations", type=int, default=100, help="Maximum number of generations"
+    )
+    parser.add_argument(
+        "--population-size",
+        type=int,
+        default=None,
+        help="Population size (default: auto)",
+    )
+    parser.add_argument("--sigma", type=float, default=0.3, help="Initial step size")
+    parser.add_argument(
+        "--metric",
+        type=str,
+        default="f1_score",
+        choices=["f1_score", "accuracy", "precision", "recall"],
+        help="Metric to optimize",
+    )
+    parser.add_argument(
+        "--target-score",
+        type=float,
+        default=None,
+        help="Target score for early stopping",
+    )
+    parser.add_argument(
+        "--output", type=str, default="cma_results.json", help="Output file for results"
+    )
+    parser.add_argument("--seed", type=int, default=42, help="Random seed")
+    parser.add_argument(
+        "--no-parallel", action="store_true", help="Disable parallel evaluation"
+    )
+    parser.add_argument(
+        "--n-jobs", type=int, default=-1, help="Number of parallel jobs (-1 for all)"
+    )
 
     args = parser.parse_args()
 
@@ -309,29 +329,30 @@ def main():
     config = load_config(args.config)
 
     # Define parameter bounds
-    param_bounds = config.get('parameter_bounds', {
-        # Example bounds - customize for your parameters
-        'swing_threshold': (0.1, 0.9),
-        'stance_threshold': (0.1, 0.9),
-        'min_phase_duration': (0.05, 0.5),
-        'smoothing_window': (1, 20),
-        'velocity_weight': (0.0, 1.0),
-        'acceleration_weight': (0.0, 1.0),
-    })
+    param_bounds = config.get(
+        "parameter_bounds",
+        {
+            # Example bounds - customize for your parameters
+            "swing_threshold": (0.1, 0.9),
+            "stance_threshold": (0.1, 0.9),
+            "min_phase_duration": (0.05, 0.5),
+            "smoothing_window": (1, 20),
+            "velocity_weight": (0.0, 1.0),
+            "acceleration_weight": (0.0, 1.0),
+        },
+    )
 
     # Initialize optimizer
     optimizer = CMAESOptimizer(
         param_bounds=param_bounds,
         population_size=args.population_size,
         sigma0=args.sigma,
-        seed=args.seed
+        seed=args.seed,
     )
 
     # Create objective function
     objective_func = create_objective_function(
-        config=config,
-        test_data_path=args.test_data,
-        metric=args.metric
+        config=config, test_data_path=args.test_data, metric=args.metric
     )
 
     # Run optimization
@@ -340,7 +361,7 @@ def main():
         max_generations=args.generations,
         target_score=args.target_score,
         parallel=not args.no_parallel,
-        n_jobs=args.n_jobs
+        n_jobs=args.n_jobs,
     )
 
     # Save results
@@ -350,12 +371,14 @@ def main():
     print("\n" + "=" * 60)
     print("OPTIMIZATION COMPLETE")
     print("=" * 60)
-    print(f"Best {args.metric}: {-best_score:.6f}")  # Negate if minimizing negative metric
+    print(
+        f"Best {args.metric}: {-best_score:.6f}"
+    )  # Negate if minimizing negative metric
     print("\nBest Parameters:")
     for name, value in best_params.items():
         print(f"  {name:25s}: {value:.6f}")
     print(f"\nResults saved to: {args.output}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

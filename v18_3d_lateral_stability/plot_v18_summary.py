@@ -65,13 +65,25 @@ def plot_performance_comparison(summaries: dict[str, dict], output_path: Path) -
 
     # 左图：Alternations
     ax1 = axes[0]
-    bars1 = ax1.bar(range(len(configs)), alternations, color=PHASE_COLORS[3], alpha=0.7, edgecolor="black")
+    bars1 = ax1.bar(
+        range(len(configs)),
+        alternations,
+        color=PHASE_COLORS[3],
+        alpha=0.7,
+        edgecolor="black",
+    )
     ax1.set_xticks(range(len(configs)))
     ax1.set_xticklabels(configs, rotation=45, ha="right", fontsize=8)
     ax1.set_ylabel("Alternations", fontsize=11)
     ax1.set_title("V18 配置对比 - 交替步数", fontweight="bold")
     ax1.grid(True, alpha=0.3, axis="y")
-    ax1.axhline(y=3, color=PALETTE["fail"], linestyle="--", linewidth=2, label="Baseline (all failed)")
+    ax1.axhline(
+        y=3,
+        color=PALETTE["fail"],
+        linestyle="--",
+        linewidth=2,
+        label="Baseline (all failed)",
+    )
     ax1.legend()
 
     # 数值标签
@@ -80,7 +92,13 @@ def plot_performance_comparison(summaries: dict[str, dict], output_path: Path) -
 
     # 右图：Forward Distance
     ax2 = axes[1]
-    bars2 = ax2.bar(range(len(configs)), forward_dist, color=PHASE_COLORS[3], alpha=0.7, edgecolor="black")
+    bars2 = ax2.bar(
+        range(len(configs)),
+        forward_dist,
+        color=PHASE_COLORS[3],
+        alpha=0.7,
+        edgecolor="black",
+    )
     ax2.set_xticks(range(len(configs)))
     ax2.set_xticklabels(configs, rotation=45, ha="right", fontsize=8)
     ax2.set_ylabel("Forward Distance (m)", fontsize=11)

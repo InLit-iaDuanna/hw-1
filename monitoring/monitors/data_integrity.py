@@ -77,9 +77,7 @@ class DataIntegrityMonitor:
                 if not dir_path.exists():
                     results["directories_missing"].append(dir_path_str)
                 elif not dir_path.is_dir():
-                    results["directories_missing"].append(
-                        f"{dir_path_str} (不是目录)"
-                    )
+                    results["directories_missing"].append(f"{dir_path_str} (不是目录)")
                 else:
                     results["directories_ok"].append(dir_path_str)
 

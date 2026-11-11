@@ -20,7 +20,9 @@ env = ResidualRLEnvV2(residual_scale=0.05, inner_steps=5, max_steps=2400)
 obs, info = env.reset()
 action = np.array([0.0, 0.0], dtype=np.float32)
 
-print(f"\n{'Step':<6} {'Time':<8} {'hip_x':<10} {'hip_vx':<10} {'Support':<8} {'Burst_t':<10} {'Accepted':<10} {'E_curr':<10}")
+print(
+    f"\n{'Step':<6} {'Time':<8} {'hip_x':<10} {'hip_vx':<10} {'Support':<8} {'Burst_t':<10} {'Accepted':<10} {'E_curr':<10}"
+)
 print("-" * 90)
 
 last_support = env.support_foot
@@ -38,7 +40,7 @@ for step in range(600):  # 前3秒
             "support": env.support_foot,
             "burst_t": env.burst_start_t,
             "accepted": env.accepted_contact,
-            "hip_x": info['hip_x'],
+            "hip_x": info["hip_x"],
         }
         fsm_events.append(event)
         last_support = env.support_foot
@@ -47,6 +49,7 @@ for step in range(600):  # 前3秒
     # 打印前20步和每50步
     if step < 20 or step % 50 == 0:
         from simulate_v13_7 import _mechanical_energy
+
         E_current = _mechanical_energy(env.params.base, env.data)
 
         print(

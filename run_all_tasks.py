@@ -9,11 +9,13 @@ import subprocess
 from pathlib import Path
 from datetime import datetime
 
+
 def print_header(title):
     """打印标题"""
     print("\n" + "=" * 80)
     print(f"  {title}")
     print("=" * 80 + "\n")
+
 
 def task1_verify_environment():
     """任务1: 验证环境"""
@@ -35,6 +37,7 @@ def task1_verify_environment():
         print(f"[ERROR] {e}")
         return False
 
+
 def task2_check_training_results():
     """任务2: 检查训练结果"""
     print_header("TASK 2: RL Training Results")
@@ -48,8 +51,8 @@ def task2_check_training_results():
     with open(report_path) as f:
         data = json.load(f)
 
-    baseline = data['baseline']['mean_distance_m']
-    final = data['final_eval']['mean_distance_m']
+    baseline = data["baseline"]["mean_distance_m"]
+    final = data["final_eval"]["mean_distance_m"]
     improvement = (final - baseline) / baseline * 100
 
     print(f"Baseline (V13.7):     {baseline:.3f}m")
@@ -59,6 +62,7 @@ def task2_check_training_results():
 
     print("\n[SUCCESS] Training results verified!")
     return True
+
 
 def task3_check_models():
     """任务3: 检查训练模型"""
@@ -91,6 +95,7 @@ def task3_check_models():
     print(f"\n[SUCCESS] Found {len(model_files)} trained models!")
     return True
 
+
 def task4_check_visualizations():
     """任务4: 检查可视化"""
     print_header("TASK 4: Visualizations")
@@ -108,6 +113,7 @@ def task4_check_visualizations():
         print(f"[ERROR] Visualization not found: {viz_path}")
         return False
 
+
 def task5_check_reports():
     """任务5: 检查生成的报告"""
     print_header("TASK 5: Generated Reports")
@@ -115,7 +121,7 @@ def task5_check_reports():
     root = Path(".")
 
     # 查找报告文件
-    report_patterns = ['SUMMARY', 'REPORT', 'COMPLETE', 'HEALTH', 'ISSUES']
+    report_patterns = ["SUMMARY", "REPORT", "COMPLETE", "HEALTH", "ISSUES"]
     reports = []
 
     for md_file in root.glob("*.md"):
@@ -135,6 +141,7 @@ def task5_check_reports():
     print(f"\n[SUCCESS] Found {len(reports)} reports!")
     return True
 
+
 def task6_check_git_status():
     """任务6: 检查Git状态"""
     print_header("TASK 6: Git Status")
@@ -142,25 +149,22 @@ def task6_check_git_status():
     try:
         # 检查最近的提交
         result = subprocess.run(
-            ['git', 'log', '--oneline', '-3'],
+            ["git", "log", "--oneline", "-3"],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
 
         print("Recent Commits:")
-        for line in result.stdout.strip().split('\n'):
+        for line in result.stdout.strip().split("\n"):
             print(f"  {line}")
 
         # 检查未提交的文件
         result = subprocess.run(
-            ['git', 'status', '--short'],
-            capture_output=True,
-            text=True,
-            check=True
+            ["git", "status", "--short"], capture_output=True, text=True, check=True
         )
 
-        untracked = [l for l in result.stdout.strip().split('\n') if l]
+        untracked = [l for l in result.stdout.strip().split("\n") if l]
 
         print(f"\nUntracked/Modified Files: {len(untracked)}")
         for line in untracked[:5]:
@@ -176,6 +180,7 @@ def task6_check_git_status():
         print(f"[ERROR] Could not check git status: {e}")
         return False
 
+
 def task7_project_statistics():
     """任务7: 项目统计"""
     print_header("TASK 7: Project Statistics")
@@ -183,8 +188,13 @@ def task7_project_statistics():
     root = Path(".")
 
     # 统计各类文件
-    py_files = len([f for f in root.rglob("*.py")
-                    if '.venv' not in str(f) and '.git' not in str(f)])
+    py_files = len(
+        [
+            f
+            for f in root.rglob("*.py")
+            if ".venv" not in str(f) and ".git" not in str(f)
+        ]
+    )
     readme_files = len(list(root.rglob("README.md")))
     version_dirs = len([d for d in root.glob("v*") if d.is_dir()])
 
@@ -206,6 +216,7 @@ def task7_project_statistics():
 
     print("\n[SUCCESS] Statistics generated!")
     return True
+
 
 def main():
     """主函数"""
@@ -268,7 +279,9 @@ def main():
 
     return passed == total
 
+
 if __name__ == "__main__":
     import sys
+
     success = main()
     sys.exit(0 if success else 1)

@@ -96,9 +96,7 @@ class TestPDController:
         controller = PDController(kp=100.0, kd=10.0, torque_limit=50.0)
 
         # 临时使用不同的增益
-        torque = controller.compute_torque(
-            q=0.1, qd=0.0, target=0.0, kp=200.0, kd=20.0
-        )
+        torque = controller.compute_torque(q=0.1, qd=0.0, target=0.0, kp=200.0, kd=20.0)
         assert abs(torque - (-20.0)) < 1e-6
 
         # 原始增益不变

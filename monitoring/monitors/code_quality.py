@@ -26,7 +26,14 @@ class CodeQualityMonitor:
         try:
             # 运行 ruff check
             result = subprocess.run(
-                [sys.executable, "-m", "ruff", "check", "common", "--output-format=json"],
+                [
+                    sys.executable,
+                    "-m",
+                    "ruff",
+                    "check",
+                    "common",
+                    "--output-format=json",
+                ],
                 capture_output=True,
                 text=True,
                 cwd=self.project_root,
@@ -35,6 +42,7 @@ class CodeQualityMonitor:
 
             if result.stdout:
                 import json
+
                 violations = json.loads(result.stdout)
                 results["violations"] = violations
                 results["total_violations"] = len(violations)
@@ -125,7 +133,9 @@ class CodeQualityMonitor:
                     if "Would reformat:" in line:
                         file_path = line.split("Would reformat:")[1].strip()
                         results["files_need_formatting"].append(file_path)
-                results["message"] = f"{len(results['files_need_formatting'])} 个文件需要格式化"
+                results["message"] = (
+                    f"{len(results['files_need_formatting'])} 个文件需要格式化"
+                )
 
         except Exception as e:
             results["status"] = "error"
@@ -153,7 +163,9 @@ class CodeQualityMonitor:
         if ruff_results.get("violation_types"):
             print("   违规类型分布:")
             for code, count in sorted(
-                ruff_results["violation_types"].items(), key=lambda x: x[1], reverse=True
+                ruff_results["violation_types"].items(),
+                key=lambda x: x[1],
+                reverse=True,
             )[:5]:
                 print(f"     {code}: {count}")
 
@@ -188,6 +200,7 @@ if __name__ == "__main__":
 
     # 保存结果
     import json
+
     output_file = project_root / "monitoring" / "code_quality_report.json"
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)

@@ -36,7 +36,9 @@ class MetricsCollector:
         try:
             # Python 版本
             py_version = sys.version_info
-            metrics["python_version"] = f"{py_version.major}.{py_version.minor}.{py_version.micro}"
+            metrics["python_version"] = (
+                f"{py_version.major}.{py_version.minor}.{py_version.micro}"
+            )
 
             # 统计代码行数
             common_dir = self.project_root / "common"
@@ -57,7 +59,8 @@ class MetricsCollector:
 
             # 版本目录统计
             version_dirs = [
-                d.name for d in self.project_root.glob("v*")
+                d.name
+                for d in self.project_root.glob("v*")
                 if d.is_dir() and d.name[1:2].isdigit()
             ]
             metrics["version_directories"] = sorted(version_dirs)

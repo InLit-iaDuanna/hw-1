@@ -2,6 +2,7 @@
 统计分析模块
 包括显著性检验、置信区间、敏感性分析等
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ from feature_extractor import GaitFeatures
 @dataclass
 class StatisticalTest:
     """统计检验结果"""
+
     test_name: str
     groups: list[str]
     statistic: float
@@ -28,6 +30,7 @@ class StatisticalTest:
 @dataclass
 class ComparisonResult:
     """版本对比结果"""
+
     version1: str
     version2: str
     metric: str
@@ -73,14 +76,17 @@ class StatisticalAnalyzer:
         mean2 = np.nanmean(group2)
         std1 = np.nanstd(group1, ddof=1)
         std2 = np.nanstd(group2, ddof=1)
-        pooled_std = np.sqrt(((len(group1) - 1) * std1**2 + (len(group2) - 1) * std2**2) / (len(group1) + len(group2) - 2))
+        pooled_std = np.sqrt(
+            ((len(group1) - 1) * std1**2 + (len(group2) - 1) * std2**2)
+            / (len(group1) + len(group2) - 2)
+        )
         cohens_d = (mean1 - mean2) / pooled_std if pooled_std > 0 else 0.0
 
         # 置信区间
         diff = mean1 - mean2
-        se = pooled_std * np.sqrt(1.0/len(group1) + 1.0/len(group2))
+        se = pooled_std * np.sqrt(1.0 / len(group1) + 1.0 / len(group2))
         df = len(group1) + len(group2) - 2
-        t_critical = stats.t.ppf(1 - self.alpha/2, df)
+        t_critical = stats.t.ppf(1 - self.alpha / 2, df)
         ci = (diff - t_critical * se, diff + t_critical * se)
 
         return StatisticalTest(
@@ -167,8 +173,8 @@ class StatisticalAnalyzer:
 
         # Eta-squared 效应量
         grand_mean = np.mean(np.concatenate(clean_groups))
-        ss_between = sum(len(g) * (np.mean(g) - grand_mean)**2 for g in clean_groups)
-        ss_total = sum(np.sum((g - grand_mean)**2) for g in clean_groups)
+        ss_between = sum(len(g) * (np.mean(g) - grand_mean) ** 2 for g in clean_groups)
+        ss_total = sum(np.sum((g - grand_mean) ** 2) for g in clean_groups)
         eta_squared = ss_between / ss_total if ss_total > 0 else 0.0
 
         return StatisticalTest(
@@ -181,7 +187,10 @@ class StatisticalAnalyzer:
         )
 
     def compare_features(
-        self, features1: GaitFeatures, features2: GaitFeatures, metrics: list[str] | None = None
+        self,
+        features1: GaitFeatures,
+        features2: GaitFeatures,
+        metrics: list[str] | None = None,
     ) -> list[ComparisonResult]:
         """
         比较两个版本的特征
@@ -199,7 +208,8 @@ class StatisticalAnalyzer:
         if metrics is None:
             # 获取所有数值型特征
             metrics = [
-                k for k, v in features1.__dataclass_fields__.items()
+                k
+                for k, v in features1.__dataclass_fields__.items()
                 if k not in ["version", "label", "metadata"]
             ]
 
@@ -210,7 +220,9 @@ class StatisticalAnalyzer:
             if value1 is None or value2 is None:
                 continue
 
-            if not isinstance(value1, (int, float)) or not isinstance(value2, (int, float)):
+            if not isinstance(value1, (int, float)) or not isinstance(
+                value2, (int, float)
+            ):
                 continue
 
             # 计算差异
@@ -345,7 +357,8 @@ class StatisticalAnalyzer:
             # 获取所有数值型特征
             first_features = next(iter(features_dict.values()))
             metrics = [
-                k for k, v in first_features.__dataclass_fields__.items()
+                k
+                for k, v in first_features.__dataclass_fields__.items()
                 if k not in ["version", "label", "metadata"]
             ]
 
@@ -372,7 +385,11 @@ class StatisticalAnalyzer:
                 "min": float(np.min(values)),
                 "max": float(np.max(values)),
                 "range": float(np.max(values) - np.min(values)),
-                "cv": float(np.std(values) / np.mean(values)) if np.mean(values) != 0 else 0.0,
+                "cv": (
+                    float(np.std(values) / np.mean(values))
+                    if np.mean(values) != 0
+                    else 0.0
+                ),
                 "n_versions": len(values),
                 "versions": versions,
                 "values": values,
@@ -426,7 +443,9 @@ def main():
             print(f"\n  {comp.metric}:")
             print(f"    {v1.version}: {comp.value1:.4f}")
             print(f"    {v2.version}: {comp.value2:.4f}")
-            print(f"    Difference: {comp.difference:+.4f} ({comp.percent_change:+.2f}%)")
+            print(
+                f"    Difference: {comp.difference:+.4f} ({comp.percent_change:+.2f}%)"
+            )
 
     # 敏感性分析
     print("\n\nSensitivity Analysis:")

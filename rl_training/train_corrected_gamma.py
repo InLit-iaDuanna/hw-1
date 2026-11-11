@@ -87,7 +87,9 @@ def make_env(
             inner_steps=inner_steps,
             max_steps=max_steps,
         )
-        env = ResidualPriorWrapper(env, prior_action=prior_action, delta_scale=delta_scale)
+        env = ResidualPriorWrapper(
+            env, prior_action=prior_action, delta_scale=delta_scale
+        )
         env = Monitor(env)
         env.reset(seed=seed_offset)
         return env
@@ -116,7 +118,9 @@ def evaluate_model(
             inner_steps=inner_steps,
             max_steps=max_steps,
         )
-        env_wrapped = ResidualPriorWrapper(env, prior_action=prior_action, delta_scale=delta_scale)
+        env_wrapped = ResidualPriorWrapper(
+            env, prior_action=prior_action, delta_scale=delta_scale
+        )
         obs, _ = env_wrapped.reset(seed=seed)
         terminated = False
         truncated = False
@@ -207,7 +211,9 @@ class DistanceEvalCallback(BaseCallback):
             print("=" * 80)
             print(f"Evaluation at {self.num_timesteps} timesteps")
             print("=" * 80)
-            print(f"distance: {result.mean_distance_m:.3f} +/- {result.std_distance_m:.3f} m")
+            print(
+                f"distance: {result.mean_distance_m:.3f} +/- {result.std_distance_m:.3f} m"
+            )
             print(f"success: {result.success_rate * 100:.0f}%")
             print(f"reward: {result.mean_reward:.3f}")
             print(f"best so far: {self.best_distance:.3f} m")
@@ -215,7 +221,9 @@ class DistanceEvalCallback(BaseCallback):
 
         if result.failure_rate > self.abort_failure_rate:
             print()
-            print(f"ABORT: failure rate {result.failure_rate * 100:.0f}% > threshold {self.abort_failure_rate * 100:.0f}%")
+            print(
+                f"ABORT: failure rate {result.failure_rate * 100:.0f}% > threshold {self.abort_failure_rate * 100:.0f}%"
+            )
             self.stop_reason = "high_failure_rate"
             return False
 
@@ -224,11 +232,19 @@ class DistanceEvalCallback(BaseCallback):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--timesteps", type=int, default=200000, help="Total timesteps (default 200k)")
+    parser.add_argument(
+        "--timesteps", type=int, default=200000, help="Total timesteps (default 200k)"
+    )
     parser.add_argument("--n-envs", type=int, default=8, help="Parallel envs")
-    parser.add_argument("--eval-freq", type=int, default=25000, help="Eval every N steps")
-    parser.add_argument("--eval-episodes", type=int, default=10, help="Episodes per eval")
-    parser.add_argument("--model-dir", type=str, default="models/residual_rl_v2_corrected")
+    parser.add_argument(
+        "--eval-freq", type=int, default=25000, help="Eval every N steps"
+    )
+    parser.add_argument(
+        "--eval-episodes", type=int, default=10, help="Episodes per eval"
+    )
+    parser.add_argument(
+        "--model-dir", type=str, default="models/residual_rl_v2_corrected"
+    )
     parser.add_argument("--checkpoint-prefix", type=str, default="ppo_corrected")
     args = parser.parse_args()
 
@@ -277,7 +293,9 @@ def main():
 
     vec_env = DummyVecEnv(
         [
-            make_env(residual_scale, inner_steps, max_steps, prior_action, delta_scale, i)
+            make_env(
+                residual_scale, inner_steps, max_steps, prior_action, delta_scale, i
+            )
             for i in range(args.n_envs)
         ]
     )
@@ -359,7 +377,9 @@ def main():
         args.eval_episodes,
         args.timesteps,
     )
-    print(f"Distance: {final_result.mean_distance_m:.3f} +/- {final_result.std_distance_m:.3f} m")
+    print(
+        f"Distance: {final_result.mean_distance_m:.3f} +/- {final_result.std_distance_m:.3f} m"
+    )
     print(f"Success rate: {final_result.success_rate * 100:.0f}%")
     print(f"Reward: {final_result.mean_reward:.3f}")
 
@@ -404,7 +424,9 @@ def main():
         },
     }
 
-    report_path = HW1_ROOT / "logs" / "residual_rl_v2" / "train_corrected_gamma_report.json"
+    report_path = (
+        HW1_ROOT / "logs" / "residual_rl_v2" / "train_corrected_gamma_report.json"
+    )
     report_path.parent.mkdir(parents=True, exist_ok=True)
     with open(report_path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)

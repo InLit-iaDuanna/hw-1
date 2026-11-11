@@ -74,8 +74,7 @@ def create_params_from_trial(trial: optuna.Trial) -> V137Params:
 
     # Suggest PD gains
     gains = {
-        name: trial.suggest_float(name, *bounds)
-        for name, bounds in BOUNDS.items()
+        name: trial.suggest_float(name, *bounds) for name, bounds in BOUNDS.items()
     }
 
     # Build phase parameters
@@ -174,8 +173,12 @@ def save_results(study: optuna.Study, output_path: Path) -> None:
             "params": trial.params,
             "state": trial.state.name,
             "user_attrs": trial.user_attrs,
-            "datetime_start": trial.datetime_start.isoformat() if trial.datetime_start else None,
-            "datetime_complete": trial.datetime_complete.isoformat() if trial.datetime_complete else None,
+            "datetime_start": (
+                trial.datetime_start.isoformat() if trial.datetime_start else None
+            ),
+            "datetime_complete": (
+                trial.datetime_complete.isoformat() if trial.datetime_complete else None
+            ),
             "duration": trial.duration.total_seconds() if trial.duration else None,
         }
         trials_data.append(trial_dict)
@@ -203,9 +206,9 @@ def print_best_results(study: optuna.Study) -> None:
 
     best_trial = study.best_trial
 
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("OPTIMIZATION COMPLETE")
-    print("="*80)
+    print("=" * 80)
     print(f"\nBest trial number: {best_trial.number}")
     print(f"Best forward distance: {-best_trial.value:.3f} m")
     print(f"Success: {best_trial.user_attrs.get('success', False)}")
@@ -218,7 +221,7 @@ def print_best_results(study: optuna.Study) -> None:
         kp = best_trial.params[f"{phase}_kp"]
         kd = best_trial.params[f"{phase}_kd"]
         print(f"  {phase:15s}: k_PD={kp:6.2f}, kd={kd:5.2f}")
-    print("="*80)
+    print("=" * 80)
 
 
 def main():
@@ -301,7 +304,7 @@ def main():
     print("\nOptimization bounds:")
     for name, (low, high) in BOUNDS.items():
         print(f"  {name:25s}: [{low:6.2f}, {high:6.2f}]")
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
 
     # Run optimization
     study.optimize(
@@ -318,10 +321,12 @@ def main():
     # Print top 5 trials
     print("\nTop 5 trials:")
     print("-" * 80)
-    top_trials = sorted(study.trials, key=lambda t: t.value if t.value is not None else float('inf'))[:5]
+    top_trials = sorted(
+        study.trials, key=lambda t: t.value if t.value is not None else float("inf")
+    )[:5]
     for i, trial in enumerate(top_trials, 1):
         dist = -trial.value if trial.value is not None else 0.0
-        success = trial.user_attrs.get('success', False)
+        success = trial.user_attrs.get("success", False)
         print(f"{i}. Trial {trial.number:3d}: {dist:6.3f} m, success={success}")
 
 

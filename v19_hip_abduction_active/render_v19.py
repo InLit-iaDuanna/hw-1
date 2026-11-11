@@ -246,24 +246,28 @@ def simulate_and_render(
         mujoco.mj_step(model, data)
 
         # 记录轨迹和指标
-        trajectory.append({
-            "t": t,
-            "hx": hx,
-            "hy": hy,
-            "hz": hz,
-            "roll": roll,
-        })
+        trajectory.append(
+            {
+                "t": t,
+                "hx": hx,
+                "hy": hy,
+                "hz": hz,
+                "roll": roll,
+            }
+        )
 
-        metrics.append({
-            "t": t,
-            "hip_y": hy,
-            "hip_y_vel": hip_y_vel,
-            "correction_torque": lat_correction,
-            "support": support,
-            "steps": alternations,
-            "la_t": la_t,
-            "ra_t": ra_t,
-        })
+        metrics.append(
+            {
+                "t": t,
+                "hip_y": hy,
+                "hip_y_vel": hip_y_vel,
+                "correction_torque": lat_correction,
+                "support": support,
+                "steps": alternations,
+                "la_t": la_t,
+                "ra_t": ra_t,
+            }
+        )
 
         # 步态事件检测
         lc, rc = _contacts(model, data)
@@ -280,14 +284,18 @@ def simulate_and_render(
                     ):
                         if accepted in {"left", "right"}:
                             alternations += 1
-                            step_events.append({
-                                "step": alternations,
-                                "t": t,
-                                "foot": foot,
-                                "hip_y": hy,
-                                "roll_deg": math.degrees(roll),
-                            })
-                            print(f"  步数 {alternations}: t={t:.2f}s, foot={foot}, hip_y={hy:.3f}m")
+                            step_events.append(
+                                {
+                                    "step": alternations,
+                                    "t": t,
+                                    "foot": foot,
+                                    "hip_y": hy,
+                                    "roll_deg": math.degrees(roll),
+                                }
+                            )
+                            print(
+                                f"  步数 {alternations}: t={t:.2f}s, foot={foot}, hip_y={hy:.3f}m"
+                            )
                         accepted = foot
                         support = foot
                         burst_t = t
@@ -308,6 +316,7 @@ def simulate_and_render(
 
             # 添加文本标注
             from PIL import Image, ImageDraw, ImageFont
+
             img = Image.fromarray(pixels)
             draw = ImageDraw.Draw(img)
 
@@ -320,23 +329,50 @@ def simulate_and_render(
 
             # 标注关键指标
             text_y = 20
-            draw.text((20, text_y), f"时间: {t:.2f}s", fill=(255, 255, 255), font=font_large)
+            draw.text(
+                (20, text_y), f"时间: {t:.2f}s", fill=(255, 255, 255), font=font_large
+            )
             text_y += 40
-            draw.text((20, text_y), f"步数: {alternations}", fill=(255, 255, 255), font=font_large)
+            draw.text(
+                (20, text_y),
+                f"步数: {alternations}",
+                fill=(255, 255, 255),
+                font=font_large,
+            )
             text_y += 40
-            draw.text((20, text_y), f"hip_y: {hy:.3f}m", fill=(255, 100, 100), font=font_large)
+            draw.text(
+                (20, text_y), f"hip_y: {hy:.3f}m", fill=(255, 100, 100), font=font_large
+            )
             text_y += 40
-            draw.text((20, text_y), f"hip_roll: {math.degrees(roll):.1f}°", fill=(255, 200, 100), font=font_small)
+            draw.text(
+                (20, text_y),
+                f"hip_roll: {math.degrees(roll):.1f}°",
+                fill=(255, 200, 100),
+                font=font_small,
+            )
             text_y += 35
-            draw.text((20, text_y), f"修正力矩: {lat_correction:.2f}Nm", fill=(100, 200, 255), font=font_small)
+            draw.text(
+                (20, text_y),
+                f"修正力矩: {lat_correction:.2f}Nm",
+                fill=(100, 200, 255),
+                font=font_small,
+            )
             text_y += 35
-            draw.text((20, text_y), f"支撑腿: {support}", fill=(150, 255, 150), font=font_small)
+            draw.text(
+                (20, text_y),
+                f"支撑腿: {support}",
+                fill=(150, 255, 150),
+                font=font_small,
+            )
 
             # 标注失败状态
             if abs(hy) > 0.25:
-                draw.text((width//2 - 150, height - 100),
-                         "侧向漂移失败！",
-                         fill=(255, 0, 0), font=font_large)
+                draw.text(
+                    (width // 2 - 150, height - 100),
+                    "侧向漂移失败！",
+                    fill=(255, 0, 0),
+                    font=font_large,
+                )
 
             frames.append(np.array(img))
 
@@ -419,57 +455,81 @@ def plot_trajectory(trajectory, step_events, output_path):
     # 标注步态事件
     for ev in step_events:
         idx = np.argmin(np.abs(t_arr - ev["t"]))
-        ax.plot(hx_arr[idx], hy_arr[idx], 'ro', markersize=8, alpha=0.7)
-        ax.text(hx_arr[idx], hy_arr[idx] + 0.02, f"{ev['step']}",
-                fontsize=10, ha='center', color='red')
+        ax.plot(hx_arr[idx], hy_arr[idx], "ro", markersize=8, alpha=0.7)
+        ax.text(
+            hx_arr[idx],
+            hy_arr[idx] + 0.02,
+            f"{ev['step']}",
+            fontsize=10,
+            ha="center",
+            color="red",
+        )
 
-    ax.axhline(0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
+    ax.axhline(0, color="gray", linestyle="--", linewidth=1, alpha=0.5)
     ax.set_xlabel("前进方向 X (m)", fontsize=12)
     ax.set_ylabel("侧向位移 Y (m)", fontsize=12)
-    ax.set_title("俯视轨迹图 (Top-Down Trajectory)", fontsize=14, fontweight='bold')
+    ax.set_title("俯视轨迹图 (Top-Down Trajectory)", fontsize=14, fontweight="bold")
     ax.grid(True, alpha=0.3)
-    ax.set_aspect('equal', adjustable='box')
+    ax.set_aspect("equal", adjustable="box")
     plt.colorbar(scatter, ax=ax, label="时间 (s)")
 
     # (2) hip_y 时间序列
     ax = axes[0, 1]
-    ax.plot(t_arr, hy_arr, 'b-', linewidth=2, label='hip_y')
-    ax.axhline(0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
-    ax.axhline(0.5, color='red', linestyle='--', linewidth=1, alpha=0.5, label='失败阈值 (0.5m)')
+    ax.plot(t_arr, hy_arr, "b-", linewidth=2, label="hip_y")
+    ax.axhline(0, color="gray", linestyle="--", linewidth=1, alpha=0.5)
+    ax.axhline(
+        0.5,
+        color="red",
+        linestyle="--",
+        linewidth=1,
+        alpha=0.5,
+        label="失败阈值 (0.5m)",
+    )
 
     # 标注步态事件
     for ev in step_events:
-        ax.axvline(ev["t"], color='orange', linestyle=':', alpha=0.5)
-        ax.text(ev["t"], 0.45, f"步{ev['step']}", rotation=90,
-                fontsize=9, ha='right', color='orange')
+        ax.axvline(ev["t"], color="orange", linestyle=":", alpha=0.5)
+        ax.text(
+            ev["t"],
+            0.45,
+            f"步{ev['step']}",
+            rotation=90,
+            fontsize=9,
+            ha="right",
+            color="orange",
+        )
 
     ax.set_xlabel("时间 (s)", fontsize=12)
     ax.set_ylabel("侧向位移 hip_y (m)", fontsize=12)
-    ax.set_title("侧向位移时间序列", fontsize=14, fontweight='bold')
+    ax.set_title("侧向位移时间序列", fontsize=14, fontweight="bold")
     ax.legend()
     ax.grid(True, alpha=0.3)
 
     # (3) hip_roll 时间序列
     ax = axes[1, 0]
-    ax.plot(t_arr, roll_arr, 'g-', linewidth=2, label='hip_roll')
-    ax.axhline(0, color='gray', linestyle='--', linewidth=1, alpha=0.5)
-    ax.axhline(45, color='red', linestyle='--', linewidth=1, alpha=0.5, label='失败阈值 (45°)')
-    ax.axhline(-45, color='red', linestyle='--', linewidth=1, alpha=0.5)
+    ax.plot(t_arr, roll_arr, "g-", linewidth=2, label="hip_roll")
+    ax.axhline(0, color="gray", linestyle="--", linewidth=1, alpha=0.5)
+    ax.axhline(
+        45, color="red", linestyle="--", linewidth=1, alpha=0.5, label="失败阈值 (45°)"
+    )
+    ax.axhline(-45, color="red", linestyle="--", linewidth=1, alpha=0.5)
 
     ax.set_xlabel("时间 (s)", fontsize=12)
     ax.set_ylabel("侧向倾倒角 hip_roll (°)", fontsize=12)
-    ax.set_title("侧向倾倒角时间序列", fontsize=14, fontweight='bold')
+    ax.set_title("侧向倾倒角时间序列", fontsize=14, fontweight="bold")
     ax.legend()
     ax.grid(True, alpha=0.3)
 
     # (4) 步态事件摘要表
     ax = axes[1, 1]
-    ax.axis('off')
+    ax.axis("off")
 
     # 计算漂移率 vs 修正能力
     if len(step_events) >= 2:
-        drift_per_step = [step_events[i]["hip_y"] - step_events[i-1]["hip_y"]
-                         for i in range(1, len(step_events))]
+        drift_per_step = [
+            step_events[i]["hip_y"] - step_events[i - 1]["hip_y"]
+            for i in range(1, len(step_events))
+        ]
         avg_drift_per_step = np.mean(np.abs(drift_per_step))
 
         # 估算修正能力（基于力矩限制和步态周期）
@@ -497,12 +557,19 @@ def plot_trajectory(trajectory, step_events, output_path):
     else:
         summary_text = "步态事件不足，无法分析漂移率"
 
-    ax.text(0.1, 0.5, summary_text, fontsize=12, family='monospace',
-            verticalalignment='center', transform=ax.transAxes,
-            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.3))
+    ax.text(
+        0.1,
+        0.5,
+        summary_text,
+        fontsize=12,
+        family="monospace",
+        verticalalignment="center",
+        transform=ax.transAxes,
+        bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.3),
+    )
 
     plt.tight_layout()
-    plt.savefig(output_path, dpi=150, bbox_inches='tight')
+    plt.savefig(output_path, dpi=150, bbox_inches="tight")
     print(f"轨迹图已保存: {output_path}")
     plt.close()
 

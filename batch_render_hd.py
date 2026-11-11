@@ -42,7 +42,9 @@ RENDER_TASKS = [
     # ========== 优先级 A：核心展示动画 ==========
     RenderTask(
         version="V10",
-        script_path=HW1_ROOT / "v10_rolling_foot_biomimetic_gait" / "render_rolling_foot_gait_v10.py",
+        script_path=HW1_ROOT
+        / "v10_rolling_foot_biomimetic_gait"
+        / "render_rolling_foot_gait_v10.py",
         tag="v10_rolling_foot_walk_HD",
         priority="A",
         description="足踝滚动仿生步态 - 最推荐展示",
@@ -94,7 +96,9 @@ RENDER_TASKS = [
     ),
     RenderTask(
         version="V09",
-        script_path=HW1_ROOT / "v09_stable_biomimetic_gait" / "render_stable_gait_v9.py",
+        script_path=HW1_ROOT
+        / "v09_stable_biomimetic_gait"
+        / "render_stable_gait_v9.py",
         tag="v9_stable_walk_HD",
         priority="B",
         description="准被动稳定步态",

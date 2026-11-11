@@ -27,6 +27,7 @@ from common.motor_dynamics import PRESETS as MOTOR_PRESETS
 
 class ResidualPriorWrapper(gym.ActionWrapper):
     """与训练时相同的 wrapper"""
+
     def __init__(self, env: gym.Env, prior_action: np.ndarray, delta_scale: float):
         super().__init__(env)
         self.prior_action = np.asarray(prior_action, dtype=np.float32)
@@ -86,7 +87,9 @@ def test_rl_on_slope(model, slope_deg: float, episodes: int = 5):
 
     for ep in range(episodes):
         base_env = create_env_with_slope(slope_deg)
-        env = ResidualPriorWrapper(base_env, prior_action=prior_action, delta_scale=delta_scale)
+        env = ResidualPriorWrapper(
+            base_env, prior_action=prior_action, delta_scale=delta_scale
+        )
 
         obs, info = env.reset(seed=ep)
         done = False
@@ -158,7 +161,9 @@ def main():
     print()
 
     # 加载模型
-    model_path = HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    model_path = (
+        HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    )
 
     if not model_path.exists():
         print(f"错误：模型文件不存在")
@@ -181,20 +186,26 @@ def main():
     constant_results = []
 
     for slope in slopes:
-        print(f"\n测试坡度: {slope:+3d}度 {'(平地)' if slope == 0 else '(上坡)' if slope > 0 else '(下坡)'}")
+        print(
+            f"\n测试坡度: {slope:+3d}度 {'(平地)' if slope == 0 else '(上坡)' if slope > 0 else '(下坡)'}"
+        )
         print("-" * 80)
 
         # 测试 RL
         print("  [RL] 测试中...", end=" ")
         rl_result = test_rl_on_slope(model, slope, episodes=5)
         rl_results.append(rl_result)
-        print(f"距离: {rl_result['mean_distance']:6.3f}m, 成功率: {rl_result['success_rate']*100:3.0f}%")
+        print(
+            f"距离: {rl_result['mean_distance']:6.3f}m, 成功率: {rl_result['success_rate']*100:3.0f}%"
+        )
 
         # 测试 Constant
         print("  [Constant] 测试中...", end=" ")
         const_result = test_constant_on_slope(slope, episodes=5)
         constant_results.append(const_result)
-        print(f"距离: {const_result['mean_distance']:6.3f}m, 成功率: {const_result['success_rate']*100:3.0f}%")
+        print(
+            f"距离: {const_result['mean_distance']:6.3f}m, 成功率: {const_result['success_rate']*100:3.0f}%"
+        )
 
     # 汇总对比
     print("\n" * 2)
@@ -203,22 +214,26 @@ def main():
     print("=" * 80)
     print()
 
-    print(f"{'坡度':<10} {'RL 距离':<15} {'RL 成功率':<12} {'Constant 距离':<15} {'Constant 成功率':<12} {'RL vs Const':<15}")
+    print(
+        f"{'坡度':<10} {'RL 距离':<15} {'RL 成功率':<12} {'Constant 距离':<15} {'Constant 成功率':<12} {'RL vs Const':<15}"
+    )
     print("-" * 90)
 
     for rl_r, const_r in zip(rl_results, constant_results):
-        slope = rl_r['slope_deg']
-        rl_dist = rl_r['mean_distance']
-        rl_succ = rl_r['success_rate']
-        const_dist = const_r['mean_distance']
-        const_succ = const_r['success_rate']
+        slope = rl_r["slope_deg"]
+        rl_dist = rl_r["mean_distance"]
+        rl_succ = rl_r["success_rate"]
+        const_dist = const_r["mean_distance"]
+        const_succ = const_r["success_rate"]
 
         diff = rl_dist - const_dist
         diff_str = f"{diff:+.3f}m" if abs(diff) < 10 else "FAIL"
 
         slope_str = f"{slope:+3d}度"
-        print(f"{slope_str:<10} {rl_dist:6.3f}m       {rl_succ*100:3.0f}%         "
-              f"{const_dist:6.3f}m       {const_succ*100:3.0f}%         {diff_str:<15}")
+        print(
+            f"{slope_str:<10} {rl_dist:6.3f}m       {rl_succ*100:3.0f}%         "
+            f"{const_dist:6.3f}m       {const_succ*100:3.0f}%         {diff_str:<15}"
+        )
 
     print()
     print("=" * 80)
@@ -227,17 +242,22 @@ def main():
     print()
 
     # 分析泛化能力
-    rl_success_count = sum(1 for r in rl_results if r['success_rate'] == 1.0)
-    const_success_count = sum(1 for r in constant_results if r['success_rate'] == 1.0)
+    rl_success_count = sum(1 for r in rl_results if r["success_rate"] == 1.0)
+    const_success_count = sum(1 for r in constant_results if r["success_rate"] == 1.0)
 
     print(f"1. 泛化能力:")
     print(f"   - RL 在 {rl_success_count}/{len(slopes)} 种地形上达到 100% 成功率")
-    print(f"   - Constant 在 {const_success_count}/{len(slopes)} 种地形上达到 100% 成功率")
+    print(
+        f"   - Constant 在 {const_success_count}/{len(slopes)} 种地形上达到 100% 成功率"
+    )
     print()
 
     # 找出 RL 优于 Constant 的场景
-    rl_better = [r for r, c in zip(rl_results, constant_results)
-                 if r['mean_distance'] > c['mean_distance'] and r['success_rate'] > 0]
+    rl_better = [
+        r
+        for r, c in zip(rl_results, constant_results)
+        if r["mean_distance"] > c["mean_distance"] and r["success_rate"] > 0
+    ]
 
     if len(rl_better) > 0:
         print(f"2. RL 优势地形:")
@@ -271,4 +291,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n\n错误: {e}")
         import traceback
+
         traceback.print_exc()

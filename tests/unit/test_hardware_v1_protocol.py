@@ -71,10 +71,9 @@ def test_capture_stats_detects_dropped_seq_and_jitter():
     parser = FrameParser()
     stats = CaptureStats()
     values = [0] * SAMPLE_VALUE_COUNT
-    packets = (
-        encode_sample_frame(seq=10, ts_us=0, status=0, values=values)
-        + encode_sample_frame(seq=12, ts_us=5000, status=1, values=values)
-    )
+    packets = encode_sample_frame(
+        seq=10, ts_us=0, status=0, values=values
+    ) + encode_sample_frame(seq=12, ts_us=5000, status=1, values=values)
 
     frames = parser.feed(packets)
     for idx, frame in enumerate(frames):
@@ -91,7 +90,9 @@ def test_status_bits_include_thighs_and_pelvis():
     parser = FrameParser()
     values = [0] * SAMPLE_VALUE_COUNT
     status = (1 << 4) | (1 << 5) | (1 << 6)
-    frame = parser.feed(encode_sample_frame(seq=1, ts_us=0, status=status, values=values))[0]
+    frame = parser.feed(
+        encode_sample_frame(seq=1, ts_us=0, status=status, values=values)
+    )[0]
 
     assert frame.status_names() == [
         "left_thigh_fail",

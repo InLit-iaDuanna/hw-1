@@ -59,8 +59,8 @@ class CompassGaitOptimizer:
 
         # Default cost weights
         self.weights = weights or {
-            "energy": 1.0,      # Minimize torque^2
-            "time": 0.1,        # Minimize step duration
+            "energy": 1.0,  # Minimize torque^2
+            "time": 0.1,  # Minimize step duration
             "smoothness": 0.5,  # Minimize jerk (d^3q/dt^3)
         }
 
@@ -357,10 +357,12 @@ class CompassGaitOptimizer:
                 bounds.append((-5.0, 5.0))
             # Control bounds
             for i in range(self.nu):
-                bounds.append((
-                    self.model.actuator_ctrlrange[i, 0],
-                    self.model.actuator_ctrlrange[i, 1],
-                ))
+                bounds.append(
+                    (
+                        self.model.actuator_ctrlrange[i, 0],
+                        self.model.actuator_ctrlrange[i, 1],
+                    )
+                )
         # Time bound
         bounds.append((0.2, 2.0))  # Step time between 0.2s and 2.0s
 
@@ -515,6 +517,7 @@ class CompassGaitOptimizer:
         if render:
             try:
                 import mujoco.viewer
+
                 viewer = mujoco.viewer.launch_passive(self.model, self.data)
             except Exception as e:
                 print(f"Could not launch viewer: {e}")

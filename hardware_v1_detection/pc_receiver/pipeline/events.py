@@ -56,8 +56,7 @@ class FootEventDetector:
             self.armed_for_heel = False
 
         toe_due = (
-            self.last_toe_s is None
-            or t_s - self.last_toe_s >= self.min_toe_interval_s
+            self.last_toe_s is None or t_s - self.last_toe_s >= self.min_toe_interval_s
         )
         after_heel = self.last_heel_s is not None and t_s - self.last_heel_s >= 0.08
         if (not self.armed_for_heel) and after_heel and toe_due:

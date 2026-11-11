@@ -1,4 +1,5 @@
 """Generate interactive HTML report with embedded figures and navigation."""
+
 from __future__ import annotations
 
 import base64
@@ -28,12 +29,14 @@ def generate_interactive_html():
         # Embed image as base64
         img_data = image_to_base64(png_file)
 
-        figures.append({
-            "num": fig_num,
-            "name": fig_name,
-            "filename": png_file.name,
-            "data": img_data,
-        })
+        figures.append(
+            {
+                "num": fig_num,
+                "name": fig_name,
+                "filename": png_file.name,
+                "data": img_data,
+            }
+        )
 
     html_content = f"""<!DOCTYPE html>
 <html lang="en">

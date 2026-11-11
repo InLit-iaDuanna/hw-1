@@ -37,14 +37,30 @@ print("Parameter Comparison:")
 print("-" * 80)
 
 # 比较base参数
-print(f"thigh_length:     v137={v137_sim.params.base.thigh_length:.6f}, v2={v2_env.params.base.thigh_length:.6f}")
-print(f"shank_length:     v137={v137_sim.params.base.shank_length:.6f}, v2={v2_env.params.base.shank_length:.6f}")
-print(f"step_length:      v137={v137_sim.params.base.step_length:.6f}, v2={v2_env.params.base.step_length:.6f}")
-print(f"foot_radius:      v137={v137_sim.params.base.foot_radius:.6f}, v2={v2_env.params.base.foot_radius:.6f}")
-print(f"arm_mass:         v137={v137_sim.params.base.arm_mass:.6f}, v2={v2_env.params.base.arm_mass:.6f}")
-print(f"arm_length:       v137={v137_sim.params.base.arm_length:.6f}, v2={v2_env.params.base.arm_length:.6f}")
-print(f"initial_vx:       v137={v137_sim.params.base.initial_vx:.6f}, v2={v2_env.params.base.initial_vx:.6f}")
-print(f"compensate_friction: v137={v137_sim.params.compensate_friction}, v2={v2_env.params.compensate_friction}")
+print(
+    f"thigh_length:     v137={v137_sim.params.base.thigh_length:.6f}, v2={v2_env.params.base.thigh_length:.6f}"
+)
+print(
+    f"shank_length:     v137={v137_sim.params.base.shank_length:.6f}, v2={v2_env.params.base.shank_length:.6f}"
+)
+print(
+    f"step_length:      v137={v137_sim.params.base.step_length:.6f}, v2={v2_env.params.base.step_length:.6f}"
+)
+print(
+    f"foot_radius:      v137={v137_sim.params.base.foot_radius:.6f}, v2={v2_env.params.base.foot_radius:.6f}"
+)
+print(
+    f"arm_mass:         v137={v137_sim.params.base.arm_mass:.6f}, v2={v2_env.params.base.arm_mass:.6f}"
+)
+print(
+    f"arm_length:       v137={v137_sim.params.base.arm_length:.6f}, v2={v2_env.params.base.arm_length:.6f}"
+)
+print(
+    f"initial_vx:       v137={v137_sim.params.base.initial_vx:.6f}, v2={v2_env.params.base.initial_vx:.6f}"
+)
+print(
+    f"compensate_friction: v137={v137_sim.params.compensate_friction}, v2={v2_env.params.compensate_friction}"
+)
 print()
 
 # 运行100步并比较轨迹
@@ -53,6 +69,7 @@ print("-" * 80)
 
 # V137
 from simulate_passive_arms_v14 import initialize
+
 initialize(v137_sim.model, v137_sim.data, v137_sim.params.base)
 v137_sim.support_foot = "left"
 v137_sim.burst_start_t = -v137_sim.params.base.gait_period
@@ -77,8 +94,10 @@ for i in range(100):
         pass
 
 if i % 20 == 0:
-        print(f"PPO Step {i:3d}:")
-        print(f"  v2:   hip_x={v2_env.data.qpos[0]:.4f}, hip_vx={v2_env.data.cvel[v2_env.model.body('hip').id][3]:.4f}")
+    print(f"PPO Step {i:3d}:")
+    print(
+        f"  v2:   hip_x={v2_env.data.qpos[0]:.4f}, hip_vx={v2_env.data.cvel[v2_env.model.body('hip').id][3]:.4f}"
+    )
 
 print()
 v137_sim.model = None

@@ -4,9 +4,9 @@ import sys
 from pathlib import Path
 import numpy as np
 
-sys.path.insert(0, str(Path('../v13_7_friction_compensation')))
-sys.path.insert(0, str(Path('../v14_passive_arms')))
-sys.path.insert(0, str(Path('..')))
+sys.path.insert(0, str(Path("../v13_7_friction_compensation")))
+sys.path.insert(0, str(Path("../v14_passive_arms")))
+sys.path.insert(0, str(Path("..")))
 
 from train_residual_rl_v2 import ResidualRLEnvV2
 
@@ -36,4 +36,8 @@ for step in range(20):
 
 env.close()
 
-print("\n[OK] sim_time accumulation is correct" if abs(diff) < 0.0001 else "\n[PROBLEM] sim_time has errors")
+print(
+    "\n[OK] sim_time accumulation is correct"
+    if abs(diff) < 0.0001
+    else "\n[PROBLEM] sim_time has errors"
+)

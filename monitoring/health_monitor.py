@@ -60,7 +60,9 @@ class HealthMonitor:
         try:
             # 检查 Python 版本
             py_version = sys.version_info
-            check.details["python_version"] = f"{py_version.major}.{py_version.minor}.{py_version.micro}"
+            check.details["python_version"] = (
+                f"{py_version.major}.{py_version.minor}.{py_version.micro}"
+            )
 
             # 检查关键依赖
             required_packages = ["mujoco", "numpy", "matplotlib", "pytest"]
@@ -146,7 +148,9 @@ class HealthMonitor:
             if missing_files or missing_dirs:
                 check.status = "FAIL"
                 check.message = "缺少关键文件或目录"
-            elif violations_count > self.config.get("checks", [{}])[3].get("max_violations", 50):
+            elif violations_count > self.config.get("checks", [{}])[3].get(
+                "max_violations", 50
+            ):
                 check.status = "WARNING"
                 check.message = f"代码质量问题较多 ({violations_count} 个违规)"
             else:
@@ -251,7 +255,9 @@ class HealthMonitor:
 
             # 检查版本脚本完整性
             version_dirs = [
-                d for d in self.project_root.glob("v*") if d.is_dir() and d.name[1:2].isdigit()
+                d
+                for d in self.project_root.glob("v*")
+                if d.is_dir() and d.name[1:2].isdigit()
             ]
             check.details["version_directories_count"] = len(version_dirs)
 
@@ -297,7 +303,9 @@ class HealthMonitor:
                 "WARNING": "[WARN]",
                 "UNKNOWN": "[????]",
             }
-            print(f"{status_symbol.get(check.status, '[????]')} {check.name}: {check.message}")
+            print(
+                f"{status_symbol.get(check.status, '[????]')} {check.name}: {check.message}"
+            )
             if check.details:
                 for key, value in check.details.items():
                     if value is not None and value != [] and value != {}:

@@ -70,6 +70,7 @@ from common.motor_dynamics import (
 @dataclass
 class EpisodeResult:
     """单个 episode 的结果记录"""
+
     episode_id: int
     forward_distance: float
     simulated_time: float
@@ -106,6 +107,7 @@ class V137IdentitySimulator:
 
         # 使用 dataclass replace
         from dataclasses import replace
+
         base = replace(base0, **overrides)
         fsm = make_v137_fsm(base)
         motor = MOTOR_PRESETS["mx64ar"]
@@ -181,36 +183,36 @@ class V137IdentitySimulator:
 
             # 调用 V13.6 FSM 控制律
             tau = control_v136(
-                fsm,
-                self.data,
-                t,
-                support_foot,
-                burst_start_t,
-                E_current
+                fsm, self.data, t, support_foot, burst_start_t, E_current
             )
-            l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau[0], tau[1], tau[2], tau[3]
+            l_hip_des, l_knee_des, r_hip_des, r_knee_des = (
+                tau[0],
+                tau[1],
+                tau[2],
+                tau[3],
+            )
 
             # === V13.7 核心：前馈摩擦补偿 ===
             if self.params.compensate_friction:
                 l_hip_des = self._compensate(
                     l_hip_des,
                     float(self.data.qvel[self.qvel_addr["left_hip"]]),
-                    self.params.hip_motor
+                    self.params.hip_motor,
                 )
                 l_knee_des = self._compensate(
                     l_knee_des,
                     float(self.data.qvel[self.qvel_addr["left_knee"]]),
-                    self.params.knee_motor
+                    self.params.knee_motor,
                 )
                 r_hip_des = self._compensate(
                     r_hip_des,
                     float(self.data.qvel[self.qvel_addr["right_hip"]]),
-                    self.params.hip_motor
+                    self.params.hip_motor,
                 )
                 r_knee_des = self._compensate(
                     r_knee_des,
                     float(self.data.qvel[self.qvel_addr["right_knee"]]),
-                    self.params.knee_motor
+                    self.params.knee_motor,
                 )
 
             # L1 电机模型（饱和 + 库仑摩擦）
@@ -338,7 +340,9 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
     print(f"  - Model path: {MODEL_PATH}")
     print(f"  - Control frequency: {1.0 / simulator.params.base.timestep:.0f} Hz")
     print(f"  - Motor model: {simulator.params.hip_motor.name}")
-    print(f"  - Friction compensation: {'ON' if simulator.params.compensate_friction else 'OFF'}")
+    print(
+        f"  - Friction compensation: {'ON' if simulator.params.compensate_friction else 'OFF'}"
+    )
     print()
 
     # 运行多个 episodes
@@ -391,7 +395,9 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
     print(f"  Average: {avg_distance:.3f} +/- {std_distance:.3f} m")
     print(f"  Range: [{min_distance:.3f}, {max_distance:.3f}] m")
     print(f"  Baseline: 4.630 m")
-    print(f"  Deviation: {avg_distance - 4.63:+.3f} m ({(avg_distance / 4.63 - 1) * 100:+.1f}%)")
+    print(
+        f"  Deviation: {avg_distance - 4.63:+.3f} m ({(avg_distance / 4.63 - 1) * 100:+.1f}%)"
+    )
     print()
 
     print(f"Time Statistics:")
@@ -404,8 +410,12 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
     print(f"  Baseline: 10 touchdowns")
     print()
 
-    print(f"Success Rate: {success_rate * 100:.0f}% ({sum(successes)}/{len(successes)})")
-    print(f"Baseline Match Rate: {match_rate * 100:.0f}% ({sum(matches)}/{len(matches)})")
+    print(
+        f"Success Rate: {success_rate * 100:.0f}% ({sum(successes)}/{len(successes)})"
+    )
+    print(
+        f"Baseline Match Rate: {match_rate * 100:.0f}% ({sum(matches)}/{len(matches)})"
+    )
     print()
 
     # === 诊断结论 ===
@@ -418,15 +428,21 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
 
     if match_rate >= 0.8:  # 80% 的 episodes 匹配基线
         print("[PASS] Successfully reproduced V13.7 baseline!")
-        print(f"  - Average distance {avg_distance:.3f}m within {tolerance}m of baseline {BASELINE_DISTANCE}m")
+        print(
+            f"  - Average distance {avg_distance:.3f}m within {tolerance}m of baseline {BASELINE_DISTANCE}m"
+        )
         print(f"  - {match_rate * 100:.0f}% of episodes match baseline")
         print()
-        print("Conclusion: Environment setup is correct, V13.7 controller works stably.")
+        print(
+            "Conclusion: Environment setup is correct, V13.7 controller works stably."
+        )
         print("Recommendation: Ready to train PPO model.")
         diagnosis = "PASS"
     else:
         print("[FAIL] Failed to reproduce V13.7 baseline")
-        print(f"  - Average distance {avg_distance:.3f}m differs from baseline {BASELINE_DISTANCE}m by {abs(avg_distance - BASELINE_DISTANCE):.3f}m")
+        print(
+            f"  - Average distance {avg_distance:.3f}m differs from baseline {BASELINE_DISTANCE}m by {abs(avg_distance - BASELINE_DISTANCE):.3f}m"
+        )
         print(f"  - Only {match_rate * 100:.0f}% of episodes match baseline")
         print()
 
@@ -434,7 +450,9 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
         print("Possible Causes:")
 
         # 检查是否所有 episodes 都早期失败
-        early_failures = sum(1 for r in results if r.simulated_time < 2.0 and not r.success)
+        early_failures = sum(
+            1 for r in results if r.simulated_time < 2.0 and not r.success
+        )
         if early_failures >= len(results) * 0.5:
             print("  1. [HIGH] Early failure pattern detected")
             print(f"     - {early_failures}/{len(results)} episodes failed within 2s")
@@ -459,9 +477,13 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
 
         print()
         print("Recommended Actions:")
-        print("  1. Compare initialize() in simulate_v13_7.py with current implementation")
+        print(
+            "  1. Compare initialize() in simulate_v13_7.py with current implementation"
+        )
         print("  2. Check if model XML matches V13.7 (armature/damping)")
-        print("  3. Print first 100 steps qpos/qvel/ctrl and compare with original V13.7")
+        print(
+            "  3. Print first 100 steps qpos/qvel/ctrl and compare with original V13.7"
+        )
         print("  4. Verify FSM state transition times match original")
 
     print()
@@ -497,8 +519,12 @@ def main():
 
     parser = argparse.ArgumentParser(description="V13.7 Identity Reproduction Test")
     parser.add_argument("--episodes", type=int, default=5, help="运行的 episode 数")
-    parser.add_argument("--save", type=str, default="v137_identity_test_report.json",
-                        help="保存结果的文件名")
+    parser.add_argument(
+        "--save",
+        type=str,
+        default="v137_identity_test_report.json",
+        help="保存结果的文件名",
+    )
 
     args = parser.parse_args()
 

@@ -19,6 +19,7 @@ sys.path.append(str(Path(__file__).parent.parent))
 
 try:
     from stable_baselines3 import PPO, SAC
+
     RL_AVAILABLE = True
 except ImportError:
     RL_AVAILABLE = False
@@ -28,6 +29,7 @@ except ImportError:
 @dataclass
 class BenchmarkResult:
     """Results from a single benchmark run"""
+
     algorithm: str
     scenario: str
     trial: int
@@ -44,6 +46,7 @@ class BenchmarkResult:
 
 class V10PDController:
     """V10 PD Controller"""
+
     def __init__(self):
         self.kp = np.array([200.0, 200.0, 150.0, 150.0])
         self.kd = np.array([20.0, 20.0, 15.0, 15.0])
@@ -67,6 +70,7 @@ class V10PDController:
 
 class V13FSMController:
     """V13.7 FSM Controller with Compass Gait Logic"""
+
     def __init__(self):
         self.kp = np.array([180.0, 180.0, 140.0, 140.0])
         self.kd = np.array([18.0, 18.0, 14.0, 14.0])
@@ -105,20 +109,26 @@ class V13FSMController:
         # Generate targets based on state
         if self.state == "stance_L":
             # Left leg stance, right leg swing
-            targets = np.array([
-                -0.1,  # Left hip (slight backward)
-                self.stance_knee_target,  # Left knee
-                self.hip_swing_amplitude * np.sin(np.pi * phase),  # Right hip swing
-                -self.knee_swing_amplitude * np.sin(np.pi * phase)  # Right knee swing
-            ])
+            targets = np.array(
+                [
+                    -0.1,  # Left hip (slight backward)
+                    self.stance_knee_target,  # Left knee
+                    self.hip_swing_amplitude * np.sin(np.pi * phase),  # Right hip swing
+                    -self.knee_swing_amplitude
+                    * np.sin(np.pi * phase),  # Right knee swing
+                ]
+            )
         else:
             # Right leg stance, left leg swing
-            targets = np.array([
-                self.hip_swing_amplitude * np.sin(np.pi * phase),  # Left hip swing
-                -self.knee_swing_amplitude * np.sin(np.pi * phase),  # Left knee swing
-                -0.1,  # Right hip
-                self.stance_knee_target  # Right knee
-            ])
+            targets = np.array(
+                [
+                    self.hip_swing_amplitude * np.sin(np.pi * phase),  # Left hip swing
+                    -self.knee_swing_amplitude
+                    * np.sin(np.pi * phase),  # Left knee swing
+                    -0.1,  # Right hip
+                    self.stance_knee_target,  # Right knee
+                ]
+            )
 
         error = targets - joint_pos
         torque = self.kp * error - self.kd * joint_vel
@@ -127,6 +137,7 @@ class V13FSMController:
 
 class VirtualConstraintsController:
     """Virtual Constraints based on HZD principles"""
+
     def __init__(self):
         self.kp = 250.0
         self.kd = 25.0
@@ -145,7 +156,7 @@ class VirtualConstraintsController:
         n = len(coeffs) - 1
         result = 0
         for i, c in enumerate(coeffs):
-            result += c * (np.math.comb(n, i) * (s**i) * ((1-s)**(n-i)))
+            result += c * (np.math.comb(n, i) * (s**i) * ((1 - s) ** (n - i)))
         return result
 
     def get_action(self, qpos, qvel, contact_force):
@@ -158,19 +169,23 @@ class VirtualConstraintsController:
         left_contact = contact_force[0] > 10.0
 
         if left_contact:
-            targets = np.array([
-                self.virtual_constraint(s, self.hip_coeffs),
-                self.virtual_constraint(s, self.knee_coeffs),
-                self.virtual_constraint(1-s, self.hip_coeffs),
-                self.virtual_constraint(1-s, self.knee_coeffs)
-            ])
+            targets = np.array(
+                [
+                    self.virtual_constraint(s, self.hip_coeffs),
+                    self.virtual_constraint(s, self.knee_coeffs),
+                    self.virtual_constraint(1 - s, self.hip_coeffs),
+                    self.virtual_constraint(1 - s, self.knee_coeffs),
+                ]
+            )
         else:
-            targets = np.array([
-                self.virtual_constraint(1-s, self.hip_coeffs),
-                self.virtual_constraint(1-s, self.knee_coeffs),
-                self.virtual_constraint(s, self.hip_coeffs),
-                self.virtual_constraint(s, self.knee_coeffs)
-            ])
+            targets = np.array(
+                [
+                    self.virtual_constraint(1 - s, self.hip_coeffs),
+                    self.virtual_constraint(1 - s, self.knee_coeffs),
+                    self.virtual_constraint(s, self.hip_coeffs),
+                    self.virtual_constraint(s, self.knee_coeffs),
+                ]
+            )
 
         error = targets - joint_pos
         torque = self.kp * error - self.kd * joint_vel
@@ -193,9 +208,9 @@ class BenchmarkSuite:
 
         # Initialize controllers
         self.controllers = {
-            'V10_PD': V10PDController(),
-            'V13_FSM': V13FSMController(),
-            'Virtual_Constraints': VirtualConstraintsController()
+            "V10_PD": V10PDController(),
+            "V13_FSM": V13FSMController(),
+            "Virtual_Constraints": VirtualConstraintsController(),
         }
 
         # Try to load RL models if available
@@ -211,13 +226,13 @@ class BenchmarkSuite:
 
         if ppo_path.exists():
             try:
-                self.controllers['RL_PPO'] = PPO.load(str(ppo_path))
+                self.controllers["RL_PPO"] = PPO.load(str(ppo_path))
             except Exception as e:
                 print(f"Warning: Could not load PPO model: {e}")
 
         if sac_path.exists():
             try:
-                self.controllers['RL_SAC'] = SAC.load(str(sac_path))
+                self.controllers["RL_SAC"] = SAC.load(str(sac_path))
             except Exception as e:
                 print(f"Warning: Could not load SAC model: {e}")
 
@@ -268,10 +283,12 @@ class BenchmarkSuite:
 
         return np.array([left_contact, right_contact])
 
-    def compute_cost_of_transport(self, distance: float, energy: float, mass: float) -> float:
+    def compute_cost_of_transport(
+        self, distance: float, energy: float, mass: float
+    ) -> float:
         """Compute mechanical cost of transport"""
         if distance < 0.01:
-            return float('inf')
+            return float("inf")
         # CoT = Energy / (mass * gravity * distance)
         gravity = 9.81
         return energy / (mass * gravity * distance)
@@ -286,15 +303,17 @@ class BenchmarkSuite:
         stability = 1.0 / (1.0 + np.var(orientations))
         return stability
 
-    def compute_robustness_score(self, scenario: str, success: bool, distance: float) -> float:
+    def compute_robustness_score(
+        self, scenario: str, success: bool, distance: float
+    ) -> float:
         """Compute robustness score based on scenario difficulty"""
         base_score = 1.0 if success else 0.0
 
         # Weight by scenario difficulty
         scenario_weights = {
-            'flat_ground': 1.0,
-            'small_slope': 1.5,
-            'perturbations': 2.0
+            "flat_ground": 1.0,
+            "small_slope": 1.5,
+            "perturbations": 2.0,
         }
 
         weight = scenario_weights.get(scenario, 1.0)
@@ -322,7 +341,9 @@ class BenchmarkSuite:
 
         return False, "running"
 
-    def run_trial(self, algorithm: str, scenario: str, trial: int, seed: int) -> BenchmarkResult:
+    def run_trial(
+        self, algorithm: str, scenario: str, trial: int, seed: int
+    ) -> BenchmarkResult:
         """Run a single benchmark trial"""
         print(f"Running {algorithm} on {scenario}, trial {trial+1}/10, seed {seed}")
 
@@ -333,10 +354,18 @@ class BenchmarkSuite:
         if controller is None:
             print(f"Warning: Controller {algorithm} not available")
             return BenchmarkResult(
-                algorithm=algorithm, scenario=scenario, trial=trial, seed=seed,
-                forward_distance=0.0, num_steps=0, cost_of_transport=float('inf'),
-                stability_metric=0.0, robustness_score=0.0, success=False,
-                termination_reason="controller_not_available", execution_time=0.0
+                algorithm=algorithm,
+                scenario=scenario,
+                trial=trial,
+                seed=seed,
+                forward_distance=0.0,
+                num_steps=0,
+                cost_of_transport=float("inf"),
+                stability_metric=0.0,
+                robustness_score=0.0,
+                success=False,
+                termination_reason="controller_not_available",
+                execution_time=0.0,
             )
 
         # Track metrics
@@ -351,18 +380,20 @@ class BenchmarkSuite:
             contact_forces = self.get_contact_forces()
 
             # Get action from controller
-            if algorithm in ['RL_PPO', 'RL_SAC']:
+            if algorithm in ["RL_PPO", "RL_SAC"]:
                 # RL models expect observation vector
-                obs = np.concatenate([
-                    self.data.qpos[:11],
-                    self.data.qvel[:10],
-                    contact_forces
-                ])
+                obs = np.concatenate(
+                    [self.data.qpos[:11], self.data.qvel[:10], contact_forces]
+                )
                 action, _ = controller.predict(obs, deterministic=True)
-            elif algorithm == 'Virtual_Constraints':
-                action = controller.get_action(self.data.qpos, self.data.qvel, contact_forces)
-            elif algorithm == 'V13_FSM':
-                action = controller.get_action(self.data.qpos, self.data.qvel, contact_forces)
+            elif algorithm == "Virtual_Constraints":
+                action = controller.get_action(
+                    self.data.qpos, self.data.qvel, contact_forces
+                )
+            elif algorithm == "V13_FSM":
+                action = controller.get_action(
+                    self.data.qpos, self.data.qvel, contact_forces
+                )
             else:  # V10_PD
                 phase = step / self.max_steps  # Simple phase estimate
                 action = controller.get_action(self.data.qpos, self.data.qvel, phase)
@@ -413,12 +444,12 @@ class BenchmarkSuite:
             robustness_score=robustness,
             success=success,
             termination_reason=termination_reason,
-            execution_time=execution_time
+            execution_time=execution_time,
         )
 
     def run_benchmark(self, output_file: str = "benchmark_results.csv"):
         """Run full benchmark suite"""
-        scenarios = ['flat_ground', 'small_slope', 'perturbations']
+        scenarios = ["flat_ground", "small_slope", "perturbations"]
         results = []
 
         print("=" * 80)
@@ -446,28 +477,49 @@ class BenchmarkSuite:
 
     def save_results(self, results: List[BenchmarkResult], output_file: str):
         """Save results to CSV file"""
-        output_path = Path(self.model_path).parent / "algorithm_comparison" / output_file
+        output_path = (
+            Path(self.model_path).parent / "algorithm_comparison" / output_file
+        )
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_path, 'w', newline='') as f:
+        with open(output_path, "w", newline="") as f:
             writer = csv.writer(f)
             # Header
-            writer.writerow([
-                'algorithm', 'scenario', 'trial', 'seed',
-                'forward_distance', 'num_steps', 'cost_of_transport',
-                'stability_metric', 'robustness_score', 'success',
-                'termination_reason', 'execution_time'
-            ])
+            writer.writerow(
+                [
+                    "algorithm",
+                    "scenario",
+                    "trial",
+                    "seed",
+                    "forward_distance",
+                    "num_steps",
+                    "cost_of_transport",
+                    "stability_metric",
+                    "robustness_score",
+                    "success",
+                    "termination_reason",
+                    "execution_time",
+                ]
+            )
 
             # Data
             for r in results:
-                writer.writerow([
-                    r.algorithm, r.scenario, r.trial, r.seed,
-                    f"{r.forward_distance:.4f}", r.num_steps,
-                    f"{r.cost_of_transport:.4f}", f"{r.stability_metric:.4f}",
-                    f"{r.robustness_score:.4f}", r.success,
-                    r.termination_reason, f"{r.execution_time:.2f}"
-                ])
+                writer.writerow(
+                    [
+                        r.algorithm,
+                        r.scenario,
+                        r.trial,
+                        r.seed,
+                        f"{r.forward_distance:.4f}",
+                        r.num_steps,
+                        f"{r.cost_of_transport:.4f}",
+                        f"{r.stability_metric:.4f}",
+                        f"{r.robustness_score:.4f}",
+                        r.success,
+                        r.termination_reason,
+                        f"{r.execution_time:.2f}",
+                    ]
+                )
 
         print(f"\nResults saved to: {output_path}")
 
@@ -483,49 +535,67 @@ class BenchmarkSuite:
         for scenario in scenarios:
             print(f"\n{scenario.upper().replace('_', ' ')}")
             print("-" * 80)
-            print(f"{'Algorithm':<20} {'Distance':<15} {'CoT':<15} {'Stability':<15} {'Success Rate'}")
+            print(
+                f"{'Algorithm':<20} {'Distance':<15} {'CoT':<15} {'Stability':<15} {'Success Rate'}"
+            )
             print("-" * 80)
 
             scenario_data = {}
             for algo in algorithms:
-                algo_results = [r for r in results if r.algorithm == algo and r.scenario == scenario]
+                algo_results = [
+                    r for r in results if r.algorithm == algo and r.scenario == scenario
+                ]
 
                 if not algo_results:
                     continue
 
                 distances = [r.forward_distance for r in algo_results]
-                cots = [r.cost_of_transport for r in algo_results if r.cost_of_transport != float('inf')]
+                cots = [
+                    r.cost_of_transport
+                    for r in algo_results
+                    if r.cost_of_transport != float("inf")
+                ]
                 stabilities = [r.stability_metric for r in algo_results]
                 success_rate = sum(r.success for r in algo_results) / len(algo_results)
 
                 scenario_data[algo] = {
-                    'distances': distances,
-                    'cots': cots,
-                    'stabilities': stabilities
+                    "distances": distances,
+                    "cots": cots,
+                    "stabilities": stabilities,
                 }
 
                 dist_mean = np.mean(distances)
                 dist_std = np.std(distances)
-                cot_mean = np.mean(cots) if cots else float('inf')
+                cot_mean = np.mean(cots) if cots else float("inf")
                 cot_std = np.std(cots) if cots else 0.0
                 stab_mean = np.mean(stabilities)
                 stab_std = np.std(stabilities)
 
-                print(f"{algo:<20} {dist_mean:>6.2f}±{dist_std:<5.2f} "
-                      f"{cot_mean:>6.3f}±{cot_std:<5.3f} "
-                      f"{stab_mean:>6.3f}±{stab_std:<5.3f} "
-                      f"{success_rate:>6.1%}")
+                print(
+                    f"{algo:<20} {dist_mean:>6.2f}±{dist_std:<5.2f} "
+                    f"{cot_mean:>6.3f}±{cot_std:<5.3f} "
+                    f"{stab_mean:>6.3f}±{stab_std:<5.3f} "
+                    f"{success_rate:>6.1%}"
+                )
 
             # Statistical significance tests (t-tests between pairs)
             if len(algorithms) >= 2:
                 print("\nPairwise t-tests (forward distance):")
                 for i, algo1 in enumerate(algorithms[:-1]):
-                    for algo2 in algorithms[i+1:]:
+                    for algo2 in algorithms[i + 1 :]:
                         if algo1 in scenario_data and algo2 in scenario_data:
-                            data1 = scenario_data[algo1]['distances']
-                            data2 = scenario_data[algo2]['distances']
+                            data1 = scenario_data[algo1]["distances"]
+                            data2 = scenario_data[algo2]["distances"]
                             t_stat, p_value = stats.ttest_ind(data1, data2)
-                            sig = "***" if p_value < 0.001 else "**" if p_value < 0.01 else "*" if p_value < 0.05 else "ns"
+                            sig = (
+                                "***"
+                                if p_value < 0.001
+                                else (
+                                    "**"
+                                    if p_value < 0.01
+                                    else "*" if p_value < 0.05 else "ns"
+                                )
+                            )
                             print(f"  {algo1} vs {algo2}: p={p_value:.4f} {sig}")
 
         print("\n" + "=" * 80)

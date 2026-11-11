@@ -199,13 +199,15 @@ class TestFloquetMultipliers:
     def test_skip_head_transient(self):
         """skip_head 应跳过暂态点。"""
         # 前几个点有大扰动
-        pts = np.array([
-            [10.0, 5.0],  # 暂态
-            [8.0, 4.0],   # 暂态
-            [1.1, 0.5],
-            [1.0, 0.5],
-            [0.9, 0.5],
-        ])
+        pts = np.array(
+            [
+                [10.0, 5.0],  # 暂态
+                [8.0, 4.0],  # 暂态
+                [1.1, 0.5],
+                [1.0, 0.5],
+                [0.9, 0.5],
+            ]
+        )
 
         result_full = floquet_multipliers(pts, skip_head=0)
         result_skip = floquet_multipliers(pts, skip_head=2)
@@ -245,7 +247,8 @@ class TestPlotSection:
     def test_plot_with_empty_data(self):
         """空数据应显示提示信息。"""
         import matplotlib
-        matplotlib.use('Agg')  # 使用非交互式后端
+
+        matplotlib.use("Agg")  # 使用非交互式后端
         import matplotlib.pyplot as plt
 
         fig, ax = plt.subplots()
@@ -259,7 +262,8 @@ class TestPlotSection:
     def test_plot_with_data(self):
         """有数据时应正常绘图。"""
         import matplotlib
-        matplotlib.use('Agg')  # 使用非交互式后端
+
+        matplotlib.use("Agg")  # 使用非交互式后端
         import matplotlib.pyplot as plt
 
         fig, ax = plt.subplots()
@@ -277,7 +281,8 @@ class TestPlotSection:
     def test_plot_without_title(self):
         """无标题时应正常绘图。"""
         import matplotlib
-        matplotlib.use('Agg')  # 使用非交互式后端
+
+        matplotlib.use("Agg")  # 使用非交互式后端
         import matplotlib.pyplot as plt
 
         fig, ax = plt.subplots()
@@ -306,12 +311,14 @@ class TestIntegration:
             theta1 = 0.3 * np.sin(2 * np.pi * t / 0.5)
             theta2 = 0.2 * np.cos(2 * np.pi * t / 0.5)
 
-            rows.append({
-                "time": t,
-                "support_foot": support,
-                "hip_angle": theta1,
-                "knee_angle": theta2,
-            })
+            rows.append(
+                {
+                    "time": t,
+                    "support_foot": support,
+                    "hip_angle": theta1,
+                    "knee_angle": theta2,
+                }
+            )
             t += dt
 
         # 采集截面
@@ -336,7 +343,9 @@ class TestIntegration:
 
         np.testing.assert_array_almost_equal(result1["jacobian"], result2["jacobian"])
         np.testing.assert_array_almost_equal(result1["eigvals"], result2["eigvals"])
-        np.testing.assert_array_almost_equal(result1["fixed_point"], result2["fixed_point"])
+        np.testing.assert_array_almost_equal(
+            result1["fixed_point"], result2["fixed_point"]
+        )
 
     def test_goswami_method_consistency(self):
         """验证 Goswami 方法的一致性（线性系统）。"""

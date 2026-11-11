@@ -322,7 +322,9 @@ def get_context_logger(name: str) -> ContextAdapter:
 # ============================================================================
 
 
-def log_execution_time(logger: logging.Logger | None = None, level: int | str = logging.INFO):
+def log_execution_time(
+    logger: logging.Logger | None = None, level: int | str = logging.INFO
+):
     """装饰器：记录函数执行时间。
 
     Args:

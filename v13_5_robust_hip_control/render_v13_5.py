@@ -368,9 +368,7 @@ def render_scan_heatmap() -> None:
         ax = axes[1]
         ax.axis("off")
         n_scanned = step + 1
-        n_success = sum(
-            grid_success[sj, si] for si, sj in scan_order[: step + 1]
-        )
+        n_success = sum(grid_success[sj, si] for si, sj in scan_order[: step + 1])
         success_rate = n_success / n_scanned * 100
 
         info_text = f"""
@@ -447,7 +445,15 @@ V10 hip 不是 PD 跟踪，而是 **bang-bang 隐式饱和驱动**：
 → V13.6 事件驱动 FSM：从"步态时序结构"层面切入
    分相位控制（stance_early/late, swing_thrust/retract）
 """
-    ax.text(0.5, 0.5, conclusion, fontsize=12, verticalalignment="center", ha="center", family="sans-serif")
+    ax.text(
+        0.5,
+        0.5,
+        conclusion,
+        fontsize=12,
+        verticalalignment="center",
+        ha="center",
+        family="sans-serif",
+    )
     fig.canvas.draw()
     img = np.frombuffer(fig.canvas.buffer_rgba(), dtype=np.uint8)
     img = img.reshape(fig.canvas.get_width_height()[::-1] + (4,))
@@ -517,7 +523,9 @@ def render_kE_Estar_heatmap() -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="V13.5 渲染：三方案对比 + Plan C 扫描热图")
+    parser = argparse.ArgumentParser(
+        description="V13.5 渲染：三方案对比 + Plan C 扫描热图"
+    )
     parser.add_argument(
         "--mode",
         choices=["comparison", "heatmap", "all"],

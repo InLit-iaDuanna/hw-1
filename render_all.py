@@ -33,40 +33,65 @@ VENV_PYTHON = ROOT / ".venv-mujoco" / "Scripts" / "python.exe"
 STAGE_DEFINITIONS = {
     1: {
         "name": "理论验证与被动极限环",
-        "versions": ["v01_mujoco_compass_gait", "v02_rugged_rimless_limit_cycle",
-                     "v03_compass_limit_cycle", "v04_kneed_limit_cycle", "v05_hybrid_compass_proof"]
+        "versions": [
+            "v01_mujoco_compass_gait",
+            "v02_rugged_rimless_limit_cycle",
+            "v03_compass_limit_cycle",
+            "v04_kneed_limit_cycle",
+            "v05_hybrid_compass_proof",
+        ],
     },
     2: {
         "name": "机械升级与控制律探索",
         "versions": [
-            "v06_mve_gait_homework", "v07_true_contact_exploration",
-            "v08_quasi_passive_assisted", "v09_stable_biomimetic_gait",
-            "v10_rolling_foot_biomimetic_gait", "v11_rugged_terrain_robustness",
+            "v06_mve_gait_homework",
+            "v07_true_contact_exploration",
+            "v08_quasi_passive_assisted",
+            "v09_stable_biomimetic_gait",
+            "v10_rolling_foot_biomimetic_gait",
+            "v11_rugged_terrain_robustness",
             "v12_energy_cot_analysis",
-            "v13b_floquet_long_run", "v13_5_robust_hip_control", "v13_6_event_driven_fsm",
-            "v13_6_refactored", "v13_7_floquet_analysis", "v13_7_friction_compensation",
-            "v13_7_refactored", "v13_parameter_sensitivity_atlas",
-            "v14b_state_machine_hip", "v14c_arm_mass_lightening", "v14_passive_arms",
-            "v15_1_sea_direct", "v15_2_strict_sea", "v15_hip_sea_scaffold",
-            "v16_motor_dynamics", "v16_refactored", "v17_refactored", "v17_state_estimation"
-        ]
+            "v13b_floquet_long_run",
+            "v13_5_robust_hip_control",
+            "v13_6_event_driven_fsm",
+            "v13_6_refactored",
+            "v13_7_floquet_analysis",
+            "v13_7_friction_compensation",
+            "v13_7_refactored",
+            "v13_parameter_sensitivity_atlas",
+            "v14b_state_machine_hip",
+            "v14c_arm_mass_lightening",
+            "v14_passive_arms",
+            "v15_1_sea_direct",
+            "v15_2_strict_sea",
+            "v15_hip_sea_scaffold",
+            "v16_motor_dynamics",
+            "v16_refactored",
+            "v17_refactored",
+            "v17_state_estimation",
+        ],
     },
     3: {
         "name": "3D化探索",
-        "versions": ["v18_3d_lateral_stability", "v19_hip_abduction_active",
-                     "v20_step_width_control", "v21_3d_perturbation_robustness"]
+        "versions": [
+            "v18_3d_lateral_stability",
+            "v19_hip_abduction_active",
+            "v20_step_width_control",
+            "v21_3d_perturbation_robustness",
+        ],
     },
     4: {
         "name": "硬件转译与实物验证",
-        "versions": ["v22_hardware_design", "v23_system_identification", "v24_sim_to_real"]
-    }
+        "versions": [
+            "v22_hardware_design",
+            "v23_system_identification",
+            "v24_sim_to_real",
+        ],
+    },
 }
 
 # 已知的render脚本命名模式
-RENDER_SCRIPT_PATTERNS = [
-    "render_*.py",
-    "*render*.py"
-]
+RENDER_SCRIPT_PATTERNS = ["render_*.py", "*render*.py"]
 
 
 def find_render_scripts(version_dir: Path) -> List[Path]:
@@ -108,7 +133,7 @@ def render_version(version: str, version_dir: Path, dry_run: bool = False) -> Di
         "scripts_found": 0,
         "scripts_executed": 0,
         "errors": [],
-        "outputs": []
+        "outputs": [],
     }
 
     # 查找render脚本
@@ -138,7 +163,7 @@ def render_version(version: str, version_dir: Path, dry_run: bool = False) -> Di
                 cwd=str(version_dir),
                 capture_output=True,
                 text=True,
-                timeout=600  # 10分钟超时
+                timeout=600,  # 10分钟超时
             )
 
             if proc.returncode == 0:
@@ -147,7 +172,9 @@ def render_version(version: str, version_dir: Path, dry_run: bool = False) -> Di
                 out_dir = version_dir / "out"
                 if out_dir.exists():
                     mp4_files = list(out_dir.glob("*.mp4"))
-                    result["outputs"].extend([str(f.relative_to(ROOT)) for f in mp4_files])
+                    result["outputs"].extend(
+                        [str(f.relative_to(ROOT)) for f in mp4_files]
+                    )
             else:
                 result["errors"].append(f"{script_name}: 返回码 {proc.returncode}")
                 if proc.stderr:
@@ -171,9 +198,9 @@ def render_version(version: str, version_dir: Path, dry_run: bool = False) -> Di
 
 def print_summary(results: List[Dict]):
     """打印汇总报告"""
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("渲染汇总")
-    print("="*80)
+    print("=" * 80)
 
     total = len(results)
     success = sum(1 for r in results if r["status"] == "success")
@@ -196,9 +223,9 @@ def print_summary(results: List[Dict]):
 
     # 失败详情
     if failed > 0 or partial > 0:
-        print("\n" + "-"*80)
+        print("\n" + "-" * 80)
         print("错误详情:")
-        print("-"*80)
+        print("-" * 80)
         for r in results:
             if r["status"] in ["failed", "partial"] and r["errors"]:
                 print(f"\n{r['version']}:")
@@ -215,12 +242,12 @@ def save_results(results: List[Dict], output_file: Path):
             "success": sum(1 for r in results if r["status"] == "success"),
             "partial": sum(1 for r in results if r["status"] == "partial"),
             "failed": sum(1 for r in results if r["status"] == "failed"),
-            "no_script": sum(1 for r in results if r["status"] == "no_script")
+            "no_script": sum(1 for r in results if r["status"] == "no_script"),
         },
-        "results": results
+        "results": results,
     }
 
-    with open(output_file, 'w', encoding='utf-8') as f:
+    with open(output_file, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, ensure_ascii=False)
 
     print(f"\n详细报告已保存: {output_file}")
@@ -228,16 +255,26 @@ def save_results(results: List[Dict], output_file: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="hw-1 批量渲染脚本")
-    parser.add_argument("--versions", nargs="+", metavar="VERSION",
-                        help="指定要渲染的版本（如 v10 v13_6）")
-    parser.add_argument("--stages", type=int, nargs="+", choices=[1,2,3,4],
-                        help="指定要渲染的阶段（1=理论 2=机械 3=3D 4=硬件）")
-    parser.add_argument("--parallel", type=int, default=2, metavar="N",
-                        help="并行任务数（默认2）")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="预览不执行")
-    parser.add_argument("--output", type=Path, default=ROOT / "render_results.json",
-                        help="结果保存路径")
+    parser.add_argument(
+        "--versions",
+        nargs="+",
+        metavar="VERSION",
+        help="指定要渲染的版本（如 v10 v13_6）",
+    )
+    parser.add_argument(
+        "--stages",
+        type=int,
+        nargs="+",
+        choices=[1, 2, 3, 4],
+        help="指定要渲染的阶段（1=理论 2=机械 3=3D 4=硬件）",
+    )
+    parser.add_argument(
+        "--parallel", type=int, default=2, metavar="N", help="并行任务数（默认2）"
+    )
+    parser.add_argument("--dry-run", action="store_true", help="预览不执行")
+    parser.add_argument(
+        "--output", type=Path, default=ROOT / "render_results.json", help="结果保存路径"
+    )
 
     args = parser.parse_args()
 
@@ -280,7 +317,7 @@ def main():
     if args.dry_run:
         print("[DRY-RUN 模式 - 不会实际执行]")
     print(f"并行任务数: {args.parallel}")
-    print("-"*80)
+    print("-" * 80)
 
     # 并行渲染
     results = []
@@ -303,7 +340,7 @@ def main():
                     "success": "[OK]",
                     "partial": "[PARTIAL]",
                     "failed": "[FAILED]",
-                    "no_script": "-"
+                    "no_script": "-",
                 }.get(result["status"], "?")
 
                 print(f"  状态: {status_icon} {result['status']}")
@@ -313,11 +350,13 @@ def main():
 
             except Exception as e:
                 print(f"  错误: {type(e).__name__}: {str(e)}")
-                results.append({
-                    "version": version,
-                    "status": "failed",
-                    "errors": [f"{type(e).__name__}: {str(e)}"]
-                })
+                results.append(
+                    {
+                        "version": version,
+                        "status": "failed",
+                        "errors": [f"{type(e).__name__}: {str(e)}"],
+                    }
+                )
 
     # 打印汇总
     print_summary(results)

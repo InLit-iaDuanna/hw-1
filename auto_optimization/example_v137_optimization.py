@@ -58,7 +58,9 @@ def create_v137_evaluate_func():
             if "swing_thrust_duration" in params:
                 base_params.fsm.swing_thrust_duration = params["swing_thrust_duration"]
             if "swing_retract_duration" in params:
-                base_params.fsm.swing_retract_duration = params["swing_retract_duration"]
+                base_params.fsm.swing_retract_duration = params[
+                    "swing_retract_duration"
+                ]
 
             # 运行仿真
             try:

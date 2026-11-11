@@ -156,6 +156,7 @@ class StabilityMetric(ObjectiveFunction):
 
 # 便捷函数
 
+
 def maximize_distance() -> MaximizeDistance:
     """创建最大化距离目标函数。"""
     return MaximizeDistance()

@@ -137,10 +137,18 @@ class PDControllerWrapper(Controller):
         r_knee_qd = data.qvel[r_knee_id]
 
         # Compute control torques
-        l_hip_tau = self.hip_controller.compute_torque(l_hip_q, l_hip_qd, self.hip_target)
-        l_knee_tau = self.knee_controller.compute_torque(l_knee_q, l_knee_qd, self.knee_target)
-        r_hip_tau = self.hip_controller.compute_torque(r_hip_q, r_hip_qd, self.hip_target)
-        r_knee_tau = self.knee_controller.compute_torque(r_knee_q, r_knee_qd, self.knee_target)
+        l_hip_tau = self.hip_controller.compute_torque(
+            l_hip_q, l_hip_qd, self.hip_target
+        )
+        l_knee_tau = self.knee_controller.compute_torque(
+            l_knee_q, l_knee_qd, self.knee_target
+        )
+        r_hip_tau = self.hip_controller.compute_torque(
+            r_hip_q, r_hip_qd, self.hip_target
+        )
+        r_knee_tau = self.knee_controller.compute_torque(
+            r_knee_q, r_knee_qd, self.knee_target
+        )
 
         tau = np.array([l_hip_tau, l_knee_tau, r_hip_tau, r_knee_tau])
 
@@ -174,8 +182,15 @@ class V136ControllerWrapper(Controller):
         E_current = _mechanical_energy(self.params.base, data)
 
         # V13.6 FSM control
-        tau_result = control_v136(self.params, data, t, support_foot, burst_start_t, E_current)
-        l_hip, l_knee, r_hip, r_knee = tau_result[0], tau_result[1], tau_result[2], tau_result[3]
+        tau_result = control_v136(
+            self.params, data, t, support_foot, burst_start_t, E_current
+        )
+        l_hip, l_knee, r_hip, r_knee = (
+            tau_result[0],
+            tau_result[1],
+            tau_result[2],
+            tau_result[3],
+        )
         mode_label = tau_result[4]
         left_phase = tau_result[5]
         right_phase = tau_result[6]
@@ -219,8 +234,12 @@ class V137ControllerWrapper(Controller):
         E_current = _mechanical_energy(self.params.fsm.base, data)
 
         # V13.6.1 FSM control (base control law)
-        tau_result = control_v136(self.params.fsm, data, t, support_foot, burst_start_t, E_current)
-        tau_desired = np.array([tau_result[0], tau_result[1], tau_result[2], tau_result[3]])
+        tau_result = control_v136(
+            self.params.fsm, data, t, support_foot, burst_start_t, E_current
+        )
+        tau_desired = np.array(
+            [tau_result[0], tau_result[1], tau_result[2], tau_result[3]]
+        )
         mode_label = tau_result[4]
         left_phase = tau_result[5]
         right_phase = tau_result[6]
@@ -231,12 +250,14 @@ class V137ControllerWrapper(Controller):
         r_hip_id = model.joint("right_hip").id
         r_knee_id = model.joint("right_knee").id
 
-        qd = np.array([
-            data.qvel[l_hip_id],
-            data.qvel[l_knee_id],
-            data.qvel[r_hip_id],
-            data.qvel[r_knee_id],
-        ])
+        qd = np.array(
+            [
+                data.qvel[l_hip_id],
+                data.qvel[l_knee_id],
+                data.qvel[r_hip_id],
+                data.qvel[r_knee_id],
+            ]
+        )
 
         # Apply motor dynamics with friction compensation
         tau_motor = np.zeros(4)
@@ -267,7 +288,9 @@ class V137ControllerWrapper(Controller):
 class ComparisonCallback(Callback):
     """Unified callback for all controllers."""
 
-    def __init__(self, controller: Controller, base_params: V10Params, controller_type: str):
+    def __init__(
+        self, controller: Controller, base_params: V10Params, controller_type: str
+    ):
         self.controller = controller
         self.base_params = base_params
         self.controller_type = controller_type
@@ -355,17 +378,19 @@ class ComparisonCallback(Callback):
         x_hip = data.xpos[hip_body_id, 0]
 
         # Record metrics
-        self.rows.append({
-            "t": t,
-            "x_hip": x_hip,
-            "energy": E,
-            "mode": info.get("mode", "none"),
-            "left_phase": left_phase,
-            "right_phase": right_phase,
-            "left_contact": left_contact,
-            "right_contact": right_contact,
-            "touchdowns": self.touchdown_count,
-        })
+        self.rows.append(
+            {
+                "t": t,
+                "x_hip": x_hip,
+                "energy": E,
+                "mode": info.get("mode", "none"),
+                "left_phase": left_phase,
+                "right_phase": right_phase,
+                "left_contact": left_contact,
+                "right_contact": right_contact,
+                "touchdowns": self.touchdown_count,
+            }
+        )
 
         # Simple failure detection
         if not self.is_failed:
@@ -387,7 +412,11 @@ class ComparisonCallback(Callback):
         final_x = self.rows[-1]["x_hip"]
         final_t = self.rows[-1]["t"]
         total_energy = self.energy.positive_input_energy
-        cot = total_energy / (final_x * self.base_params.hip_mass * 9.81) if final_x > 0.1 else np.inf
+        cot = (
+            total_energy / (final_x * self.base_params.hip_mass * 9.81)
+            if final_x > 0.1
+            else np.inf
+        )
 
         # Determine success
         success = (
@@ -464,7 +493,7 @@ def run_controller(
     print(f"  Total energy:      {summary['total_energy']:.2f} J")
     print(f"  CoT:               {summary['cot']:.4f}")
     print(f"  Success:           {summary['success']}")
-    if not summary['success']:
+    if not summary["success"]:
         print(f"  Failure reason:    {summary['failure_reason']}")
 
     # Extract time series
@@ -492,7 +521,9 @@ def run_controller(
         metadata={
             "controller_type": callback.controller_type,
             "duration": duration,
-            "failure_reason": summary["failure_reason"] if not summary["success"] else None,
+            "failure_reason": (
+                summary["failure_reason"] if not summary["success"] else None
+            ),
         },
     )
 
@@ -509,7 +540,9 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Compare controllers side-by-side")
-    parser.add_argument("--duration", type=float, default=20.0, help="Simulation duration (s)")
+    parser.add_argument(
+        "--duration", type=float, default=20.0, help="Simulation duration (s)"
+    )
     parser.add_argument("--render", action="store_true", help="Enable rendering")
     parser.add_argument("--slope", type=float, default=0.0, help="Slope angle (deg)")
     args = parser.parse_args()
@@ -525,6 +558,7 @@ def main():
 
     # V13.7 parameters (needs PassiveArmsParams base)
     from simulate_passive_arms_v14 import PassiveArmsParams
+
     v14_base = PassiveArmsParams(
         hip_mass=v10_params.hip_mass,
         torso_mass=v10_params.torso_mass,

@@ -148,7 +148,7 @@ class DiagnosticWizard:
             "2": "fall_down",
             "3": "fly_away",
             "4": "penetration",
-            "5": "no_alternation"
+            "5": "no_alternation",
         }
 
         error_type = error_map.get(choice)

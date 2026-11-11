@@ -9,6 +9,7 @@ sys.path.insert(0, str(HW1_ROOT))
 
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
+
 def debug_fsm_transitions():
     """运行一个episode并打印所有FSM状态转换"""
 
@@ -74,6 +75,7 @@ def debug_fsm_transitions():
     print()
 
     env.close()
+
 
 if __name__ == "__main__":
     debug_fsm_transitions()

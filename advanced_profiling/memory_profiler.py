@@ -100,7 +100,9 @@ class MemoryAnalyzer:
                     "file": stat.traceback.format()[0] if stat.traceback else "unknown",
                     "size_mb": stat.size / 1024 / 1024,
                     "count": stat.count,
-                    "avg_size_kb": stat.size / stat.count / 1024 if stat.count > 0 else 0,
+                    "avg_size_kb": (
+                        stat.size / stat.count / 1024 if stat.count > 0 else 0
+                    ),
                 }
             )
 
@@ -297,7 +299,9 @@ def identify_preallocation_opportunities(
     print(f"n_fields = {n_fields}")
     print("data_array = np.zeros((n_steps, n_fields), dtype=np.float64)")
     print("# 在仿真循环中直接写入 data_array[step_idx, :]")
-    print("# 结束后转换: rows = [dict(zip(keys, data_array[i])) for i in range(n_steps)]")
+    print(
+        "# 结束后转换: rows = [dict(zip(keys, data_array[i])) for i in range(n_steps)]"
+    )
     print("```")
 
     return result
@@ -327,7 +331,9 @@ def save_memory_report(stats: dict[str, Any], output_path: Path) -> None:
                 lines.append(
                     f"{i}. +{diff['size_diff_mb']:.2f} MB ({diff['count_diff']:+d} 对象)"
                 )
-                lines.append(f"   当前: {diff['size_mb']:.2f} MB ({diff['count']} 对象)")
+                lines.append(
+                    f"   当前: {diff['size_mb']:.2f} MB ({diff['count']} 对象)"
+                )
                 lines.append(f"   位置: {diff['file']}")
                 lines.append("")
 

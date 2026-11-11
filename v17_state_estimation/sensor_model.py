@@ -45,9 +45,7 @@ class SensorModel:
         self.params = params
         self._rad_per_count = 2.0 * math.pi / params.encoder_cpr
         self._read_noise_std = (
-            0.5 * encoder_resolution_rad
-            if encoder_resolution_rad is not None
-            else 0.0
+            0.5 * encoder_resolution_rad if encoder_resolution_rad is not None else 0.0
         )
         self.contact_threshold_N = contact_threshold_N
         self._last_left_contact: bool | None = None
@@ -111,7 +109,9 @@ class SensorModel:
     def read(self, model, data) -> dict:
         """Compatibility wrapper used by older integration tests."""
         left_contact, right_contact = self._infer_contacts(model, data)
-        reading = self.measure(data, float(getattr(data, "time", 0.0)), left_contact, right_contact)
+        reading = self.measure(
+            data, float(getattr(data, "time", 0.0)), left_contact, right_contact
+        )
         joint_angles = reading.joint_angles.copy()
         if self._read_noise_std > 0.0:
             joint_angles = np.array(
@@ -139,7 +139,11 @@ class SensorModel:
                 if name:
                     names.append(name)
             joined = " ".join(names).lower()
-            if "floor" not in joined and "ground" not in joined and "ramp" not in joined:
+            if (
+                "floor" not in joined
+                and "ground" not in joined
+                and "ramp" not in joined
+            ):
                 continue
             if "left" in joined:
                 left_contact = True

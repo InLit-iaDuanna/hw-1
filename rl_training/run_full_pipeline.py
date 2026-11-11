@@ -78,39 +78,46 @@ def main():
 
   # 自定义参数
   python run_full_pipeline.py --episodes 100 --bc-epochs 100 --ppo-timesteps 10000000
-        """
+        """,
     )
 
-    parser.add_argument("--start-from", type=int, default=1, choices=[1, 2, 3, 4],
-                        help="从哪个阶段开始 (1-4)")
-    parser.add_argument("--end-at", type=int, default=4, choices=[1, 2, 3, 4],
-                        help="在哪个阶段结束 (1-4)")
+    parser.add_argument(
+        "--start-from",
+        type=int,
+        default=1,
+        choices=[1, 2, 3, 4],
+        help="从哪个阶段开始 (1-4)",
+    )
+    parser.add_argument(
+        "--end-at",
+        type=int,
+        default=4,
+        choices=[1, 2, 3, 4],
+        help="在哪个阶段结束 (1-4)",
+    )
 
     # 阶段1参数
-    parser.add_argument("--episodes", type=int, default=50,
-                        help="收集的专家轨迹episode数")
-    parser.add_argument("--max-steps", type=int, default=600,
-                        help="每个episode的最大步数")
+    parser.add_argument(
+        "--episodes", type=int, default=50, help="收集的专家轨迹episode数"
+    )
+    parser.add_argument(
+        "--max-steps", type=int, default=600, help="每个episode的最大步数"
+    )
 
     # 阶段2参数
-    parser.add_argument("--bc-epochs", type=int, default=50,
-                        help="行为克隆训练轮数")
-    parser.add_argument("--bc-batch-size", type=int, default=256,
-                        help="行为克隆批大小")
-    parser.add_argument("--bc-lr", type=float, default=1e-3,
-                        help="行为克隆学习率")
+    parser.add_argument("--bc-epochs", type=int, default=50, help="行为克隆训练轮数")
+    parser.add_argument("--bc-batch-size", type=int, default=256, help="行为克隆批大小")
+    parser.add_argument("--bc-lr", type=float, default=1e-3, help="行为克隆学习率")
 
     # 阶段3参数
-    parser.add_argument("--ppo-timesteps", type=int, default=5_000_000,
-                        help="PPO训练总步数")
-    parser.add_argument("--ppo-envs", type=int, default=8,
-                        help="PPO并行环境数")
-    parser.add_argument("--ppo-lr", type=float, default=3e-4,
-                        help="PPO学习率")
+    parser.add_argument(
+        "--ppo-timesteps", type=int, default=5_000_000, help="PPO训练总步数"
+    )
+    parser.add_argument("--ppo-envs", type=int, default=8, help="PPO并行环境数")
+    parser.add_argument("--ppo-lr", type=float, default=3e-4, help="PPO学习率")
 
     # 阶段4参数
-    parser.add_argument("--eval-episodes", type=int, default=20,
-                        help="评估的episode数")
+    parser.add_argument("--eval-episodes", type=int, default=20, help="评估的episode数")
 
     args = parser.parse_args()
 
@@ -130,48 +137,65 @@ def main():
 
     # 阶段1: 收集专家轨迹
     if args.start_from <= 1 <= args.end_at:
-        stages.append({
-            "name": "阶段1: 收集V13.7专家轨迹",
-            "script": "collect_expert_trajectories.py",
-            "args": [
-                "--episodes", str(args.episodes),
-                "--max-steps", str(args.max_steps),
-            ]
-        })
+        stages.append(
+            {
+                "name": "阶段1: 收集V13.7专家轨迹",
+                "script": "collect_expert_trajectories.py",
+                "args": [
+                    "--episodes",
+                    str(args.episodes),
+                    "--max-steps",
+                    str(args.max_steps),
+                ],
+            }
+        )
 
     # 阶段2: 行为克隆预训练
     if args.start_from <= 2 <= args.end_at:
-        stages.append({
-            "name": "阶段2: 行为克隆预训练",
-            "script": "train_behavioral_cloning.py",
-            "args": [
-                "--epochs", str(args.bc_epochs),
-                "--batch-size", str(args.bc_batch_size),
-                "--lr", str(args.bc_lr),
-            ]
-        })
+        stages.append(
+            {
+                "name": "阶段2: 行为克隆预训练",
+                "script": "train_behavioral_cloning.py",
+                "args": [
+                    "--epochs",
+                    str(args.bc_epochs),
+                    "--batch-size",
+                    str(args.bc_batch_size),
+                    "--lr",
+                    str(args.bc_lr),
+                ],
+            }
+        )
 
     # 阶段3: PPO warm-start训练
     if args.start_from <= 3 <= args.end_at:
-        stages.append({
-            "name": "阶段3: PPO Warm-Start训练",
-            "script": "train_ppo_with_bc_init.py",
-            "args": [
-                "--timesteps", str(args.ppo_timesteps),
-                "--envs", str(args.ppo_envs),
-                "--lr", str(args.ppo_lr),
-            ]
-        })
+        stages.append(
+            {
+                "name": "阶段3: PPO Warm-Start训练",
+                "script": "train_ppo_with_bc_init.py",
+                "args": [
+                    "--timesteps",
+                    str(args.ppo_timesteps),
+                    "--envs",
+                    str(args.ppo_envs),
+                    "--lr",
+                    str(args.ppo_lr),
+                ],
+            }
+        )
 
     # 阶段4: 对比评估
     if args.start_from <= 4 <= args.end_at:
-        stages.append({
-            "name": "阶段4: 对比评估",
-            "script": "evaluate_and_compare.py",
-            "args": [
-                "--episodes", str(args.eval_episodes),
-            ]
-        })
+        stages.append(
+            {
+                "name": "阶段4: 对比评估",
+                "script": "evaluate_and_compare.py",
+                "args": [
+                    "--episodes",
+                    str(args.eval_episodes),
+                ],
+            }
+        )
 
     # 执行各阶段
     for i, stage in enumerate(stages, 1):
@@ -188,7 +212,7 @@ def main():
         if i < len(stages):
             print()
             response = input(f"继续执行下一阶段? [Y/n]: ").strip().lower()
-            if response in ['n', 'no']:
+            if response in ["n", "no"]:
                 print("流程已停止")
                 return
 

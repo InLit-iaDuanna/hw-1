@@ -118,12 +118,16 @@ def test_optimizer():
     # 贝叶斯优化
     bo = BayesianOptimizer(param_names, param_bounds, random_state=42)
     bo_results = bo.optimize(objective, n_initial=5, n_iterations=10, verbose=False)
-    print(f"Bayesian Opt: best = {bo_results['best_value']:.4f} at {bo_results['best_params']}")
+    print(
+        f"Bayesian Opt: best = {bo_results['best_value']:.4f} at {bo_results['best_params']}"
+    )
 
     # 验证找到了接近最优的解
     best_x = bo_results["best_params"]["x"]
     best_y = bo_results["best_params"]["y"]
-    assert abs(best_x - 5) < 1.0 and abs(best_y - 3) < 1.0, "Should find near-optimal solution"
+    assert (
+        abs(best_x - 5) < 1.0 and abs(best_y - 3) < 1.0
+    ), "Should find near-optimal solution"
 
     print("[PASS] Optimizer tests passed")
 
@@ -143,6 +147,7 @@ def test_visualizer():
 
     # 测试 2D 切片（不显示，只保存）
     import matplotlib
+
     matplotlib.use("Agg")  # 无 GUI 后端
 
     viz.plot_2d_slice(
@@ -182,6 +187,7 @@ def test_full_workflow():
 
     # 运行简化工作流
     import matplotlib
+
     matplotlib.use("Agg")
 
     explorer.initial_sampling(method="lhs", n_samples=20, seed=42)
@@ -215,6 +221,7 @@ def main():
     except Exception as e:
         print(f"\n[FAIL] Test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

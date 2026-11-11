@@ -250,14 +250,16 @@ def simulate_and_record(p: V19Params, scenario: PerturbationScenario, dt=0.001):
         hy = abs(float(data.qpos[hy_q]))
 
         # 记录状态
-        trajectory.append({
-            "t": t,
-            "qpos": data.qpos.copy(),
-            "qvel": data.qvel.copy(),
-            "alternations": alternations,
-            "roll_deg": math.degrees(roll),
-            "hip_y": hy,
-        })
+        trajectory.append(
+            {
+                "t": t,
+                "qpos": data.qpos.copy(),
+                "qvel": data.qvel.copy(),
+                "alternations": alternations,
+                "roll_deg": math.degrees(roll),
+                "hip_y": hy,
+            }
+        )
 
         lc, rc = _contacts(model, data)
         for foot, has_c in (("left", lc), ("right", rc)):
@@ -307,9 +309,7 @@ def simulate_and_record(p: V19Params, scenario: PerturbationScenario, dt=0.001):
     }
 
 
-def annotate_frame(
-    frame, t, state, scenario, result, mode="single"
-) -> np.ndarray:
+def annotate_frame(frame, t, state, scenario, result, mode="single") -> np.ndarray:
     """为帧添加标注信息。"""
     img = Image.fromarray(frame)
     draw = ImageDraw.Draw(img, "RGBA")
@@ -408,7 +408,9 @@ def render_single(init_roll_deg: float, output: str, fps=60):
         camera.lookat[:] = [float(data.qpos[0]) + 0.3, 0.0, 0.6]
         renderer.update_scene(data, camera=camera)
         frame = renderer.render()
-        frames.append(annotate_frame(frame, state["t"], state, scenario, result, "single"))
+        frames.append(
+            annotate_frame(frame, state["t"], state, scenario, result, "single")
+        )
 
     out_path = OUT_DIR / output
     imageio.mimsave(out_path, frames, fps=fps)
@@ -486,7 +488,9 @@ def render_cascade(output: str, fps=60):
                 renderer.update_scene(data, camera=camera)
                 frame = renderer.render()
                 sub_frames.append(
-                    annotate_frame(frame, result["sim_time"], state, scenario, result, "cascade")
+                    annotate_frame(
+                        frame, result["sim_time"], state, scenario, result, "cascade"
+                    )
                 )
 
         # 水平拼接（如果想并排显示，可以用 np.hstack）

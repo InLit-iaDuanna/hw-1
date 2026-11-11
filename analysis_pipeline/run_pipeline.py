@@ -2,6 +2,7 @@
 主管道运行脚本
 完整的数据分析流程：加载 -> 预处理 -> 特征提取 -> 统计分析 -> 可视化 -> 报告生成
 """
+
 from __future__ import annotations
 
 import argparse
@@ -48,14 +49,16 @@ class AnalysisPipeline:
         self.generator = ReportGenerator(report_config, self.output_dir)
 
         # 缓存
-        self.cache_enabled = self.config.get("execution", {}).get("cache_intermediate", True)
-        self.cache_dir = Path(self.config.get("execution", {}).get("cache_directory", "./.cache"))
+        self.cache_enabled = self.config.get("execution", {}).get(
+            "cache_intermediate", True
+        )
+        self.cache_dir = Path(
+            self.config.get("execution", {}).get("cache_directory", "./.cache")
+        )
         if self.cache_enabled:
             self.cache_dir.mkdir(parents=True, exist_ok=True)
 
-    def run_full_pipeline(
-        self, version_keys: list[str] | None = None
-    ) -> dict:
+    def run_full_pipeline(self, version_keys: list[str] | None = None) -> dict:
         """
         运行完整管道
 
@@ -107,7 +110,9 @@ class AnalysisPipeline:
         # 4. 统计分析
         print("\n[4/6] Statistical analysis...")
         comparisons = []
-        comparison_groups = self.config.get("statistical_analysis", {}).get("comparison_groups", [])
+        comparison_groups = self.config.get("statistical_analysis", {}).get(
+            "comparison_groups", []
+        )
 
         for group in comparison_groups:
             if len(group) >= 2:
@@ -159,9 +164,7 @@ class AnalysisPipeline:
                 "convergence_rate",
             ]
             fig_path = self.figures_dir / "feature_comparison.png"
-            self.visualizer.plot_comparison_bars(
-                features_dict, key_metrics, fig_path
-            )
+            self.visualizer.plot_comparison_bars(features_dict, key_metrics, fig_path)
             figure_paths["feature_comparison"] = fig_path
         except Exception as e:
             print(f"  Warning: Failed to plot feature comparison: {e}")
@@ -189,7 +192,9 @@ class AnalysisPipeline:
         )
 
         # 保存报告
-        output_formats = self.config.get("report", {}).get("output_formats", ["markdown"])
+        output_formats = self.config.get("report", {}).get(
+            "output_formats", ["markdown"]
+        )
         for fmt in output_formats:
             try:
                 self.generator.save_report(report_md, "analysis_report", fmt)

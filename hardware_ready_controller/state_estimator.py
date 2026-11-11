@@ -16,6 +16,7 @@ from dataclasses import dataclass
 @dataclass
 class KalmanConfig:
     """Configuration for Kalman filter parameters."""
+
     # Process noise covariance (from V17 tuning)
     process_noise_position: float = 1e-8  # rad^2
     process_noise_velocity: float = 1e-4  # (rad/s)^2
@@ -54,16 +55,12 @@ class KalmanFilter:
         self.P = np.eye(2) * 0.1  # state covariance
 
         # State transition matrix (constant velocity model)
-        self.F = np.array([
-            [1.0, dt],
-            [0.0, 1.0]
-        ])
+        self.F = np.array([[1.0, dt], [0.0, 1.0]])
 
         # Process noise covariance
-        self.Q = np.array([
-            [config.process_noise_position, 0.0],
-            [0.0, config.process_noise_velocity]
-        ])
+        self.Q = np.array(
+            [[config.process_noise_position, 0.0], [0.0, config.process_noise_velocity]]
+        )
 
         # Measurement matrix (observe angle only)
         self.H = np.array([[1.0, 0.0]])
@@ -164,9 +161,9 @@ class JointStateEstimator:
 
         # Create Kalman filters for each joint
         self.filters = {
-            'hip': KalmanFilter(config, dt),
-            'knee': KalmanFilter(config, dt),
-            'ankle': KalmanFilter(config, dt)
+            "hip": KalmanFilter(config, dt),
+            "knee": KalmanFilter(config, dt),
+            "ankle": KalmanFilter(config, dt),
         }
 
         # Contact state tracking
@@ -176,7 +173,9 @@ class JointStateEstimator:
         # Timestamp tracking for delay compensation
         self.last_update_time = 0.0
 
-    def update_joint(self, joint_name: str, encoder_angle: float) -> Tuple[float, float]:
+    def update_joint(
+        self, joint_name: str, encoder_angle: float
+    ) -> Tuple[float, float]:
         """
         Update state estimate for a single joint.
 
@@ -192,8 +191,9 @@ class JointStateEstimator:
 
         return self.filters[joint_name].step(encoder_angle)
 
-    def update_all_joints(self, hip_angle: float, knee_angle: float,
-                         ankle_angle: float) -> dict:
+    def update_all_joints(
+        self, hip_angle: float, knee_angle: float, ankle_angle: float
+    ) -> dict:
         """
         Update all joint state estimates.
 
@@ -206,18 +206,15 @@ class JointStateEstimator:
             Dictionary with filtered states for all joints
         """
         states = {}
-        states['hip'] = self.update_joint('hip', hip_angle)
-        states['knee'] = self.update_joint('knee', knee_angle)
-        states['ankle'] = self.update_joint('ankle', ankle_angle)
+        states["hip"] = self.update_joint("hip", hip_angle)
+        states["knee"] = self.update_joint("knee", knee_angle)
+        states["ankle"] = self.update_joint("ankle", ankle_angle)
 
         return states
 
     def get_all_states(self) -> dict:
         """Get current state estimates for all joints."""
-        return {
-            name: filt.get_state()
-            for name, filt in self.filters.items()
-        }
+        return {name: filt.get_state() for name, filt in self.filters.items()}
 
     def reset_all(self):
         """Reset all joint filters."""
@@ -244,8 +241,9 @@ class ForwardKinematics:
         self.L_thigh = thigh_length
         self.L_shank = shank_length
 
-    def compute_hip_position(self, hip_angle: float, knee_angle: float,
-                            ankle_angle: float) -> Tuple[float, float]:
+    def compute_hip_position(
+        self, hip_angle: float, knee_angle: float, ankle_angle: float
+    ) -> Tuple[float, float]:
         """
         Compute hip position in world frame (ankle as origin).
 
@@ -269,9 +267,15 @@ class ForwardKinematics:
 
         return x_hip, y_hip
 
-    def compute_hip_velocity(self, hip_angle: float, knee_angle: float,
-                            ankle_angle: float, hip_vel: float,
-                            knee_vel: float, ankle_vel: float) -> Tuple[float, float]:
+    def compute_hip_velocity(
+        self,
+        hip_angle: float,
+        knee_angle: float,
+        ankle_angle: float,
+        hip_vel: float,
+        knee_vel: float,
+        ankle_vel: float,
+    ) -> Tuple[float, float]:
         """
         Compute hip velocity using Jacobian.
 
@@ -287,10 +291,12 @@ class ForwardKinematics:
         theta_thigh = ankle_angle + knee_angle
 
         # Partial derivatives
-        dx_dankle = (self.L_shank * np.cos(theta_shank) +
-                    self.L_thigh * np.cos(theta_thigh))
-        dy_dankle = (-self.L_shank * np.sin(theta_shank) -
-                    self.L_thigh * np.sin(theta_thigh))
+        dx_dankle = self.L_shank * np.cos(theta_shank) + self.L_thigh * np.cos(
+            theta_thigh
+        )
+        dy_dankle = -self.L_shank * np.sin(theta_shank) - self.L_thigh * np.sin(
+            theta_thigh
+        )
 
         dx_dknee = self.L_thigh * np.cos(theta_thigh)
         dy_dknee = -self.L_thigh * np.sin(theta_thigh)
@@ -390,10 +396,13 @@ class StateEstimator:
     Complete state estimator combining Kalman filtering, kinematics, and contact detection.
     """
 
-    def __init__(self, config: Optional[KalmanConfig] = None,
-                 dt: float = 0.001,
-                 thigh_length: float = 0.4,
-                 shank_length: float = 0.4):
+    def __init__(
+        self,
+        config: Optional[KalmanConfig] = None,
+        dt: float = 0.001,
+        thigh_length: float = 0.4,
+        shank_length: float = 0.4,
+    ):
         """
         Initialize complete state estimator.
 
@@ -410,8 +419,13 @@ class StateEstimator:
         self.dt = dt
         self.current_time = 0.0
 
-    def update(self, hip_angle: float, knee_angle: float, ankle_angle: float,
-               ground_force: float) -> dict:
+    def update(
+        self,
+        hip_angle: float,
+        knee_angle: float,
+        ankle_angle: float,
+        ground_force: float,
+    ) -> dict:
         """
         Complete state update with all sensors.
 
@@ -430,9 +444,9 @@ class StateEstimator:
         )
 
         # Extract filtered values
-        hip_pos, hip_vel = joint_states['hip']
-        knee_pos, knee_vel = joint_states['knee']
-        ankle_pos, ankle_vel = joint_states['ankle']
+        hip_pos, hip_vel = joint_states["hip"]
+        knee_pos, knee_vel = joint_states["knee"]
+        ankle_pos, ankle_vel = joint_states["ankle"]
 
         # Compute hip position
         hip_x, hip_y = self.kinematics.compute_hip_position(
@@ -441,8 +455,7 @@ class StateEstimator:
 
         # Compute hip velocity
         hip_vx, hip_vy = self.kinematics.compute_hip_velocity(
-            hip_pos, knee_pos, ankle_pos,
-            hip_vel, knee_vel, ankle_vel
+            hip_pos, knee_pos, ankle_pos, hip_vel, knee_vel, ankle_vel
         )
 
         # Update contact state
@@ -453,19 +466,15 @@ class StateEstimator:
         self.current_time += self.dt
 
         return {
-            'joints': {
-                'hip': {'angle': hip_pos, 'velocity': hip_vel},
-                'knee': {'angle': knee_pos, 'velocity': knee_vel},
-                'ankle': {'angle': ankle_pos, 'velocity': ankle_vel}
+            "joints": {
+                "hip": {"angle": hip_pos, "velocity": hip_vel},
+                "knee": {"angle": knee_pos, "velocity": knee_vel},
+                "ankle": {"angle": ankle_pos, "velocity": ankle_vel},
             },
-            'hip_position': {'x': hip_x, 'y': hip_y},
-            'hip_velocity': {'x': hip_vx, 'y': hip_vy},
-            'contact': {
-                'state': contact,
-                'force': ground_force,
-                'time': contact_time
-            },
-            'timestamp': self.current_time
+            "hip_position": {"x": hip_x, "y": hip_y},
+            "hip_velocity": {"x": hip_vx, "y": hip_vy},
+            "contact": {"state": contact, "force": ground_force, "time": contact_time},
+            "timestamp": self.current_time,
         }
 
     def reset(self):
@@ -476,6 +485,7 @@ class StateEstimator:
 
 
 # Utility functions
+
 
 def encoder_counts_to_radians(counts: int, cpr: int = 4096) -> float:
     """
@@ -491,8 +501,9 @@ def encoder_counts_to_radians(counts: int, cpr: int = 4096) -> float:
     return (counts / cpr) * 2 * np.pi
 
 
-def estimate_velocity_finite_diff(angle_curr: float, angle_prev: float,
-                                  dt: float) -> float:
+def estimate_velocity_finite_diff(
+    angle_curr: float, angle_prev: float, dt: float
+) -> float:
     """
     Simple finite difference velocity estimate (noisy, use Kalman filter instead).
 

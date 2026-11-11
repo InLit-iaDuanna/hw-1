@@ -2,6 +2,7 @@
 可视化模块
 生成标准图表、对比图、统计图等
 """
+
 from __future__ import annotations
 
 from pathlib import Path
@@ -56,7 +57,9 @@ class Visualizer:
             title: 图表标题
         """
         n_signals = len(signals)
-        fig, axes = plt.subplots(n_signals, 1, figsize=(self.figure_size[0], 3*n_signals), sharex=True)
+        fig, axes = plt.subplots(
+            n_signals, 1, figsize=(self.figure_size[0], 3 * n_signals), sharex=True
+        )
 
         if n_signals == 1:
             axes = [axes]
@@ -64,7 +67,12 @@ class Visualizer:
         for ax, signal_name in zip(axes, signals):
             data = gait_data.get_column(signal_name)
             if data is not None:
-                ax.plot(gait_data.time, data, linewidth=1.5, color=self.get_version_color(gait_data.version))
+                ax.plot(
+                    gait_data.time,
+                    data,
+                    linewidth=1.5,
+                    color=self.get_version_color(gait_data.version),
+                )
                 ax.set_ylabel(signal_name.replace("_", " ").title())
                 ax.grid(True, alpha=0.3)
 
@@ -73,7 +81,9 @@ class Visualizer:
         if title:
             fig.suptitle(title, fontsize=14, fontweight="bold")
         else:
-            fig.suptitle(f"{gait_data.label} - Time Series", fontsize=14, fontweight="bold")
+            fig.suptitle(
+                f"{gait_data.label} - Time Series", fontsize=14, fontweight="bold"
+            )
 
         plt.tight_layout()
         plt.savefig(output_path, dpi=self.figure_dpi, bbox_inches="tight")
@@ -126,7 +136,9 @@ class Visualizer:
         if title:
             ax.set_title(title, fontsize=14, fontweight="bold")
         else:
-            ax.set_title(f"{gait_data.label} - Phase Diagram", fontsize=14, fontweight="bold")
+            ax.set_title(
+                f"{gait_data.label} - Phase Diagram", fontsize=14, fontweight="bold"
+            )
 
         plt.tight_layout()
         plt.savefig(output_path, dpi=self.figure_dpi, bbox_inches="tight")
@@ -314,8 +326,13 @@ class Visualizer:
         for i in range(len(valid_metrics)):
             for j in range(len(valid_metrics)):
                 text = ax.text(
-                    j, i, f"{corr_matrix[i, j]:.2f}",
-                    ha="center", va="center", color="black", fontsize=8
+                    j,
+                    i,
+                    f"{corr_matrix[i, j]:.2f}",
+                    ha="center",
+                    va="center",
+                    color="black",
+                    fontsize=8,
                 )
 
         cbar = plt.colorbar(im, ax=ax)
@@ -349,31 +366,66 @@ class Visualizer:
         fig, axes = plt.subplots(4, 1, figsize=(12, 10), sharex=True)
 
         # 1. 髋关节角度
-        if "left_hip" in gait_data.joint_angles and "right_hip" in gait_data.joint_angles:
-            axes[0].plot(gait_data.time, np.rad2deg(gait_data.joint_angles["left_hip"]),
-                        label="Left Hip", linewidth=1.5)
-            axes[0].plot(gait_data.time, np.rad2deg(gait_data.joint_angles["right_hip"]),
-                        label="Right Hip", linewidth=1.5)
+        if (
+            "left_hip" in gait_data.joint_angles
+            and "right_hip" in gait_data.joint_angles
+        ):
+            axes[0].plot(
+                gait_data.time,
+                np.rad2deg(gait_data.joint_angles["left_hip"]),
+                label="Left Hip",
+                linewidth=1.5,
+            )
+            axes[0].plot(
+                gait_data.time,
+                np.rad2deg(gait_data.joint_angles["right_hip"]),
+                label="Right Hip",
+                linewidth=1.5,
+            )
             axes[0].set_ylabel("Hip Angle (deg)")
             axes[0].legend(loc="upper right")
             axes[0].grid(True, alpha=0.3)
 
         # 2. 膝关节角度
-        if "left_knee" in gait_data.joint_angles and "right_knee" in gait_data.joint_angles:
-            axes[1].plot(gait_data.time, np.rad2deg(gait_data.joint_angles["left_knee"]),
-                        label="Left Knee", linewidth=1.5)
-            axes[1].plot(gait_data.time, np.rad2deg(gait_data.joint_angles["right_knee"]),
-                        label="Right Knee", linewidth=1.5)
+        if (
+            "left_knee" in gait_data.joint_angles
+            and "right_knee" in gait_data.joint_angles
+        ):
+            axes[1].plot(
+                gait_data.time,
+                np.rad2deg(gait_data.joint_angles["left_knee"]),
+                label="Left Knee",
+                linewidth=1.5,
+            )
+            axes[1].plot(
+                gait_data.time,
+                np.rad2deg(gait_data.joint_angles["right_knee"]),
+                label="Right Knee",
+                linewidth=1.5,
+            )
             axes[1].set_ylabel("Knee Angle (deg)")
             axes[1].legend(loc="upper right")
             axes[1].grid(True, alpha=0.3)
 
         # 3. 接触状态
-        if "left_contact" in gait_data.contact_states and "right_contact" in gait_data.contact_states:
-            axes[2].fill_between(gait_data.time, 0, gait_data.contact_states["left_contact"],
-                                alpha=0.5, label="Left Contact")
-            axes[2].fill_between(gait_data.time, 0, -gait_data.contact_states["right_contact"],
-                                alpha=0.5, label="Right Contact")
+        if (
+            "left_contact" in gait_data.contact_states
+            and "right_contact" in gait_data.contact_states
+        ):
+            axes[2].fill_between(
+                gait_data.time,
+                0,
+                gait_data.contact_states["left_contact"],
+                alpha=0.5,
+                label="Left Contact",
+            )
+            axes[2].fill_between(
+                gait_data.time,
+                0,
+                -gait_data.contact_states["right_contact"],
+                alpha=0.5,
+                label="Right Contact",
+            )
             axes[2].set_ylabel("Contact State")
             axes[2].legend(loc="upper right")
             axes[2].grid(True, alpha=0.3)
@@ -390,7 +442,9 @@ class Visualizer:
         if title:
             fig.suptitle(title, fontsize=14, fontweight="bold")
         else:
-            fig.suptitle(f"{gait_data.label} - Gait Cycle", fontsize=14, fontweight="bold")
+            fig.suptitle(
+                f"{gait_data.label} - Gait Cycle", fontsize=14, fontweight="bold"
+            )
 
         plt.tight_layout()
         plt.savefig(output_path, dpi=self.figure_dpi, bbox_inches="tight")

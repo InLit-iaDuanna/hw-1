@@ -10,10 +10,11 @@ from typing import Optional, Callable
 
 class PhaseState(IntEnum):
     """4-phase gait cycle states"""
-    STANCE_EARLY = 0    # Heel strike to mid-stance
-    STANCE_LATE = 1     # Mid-stance to toe-off
-    SWING_THRUST = 2    # Initial swing with thrust assist
-    SWING_RETRACT = 3   # Leg retraction and positioning
+
+    STANCE_EARLY = 0  # Heel strike to mid-stance
+    STANCE_LATE = 1  # Mid-stance to toe-off
+    SWING_THRUST = 2  # Initial swing with thrust assist
+    SWING_RETRACT = 3  # Leg retraction and positioning
 
 
 class PhaseStateMachine:
@@ -27,9 +28,9 @@ class PhaseStateMachine:
 
     # Phase duration thresholds from V13.6.1 optimal values (seconds)
     PHASE_DURATIONS = {
-        PhaseState.STANCE_EARLY: 0.15,   # Early stance phase
-        PhaseState.STANCE_LATE: 0.25,    # Late stance phase
-        PhaseState.SWING_THRUST: 0.20,   # Swing thrust phase
+        PhaseState.STANCE_EARLY: 0.15,  # Early stance phase
+        PhaseState.STANCE_LATE: 0.25,  # Late stance phase
+        PhaseState.SWING_THRUST: 0.20,  # Swing thrust phase
         PhaseState.SWING_RETRACT: 0.20,  # Swing retract phase
     }
 
@@ -71,7 +72,10 @@ class PhaseStateMachine:
 
         elif self.current_phase == PhaseState.STANCE_LATE:
             # Transition to SWING_THRUST on toe-off (contact lost) or timeout
-            if not contact or phase_time >= self.PHASE_DURATIONS[PhaseState.STANCE_LATE]:
+            if (
+                not contact
+                or phase_time >= self.PHASE_DURATIONS[PhaseState.STANCE_LATE]
+            ):
                 new_phase = PhaseState.SWING_THRUST
 
         elif self.current_phase == PhaseState.SWING_THRUST:
@@ -162,16 +166,19 @@ class PhaseStateMachine:
             Dictionary with transition counts and phase visit counts
         """
         return {
-            'current_phase': self.current_phase.name,
-            'phase_time': self.get_phase_time(),
-            'phase_progress': self.get_phase_progress(),
-            'total_transitions': self.transition_count,
-            'phase_counts': {phase.name: count for phase, count in self.phase_counts.items()},
+            "current_phase": self.current_phase.name,
+            "phase_time": self.get_phase_time(),
+            "phase_progress": self.get_phase_progress(),
+            "total_transitions": self.transition_count,
+            "phase_counts": {
+                phase.name: count for phase, count in self.phase_counts.items()
+            },
         }
 
 
 # Example usage
 if __name__ == "__main__":
+
     def log_transition(msg: str):
         print(f"[{time.perf_counter():.3f}] {msg}")
 
@@ -182,15 +189,15 @@ if __name__ == "__main__":
 
     # Simulate gait cycle with contact patterns
     contact_sequence = [
-        (0.05, True),   # Early stance
-        (0.10, True),   # Early stance continuing
-        (0.16, True),   # Transition to late stance
-        (0.30, True),   # Late stance
+        (0.05, True),  # Early stance
+        (0.10, True),  # Early stance continuing
+        (0.16, True),  # Transition to late stance
+        (0.30, True),  # Late stance
         (0.41, False),  # Toe-off -> swing thrust
         (0.50, False),  # Swing thrust
         (0.62, False),  # Swing retract
         (0.75, False),  # Swing retract continuing
-        (0.83, True),   # Heel strike -> stance early
+        (0.83, True),  # Heel strike -> stance early
     ]
 
     start_time = time.perf_counter()
@@ -203,8 +210,10 @@ if __name__ == "__main__":
         transitioned = fsm.update(contact)
         phase_id, phase_time = fsm.get_current_phase()
 
-        print(f"t={delay:.2f}s contact={contact} -> Phase {phase_id} ({PhaseState(phase_id).name}), "
-              f"time={phase_time:.3f}s, progress={fsm.get_phase_progress():.1%}")
+        print(
+            f"t={delay:.2f}s contact={contact} -> Phase {phase_id} ({PhaseState(phase_id).name}), "
+            f"time={phase_time:.3f}s, progress={fsm.get_phase_progress():.1%}"
+        )
 
     print("\nStatistics:")
     stats = fsm.get_statistics()

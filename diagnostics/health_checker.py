@@ -56,7 +56,7 @@ class HealthChecker:
             "total_checks": len(self.results),
             "passed_checks": passed_count,
             "failed_checks": failed_count,
-            "checks": self.results
+            "checks": self.results,
         }
 
         if verbose:
@@ -87,7 +87,7 @@ class HealthChecker:
             "name": name,
             "passed": passed,
             "details": f"当前版本: {current[0]}.{current[1]}, 最低要求: {min_version[0]}.{min_version[1]}",
-            "severity": "critical" if not passed else "none"
+            "severity": "critical" if not passed else "none",
         }
 
         self.results.append(result)
@@ -119,7 +119,7 @@ class HealthChecker:
                 "name": f"包: {package_name}",
                 "passed": passed,
                 "details": "已安装" if passed else "未安装",
-                "severity": severity if not passed else "none"
+                "severity": severity if not passed else "none",
             }
 
             self.results.append(result)
@@ -144,7 +144,7 @@ class HealthChecker:
                 "name": f"目录: {dir_name}/",
                 "passed": passed,
                 "details": str(dir_path) if passed else f"不存在: {dir_path}",
-                "severity": severity if not passed else "none"
+                "severity": severity if not passed else "none",
             }
 
             self.results.append(result)
@@ -175,7 +175,7 @@ class HealthChecker:
                 "name": f"模块: common/{module_name}.py",
                 "passed": passed,
                 "details": "存在" if passed else "不存在",
-                "severity": "medium" if not passed else "none"
+                "severity": "medium" if not passed else "none",
             }
 
             self.results.append(result)
@@ -209,7 +209,7 @@ class HealthChecker:
                 "name": f"目录可写: {dir_path.name}/",
                 "passed": passed,
                 "details": details,
-                "severity": "medium" if not passed else "none"
+                "severity": "medium" if not passed else "none",
             }
 
             self.results.append(result)
@@ -222,7 +222,7 @@ class HealthChecker:
         self,
         model_xml_path: Path | str | None = None,
         duration: float = 1.0,
-        verbose: bool = True
+        verbose: bool = True,
     ) -> dict[str, Any]:
         """运行仿真 smoke test。
 
@@ -243,11 +243,7 @@ class HealthChecker:
             import mujoco
             import numpy as np
         except ImportError as e:
-            return {
-                "passed": False,
-                "details": "无法导入必需包",
-                "error": str(e)
-            }
+            return {"passed": False, "details": "无法导入必需包", "error": str(e)}
 
         # 如果没有提供模型，创建一个简单的测试模型
         if model_xml_path is None:
@@ -267,18 +263,14 @@ class HealthChecker:
             try:
                 model = mujoco.MjModel.from_xml_string(xml_string)
             except Exception as e:
-                return {
-                    "passed": False,
-                    "details": "无法创建测试模型",
-                    "error": str(e)
-                }
+                return {"passed": False, "details": "无法创建测试模型", "error": str(e)}
         else:
             model_path = Path(model_xml_path)
             if not model_path.exists():
                 return {
                     "passed": False,
                     "details": f"模型文件不存在: {model_path}",
-                    "error": None
+                    "error": None,
                 }
 
             try:
@@ -287,7 +279,7 @@ class HealthChecker:
                 return {
                     "passed": False,
                     "details": f"无法加载模型: {model_path}",
-                    "error": str(e)
+                    "error": str(e),
                 }
 
         # 运行仿真
@@ -304,11 +296,7 @@ class HealthChecker:
 
                 # 检查 NaN
                 if np.any(np.isnan(data.qpos)) or np.any(np.isnan(data.qvel)):
-                    return {
-                        "passed": False,
-                        "details": "仿真出现 NaN",
-                        "error": None
-                    }
+                    return {"passed": False, "details": "仿真出现 NaN", "error": None}
 
             if verbose:
                 print(f"✓ 仿真成功完成 {steps} 步")
@@ -316,15 +304,11 @@ class HealthChecker:
             return {
                 "passed": True,
                 "details": f"仿真成功运行 {duration}s",
-                "error": None
+                "error": None,
             }
 
         except Exception as e:
-            return {
-                "passed": False,
-                "details": "仿真运行时错误",
-                "error": str(e)
-            }
+            return {"passed": False, "details": "仿真运行时错误", "error": str(e)}
 
     def export_report(self, output_path: Path | str) -> None:
         """导出健康检查报告为 JSON。"""
@@ -337,7 +321,7 @@ class HealthChecker:
             "total_checks": len(self.results),
             "passed_checks": sum(1 for r in self.results if r["passed"]),
             "failed_checks": sum(1 for r in self.results if not r["passed"]),
-            "checks": self.results
+            "checks": self.results,
         }
 
         with open(output_path, "w", encoding="utf-8") as f:
@@ -351,32 +335,13 @@ def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="hw-1 系统健康检查")
+    parser.add_argument("--project-root", type=str, help="项目根目录路径")
+    parser.add_argument("--smoke-test", action="store_true", help="运行 smoke test")
+    parser.add_argument("--model", type=str, help="Smoke test 使用的模型 XML 路径")
     parser.add_argument(
-        "--project-root",
-        type=str,
-        help="项目根目录路径"
+        "--duration", type=float, default=1.0, help="Smoke test 仿真时长 (秒)"
     )
-    parser.add_argument(
-        "--smoke-test",
-        action="store_true",
-        help="运行 smoke test"
-    )
-    parser.add_argument(
-        "--model",
-        type=str,
-        help="Smoke test 使用的模型 XML 路径"
-    )
-    parser.add_argument(
-        "--duration",
-        type=float,
-        default=1.0,
-        help="Smoke test 仿真时长 (秒)"
-    )
-    parser.add_argument(
-        "--export",
-        type=str,
-        help="导出报告到 JSON 文件"
-    )
+    parser.add_argument("--export", type=str, help="导出报告到 JSON 文件")
 
     args = parser.parse_args()
 
@@ -388,9 +353,7 @@ def main() -> None:
     # 运行 smoke test
     if args.smoke_test:
         smoke_result = checker.run_smoke_test(
-            model_xml_path=args.model,
-            duration=args.duration,
-            verbose=True
+            model_xml_path=args.model, duration=args.duration, verbose=True
         )
 
         if smoke_result["passed"]:

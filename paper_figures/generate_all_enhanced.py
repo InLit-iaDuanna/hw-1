@@ -1,4 +1,5 @@
 """Generate all enhanced paper figures including new analytical figures."""
+
 from __future__ import annotations
 
 import sys
@@ -15,7 +16,9 @@ from generators.fig_stability_domain import create_stability_heatmap
 from generators.fig_energy_analysis import create_energy_analysis_figure
 from generators.fig_phase_portrait import create_phase_portrait
 from generators.fig_hardware_specs import create_hardware_specs_figure
-from generators.fig_advanced_friction_compensation import create_friction_compensation_figure
+from generators.fig_advanced_friction_compensation import (
+    create_friction_compensation_figure,
+)
 from generators.fig_state_estimation_robustness import create_state_estimation_figure
 from generators.fig_3d_failure_analysis import create_3d_failure_analysis_figure
 from generators.fig_poincare_convergence import create_poincare_convergence_figure
@@ -36,9 +39,11 @@ def generate_all_figures():
         ("Figure 3: Energy Analysis", create_energy_analysis_figure),
         ("Figure 4: Phase Portrait", create_phase_portrait),
         ("Figure 5: Hardware Specifications", create_hardware_specs_figure),
-
         # New enhanced figures
-        ("Figure 6: Friction Compensation Analysis (V13.7/V16)", create_friction_compensation_figure),
+        (
+            "Figure 6: Friction Compensation Analysis (V13.7/V16)",
+            create_friction_compensation_figure,
+        ),
         ("Figure 7: State Estimation Robustness (V17)", create_state_estimation_figure),
         ("Figure 8: 3D Failure Analysis (V18-V20)", create_3d_failure_analysis_figure),
         ("Figure 9: Poincaré Convergence (V5)", create_poincare_convergence_figure),
@@ -61,6 +66,7 @@ def generate_all_figures():
             print(f"    [ERROR] in {elapsed:.2f}s: {e}")
             failed_figures.append((title, str(e)))
             import traceback
+
             traceback.print_exc()
 
     print("\n" + "=" * 70)
@@ -74,7 +80,7 @@ def generate_all_figures():
 
     print(f"\n[OUTPUT] Directory: {OUTPUT_DIR}")
     print("\n[FILES] Generated files by format:")
-    for fmt in ['svg', 'pdf', 'png']:
+    for fmt in ["svg", "pdf", "png"]:
         fmt_files = list(OUTPUT_DIR.glob(f"*.{fmt}"))
         print(f"\n  {fmt.upper()} ({len(fmt_files)} files):")
         for f in sorted(fmt_files):

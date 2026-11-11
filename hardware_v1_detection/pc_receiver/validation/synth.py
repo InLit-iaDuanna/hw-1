@@ -73,10 +73,10 @@ class TrajectorySample:
 class SynthConfig:
     """Knobs for the simulation -> IMU synthesis."""
 
-    pelvis_pitch_rad: float = 0.0          # trunk lean; compass gait ~ upright
-    heel_impact_g: float = 2.0             # extra accel magnitude at contact rising edge
-    heel_impact_frames: int = 2            # how many frames the impact spike lasts
-    sample_rate_hz: float = 200.0          # nominal device rate (ts spacing uses CSV dt)
+    pelvis_pitch_rad: float = 0.0  # trunk lean; compass gait ~ upright
+    heel_impact_g: float = 2.0  # extra accel magnitude at contact rising edge
+    heel_impact_frames: int = 2  # how many frames the impact spike lasts
+    sample_rate_hz: float = 200.0  # nominal device rate (ts spacing uses CSV dt)
 
 
 # Segment pitch is keyed by SENSOR_NAMES order (first 6 are BMI, last is pelvis).
@@ -172,9 +172,7 @@ class TrajectorySynthesizer:
                     impact = self.config.heel_impact_g
                 elif name == "right_foot" and i in impact_right:
                     impact = self.config.heel_impact_g
-                bmi.append(
-                    self._bmi_imu(pitches[name], rates[name], impact)
-                )
+                bmi.append(self._bmi_imu(pitches[name], rates[name], impact))
             pelvis = self._pelvis_imu(pitches["pelvis"], rates["pelvis"])
             frames.append(
                 SampleFrame(
@@ -215,7 +213,9 @@ class TrajectorySynthesizer:
         for i, sample in enumerate(samples):
             now = getattr(sample, attr)
             if now and not prev:
-                for k in range(i, min(len(samples), i + self.config.heel_impact_frames)):
+                for k in range(
+                    i, min(len(samples), i + self.config.heel_impact_frames)
+                ):
                     frames.add(k)
             prev = now
         return frames
