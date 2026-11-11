@@ -24,7 +24,9 @@ from mpl_toolkits.mplot3d import Axes3D
 class ParameterVisualizer:
     """参数空间可视化器。"""
 
-    def __init__(self, output_dir: Path | str | None = None, style: str = "seaborn-v0_8-darkgrid"):
+    def __init__(
+        self, output_dir: Path | str | None = None, style: str = "seaborn-v0_8-darkgrid"
+    ):
         """
         Args:
             output_dir: 输出目录（None 则不保存）
@@ -65,11 +67,21 @@ class ParameterVisualizer:
         fig, ax = plt.subplots(figsize=(10, 6))
 
         # 绘制响应曲线
-        ax.plot(param_values, objective_values, "b-", linewidth=2, label="Response Surface")
+        ax.plot(
+            param_values, objective_values, "b-", linewidth=2, label="Response Surface"
+        )
 
         # 绘制采样点
         if samples_x is not None and samples_y is not None:
-            ax.scatter(samples_x, samples_y, c="red", s=50, alpha=0.6, label="Samples", zorder=5)
+            ax.scatter(
+                samples_x,
+                samples_y,
+                c="red",
+                s=50,
+                alpha=0.6,
+                label="Samples",
+                zorder=5,
+            )
 
         ax.set_xlabel(xlabel or param_name, fontsize=12)
         ax.set_ylabel(ylabel, fontsize=12)
@@ -118,17 +130,35 @@ class ParameterVisualizer:
 
         # 绘制曲面
         surf = ax.plot_surface(
-            X, Y, objective_grid, cmap=cm.viridis, alpha=0.8, edgecolor="none", antialiased=True
+            X,
+            Y,
+            objective_grid,
+            cmap=cm.viridis,
+            alpha=0.8,
+            edgecolor="none",
+            antialiased=True,
         )
 
         # 绘制采样点
         if samples_x is not None and samples_y is not None and samples_z is not None:
-            ax.scatter(samples_x, samples_y, samples_z, c="red", s=30, alpha=0.8, label="Samples")
+            ax.scatter(
+                samples_x,
+                samples_y,
+                samples_z,
+                c="red",
+                s=30,
+                alpha=0.8,
+                label="Samples",
+            )
 
         ax.set_xlabel(param1_name, fontsize=11)
         ax.set_ylabel(param2_name, fontsize=11)
         ax.set_zlabel("Objective", fontsize=11)
-        ax.set_title(title or f"Response Surface: {param1_name} vs {param2_name}", fontsize=13, fontweight="bold")
+        ax.set_title(
+            title or f"Response Surface: {param1_name} vs {param2_name}",
+            fontsize=13,
+            fontweight="bold",
+        )
 
         # 添加颜色条
         fig.colorbar(surf, ax=ax, shrink=0.5, aspect=10)
@@ -172,18 +202,42 @@ class ParameterVisualizer:
         X, Y = np.meshgrid(param1_values, param2_values, indexing="ij")
 
         # 绘制填充等高线
-        contourf = ax.contourf(X, Y, objective_grid, levels=n_levels, cmap="viridis", alpha=0.8)
+        contourf = ax.contourf(
+            X, Y, objective_grid, levels=n_levels, cmap="viridis", alpha=0.8
+        )
         # 绘制等高线
-        contour = ax.contour(X, Y, objective_grid, levels=n_levels, colors="black", alpha=0.3, linewidths=0.5)
+        contour = ax.contour(
+            X,
+            Y,
+            objective_grid,
+            levels=n_levels,
+            colors="black",
+            alpha=0.3,
+            linewidths=0.5,
+        )
         ax.clabel(contour, inline=True, fontsize=8, fmt="%.2f")
 
         # 绘制采样点
         if samples_x is not None and samples_y is not None:
-            ax.scatter(samples_x, samples_y, c="red", s=40, alpha=0.7, edgecolors="white", linewidths=0.5, label="Samples", zorder=5)
+            ax.scatter(
+                samples_x,
+                samples_y,
+                c="red",
+                s=40,
+                alpha=0.7,
+                edgecolors="white",
+                linewidths=0.5,
+                label="Samples",
+                zorder=5,
+            )
 
         ax.set_xlabel(param1_name, fontsize=12)
         ax.set_ylabel(param2_name, fontsize=12)
-        ax.set_title(title or f"Contour Plot: {param1_name} vs {param2_name}", fontsize=14, fontweight="bold")
+        ax.set_title(
+            title or f"Contour Plot: {param1_name} vs {param2_name}",
+            fontsize=14,
+            fontweight="bold",
+        )
 
         # 颜色条
         cbar = fig.colorbar(contourf, ax=ax)
@@ -220,7 +274,14 @@ class ParameterVisualizer:
         fig, ax = plt.subplots(figsize=(10, 8))
 
         # 绘制所有解
-        ax.scatter(objectives[:, 0], objectives[:, 1], c="blue", s=60, alpha=0.6, label="Pareto Solutions")
+        ax.scatter(
+            objectives[:, 0],
+            objectives[:, 1],
+            c="blue",
+            s=60,
+            alpha=0.6,
+            label="Pareto Solutions",
+        )
 
         # 高亮特定解
         if highlight_indices:
@@ -285,7 +346,14 @@ class ParameterVisualizer:
         colors = plt.cm.viridis(np.linspace(0.3, 0.9, len(sorted_names)))
 
         # 绘制条形图
-        bars = ax.barh(sorted_names, sorted_scores, xerr=sorted_errors, color=colors, alpha=0.8, capsize=5)
+        bars = ax.barh(
+            sorted_names,
+            sorted_scores,
+            xerr=sorted_errors,
+            color=colors,
+            alpha=0.8,
+            capsize=5,
+        )
 
         ax.set_xlabel(ylabel, fontsize=12)
         ax.set_title(title, fontsize=14, fontweight="bold")
@@ -359,10 +427,25 @@ class ParameterVisualizer:
 
         # 绘制所有评估点
         if all_values is not None:
-            ax.scatter(iterations, all_values, c="lightblue", s=20, alpha=0.5, label="All Evaluations")
+            ax.scatter(
+                iterations,
+                all_values,
+                c="lightblue",
+                s=20,
+                alpha=0.5,
+                label="All Evaluations",
+            )
 
         # 绘制历史最优
-        ax.plot(iterations, best_values, "r-", linewidth=2.5, marker="o", markersize=5, label="Best So Far")
+        ax.plot(
+            iterations,
+            best_values,
+            "r-",
+            linewidth=2.5,
+            marker="o",
+            markersize=5,
+            label="Best So Far",
+        )
 
         ax.set_xlabel("Iteration", fontsize=12)
         ax.set_ylabel(ylabel, fontsize=12)
@@ -399,7 +482,9 @@ class ParameterVisualizer:
         axes = np.array(axes).flatten() if n_params > 1 else [axes]
 
         for i, (ax, name) in enumerate(zip(axes, param_names)):
-            ax.hist(samples[:, i], bins=30, color="steelblue", alpha=0.7, edgecolor="black")
+            ax.hist(
+                samples[:, i], bins=30, color="steelblue", alpha=0.7, edgecolor="black"
+            )
             ax.set_xlabel(name, fontsize=11)
             ax.set_ylabel("Frequency", fontsize=11)
             ax.set_title(f"Distribution: {name}", fontsize=12, fontweight="bold")

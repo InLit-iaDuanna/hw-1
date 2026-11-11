@@ -23,6 +23,7 @@ class SensorNoiseParams:
         contact_chatter_ms: 接触传感器抖动窗口 (毫秒)
         noise_scale: 全局噪声缩放因子 (0.0=无噪声, 1.0=标称噪声)
     """
+
     encoder_cpr: int = 4096
     encoder_quantize: bool = True
     contact_chatter_ms: float = 5.0
@@ -39,6 +40,7 @@ class SensorReading:
         right_contact_raw: 右脚接触传感器原始读数
         timestamp: 时间戳 (s)
     """
+
     joint_angles: np.ndarray
     left_contact_raw: bool
     right_contact_raw: bool
@@ -149,12 +151,14 @@ class SensorModel:
             带噪声的传感器读数
         """
         # 提取关节角度 (假设 qpos 顺序：[root_x, root_z, left_hip, left_knee, ...])
-        raw_angles = np.array([
-            float(data.qpos[2]),  # left_hip
-            float(data.qpos[3]),  # left_knee
-            float(data.qpos[5]),  # right_hip
-            float(data.qpos[6]),  # right_knee
-        ])
+        raw_angles = np.array(
+            [
+                float(data.qpos[2]),  # left_hip
+                float(data.qpos[3]),  # left_knee
+                float(data.qpos[5]),  # right_hip
+                float(data.qpos[6]),  # right_knee
+            ]
+        )
 
         # 编码器量化
         quantized = np.array([self._quantize_angle(a) for a in raw_angles])

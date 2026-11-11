@@ -75,7 +75,9 @@ class DataDiffer:
 
         # 统计差异（数值列）
         common_cols = list(cols1 & cols2)
-        numeric_cols = df1[common_cols].select_dtypes(include=[np.number]).columns.tolist()
+        numeric_cols = (
+            df1[common_cols].select_dtypes(include=[np.number]).columns.tolist()
+        )
 
         statistical_diffs = {}
 
@@ -88,7 +90,11 @@ class DataDiffer:
 
             statistical_diffs[col] = {
                 "mean_diff": float(val2.mean() - val1.mean()),
-                "mean_pct_change": float((val2.mean() - val1.mean()) / val1.mean() * 100) if val1.mean() != 0 else None,
+                "mean_pct_change": (
+                    float((val2.mean() - val1.mean()) / val1.mean() * 100)
+                    if val1.mean() != 0
+                    else None
+                ),
                 "std_diff": float(val2.std() - val1.std()),
                 "min_diff": float(val2.min() - val1.min()),
                 "max_diff": float(val2.max() - val1.max()),
@@ -114,14 +120,18 @@ class DataDiffer:
                 merged = df1.merge(
                     df2,
                     on=key_columns,
-                    how='outer',
-                    suffixes=('_file1', '_file2'),
-                    indicator=True
+                    how="outer",
+                    suffixes=("_file1", "_file2"),
+                    indicator=True,
                 )
 
-                report["row_diff"]["only_in_file1"] = int((merged['_merge'] == 'left_only').sum())
-                report["row_diff"]["only_in_file2"] = int((merged['_merge'] == 'right_only').sum())
-                report["row_diff"]["in_both"] = int((merged['_merge'] == 'both').sum())
+                report["row_diff"]["only_in_file1"] = int(
+                    (merged["_merge"] == "left_only").sum()
+                )
+                report["row_diff"]["only_in_file2"] = int(
+                    (merged["_merge"] == "right_only").sum()
+                )
+                report["row_diff"]["in_both"] = int((merged["_merge"] == "both").sum())
 
             except Exception as e:
                 report["row_diff"]["error"] = str(e)
@@ -146,10 +156,10 @@ class DataDiffer:
         file1 = self._resolve_path(file1)
         file2 = self._resolve_path(file2)
 
-        with open(file1, 'r', encoding='utf-8') as f:
+        with open(file1, "r", encoding="utf-8") as f:
             data1 = json.load(f)
 
-        with open(file2, 'r', encoding='utf-8') as f:
+        with open(file2, "r", encoding="utf-8") as f:
             data2 = json.load(f)
 
         report = {
@@ -162,23 +172,22 @@ class DataDiffer:
         return report
 
     def _deep_diff(
-        self,
-        obj1: Any,
-        obj2: Any,
-        path: str = "root"
+        self, obj1: Any, obj2: Any, path: str = "root"
     ) -> List[Dict[str, Any]]:
         """递归对比两个对象"""
         changes = []
 
         if type(obj1) != type(obj2):
-            changes.append({
-                "path": path,
-                "type": "type_change",
-                "old_type": type(obj1).__name__,
-                "new_type": type(obj2).__name__,
-                "old_value": obj1,
-                "new_value": obj2,
-            })
+            changes.append(
+                {
+                    "path": path,
+                    "type": "type_change",
+                    "old_type": type(obj1).__name__,
+                    "new_type": type(obj2).__name__,
+                    "old_value": obj1,
+                    "new_value": obj2,
+                }
+            )
             return changes
 
         if isinstance(obj1, dict):
@@ -188,28 +197,34 @@ class DataDiffer:
                 key_path = f"{path}.{key}"
 
                 if key not in obj1:
-                    changes.append({
-                        "path": key_path,
-                        "type": "added",
-                        "new_value": obj2[key],
-                    })
+                    changes.append(
+                        {
+                            "path": key_path,
+                            "type": "added",
+                            "new_value": obj2[key],
+                        }
+                    )
                 elif key not in obj2:
-                    changes.append({
-                        "path": key_path,
-                        "type": "removed",
-                        "old_value": obj1[key],
-                    })
+                    changes.append(
+                        {
+                            "path": key_path,
+                            "type": "removed",
+                            "old_value": obj1[key],
+                        }
+                    )
                 else:
                     changes.extend(self._deep_diff(obj1[key], obj2[key], key_path))
 
         elif isinstance(obj1, list):
             if len(obj1) != len(obj2):
-                changes.append({
-                    "path": path,
-                    "type": "length_change",
-                    "old_length": len(obj1),
-                    "new_length": len(obj2),
-                })
+                changes.append(
+                    {
+                        "path": path,
+                        "type": "length_change",
+                        "old_length": len(obj1),
+                        "new_length": len(obj2),
+                    }
+                )
 
             for i in range(min(len(obj1), len(obj2))):
                 changes.extend(self._deep_diff(obj1[i], obj2[i], f"{path}[{i}]"))
@@ -250,28 +265,30 @@ class DataDiffer:
         file1 = self._resolve_path(file1)
         file2 = self._resolve_path(file2)
 
-        with open(file1, 'r', encoding='utf-8') as f:
+        with open(file1, "r", encoding="utf-8") as f:
             lines1 = f.readlines()
 
-        with open(file2, 'r', encoding='utf-8') as f:
+        with open(file2, "r", encoding="utf-8") as f:
             lines2 = f.readlines()
 
         import difflib
 
-        diff = list(difflib.unified_diff(
-            lines1,
-            lines2,
-            fromfile=str(file1.relative_to(self.project_root)),
-            tofile=str(file2.relative_to(self.project_root)),
-            lineterm='',
-        ))
+        diff = list(
+            difflib.unified_diff(
+                lines1,
+                lines2,
+                fromfile=str(file1.relative_to(self.project_root)),
+                tofile=str(file2.relative_to(self.project_root)),
+                lineterm="",
+            )
+        )
 
         report = {
             "file1": str(file1.relative_to(self.project_root)),
             "file2": str(file2.relative_to(self.project_root)),
             "compared_at": datetime.now().isoformat(),
-            "lines_added": sum(1 for line in diff if line.startswith('+')),
-            "lines_removed": sum(1 for line in diff if line.startswith('-')),
+            "lines_added": sum(1 for line in diff if line.startswith("+")),
+            "lines_removed": sum(1 for line in diff if line.startswith("-")),
             "diff": diff[:100],  # 限制差异行数
         }
 
@@ -293,14 +310,14 @@ class DataDiffer:
             差异报告字典
         """
         report = {
-            "asset1_id": asset1['asset_id'],
-            "asset2_id": asset2['asset_id'],
+            "asset1_id": asset1["asset_id"],
+            "asset2_id": asset2["asset_id"],
             "compared_at": datetime.now().isoformat(),
             "differences": {},
         }
 
         # 元数据差异
-        for key in ['size_bytes', 'modified_at', 'version_tag', 'experiment_id']:
+        for key in ["size_bytes", "modified_at", "version_tag", "experiment_id"]:
             if asset1.get(key) != asset2.get(key):
                 report["differences"][key] = {
                     "asset1": asset1.get(key),
@@ -308,10 +325,10 @@ class DataDiffer:
                 }
 
         # 哈希差异
-        if asset1['hash'] != asset2['hash']:
+        if asset1["hash"] != asset2["hash"]:
             report["differences"]["hash"] = {
-                "asset1": asset1['hash'][:16],
-                "asset2": asset2['hash'][:16],
+                "asset1": asset1["hash"][:16],
+                "asset2": asset2["hash"][:16],
                 "files_identical": False,
             }
         else:
@@ -320,21 +337,27 @@ class DataDiffer:
             }
 
         # 自动检测文件类型并进行内容对比
-        file_path1 = self.project_root / asset1['file_path']
-        file_path2 = self.project_root / asset2['file_path']
+        file_path1 = self.project_root / asset1["file_path"]
+        file_path2 = self.project_root / asset2["file_path"]
 
         if file_path1.exists() and file_path2.exists():
             ext = file_path1.suffix.lower()
 
             try:
-                if ext == '.csv':
-                    content_diff = self.compare_csv_files(str(file_path1), str(file_path2))
+                if ext == ".csv":
+                    content_diff = self.compare_csv_files(
+                        str(file_path1), str(file_path2)
+                    )
                     report["content_diff"] = content_diff
-                elif ext == '.json':
-                    content_diff = self.compare_json_files(str(file_path1), str(file_path2))
+                elif ext == ".json":
+                    content_diff = self.compare_json_files(
+                        str(file_path1), str(file_path2)
+                    )
                     report["content_diff"] = content_diff
-                elif ext in ['.xml', '.txt']:
-                    content_diff = self.compare_text_files(str(file_path1), str(file_path2))
+                elif ext in [".xml", ".txt"]:
+                    content_diff = self.compare_text_files(
+                        str(file_path1), str(file_path2)
+                    )
                     report["content_diff"] = content_diff
             except Exception as e:
                 report["content_diff_error"] = str(e)
@@ -375,14 +398,20 @@ class DataDiffer:
 
             if "rows" in report["structure_diff"]:
                 rows = report["structure_diff"]["rows"]
-                lines.append(f"  Rows: {rows['file1']} -> {rows['file2']} (diff: {rows['difference']:+d})")
+                lines.append(
+                    f"  Rows: {rows['file1']} -> {rows['file2']} (diff: {rows['difference']:+d})"
+                )
 
             if "columns" in report["structure_diff"]:
                 cols = report["structure_diff"]["columns"]
                 if cols["file1_only"]:
-                    lines.append(f"  Columns only in file1: {', '.join(cols['file1_only'])}")
+                    lines.append(
+                        f"  Columns only in file1: {', '.join(cols['file1_only'])}"
+                    )
                 if cols["file2_only"]:
-                    lines.append(f"  Columns only in file2: {', '.join(cols['file2_only'])}")
+                    lines.append(
+                        f"  Columns only in file2: {', '.join(cols['file2_only'])}"
+                    )
                 lines.append(f"  Common columns: {len(cols['common'])}")
 
             lines.append("")
@@ -395,13 +424,19 @@ class DataDiffer:
             for col, stats in report["statistical_diff"].items():
                 lines.append(f"  {col}:")
 
-                pct = stats.get('mean_pct_change')
+                pct = stats.get("mean_pct_change")
                 if pct is not None:
-                    lines.append(f"    Mean: {stats['file1_stats']['mean']:.4f} -> {stats['file2_stats']['mean']:.4f} ({pct:+.2f}%)")
+                    lines.append(
+                        f"    Mean: {stats['file1_stats']['mean']:.4f} -> {stats['file2_stats']['mean']:.4f} ({pct:+.2f}%)"
+                    )
                 else:
-                    lines.append(f"    Mean: {stats['file1_stats']['mean']:.4f} -> {stats['file2_stats']['mean']:.4f}")
+                    lines.append(
+                        f"    Mean: {stats['file1_stats']['mean']:.4f} -> {stats['file2_stats']['mean']:.4f}"
+                    )
 
-                lines.append(f"    Std:  {stats['file1_stats']['std']:.4f} -> {stats['file2_stats']['std']:.4f}")
+                lines.append(
+                    f"    Std:  {stats['file1_stats']['std']:.4f} -> {stats['file2_stats']['std']:.4f}"
+                )
                 lines.append("")
 
         # JSON 变化
@@ -411,15 +446,21 @@ class DataDiffer:
 
             for change in report["changes"][:20]:  # 限制显示数量
                 if change["type"] == "value_change":
-                    pct = change.get('pct_change')
+                    pct = change.get("pct_change")
                     if pct is not None:
-                        lines.append(f"  {change['path']}: {change['old_value']} -> {change['new_value']} ({pct:+.2f}%)")
+                        lines.append(
+                            f"  {change['path']}: {change['old_value']} -> {change['new_value']} ({pct:+.2f}%)"
+                        )
                     else:
-                        lines.append(f"  {change['path']}: {change['old_value']} -> {change['new_value']}")
+                        lines.append(
+                            f"  {change['path']}: {change['old_value']} -> {change['new_value']}"
+                        )
                 elif change["type"] == "added":
                     lines.append(f"  {change['path']}: ADDED = {change['new_value']}")
                 elif change["type"] == "removed":
-                    lines.append(f"  {change['path']}: REMOVED (was {change['old_value']})")
+                    lines.append(
+                        f"  {change['path']}: REMOVED (was {change['old_value']})"
+                    )
 
             if len(report["changes"]) > 20:
                 lines.append(f"  ... and {len(report['changes']) - 20} more changes")
@@ -434,9 +475,13 @@ class DataDiffer:
             if "in_both" in report["row_diff"]:
                 lines.append(f"  Rows in both files: {report['row_diff']['in_both']}")
             if "only_in_file1" in report["row_diff"]:
-                lines.append(f"  Rows only in file1: {report['row_diff']['only_in_file1']}")
+                lines.append(
+                    f"  Rows only in file1: {report['row_diff']['only_in_file1']}"
+                )
             if "only_in_file2" in report["row_diff"]:
-                lines.append(f"  Rows only in file2: {report['row_diff']['only_in_file2']}")
+                lines.append(
+                    f"  Rows only in file2: {report['row_diff']['only_in_file2']}"
+                )
 
             lines.append("")
 
@@ -448,7 +493,7 @@ class DataDiffer:
             output_path = self._resolve_path(output_path)
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 f.write(text)
 
             print(f"Report saved to: {output_path}")
@@ -465,7 +510,7 @@ class DataDiffer:
         return path
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 示例用法
     project_root = r"D:\Dunna\Documents\hw-1"
     differ = DataDiffer(project_root)
@@ -484,4 +529,6 @@ if __name__ == '__main__':
     # )
     # print(differ.generate_diff_report(report))
 
-    print("DataDiffer initialized. Use compare_csv_files() or compare_json_files() to compare data.")
+    print(
+        "DataDiffer initialized. Use compare_csv_files() or compare_json_files() to compare data."
+    )

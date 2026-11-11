@@ -2,6 +2,7 @@
 报告生成模块
 生成 Markdown、HTML、LaTeX 格式的分析报告
 """
+
 from __future__ import annotations
 
 from dataclasses import asdict
@@ -39,9 +40,7 @@ class ReportGenerator:
         """生成 Markdown 标题"""
         return f"{'#' * level} {title}\n\n"
 
-    def generate_markdown_table(
-        self, headers: list[str], rows: list[list[Any]]
-    ) -> str:
+    def generate_markdown_table(self, headers: list[str], rows: list[list[Any]]) -> str:
         """生成 Markdown 表格"""
         md = "| " + " | ".join(headers) + " |\n"
         md += "| " + " | ".join(["---"] * len(headers)) + " |\n"
@@ -76,9 +75,7 @@ class ReportGenerator:
 
         return latex
 
-    def generate_data_summary(
-        self, data_dict: dict[str, GaitData]
-    ) -> str:
+    def generate_data_summary(self, data_dict: dict[str, GaitData]) -> str:
         """生成数据概览部分"""
         md = self.generate_markdown_header("数据概览", 2)
 
@@ -90,21 +87,21 @@ class ReportGenerator:
         rows = []
 
         for version_key, gait_data in data_dict.items():
-            rows.append([
-                gait_data.version,
-                gait_data.label,
-                f"{gait_data.duration:.2f}",
-                gait_data.num_samples,
-                f"{gait_data.sampling_rate:.1f}",
-            ])
+            rows.append(
+                [
+                    gait_data.version,
+                    gait_data.label,
+                    f"{gait_data.duration:.2f}",
+                    gait_data.num_samples,
+                    f"{gait_data.sampling_rate:.1f}",
+                ]
+            )
 
         md += self.generate_markdown_table(headers, rows)
 
         return md
 
-    def generate_features_summary(
-        self, features_dict: dict[str, GaitFeatures]
-    ) -> str:
+    def generate_features_summary(self, features_dict: dict[str, GaitFeatures]) -> str:
         """生成特征汇总表"""
         md = self.generate_markdown_header("特征汇总", 2)
 
@@ -137,9 +134,7 @@ class ReportGenerator:
 
         return md
 
-    def generate_comparison_section(
-        self, comparisons: list[ComparisonResult]
-    ) -> str:
+    def generate_comparison_section(self, comparisons: list[ComparisonResult]) -> str:
         """生成版本对比部分"""
         md = self.generate_markdown_header("版本对比", 2)
 
@@ -160,15 +155,17 @@ class ReportGenerator:
 
         for metric, comps in comp_by_metric.items():
             for comp in comps[:1]:  # 每个指标只显示一次
-                rows.append([
-                    metric.replace("_", " ").title(),
-                    comp.version1,
-                    f"{comp.value1:.4f}",
-                    comp.version2,
-                    f"{comp.value2:.4f}",
-                    f"{comp.difference:+.4f}",
-                    f"{comp.percent_change:+.2f}",
-                ])
+                rows.append(
+                    [
+                        metric.replace("_", " ").title(),
+                        comp.version1,
+                        f"{comp.value1:.4f}",
+                        comp.version2,
+                        f"{comp.value2:.4f}",
+                        f"{comp.difference:+.4f}",
+                        f"{comp.percent_change:+.2f}",
+                    ]
+                )
 
         md += self.generate_markdown_table(headers, rows)
 
@@ -188,13 +185,15 @@ class ReportGenerator:
         rows = []
 
         for metric, stats in sensitivity_results.items():
-            rows.append([
-                metric.replace("_", " ").title(),
-                f"{stats['mean']:.4f}",
-                f"{stats['std']:.4f}",
-                f"[{stats['min']:.4f}, {stats['max']:.4f}]",
-                f"{stats['cv']:.2%}",
-            ])
+            rows.append(
+                [
+                    metric.replace("_", " ").title(),
+                    f"{stats['mean']:.4f}",
+                    f"{stats['std']:.4f}",
+                    f"[{stats['min']:.4f}, {stats['max']:.4f}]",
+                    f"{stats['cv']:.2%}",
+                ]
+            )
 
         md += self.generate_markdown_table(headers, rows)
 
@@ -270,7 +269,9 @@ class ReportGenerator:
             md += self.generate_sensitivity_section(sensitivity)
 
         if figure_paths and "correlation_heatmap" in figure_paths:
-            md += self.embed_figure(figure_paths["correlation_heatmap"], "特征相关性热图")
+            md += self.embed_figure(
+                figure_paths["correlation_heatmap"], "特征相关性热图"
+            )
 
         # 结论
         md += self.generate_markdown_header("结论", 2)
@@ -301,7 +302,10 @@ class ReportGenerator:
 
         for version_key, features in features_dict.items():
             if features.convergence_rate is not None:
-                if best_convergence is None or features.convergence_rate > best_convergence:
+                if (
+                    best_convergence is None
+                    or features.convergence_rate > best_convergence
+                ):
                     best_convergence = features.convergence_rate
                     most_stable = features.label
 
@@ -314,7 +318,10 @@ class ReportGenerator:
 
         for version_key, features in features_dict.items():
             if features.left_right_symmetry is not None:
-                if best_symmetry is None or features.left_right_symmetry > best_symmetry:
+                if (
+                    best_symmetry is None
+                    or features.left_right_symmetry > best_symmetry
+                ):
                     best_symmetry = features.left_right_symmetry
                     most_symmetric = features.label
 
@@ -390,7 +397,9 @@ class ReportGenerator:
                 html += f"<h3>{line[4:]}</h3>\n"
             elif line.startswith("| "):
                 # 表格行（简化处理）
-                html += "<tr><td>" + line[2:-2].replace(" | ", "</td><td>") + "</td></tr>\n"
+                html += (
+                    "<tr><td>" + line[2:-2].replace(" | ", "</td><td>") + "</td></tr>\n"
+                )
             elif line.startswith("!["):
                 # 图片（简化处理）
                 html += f"<img src='{line}' />\n"
@@ -444,9 +453,7 @@ def main():
 
     # 生成报告
     print("\nGenerating report...")
-    report_md = generator.generate_markdown_report(
-        data_dict, features_dict
-    )
+    report_md = generator.generate_markdown_report(data_dict, features_dict)
 
     generator.save_report(report_md, "analysis_report", "markdown")
 

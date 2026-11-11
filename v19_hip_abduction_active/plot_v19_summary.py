@@ -62,13 +62,21 @@ def plot_pd_gain_comparison(summaries: dict[str, dict], output_path: Path) -> No
 
     # 左图：Alternations vs Kp
     ax1 = axes[0]
-    bars1 = ax1.bar(range(len(configs)), alternations, color=PHASE_COLORS[3], alpha=0.7, edgecolor="black")
+    bars1 = ax1.bar(
+        range(len(configs)),
+        alternations,
+        color=PHASE_COLORS[3],
+        alpha=0.7,
+        edgecolor="black",
+    )
     ax1.set_xticks(range(len(configs)))
     ax1.set_xticklabels(configs, rotation=45, ha="right")
     ax1.set_ylabel("Alternations", fontsize=11)
     ax1.set_title("V19 Hip_y PD 增益对比 - 交替步数", fontweight="bold")
     ax1.grid(True, alpha=0.3, axis="y")
-    ax1.axhline(y=3, color=PALETTE["fail"], linestyle="--", linewidth=2, label="V18 Baseline")
+    ax1.axhline(
+        y=3, color=PALETTE["fail"], linestyle="--", linewidth=2, label="V18 Baseline"
+    )
     ax1.legend()
 
     # 数值标签
@@ -77,7 +85,13 @@ def plot_pd_gain_comparison(summaries: dict[str, dict], output_path: Path) -> No
 
     # 右图：Forward Distance vs Kp
     ax2 = axes[1]
-    bars2 = ax2.bar(range(len(configs)), forward_dist, color=PHASE_COLORS[3], alpha=0.7, edgecolor="black")
+    bars2 = ax2.bar(
+        range(len(configs)),
+        forward_dist,
+        color=PHASE_COLORS[3],
+        alpha=0.7,
+        edgecolor="black",
+    )
     ax2.set_xticks(range(len(configs)))
     ax2.set_xticklabels(configs, rotation=45, ha="right")
     ax2.set_ylabel("Forward Distance (m)", fontsize=11)
@@ -116,7 +130,14 @@ def plot_all_configs_summary(summaries: dict[str, dict], output_path: Path) -> N
     ax.set_ylabel("Alternations", fontsize=11)
     ax.set_title("V19 所有配置对比", fontweight="bold")
     ax.grid(True, alpha=0.3, axis="y")
-    ax.axhline(y=3, color="gray", linestyle="--", linewidth=1.5, alpha=0.5, label="V18 Baseline")
+    ax.axhline(
+        y=3,
+        color="gray",
+        linestyle="--",
+        linewidth=1.5,
+        alpha=0.5,
+        label="V18 Baseline",
+    )
     ax.legend()
 
     # 数值标签

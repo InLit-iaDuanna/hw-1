@@ -30,9 +30,7 @@ from data_storage import (
 
 def setup_encoding():
     """设置 UTF-8 输出（Windows 兼容）"""
-    sys.stdout = io.TextIOWrapper(
-        sys.stdout.buffer, encoding='utf-8', errors='replace'
-    )
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
 
 def main():

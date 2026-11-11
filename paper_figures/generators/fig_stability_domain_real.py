@@ -30,24 +30,24 @@ def load_v13_slice_c_data():
     df = pd.read_csv(data_path)
 
     # Extract grid parameters
-    foot_radius = df['foot_radius'].values
-    leg_length = df['leg_scale_y'].values
-    success = df['success'].values
-    alternating_td = df['alternating_touchdowns'].values
-    forward_dist = df['forward_distance'].values
+    foot_radius = df["foot_radius"].values
+    leg_length = df["leg_scale_y"].values
+    success = df["success"].values
+    alternating_td = df["alternating_touchdowns"].values
+    forward_dist = df["forward_distance"].values
 
     # Create stability metric (steps achieved)
     stability = alternating_td.astype(float)
     stability[~success] = 0  # Failed runs get 0
 
     return {
-        'foot_radius': foot_radius,
-        'leg_length': leg_length,
-        'stability': stability,
-        'success': success,
-        'forward_distance': forward_dist,
-        'ix': df['ix'].values,
-        'iy': df['iy'].values,
+        "foot_radius": foot_radius,
+        "leg_length": leg_length,
+        "stability": stability,
+        "success": success,
+        "forward_distance": forward_dist,
+        "ix": df["ix"].values,
+        "iy": df["iy"].values,
     }
 
 
@@ -56,15 +56,15 @@ def reshape_to_grid(data, nx=6, ny=6):
     stability_grid = np.zeros((ny, nx))
     success_grid = np.zeros((ny, nx), dtype=bool)
 
-    for i in range(len(data['ix'])):
-        ix = data['ix'][i]
-        iy = data['iy'][i]
-        stability_grid[iy, ix] = data['stability'][i]
-        success_grid[iy, ix] = data['success'][i]
+    for i in range(len(data["ix"])):
+        ix = data["ix"][i]
+        iy = data["iy"][i]
+        stability_grid[iy, ix] = data["stability"][i]
+        success_grid[iy, ix] = data["success"][i]
 
     # Get unique grid values
-    foot_vals = np.unique(data['foot_radius'])
-    leg_vals = np.unique(data['leg_length'])
+    foot_vals = np.unique(data["foot_radius"])
+    leg_vals = np.unique(data["leg_length"])
 
     return foot_vals, leg_vals, stability_grid, success_grid
 
@@ -82,6 +82,7 @@ def create_stability_heatmap():
         # Fallback synthetic data
         print("Using synthetic data for demonstration")
         from fig_stability_domain import create_stability_heatmap as fallback
+
         return fallback()
 
     # Reshape to grid
@@ -102,7 +103,9 @@ def create_stability_heatmap():
 
     # Add contour lines at key stability thresholds
     contours = ax.contour(
-        X, Y, stability_grid,
+        X,
+        Y,
+        stability_grid,
         levels=[5, 10, 12],
         colors="white",
         linewidths=1.2,
@@ -114,20 +117,30 @@ def create_stability_heatmap():
     for i in range(len(foot_vals)):
         for j in range(len(leg_vals)):
             if success_grid[j, i]:
-                ax.plot(foot_vals[i], leg_vals[j], 'o',
-                       color='white', markersize=8,
-                       markeredgecolor='green', markeredgewidth=2)
+                ax.plot(
+                    foot_vals[i],
+                    leg_vals[j],
+                    "o",
+                    color="white",
+                    markersize=8,
+                    markeredgecolor="green",
+                    markeredgewidth=2,
+                )
 
     # Mark optimal point (max stability)
     opt_idx = np.unravel_index(np.argmax(stability_grid), stability_grid.shape)
     opt_foot = foot_vals[opt_idx[1]]
     opt_leg = leg_vals[opt_idx[0]]
     ax.plot(
-        opt_foot, opt_leg, "*",
-        markersize=18, color="white",
-        markeredgecolor="black", markeredgewidth=1.5,
+        opt_foot,
+        opt_leg,
+        "*",
+        markersize=18,
+        color="white",
+        markeredgecolor="black",
+        markeredgewidth=1.5,
         label=f"Optimal: ({opt_foot:.3f}, {opt_leg:.2f})",
-        zorder=10
+        zorder=10,
     )
 
     # Mark V10 baseline design (foot=0.10, leg=0.50 in original scale)
@@ -140,11 +153,15 @@ def create_stability_heatmap():
         v10_foot_actual = foot_vals[v10_idx]
         # leg_scale_y in V13, typical value ~1.0 for baseline
         ax.plot(
-            v10_foot_actual, 0.90,  # Approximate V10 position
-            "o", markersize=10, color="white",
-            markeredgecolor="blue", markeredgewidth=2,
+            v10_foot_actual,
+            0.90,  # Approximate V10 position
+            "o",
+            markersize=10,
+            color="white",
+            markeredgecolor="blue",
+            markeredgewidth=2,
             label="V10 Baseline",
-            zorder=9
+            zorder=9,
         )
 
     # Labels and formatting
@@ -165,10 +182,16 @@ def create_stability_heatmap():
 
     # Add success rate annotation
     success_rate = success_grid.sum() / success_grid.size
-    ax.text(0.98, 0.02, f"Success Rate: {success_rate:.1%} ({success_grid.sum()}/{success_grid.size})",
-            transform=ax.transAxes, ha='right', va='bottom',
-            bbox=dict(boxstyle='round', facecolor='white', alpha=0.9),
-            fontsize=9)
+    ax.text(
+        0.98,
+        0.02,
+        f"Success Rate: {success_rate:.1%} ({success_grid.sum()}/{success_grid.size})",
+        transform=ax.transAxes,
+        ha="right",
+        va="bottom",
+        bbox=dict(boxstyle="round", facecolor="white", alpha=0.9),
+        fontsize=9,
+    )
 
     plt.tight_layout()
 

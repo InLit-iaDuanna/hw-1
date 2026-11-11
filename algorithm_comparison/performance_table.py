@@ -30,7 +30,7 @@ class PerformanceTableGenerator:
             print(f"Warning: Results file not found at {self.results_path}")
             return self._get_dummy_results()
 
-        with open(self.results_path, 'r') as f:
+        with open(self.results_path, "r") as f:
             return json.load(f)
 
     def _get_dummy_results(self) -> Dict[str, Any]:
@@ -42,42 +42,42 @@ class PerformanceTableGenerator:
                     "latency_ms": [2.1, 2.0, 2.2, 2.1, 2.0],
                     "transitions_detected": [245, 243, 247, 245, 244],
                     "false_positives": [3, 4, 2, 3, 3],
-                    "false_negatives": [7, 8, 6, 7, 7]
+                    "false_negatives": [7, 8, 6, 7, 7],
                 },
                 "HMM": {
                     "accuracy": [0.94, 0.93, 0.95, 0.94, 0.94],
                     "latency_ms": [8.5, 8.3, 8.7, 8.5, 8.4],
                     "transitions_detected": [240, 238, 242, 240, 239],
                     "false_positives": [5, 6, 4, 5, 5],
-                    "false_negatives": [10, 11, 9, 10, 10]
+                    "false_negatives": [10, 11, 9, 10, 10],
                 },
                 "CNN": {
                     "accuracy": [0.97, 0.96, 0.98, 0.97, 0.97],
                     "latency_ms": [45.2, 44.8, 45.6, 45.2, 45.0],
                     "transitions_detected": [248, 246, 250, 248, 247],
                     "false_positives": [2, 3, 1, 2, 2],
-                    "false_negatives": [5, 6, 4, 5, 5]
+                    "false_negatives": [5, 6, 4, 5, 5],
                 },
                 "LSTM": {
                     "accuracy": [0.98, 0.97, 0.99, 0.98, 0.98],
                     "latency_ms": [67.8, 67.2, 68.4, 67.8, 67.5],
                     "transitions_detected": [251, 249, 253, 251, 250],
                     "false_positives": [1, 2, 0, 1, 1],
-                    "false_negatives": [3, 4, 2, 3, 3]
+                    "false_negatives": [3, 4, 2, 3, 3],
                 },
                 "Random Forest": {
                     "accuracy": [0.92, 0.91, 0.93, 0.92, 0.92],
                     "latency_ms": [15.3, 15.1, 15.5, 15.3, 15.2],
                     "transitions_detected": [235, 233, 237, 235, 234],
                     "false_positives": [8, 9, 7, 8, 8],
-                    "false_negatives": [12, 13, 11, 12, 12]
-                }
+                    "false_negatives": [12, 13, 11, 12, 12],
+                },
             },
             "metadata": {
                 "dataset": "Gait Cycle Dataset",
                 "n_trials": 5,
-                "total_transitions": 255
-            }
+                "total_transitions": 255,
+            },
         }
 
     def _compute_statistics(self, values: List[float]) -> Tuple[float, float]:
@@ -104,7 +104,7 @@ class PerformanceTableGenerator:
             Name of best performing algorithm
         """
         best_algo = None
-        best_value = float('-inf') if higher_is_better else float('inf')
+        best_value = float("-inf") if higher_is_better else float("inf")
 
         for algo, metrics in self.results["algorithms"].items():
             if metric not in metrics:
@@ -123,7 +123,9 @@ class PerformanceTableGenerator:
 
         return best_algo
 
-    def _test_significance(self, algo1: str, algo2: str, metric: str) -> Tuple[float, bool]:
+    def _test_significance(
+        self, algo1: str, algo2: str, metric: str
+    ) -> Tuple[float, bool]:
         """
         Perform statistical significance test between two algorithms
 
@@ -146,8 +148,9 @@ class PerformanceTableGenerator:
 
         return p_value, is_significant
 
-    def _format_value_latex(self, mean: float, std: float, is_best: bool,
-                           metric: str, precision: int = 2) -> str:
+    def _format_value_latex(
+        self, mean: float, std: float, is_best: bool, metric: str, precision: int = 2
+    ) -> str:
         """
         Format value for LaTeX table
 
@@ -182,8 +185,9 @@ class PerformanceTableGenerator:
 
         return formatted
 
-    def _format_value_markdown(self, mean: float, std: float, is_best: bool,
-                              metric: str, precision: int = 2) -> str:
+    def _format_value_markdown(
+        self, mean: float, std: float, is_best: bool, metric: str, precision: int = 2
+    ) -> str:
         """
         Format value for Markdown table
 
@@ -230,17 +234,19 @@ class PerformanceTableGenerator:
             ("latency_ms", "Latency (ms)", False),
             ("transitions_detected", "Transitions Detected", True),
             ("false_positives", "False Positives", False),
-            ("false_negatives", "False Negatives", False)
+            ("false_negatives", "False Negatives", False),
         ]
 
         # Start table
         n_cols = len(metrics_config) + 1
-        latex = ["\\begin{table}[htbp]",
-                 "\\centering",
-                 "\\caption{Performance Comparison of Gait Phase Detection Algorithms}",
-                 "\\label{tab:performance_comparison}",
-                 f"\\begin{{tabular}}{{l{'c' * len(metrics_config)}}}",
-                 "\\toprule"]
+        latex = [
+            "\\begin{table}[htbp]",
+            "\\centering",
+            "\\caption{Performance Comparison of Gait Phase Detection Algorithms}",
+            "\\label{tab:performance_comparison}",
+            f"\\begin{{tabular}}{{l{'c' * len(metrics_config)}}}",
+            "\\toprule",
+        ]
 
         # Header row
         header = ["Algorithm"] + [config[1] for config in metrics_config]
@@ -261,7 +267,7 @@ class PerformanceTableGenerator:
                 if metric in self.results["algorithms"][algo]:
                     values = self.results["algorithms"][algo][metric]
                     mean, std = self._compute_statistics(values)
-                    is_best = (algo == best_performers[metric])
+                    is_best = algo == best_performers[metric]
 
                     formatted = self._format_value_latex(mean, std, is_best, metric)
                     row.append(formatted)
@@ -271,25 +277,27 @@ class PerformanceTableGenerator:
             latex.append(" & ".join(row) + " \\\\")
 
         # Footer
-        latex.extend([
-            "\\bottomrule",
-            "\\end{tabular}",
-            "\\begin{tablenotes}",
-            "\\small",
-            "\\item Values are reported as mean $\\pm$ standard deviation over 5 trials.",
-            "\\item \\textbf{Bold} values indicate best performance for each metric.",
-            f"\\item Dataset: {self.results['metadata']['dataset']} "
-            f"({self.results['metadata']['total_transitions']} total transitions).",
-            "\\end{tablenotes}",
-            "\\end{table}"
-        ])
+        latex.extend(
+            [
+                "\\bottomrule",
+                "\\end{tabular}",
+                "\\begin{tablenotes}",
+                "\\small",
+                "\\item Values are reported as mean $\\pm$ standard deviation over 5 trials.",
+                "\\item \\textbf{Bold} values indicate best performance for each metric.",
+                f"\\item Dataset: {self.results['metadata']['dataset']} "
+                f"({self.results['metadata']['total_transitions']} total transitions).",
+                "\\end{tablenotes}",
+                "\\end{table}",
+            ]
+        )
 
         latex_str = "\n".join(latex)
 
         # Write to file
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             f.write(latex_str)
 
         print(f"LaTeX table saved to: {output_file.absolute()}")
@@ -311,7 +319,7 @@ class PerformanceTableGenerator:
             ("latency_ms", "Latency", False),
             ("transitions_detected", "Transitions", True),
             ("false_positives", "FP", False),
-            ("false_negatives", "FN", False)
+            ("false_negatives", "FN", False),
         ]
 
         # Find best performers
@@ -339,7 +347,7 @@ class PerformanceTableGenerator:
                 if metric in self.results["algorithms"][algo]:
                     values = self.results["algorithms"][algo][metric]
                     mean, std = self._compute_statistics(values)
-                    is_best = (algo == best_performers[metric])
+                    is_best = algo == best_performers[metric]
 
                     formatted = self._format_value_markdown(mean, std, is_best, metric)
                     row.append(formatted)
@@ -349,30 +357,36 @@ class PerformanceTableGenerator:
             markdown.append("| " + " | ".join(row) + " |")
 
         # Add notes
-        markdown.extend([
-            "",
-            "**Notes:**",
-            f"- Values are reported as mean ± standard deviation over {self.results['metadata']['n_trials']} trials",
-            "- **Bold** values indicate best performance for each metric",
-            f"- Dataset: {self.results['metadata']['dataset']} ({self.results['metadata']['total_transitions']} total transitions)",
-            "- FP = False Positives, FN = False Negatives",
-            ""
-        ])
+        markdown.extend(
+            [
+                "",
+                "**Notes:**",
+                f"- Values are reported as mean ± standard deviation over {self.results['metadata']['n_trials']} trials",
+                "- **Bold** values indicate best performance for each metric",
+                f"- Dataset: {self.results['metadata']['dataset']} ({self.results['metadata']['total_transitions']} total transitions)",
+                "- FP = False Positives, FN = False Negatives",
+                "",
+            ]
+        )
 
         # Add statistical significance section
-        markdown.extend([
-            "### Statistical Significance",
-            "",
-            "Comparing best performer (LSTM) against FSM baseline:",
-            ""
-        ])
+        markdown.extend(
+            [
+                "### Statistical Significance",
+                "",
+                "Comparing best performer (LSTM) against FSM baseline:",
+                "",
+            ]
+        )
 
         best_algo = "LSTM"
         baseline_algo = "FSM"
 
         for metric, label, _ in metrics_config:
             if metric in self.results["algorithms"][best_algo]:
-                p_value, is_sig = self._test_significance(best_algo, baseline_algo, metric)
+                p_value, is_sig = self._test_significance(
+                    best_algo, baseline_algo, metric
+                )
                 sig_marker = "✓" if is_sig else "✗"
                 markdown.append(f"- **{label}**: p = {p_value:.4f} {sig_marker}")
 
@@ -385,7 +399,7 @@ class PerformanceTableGenerator:
         # Write to file
         output_file = Path(output_path)
         output_file.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             f.write(markdown_str)
 
         print(f"Markdown table saved to: {output_file.absolute()}")
@@ -426,20 +440,20 @@ def main():
         "--results",
         type=str,
         default="benchmark_results.json",
-        help="Path to benchmark results JSON file"
+        help="Path to benchmark results JSON file",
     )
     parser.add_argument(
         "--output-dir",
         type=str,
         default=".",
-        help="Output directory for generated tables"
+        help="Output directory for generated tables",
     )
     parser.add_argument(
         "--format",
         type=str,
         choices=["latex", "markdown", "both"],
         default="both",
-        help="Output format(s) to generate"
+        help="Output format(s) to generate",
     )
 
     args = parser.parse_args()

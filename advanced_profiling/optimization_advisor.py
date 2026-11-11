@@ -42,9 +42,7 @@ class OptimizationAdvisor:
         """添加优化建议。"""
         self.optimizations.append(opt)
 
-    def compute_priority_score(
-        self, impact: str, effort: str, speedup: float
-    ) -> float:
+    def compute_priority_score(self, impact: str, effort: str, speedup: float) -> float:
         """计算优化优先级分数。
 
         Args:
@@ -428,7 +426,9 @@ row = make_row(..., left_contact, right_contact, cached_detail)""",
         # 保存 JSON
         json_path = output_path.with_suffix(".json")
         json_path.parent.mkdir(parents=True, exist_ok=True)
-        json_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+        json_path.write_text(
+            json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8"
+        )
 
         # 保存文本报告
         lines = []

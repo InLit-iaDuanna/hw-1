@@ -120,7 +120,9 @@ def swing_clearance(step: int, state: np.ndarray, params: PassiveWalkerParams) -
     return fz - (ramp_height(fx, params) + params.foot_radius / math.cos(params.gamma))
 
 
-def passive_dynamics(_t: float, y: np.ndarray, params: PassiveWalkerParams) -> np.ndarray:
+def passive_dynamics(
+    _t: float, y: np.ndarray, params: PassiveWalkerParams
+) -> np.ndarray:
     """
     Pure passive compass gait dynamics
 
@@ -314,7 +316,9 @@ def simulate_passive_walker(
 
             # Event detection
             if i > 30 and event_value(step, y_next, params) <= 0:
-                event_t, event_y = bisect_event(y, y_next, t, t + params.dt, step, params)
+                event_t, event_y = bisect_event(
+                    y, y_next, t, t + params.dt, step, params
+                )
                 t, y = event_t, event_y
                 step_rows.append(
                     make_trajectory_row(t, step, y, params, 1.0, "touchdown")
@@ -351,7 +355,9 @@ def simulate_passive_walker(
 
         # Continue with post-impact state
         y = post
-        trajectory.append(make_trajectory_row(t, step + 1, y, params, 0.0, "impact_map"))
+        trajectory.append(
+            make_trajectory_row(t, step + 1, y, params, 0.0, "impact_map")
+        )
 
     return trajectory, poincare
 

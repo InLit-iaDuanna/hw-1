@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # slides_tail.py  — appends slides+script to presentation.html
 import pathlib
+
 HTML = pathlib.Path(r"D:\Dunna\Documents\hw-1\presentation.html")
 
 S = []

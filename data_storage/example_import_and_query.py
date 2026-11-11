@@ -32,7 +32,8 @@ def main():
     # 设置 UTF-8 输出（Windows 兼容）
     import locale
     import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
     # 项目根目录
     hw1_root = Path(__file__).parent.parent
@@ -79,7 +80,9 @@ def main():
             stats = import_version_batch(conn, version_name, version_path)
             total_stats["scan_csv"] += stats["scan_csv"]
             total_stats["summary_json"] += stats["summary_json"]
-            print(f"  [OK] 扫描记录: {stats['scan_csv']}, 摘要: {stats['summary_json']}")
+            print(
+                f"  [OK] 扫描记录: {stats['scan_csv']}, 摘要: {stats['summary_json']}"
+            )
         except Exception as e:
             print(f"  [ERROR] 导入失败: {e}")
 
@@ -91,7 +94,9 @@ def main():
     # 3. 导入性能对比表
     # ========================================================================
     print("\n[3] 导入性能对比表...")
-    benchmark_csv = hw1_root / "v12_energy_cot_analysis" / "out" / "v12_energy_cot_table.csv"
+    benchmark_csv = (
+        hw1_root / "v12_energy_cot_analysis" / "out" / "v12_energy_cot_table.csv"
+    )
 
     if benchmark_csv.exists():
         try:
@@ -119,7 +124,11 @@ def main():
     print("-" * 60)
     best_cot = get_best_simulations(conn, metric="CoT", top_n=5, success_only=True)
     if not best_cot.empty:
-        print(best_cot[["version_name", "CoT", "forward_distance", "alternating_touchdowns"]].to_string(index=False))
+        print(
+            best_cot[
+                ["version_name", "CoT", "forward_distance", "alternating_touchdowns"]
+            ].to_string(index=False)
+        )
     else:
         print("无数据")
 
@@ -128,7 +137,11 @@ def main():
     print("-" * 60)
     best_score = get_best_simulations(conn, metric="score", top_n=5, success_only=True)
     if not best_score.empty:
-        print(best_score[["version_name", "score", "forward_distance", "alternating_touchdowns"]].to_string(index=False))
+        print(
+            best_score[
+                ["version_name", "score", "forward_distance", "alternating_touchdowns"]
+            ].to_string(index=False)
+        )
     else:
         print("无数据")
 
@@ -160,11 +173,15 @@ def main():
             param_name="slope_deg",
             min_value=3.0,
             max_value=4.0,
-            version_name="V07"
+            version_name="V07",
         )
         if not param_query.empty:
             print(f"找到 {len(param_query)} 条记录")
-            print(param_query[["sim_id", "slope_deg", "success", "forward_distance"]].head(10).to_string(index=False))
+            print(
+                param_query[["sim_id", "slope_deg", "success", "forward_distance"]]
+                .head(10)
+                .to_string(index=False)
+            )
         else:
             print("无数据")
     except Exception as e:
@@ -205,7 +222,11 @@ def main():
 
     print(f"版本数: {version_count}")
     print(f"仿真总数: {sim_count}")
-    print(f"成功仿真: {success_count} ({100*success_count/sim_count:.1f}%)" if sim_count > 0 else "成功仿真: 0")
+    print(
+        f"成功仿真: {success_count} ({100*success_count/sim_count:.1f}%)"
+        if sim_count > 0
+        else "成功仿真: 0"
+    )
     print(f"基准数据: {benchmark_count}")
 
     # ========================================================================

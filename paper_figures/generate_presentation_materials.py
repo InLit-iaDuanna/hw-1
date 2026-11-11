@@ -1,4 +1,5 @@
 """Generate presentation materials: high-res screenshots, GIFs, and PPT assets."""
+
 from __future__ import annotations
 
 import json
@@ -35,7 +36,9 @@ def create_presentation_structure():
 
         # Create README in each subdirectory
         readme_path = dirpath / "README.txt"
-        readme_path.write_text(f"{dirname}\n{'=' * len(dirname)}\n\n{description}\n", encoding="utf-8")
+        readme_path.write_text(
+            f"{dirname}\n{'=' * len(dirname)}\n\n{description}\n", encoding="utf-8"
+        )
         created.append(dirpath)
 
     return created
@@ -99,7 +102,9 @@ def create_video_keyframe_index():
     }
 
     index_path = PRESENTATIONS_DIR / "keyframes" / "VIDEO_INDEX.json"
-    index_path.write_text(json.dumps(video_sources, indent=2, ensure_ascii=False), encoding="utf-8")
+    index_path.write_text(
+        json.dumps(video_sources, indent=2, ensure_ascii=False), encoding="utf-8"
+    )
 
     # Copy preview images
     keyframes_dir = PRESENTATIONS_DIR / "keyframes"
@@ -226,12 +231,30 @@ def create_data_tables_package():
     version_summary = [
         ["Version", "Name", "Category", "Success", "Key_Innovation"],
         ["V01", "Compass Gait", "passive", "No", "Initial exploration"],
-        ["V05", "Hybrid Compass Proof", "passive", "Yes", "Limit cycle stability proof"],
+        [
+            "V05",
+            "Hybrid Compass Proof",
+            "passive",
+            "Yes",
+            "Limit cycle stability proof",
+        ],
         ["V10", "Rolling Foot", "quasi-passive", "Yes", "Biomimetic foot design"],
         ["V13", "FSM Control", "control", "Yes", "Event-driven finite state machine"],
-        ["V13.7", "Friction Compensation", "control", "Yes", "Motor friction compensation"],
+        [
+            "V13.7",
+            "Friction Compensation",
+            "control",
+            "Yes",
+            "Motor friction compensation",
+        ],
         ["V16", "Motor Dynamics", "actuation", "Yes", "Friction failure band analysis"],
-        ["V17", "State Estimation", "sensing", "Yes", "Kalman filter + encoder quantization"],
+        [
+            "V17",
+            "State Estimation",
+            "sensing",
+            "Yes",
+            "Kalman filter + encoder quantization",
+        ],
         ["V18", "3D Lateral Stability", "3d", "No", "Passive lateral stability failed"],
         ["V19", "Hip Abduction Active", "3d", "No", "Active control insufficient"],
         ["V20", "Step Width Control", "3d", "No", "Root cause: unstable eigenvalues"],
@@ -239,6 +262,7 @@ def create_data_tables_package():
     ]
 
     import csv
+
     csv_path = tables_dir / "version_summary.csv"
     with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)

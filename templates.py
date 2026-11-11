@@ -27,6 +27,7 @@ class V05PassiveConfig:
     - Fixed point speed determined by energy balance
     - Suited for understanding fundamental gait mechanics
     """
+
     slope_deg: float = 5.0
     leg_length: float = 1.0
     foot_radius: float = 0.035
@@ -46,21 +47,21 @@ class V05PassiveConfig:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
-            'slope_deg': self.slope_deg,
-            'leg_length': self.leg_length,
-            'foot_radius': self.foot_radius,
-            'step_angle_deg': self.step_angle_deg,
-            'gravity': self.gravity,
-            'stance_damping': self.stance_damping,
-            'swing_damping': self.swing_damping,
-            'passive_hip_stiffness': self.passive_hip_stiffness,
-            'collision_retention': self.collision_retention,
-            'energy_gain_scale': self.energy_gain_scale,
-            'initial_speed': self.initial_speed,
-            'initial_error': self.initial_error,
-            'steps': self.steps,
-            'dt': self.dt,
-            'samples_per_step': self.samples_per_step
+            "slope_deg": self.slope_deg,
+            "leg_length": self.leg_length,
+            "foot_radius": self.foot_radius,
+            "step_angle_deg": self.step_angle_deg,
+            "gravity": self.gravity,
+            "stance_damping": self.stance_damping,
+            "swing_damping": self.swing_damping,
+            "passive_hip_stiffness": self.passive_hip_stiffness,
+            "collision_retention": self.collision_retention,
+            "energy_gain_scale": self.energy_gain_scale,
+            "initial_speed": self.initial_speed,
+            "initial_error": self.initial_error,
+            "steps": self.steps,
+            "dt": self.dt,
+            "samples_per_step": self.samples_per_step,
         }
 
 
@@ -77,6 +78,7 @@ class V10RollingConfig:
     - Ankle compliance for terrain adaptation
     - Validated for robustness and energy efficiency
     """
+
     slope_deg: float = 0.0
     foot_radius: float = 0.04
     foot_length: float = 0.16
@@ -124,49 +126,49 @@ class V10RollingConfig:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
-            'slope_deg': self.slope_deg,
-            'foot_radius': self.foot_radius,
-            'foot_length': self.foot_length,
-            'toe_radius': self.toe_radius,
-            'ankle_limit_deg': self.ankle_limit_deg,
-            'ankle_damping': self.ankle_damping,
-            'ankle_stiffness': self.ankle_stiffness,
-            'friction': self.friction,
-            'hip_mass': self.hip_mass,
-            'torso_mass': self.torso_mass,
-            'torso_height': self.torso_height,
-            'initial_vx': self.initial_vx,
-            'knee_limit_deg': self.knee_limit_deg,
-            'duration': self.duration,
-            'timestep': self.timestep,
-            'thigh_length': self.thigh_length,
-            'shank_length': self.shank_length,
-            'step_length': self.step_length,
-            'knee_damping': self.knee_damping,
-            'knee_stiffness': self.knee_stiffness,
-            'hip_joint_damping': self.hip_joint_damping,
-            'joint_damping': self.joint_damping,
-            'release_phase': self.release_phase,
-            'swing_foot_x': self.swing_foot_x,
-            'swing_foot_clearance': self.swing_foot_clearance,
-            'swing_hip_vel': self.swing_hip_vel,
-            'swing_knee_vel': self.swing_knee_vel,
-            'hip_torque_limit': self.hip_torque_limit,
-            'knee_torque_limit': self.knee_torque_limit,
-            'hip_kp': self.hip_kp,
-            'hip_kd': self.hip_kd,
-            'knee_kp': self.knee_kp,
-            'knee_kd': self.knee_kd,
-            'gait_period': self.gait_period,
-            'swing_back_deg': self.swing_back_deg,
-            'swing_front_deg': self.swing_front_deg,
-            'stance_front_deg': self.stance_front_deg,
-            'stance_back_deg': self.stance_back_deg,
-            'swing_knee_flex_deg': self.swing_knee_flex_deg,
-            'stance_knee_deg': self.stance_knee_deg,
-            'recovery_clearance': self.recovery_clearance,
-            'min_event_interval': self.min_event_interval,
-            'stable_contact_time': self.stable_contact_time
+            "slope_deg": self.slope_deg,
+            "foot_radius": self.foot_radius,
+            "foot_length": self.foot_length,
+            "toe_radius": self.toe_radius,
+            "ankle_limit_deg": self.ankle_limit_deg,
+            "ankle_damping": self.ankle_damping,
+            "ankle_stiffness": self.ankle_stiffness,
+            "friction": self.friction,
+            "hip_mass": self.hip_mass,
+            "torso_mass": self.torso_mass,
+            "torso_height": self.torso_height,
+            "initial_vx": self.initial_vx,
+            "knee_limit_deg": self.knee_limit_deg,
+            "duration": self.duration,
+            "timestep": self.timestep,
+            "thigh_length": self.thigh_length,
+            "shank_length": self.shank_length,
+            "step_length": self.step_length,
+            "knee_damping": self.knee_damping,
+            "knee_stiffness": self.knee_stiffness,
+            "hip_joint_damping": self.hip_joint_damping,
+            "joint_damping": self.joint_damping,
+            "release_phase": self.release_phase,
+            "swing_foot_x": self.swing_foot_x,
+            "swing_foot_clearance": self.swing_foot_clearance,
+            "swing_hip_vel": self.swing_hip_vel,
+            "swing_knee_vel": self.swing_knee_vel,
+            "hip_torque_limit": self.hip_torque_limit,
+            "knee_torque_limit": self.knee_torque_limit,
+            "hip_kp": self.hip_kp,
+            "hip_kd": self.hip_kd,
+            "knee_kp": self.knee_kp,
+            "knee_kd": self.knee_kd,
+            "gait_period": self.gait_period,
+            "swing_back_deg": self.swing_back_deg,
+            "swing_front_deg": self.swing_front_deg,
+            "stance_front_deg": self.stance_front_deg,
+            "stance_back_deg": self.stance_back_deg,
+            "swing_knee_flex_deg": self.swing_knee_flex_deg,
+            "stance_knee_deg": self.stance_knee_deg,
+            "recovery_clearance": self.recovery_clearance,
+            "min_event_interval": self.min_event_interval,
+            "stable_contact_time": self.stable_contact_time,
         }
 
 
@@ -184,6 +186,7 @@ class PhaseParams:
     - kd: Derivative gain
     - E_target: Target mechanical energy (used when k_E > 0)
     """
+
     k_E: float
     k_PD: float
     tau_max: float
@@ -193,11 +196,11 @@ class PhaseParams:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
-            'k_E': self.k_E,
-            'k_PD': self.k_PD,
-            'tau_max': self.tau_max,
-            'kd': self.kd,
-            'E_target': self.E_target
+            "k_E": self.k_E,
+            "k_PD": self.k_PD,
+            "tau_max": self.tau_max,
+            "kd": self.kd,
+            "E_target": self.E_target,
         }
 
 
@@ -217,6 +220,7 @@ class V137FSMConfig:
     - swing_thrust  → Initial Swing (active energy injection)
     - swing_retract → Mid/Terminal Swing (passive return)
     """
+
     # Base parameters (inherited from V10)
     base_slope_deg: float = 0.0
     base_foot_radius: float = 0.04
@@ -281,57 +285,57 @@ class V137FSMConfig:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
-            'base': {
-                'slope_deg': self.base_slope_deg,
-                'foot_radius': self.base_foot_radius,
-                'foot_length': self.base_foot_length,
-                'toe_radius': self.base_toe_radius,
-                'ankle_limit_deg': self.base_ankle_limit_deg,
-                'ankle_damping': self.base_ankle_damping,
-                'ankle_stiffness': self.base_ankle_stiffness,
-                'friction': self.base_friction,
-                'hip_mass': self.base_hip_mass,
-                'torso_mass': self.base_torso_mass,
-                'torso_height': self.base_torso_height,
-                'initial_vx': self.base_initial_vx,
-                'knee_limit_deg': self.base_knee_limit_deg,
-                'duration': self.base_duration,
-                'timestep': self.base_timestep,
-                'thigh_length': self.base_thigh_length,
-                'shank_length': self.base_shank_length,
-                'step_length': self.base_step_length,
-                'knee_damping': self.base_knee_damping,
-                'knee_stiffness': self.base_knee_stiffness,
-                'hip_joint_damping': self.base_hip_joint_damping,
-                'joint_damping': self.base_joint_damping,
-                'release_phase': self.base_release_phase,
-                'swing_foot_x': self.base_swing_foot_x,
-                'swing_foot_clearance': self.base_swing_foot_clearance,
-                'swing_hip_vel': self.base_swing_hip_vel,
-                'swing_knee_vel': self.base_swing_knee_vel,
-                'hip_torque_limit': self.base_hip_torque_limit,
-                'knee_torque_limit': self.base_knee_torque_limit,
-                'hip_kp': self.base_hip_kp,
-                'hip_kd': self.base_hip_kd,
-                'knee_kp': self.base_knee_kp,
-                'knee_kd': self.base_knee_kd,
-                'gait_period': self.base_gait_period,
-                'swing_back_deg': self.base_swing_back_deg,
-                'swing_front_deg': self.base_swing_front_deg,
-                'stance_front_deg': self.base_stance_front_deg,
-                'stance_back_deg': self.base_stance_back_deg,
-                'swing_knee_flex_deg': self.base_swing_knee_flex_deg,
-                'stance_knee_deg': self.base_stance_knee_deg,
-                'recovery_clearance': self.base_recovery_clearance,
-                'min_event_interval': self.base_min_event_interval,
-                'stable_contact_time': self.base_stable_contact_time
+            "base": {
+                "slope_deg": self.base_slope_deg,
+                "foot_radius": self.base_foot_radius,
+                "foot_length": self.base_foot_length,
+                "toe_radius": self.base_toe_radius,
+                "ankle_limit_deg": self.base_ankle_limit_deg,
+                "ankle_damping": self.base_ankle_damping,
+                "ankle_stiffness": self.base_ankle_stiffness,
+                "friction": self.base_friction,
+                "hip_mass": self.base_hip_mass,
+                "torso_mass": self.base_torso_mass,
+                "torso_height": self.base_torso_height,
+                "initial_vx": self.base_initial_vx,
+                "knee_limit_deg": self.base_knee_limit_deg,
+                "duration": self.base_duration,
+                "timestep": self.base_timestep,
+                "thigh_length": self.base_thigh_length,
+                "shank_length": self.base_shank_length,
+                "step_length": self.base_step_length,
+                "knee_damping": self.base_knee_damping,
+                "knee_stiffness": self.base_knee_stiffness,
+                "hip_joint_damping": self.base_hip_joint_damping,
+                "joint_damping": self.base_joint_damping,
+                "release_phase": self.base_release_phase,
+                "swing_foot_x": self.base_swing_foot_x,
+                "swing_foot_clearance": self.base_swing_foot_clearance,
+                "swing_hip_vel": self.base_swing_hip_vel,
+                "swing_knee_vel": self.base_swing_knee_vel,
+                "hip_torque_limit": self.base_hip_torque_limit,
+                "knee_torque_limit": self.base_knee_torque_limit,
+                "hip_kp": self.base_hip_kp,
+                "hip_kd": self.base_hip_kd,
+                "knee_kp": self.base_knee_kp,
+                "knee_kd": self.base_knee_kd,
+                "gait_period": self.base_gait_period,
+                "swing_back_deg": self.base_swing_back_deg,
+                "swing_front_deg": self.base_swing_front_deg,
+                "stance_front_deg": self.base_stance_front_deg,
+                "stance_back_deg": self.base_stance_back_deg,
+                "swing_knee_flex_deg": self.base_swing_knee_flex_deg,
+                "stance_knee_deg": self.base_stance_knee_deg,
+                "recovery_clearance": self.base_recovery_clearance,
+                "min_event_interval": self.base_min_event_interval,
+                "stable_contact_time": self.base_stable_contact_time,
             },
-            'phases': {
-                'stance_early': self.stance_early.to_dict(),
-                'stance_late': self.stance_late.to_dict(),
-                'swing_thrust': self.swing_thrust.to_dict(),
-                'swing_retract': self.swing_retract.to_dict()
-            }
+            "phases": {
+                "stance_early": self.stance_early.to_dict(),
+                "stance_late": self.stance_late.to_dict(),
+                "swing_thrust": self.swing_thrust.to_dict(),
+                "swing_retract": self.swing_retract.to_dict(),
+            },
         }
 
 
@@ -348,6 +352,7 @@ class BiomimeticConfig:
     - Natural gait timing and coordination
     - Foundation for later rolling foot development (V10)
     """
+
     slope_deg: float = 0.0
     foot_radius: float = 0.04
     foot_length: float = 0.10
@@ -391,45 +396,45 @@ class BiomimeticConfig:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
-            'slope_deg': self.slope_deg,
-            'foot_radius': self.foot_radius,
-            'foot_length': self.foot_length,
-            'friction': self.friction,
-            'hip_mass': self.hip_mass,
-            'torso_mass': self.torso_mass,
-            'torso_height': self.torso_height,
-            'initial_vx': self.initial_vx,
-            'knee_limit_deg': self.knee_limit_deg,
-            'duration': self.duration,
-            'timestep': self.timestep,
-            'thigh_length': self.thigh_length,
-            'shank_length': self.shank_length,
-            'step_length': self.step_length,
-            'knee_damping': self.knee_damping,
-            'knee_stiffness': self.knee_stiffness,
-            'hip_joint_damping': self.hip_joint_damping,
-            'joint_damping': self.joint_damping,
-            'release_phase': self.release_phase,
-            'swing_foot_x': self.swing_foot_x,
-            'swing_foot_clearance': self.swing_foot_clearance,
-            'swing_hip_vel': self.swing_hip_vel,
-            'swing_knee_vel': self.swing_knee_vel,
-            'hip_torque_limit': self.hip_torque_limit,
-            'knee_torque_limit': self.knee_torque_limit,
-            'hip_kp': self.hip_kp,
-            'hip_kd': self.hip_kd,
-            'knee_kp': self.knee_kp,
-            'knee_kd': self.knee_kd,
-            'gait_period': self.gait_period,
-            'swing_back_deg': self.swing_back_deg,
-            'swing_front_deg': self.swing_front_deg,
-            'stance_front_deg': self.stance_front_deg,
-            'stance_back_deg': self.stance_back_deg,
-            'swing_knee_flex_deg': self.swing_knee_flex_deg,
-            'stance_knee_deg': self.stance_knee_deg,
-            'recovery_clearance': self.recovery_clearance,
-            'min_event_interval': self.min_event_interval,
-            'stable_contact_time': self.stable_contact_time
+            "slope_deg": self.slope_deg,
+            "foot_radius": self.foot_radius,
+            "foot_length": self.foot_length,
+            "friction": self.friction,
+            "hip_mass": self.hip_mass,
+            "torso_mass": self.torso_mass,
+            "torso_height": self.torso_height,
+            "initial_vx": self.initial_vx,
+            "knee_limit_deg": self.knee_limit_deg,
+            "duration": self.duration,
+            "timestep": self.timestep,
+            "thigh_length": self.thigh_length,
+            "shank_length": self.shank_length,
+            "step_length": self.step_length,
+            "knee_damping": self.knee_damping,
+            "knee_stiffness": self.knee_stiffness,
+            "hip_joint_damping": self.hip_joint_damping,
+            "joint_damping": self.joint_damping,
+            "release_phase": self.release_phase,
+            "swing_foot_x": self.swing_foot_x,
+            "swing_foot_clearance": self.swing_foot_clearance,
+            "swing_hip_vel": self.swing_hip_vel,
+            "swing_knee_vel": self.swing_knee_vel,
+            "hip_torque_limit": self.hip_torque_limit,
+            "knee_torque_limit": self.knee_torque_limit,
+            "hip_kp": self.hip_kp,
+            "hip_kd": self.hip_kd,
+            "knee_kp": self.knee_kp,
+            "knee_kd": self.knee_kd,
+            "gait_period": self.gait_period,
+            "swing_back_deg": self.swing_back_deg,
+            "swing_front_deg": self.swing_front_deg,
+            "stance_front_deg": self.stance_front_deg,
+            "stance_back_deg": self.stance_back_deg,
+            "swing_knee_flex_deg": self.swing_knee_flex_deg,
+            "stance_knee_deg": self.stance_knee_deg,
+            "recovery_clearance": self.recovery_clearance,
+            "min_event_interval": self.min_event_interval,
+            "stable_contact_time": self.stable_contact_time,
         }
 
 
@@ -437,10 +442,10 @@ class BiomimeticConfig:
 # Template Registry
 # =============================================================================
 TEMPLATES: Dict[str, Any] = {
-    'v05_passive': V05PassiveConfig(),
-    'v10_rolling': V10RollingConfig(),
-    'v137_fsm': V137FSMConfig(),
-    'biomimetic': BiomimeticConfig()
+    "v05_passive": V05PassiveConfig(),
+    "v10_rolling": V10RollingConfig(),
+    "v137_fsm": V137FSMConfig(),
+    "biomimetic": BiomimeticConfig(),
 }
 
 
@@ -457,7 +462,7 @@ def get_template(name: str) -> Any:
         KeyError: If template name not found
     """
     if name not in TEMPLATES:
-        available = ', '.join(TEMPLATES.keys())
+        available = ", ".join(TEMPLATES.keys())
         raise KeyError(f"Template '{name}' not found. Available: {available}")
     return TEMPLATES[name]
 
@@ -483,7 +488,7 @@ def get_template_dict(name: str) -> Dict[str, Any]:
 # =============================================================================
 # Usage Examples
 # =============================================================================
-if __name__ == '__main__':
+if __name__ == "__main__":
     import json
 
     print("Available templates:")
@@ -493,13 +498,13 @@ if __name__ == '__main__':
     print("\n" + "=" * 70)
     print("V05 Passive Configuration:")
     print("=" * 70)
-    v05 = get_template('v05_passive')
+    v05 = get_template("v05_passive")
     print(json.dumps(v05.to_dict(), indent=2))
 
     print("\n" + "=" * 70)
     print("V10 Rolling Configuration (first 10 parameters):")
     print("=" * 70)
-    v10 = get_template('v10_rolling')
+    v10 = get_template("v10_rolling")
     v10_dict = v10.to_dict()
     for i, (key, value) in enumerate(v10_dict.items()):
         if i >= 10:
@@ -510,14 +515,14 @@ if __name__ == '__main__':
     print("\n" + "=" * 70)
     print("V13.7 FSM Phase Configuration:")
     print("=" * 70)
-    v137 = get_template('v137_fsm')
+    v137 = get_template("v137_fsm")
     v137_dict = v137.to_dict()
-    print(json.dumps(v137_dict['phases'], indent=2))
+    print(json.dumps(v137_dict["phases"], indent=2))
 
     print("\n" + "=" * 70)
     print("Biomimetic Configuration (summary):")
     print("=" * 70)
-    bio = get_template('biomimetic')
+    bio = get_template("biomimetic")
     bio_dict = bio.to_dict()
     print(f"  Total parameters: {len(bio_dict)}")
     print(f"  Leg length: {bio.thigh_length + bio.shank_length:.2f}m")

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # gen_pres.py  —  writes presentation.html
 import pathlib
+
 OUT = pathlib.Path(r"D:\Dunna\Documents\hw-1\presentation.html")
 parts = []
 w = parts.append

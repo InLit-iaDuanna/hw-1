@@ -376,9 +376,7 @@ def save_parallel_report(
     lines.append("=" * 80)
     lines.append(f"\n发现 {len(opportunities)} 个潜在并行化机会\n")
 
-    sorted_opps = sorted(
-        opportunities, key=lambda x: x.potential_speedup, reverse=True
-    )
+    sorted_opps = sorted(opportunities, key=lambda x: x.potential_speedup, reverse=True)
 
     for i, opp in enumerate(sorted_opps, 1):
         lines.append(f"\n{i}. {opp.function_name}")
@@ -400,7 +398,9 @@ if __name__ == "__main__":
 
     # 示例 1: 分析参数扫描文件
     scan_files = [
-        HW1_ROOT / "v10_rolling_foot_biomimetic_gait" / "scan_rolling_foot_params_v10.py",
+        HW1_ROOT
+        / "v10_rolling_foot_biomimetic_gait"
+        / "scan_rolling_foot_params_v10.py",
         HW1_ROOT / "v13_7_friction_compensation" / "scan_v13_7_tauC_verify.py",
         HW1_ROOT / "v17_state_estimation" / "scan_v17_noise.py",
     ]

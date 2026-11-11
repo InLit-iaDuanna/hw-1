@@ -31,7 +31,9 @@ from common.compass_gait import CompassGaitParams, CompassGait
 from common.simulation_runner import run_simulation_safe
 
 
-def create_objective_function(metric: str = "speed") -> Callable[[dict[str, float]], float]:
+def create_objective_function(
+    metric: str = "speed",
+) -> Callable[[dict[str, float]], float]:
     """Create objective function for sensitivity analysis.
 
     Args:
@@ -131,23 +133,21 @@ def define_parameter_space() -> tuple[list[str], list[tuple[float, float]]]:
     ]
 
     param_bounds = [
-        (3.0, 8.0),      # slope_deg: terrain steepness
-        (5.0, 15.0),     # step_angle_deg: gait geometry
+        (3.0, 8.0),  # slope_deg: terrain steepness
+        (5.0, 15.0),  # step_angle_deg: gait geometry
         (0.005, 0.025),  # stance_damping: energy dissipation
         (0.020, 0.050),  # swing_damping: leg swing control
-        (0.20, 0.80),    # passive_hip_stiffness: hip compliance
-        (0.70, 0.95),    # collision_retention: impact efficiency
-        (0.20, 0.80),    # energy_gain_scale: active energy input
-        (0.15, 0.35),    # initial_speed: starting condition
+        (0.20, 0.80),  # passive_hip_stiffness: hip compliance
+        (0.70, 0.95),  # collision_retention: impact efficiency
+        (0.20, 0.80),  # energy_gain_scale: active energy input
+        (0.15, 0.35),  # initial_speed: starting condition
     ]
 
     return param_names, param_bounds
 
 
 def visualize_sensitivity_results(
-    results: dict[str, Any],
-    output_path: Path | None = None,
-    show: bool = True
+    results: dict[str, Any], output_path: Path | None = None, show: bool = True
 ) -> None:
     """Visualize Sobol sensitivity analysis results.
 
@@ -173,10 +173,24 @@ def visualize_sensitivity_results(
     x = np.arange(n_params)
     width = 0.35
 
-    ax1.bar(x - width/2, S1, width, label="S1 (First-order)",
-            color="steelblue", yerr=S1_conf, capsize=5)
-    ax1.bar(x + width/2, ST, width, label="ST (Total-order)",
-            color="coral", yerr=ST_conf, capsize=5)
+    ax1.bar(
+        x - width / 2,
+        S1,
+        width,
+        label="S1 (First-order)",
+        color="steelblue",
+        yerr=S1_conf,
+        capsize=5,
+    )
+    ax1.bar(
+        x + width / 2,
+        ST,
+        width,
+        label="ST (Total-order)",
+        color="coral",
+        yerr=ST_conf,
+        capsize=5,
+    )
 
     ax1.set_xlabel("Parameter", fontweight="bold")
     ax1.set_ylabel("Sobol Index", fontweight="bold")
@@ -216,8 +230,9 @@ def visualize_sensitivity_results(
     ax4 = axes[1, 1]
     if "interaction_matrix" in results and results["interaction_matrix"] is not None:
         interaction_matrix = results["interaction_matrix"]
-        im = ax4.imshow(interaction_matrix, cmap="RdYlGn", aspect="auto",
-                        vmin=-0.1, vmax=0.5)
+        im = ax4.imshow(
+            interaction_matrix, cmap="RdYlGn", aspect="auto", vmin=-0.1, vmax=0.5
+        )
         ax4.set_xticks(range(n_params))
         ax4.set_yticks(range(n_params))
         ax4.set_xticklabels(param_names, rotation=45, ha="right")
@@ -231,11 +246,25 @@ def visualize_sensitivity_results(
                 if i != j:
                     value = interaction_matrix[i, j]
                     color = "white" if value > 0.25 else "black"
-                    ax4.text(j, i, f"{value:.3f}", ha="center", va="center",
-                            color=color, fontsize=8)
+                    ax4.text(
+                        j,
+                        i,
+                        f"{value:.3f}",
+                        ha="center",
+                        va="center",
+                        color=color,
+                        fontsize=8,
+                    )
     else:
-        ax4.text(0.5, 0.5, "Second-order indices\nnot computed",
-                ha="center", va="center", transform=ax4.transAxes, fontsize=12)
+        ax4.text(
+            0.5,
+            0.5,
+            "Second-order indices\nnot computed",
+            ha="center",
+            va="center",
+            transform=ax4.transAxes,
+            fontsize=12,
+        )
         ax4.set_xticks([])
         ax4.set_yticks([])
 
@@ -258,9 +287,9 @@ def print_sensitivity_report(results: dict[str, Any], metric: str) -> None:
         results: Results from comprehensive_sensitivity_analysis
         metric: Target metric name
     """
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print(f"SOBOL SENSITIVITY ANALYSIS REPORT - Metric: {metric.upper()}")
-    print("="*80)
+    print("=" * 80)
 
     param_names = results["param_names"]
     S1 = results["S1"]
@@ -271,22 +300,24 @@ def print_sensitivity_report(results: dict[str, Any], metric: str) -> None:
     print(f"\nTotal function evaluations: {n_evals}")
     print(f"Number of parameters: {len(param_names)}")
 
-    print("\n" + "-"*80)
+    print("\n" + "-" * 80)
     print("PARAMETER IMPORTANCE RANKING (by Total Sobol Index)")
-    print("-"*80)
+    print("-" * 80)
     print(f"{'Rank':<6} {'Parameter':<25} {'ST':<10} {'S1':<10} {'Interaction':<12}")
-    print("-"*80)
+    print("-" * 80)
 
     for i, (name, st_value) in enumerate(ranked, 1):
         idx = param_names.index(name)
         s1_value = S1[idx]
         interaction = st_value - s1_value
 
-        print(f"{i:<6} {name:<25} {st_value:>8.4f}  {s1_value:>8.4f}  {interaction:>10.4f}")
+        print(
+            f"{i:<6} {name:<25} {st_value:>8.4f}  {s1_value:>8.4f}  {interaction:>10.4f}"
+        )
 
-    print("\n" + "-"*80)
+    print("\n" + "-" * 80)
     print("INTERPRETATION GUIDE")
-    print("-"*80)
+    print("-" * 80)
     print("S1 (First-order):  Direct effect of parameter variation")
     print("ST (Total-order):  Direct + interaction effects")
     print("Interaction:       ST - S1 (effect through parameter interactions)")
@@ -295,9 +326,9 @@ def print_sensitivity_report(results: dict[str, Any], metric: str) -> None:
     print("ST ≈ S1:          Parameter effects are mostly independent")
 
     # Identify key parameters
-    print("\n" + "-"*80)
+    print("\n" + "-" * 80)
     print("KEY FINDINGS")
-    print("-"*80)
+    print("-" * 80)
 
     threshold_high = 0.1
     threshold_interaction = 0.05
@@ -312,17 +343,21 @@ def print_sensitivity_report(results: dict[str, Any], metric: str) -> None:
         print(f"\nNo parameters with ST > {threshold_high}")
 
     interactive_params = [
-        name for name in param_names
-        if (ST[param_names.index(name)] - S1[param_names.index(name)]) > threshold_interaction
+        name
+        for name in param_names
+        if (ST[param_names.index(name)] - S1[param_names.index(name)])
+        > threshold_interaction
     ]
     if interactive_params:
-        print(f"\nParameters with strong interactions (ST-S1 > {threshold_interaction}):")
+        print(
+            f"\nParameters with strong interactions (ST-S1 > {threshold_interaction}):"
+        )
         for name in interactive_params:
             idx = param_names.index(name)
             interaction = ST[idx] - S1[idx]
             print(f"  - {name}: Interaction={interaction:.4f}")
 
-    print("\n" + "="*80 + "\n")
+    print("\n" + "=" * 80 + "\n")
 
 
 def main():
@@ -334,40 +369,33 @@ def main():
         type=str,
         default="speed",
         choices=["speed", "stability", "energy", "robustness"],
-        help="Target metric for sensitivity analysis"
+        help="Target metric for sensitivity analysis",
     )
     parser.add_argument(
         "--samples",
         type=int,
         default=512,
-        help="Base sample size (actual evals = samples * (2*D + 2))"
+        help="Base sample size (actual evals = samples * (2*D + 2))",
     )
     parser.add_argument(
         "--second-order",
         action="store_true",
-        help="Compute second-order interaction indices (increases computation)"
+        help="Compute second-order interaction indices (increases computation)",
     )
     parser.add_argument(
-        "--seed",
-        type=int,
-        default=42,
-        help="Random seed for reproducibility"
+        "--seed", type=int, default=42, help="Random seed for reproducibility"
     )
     parser.add_argument(
-        "--visualize",
-        action="store_true",
-        help="Generate visualization plots"
+        "--visualize", action="store_true", help="Generate visualization plots"
     )
     parser.add_argument(
         "--output-dir",
         type=str,
         default="sensitivity_results",
-        help="Output directory for results"
+        help="Output directory for results",
     )
     parser.add_argument(
-        "--no-show",
-        action="store_true",
-        help="Don't display plots (only save)"
+        "--no-show", action="store_true", help="Don't display plots (only save)"
     )
 
     args = parser.parse_args()
@@ -428,9 +456,7 @@ def main():
         print("\nGenerating visualization...")
         fig_path = output_dir / f"sensitivity_{args.metric}_n{args.samples}.png"
         visualize_sensitivity_results(
-            results,
-            output_path=fig_path,
-            show=not args.no_show
+            results, output_path=fig_path, show=not args.no_show
         )
 
     print("\nAnalysis complete!")

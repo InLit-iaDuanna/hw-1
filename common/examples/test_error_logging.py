@@ -13,8 +13,9 @@ sys.path.insert(0, str(ROOT))
 # 设置控制台编码
 if sys.platform == "win32":
     import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8")
 
 
 def test_imports():
@@ -30,6 +31,7 @@ def test_imports():
             DataValidationError,
             wrap_exception,
         )
+
         print("[OK] exceptions module imported successfully")
 
         # 测试日志模块
@@ -39,6 +41,7 @@ def test_imports():
             log_execution_time,
             LogContext,
         )
+
         print("[OK] logging_config module imported successfully")
 
         # 测试错误处理模块
@@ -48,6 +51,7 @@ def test_imports():
             safe_execute,
             ErrorContext,
         )
+
         print("[OK] error_handler module imported successfully")
 
         # 测试监控模块
@@ -57,6 +61,7 @@ def test_imports():
             PerformanceTracker,
             AlertManager,
         )
+
         print("[OK] monitoring module imported successfully")
 
         return True
@@ -159,6 +164,7 @@ def test_logging():
     except Exception as e:
         print(f"[FAIL] Logging test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -239,6 +245,7 @@ def test_error_handler():
     except Exception as e:
         print(f"[FAIL] Error handler test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -333,6 +340,7 @@ def test_monitoring():
     except Exception as e:
         print(f"[FAIL] Monitoring test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -360,6 +368,7 @@ def main():
         except Exception as e:
             print(f"\n[CRASH] Test '{name}' crashed: {e}")
             import traceback
+
             traceback.print_exc()
             results.append((name, False))
 
@@ -387,4 +396,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-

@@ -55,7 +55,9 @@ def _make_identity() -> tuple[V137IdentitySimulator, dict[str, Any]]:
     return sim, state
 
 
-def _identity_step(sim: V137IdentitySimulator, state: dict[str, Any], step: int) -> dict[str, Any]:
+def _identity_step(
+    sim: V137IdentitySimulator, state: dict[str, Any], step: int
+) -> dict[str, Any]:
     p = sim.params.base
     t = step * p.timestep
     e_current = _mechanical_energy(p, sim.data)
@@ -181,7 +183,10 @@ def _first_divergence(identity: dict[str, Any], v2: dict[str, Any]) -> str:
         ("support_foot", identity["support_foot"] != v2["support_foot"]),
         ("phase", identity["phase"] != v2["phase"]),
         ("contact_reported", identity["contact_reported"] != v2["contact_reported"]),
-        ("base_torque", not np.allclose(identity["base_torque"], v2["base_torque"], atol=1e-7)),
+        (
+            "base_torque",
+            not np.allclose(identity["base_torque"], v2["base_torque"], atol=1e-7),
+        ),
         ("left_contact", identity["left_contact"] != v2["left_contact"]),
         ("right_contact", identity["right_contact"] != v2["right_contact"]),
         ("touchdown", identity["touchdown"] != v2["touchdown"]),
@@ -193,13 +198,22 @@ def _first_divergence(identity: dict[str, Any], v2: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Compare V2 against V13.7 identity for the first second.")
+    parser = argparse.ArgumentParser(
+        description="Compare V2 against V13.7 identity for the first second."
+    )
     parser.add_argument("--seconds", type=float, default=1.0)
-    parser.add_argument("--stride", type=int, default=1, help="Print every N milliseconds; default prints every step.")
+    parser.add_argument(
+        "--stride",
+        type=int,
+        default=1,
+        help="Print every N milliseconds; default prints every step.",
+    )
     args = parser.parse_args()
 
     identity, identity_state = _make_identity()
-    env = ResidualRLEnvV2(residual_scale=0.05, inner_steps=1, max_steps=int(args.seconds * 1000))
+    env = ResidualRLEnvV2(
+        residual_scale=0.05, inner_steps=1, max_steps=int(args.seconds * 1000)
+    )
     env.reset(seed=0)
     action = np.zeros(2, dtype=np.float32)
 
@@ -209,7 +223,9 @@ def main() -> int:
     print("=" * 160)
     print("DEBUG: ResidualRLEnvV2 vs test_v137_identity.py")
     print("=" * 160)
-    print("Fields: contact and contact_reported are left/right. base_torque is [Lhip,Lknee,Rhip,Rknee].")
+    print(
+        "Fields: contact and contact_reported are left/right. base_torque is [Lhip,Lknee,Rhip,Rknee]."
+    )
     print(
         f"{'step':>4} {'t':>7} | "
         f"{'hip_x identity':>14} {'hip_x V2':>14} {'diff':>10} | "
@@ -235,7 +251,11 @@ def main() -> int:
                 f"{_fmt_bool_pair(v['left_contact'], v['right_contact'])}"
             )
             touchdown = f"{i['touchdown'] or '-'}/{v['touchdown'] or '-'}"
-            marker = f"  <-- first divergence: {divergence}" if first_divergence == (step, i["t"], divergence) else ""
+            marker = (
+                f"  <-- first divergence: {divergence}"
+                if first_divergence == (step, i["t"], divergence)
+                else ""
+            )
             print(
                 f"{step:4d} {i['t']:7.3f} | "
                 f"{i['hip_x']:14.9f} {v['hip_x']:14.9f} {diff:10.2e} | "

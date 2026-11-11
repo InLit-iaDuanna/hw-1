@@ -26,7 +26,9 @@ class TradeOffAnalyzer:
         self.df = pd.read_csv(results_file)
 
         # Clean data
-        self.df['cost_of_transport'] = self.df['cost_of_transport'].replace([np.inf, -np.inf], np.nan)
+        self.df["cost_of_transport"] = self.df["cost_of_transport"].replace(
+            [np.inf, -np.inf], np.nan
+        )
 
         # Compute aggregate metrics per algorithm-scenario combination
         self.aggregate_df = self._compute_aggregates()
@@ -36,68 +38,71 @@ class TradeOffAnalyzer:
 
     def setup_styles(self):
         """Set up matplotlib and seaborn styles"""
-        plt.style.use('seaborn-v0_8-darkgrid')
+        plt.style.use("seaborn-v0_8-darkgrid")
         sns.set_palette("husl")
 
         # Color scheme for algorithms
         self.colors = {
-            'V10_PD': '#FF6B6B',
-            'V13_FSM': '#4ECDC4',
-            'RL_PPO': '#45B7D1',
-            'RL_SAC': '#FFA07A',
-            'Trajectory_Opt': '#98D8C8',
-            'Virtual_Constraints': '#F7DC6F'
+            "V10_PD": "#FF6B6B",
+            "V13_FSM": "#4ECDC4",
+            "RL_PPO": "#45B7D1",
+            "RL_SAC": "#FFA07A",
+            "Trajectory_Opt": "#98D8C8",
+            "Virtual_Constraints": "#F7DC6F",
         }
 
         # Marker styles
         self.markers = {
-            'V10_PD': 'o',
-            'V13_FSM': 's',
-            'RL_PPO': '^',
-            'RL_SAC': 'v',
-            'Trajectory_Opt': 'D',
-            'Virtual_Constraints': 'p'
+            "V10_PD": "o",
+            "V13_FSM": "s",
+            "RL_PPO": "^",
+            "RL_SAC": "v",
+            "Trajectory_Opt": "D",
+            "Virtual_Constraints": "p",
         }
 
     def _compute_aggregates(self) -> pd.DataFrame:
         """Compute aggregate metrics per algorithm-scenario"""
         agg_metrics = []
 
-        for (algo, scenario), group in self.df.groupby(['algorithm', 'scenario']):
+        for (algo, scenario), group in self.df.groupby(["algorithm", "scenario"]):
             # Filter successful trials
-            successful = group[group['success'] == True]
+            successful = group[group["success"] == True]
 
             metrics = {
-                'algorithm': algo,
-                'scenario': scenario,
-                'mean_distance': group['forward_distance'].mean(),
-                'std_distance': group['forward_distance'].std(),
-                'mean_cot': group['cost_of_transport'].mean(),
-                'std_cot': group['cost_of_transport'].std(),
-                'mean_stability': group['stability_metric'].mean(),
-                'std_stability': group['stability_metric'].std(),
-                'mean_robustness': group['robustness_score'].mean(),
-                'std_robustness': group['robustness_score'].std(),
-                'success_rate': (group['success'] == True).mean(),
-                'mean_execution_time': group['execution_time'].mean(),
-                'std_execution_time': group['execution_time'].std(),
-                'num_trials': len(group)
+                "algorithm": algo,
+                "scenario": scenario,
+                "mean_distance": group["forward_distance"].mean(),
+                "std_distance": group["forward_distance"].std(),
+                "mean_cot": group["cost_of_transport"].mean(),
+                "std_cot": group["cost_of_transport"].std(),
+                "mean_stability": group["stability_metric"].mean(),
+                "std_stability": group["stability_metric"].std(),
+                "mean_robustness": group["robustness_score"].mean(),
+                "std_robustness": group["robustness_score"].std(),
+                "success_rate": (group["success"] == True).mean(),
+                "mean_execution_time": group["execution_time"].mean(),
+                "std_execution_time": group["execution_time"].std(),
+                "num_trials": len(group),
             }
 
             # Compute energy from CoT and distance
             # CoT = Energy / (mass * g * distance)
             # Assume mass * g ≈ 50 N for typical biped
-            if not pd.isna(metrics['mean_cot']) and metrics['mean_distance'] > 0:
-                metrics['mean_energy'] = metrics['mean_cot'] * 50 * metrics['mean_distance']
+            if not pd.isna(metrics["mean_cot"]) and metrics["mean_distance"] > 0:
+                metrics["mean_energy"] = (
+                    metrics["mean_cot"] * 50 * metrics["mean_distance"]
+                )
             else:
-                metrics['mean_energy'] = np.nan
+                metrics["mean_energy"] = np.nan
 
             agg_metrics.append(metrics)
 
         return pd.DataFrame(agg_metrics)
 
-    def compute_pareto_front(self, objectives: List[str],
-                            minimize: List[bool]) -> pd.DataFrame:
+    def compute_pareto_front(
+        self, objectives: List[str], minimize: List[bool]
+    ) -> pd.DataFrame:
         """
         Compute Pareto front for given objectives
 
@@ -157,60 +162,63 @@ class TradeOffAnalyzer:
         fig, ax = plt.subplots(figsize=(12, 8))
 
         # Plot by scenario
-        scenarios = self.aggregate_df['scenario'].unique()
+        scenarios = self.aggregate_df["scenario"].unique()
 
         for scenario in scenarios:
-            scenario_data = self.aggregate_df[self.aggregate_df['scenario'] == scenario]
+            scenario_data = self.aggregate_df[self.aggregate_df["scenario"] == scenario]
 
-            for algo in scenario_data['algorithm'].unique():
-                algo_data = scenario_data[scenario_data['algorithm'] == algo]
+            for algo in scenario_data["algorithm"].unique():
+                algo_data = scenario_data[scenario_data["algorithm"] == algo]
 
                 # Skip if no valid energy data
-                if algo_data['mean_energy'].isna().all():
+                if algo_data["mean_energy"].isna().all():
                     continue
 
-                marker_style = self.markers.get(algo, 'o')
-                color = self.colors.get(algo, 'gray')
-                alpha = 0.5 if scenario != 'flat_ground' else 1.0
-                size = 100 if scenario == 'flat_ground' else 60
+                marker_style = self.markers.get(algo, "o")
+                color = self.colors.get(algo, "gray")
+                alpha = 0.5 if scenario != "flat_ground" else 1.0
+                size = 100 if scenario == "flat_ground" else 60
 
                 ax.scatter(
-                    algo_data['mean_distance'],
-                    algo_data['mean_energy'],
+                    algo_data["mean_distance"],
+                    algo_data["mean_energy"],
                     c=color,
                     marker=marker_style,
                     s=size,
                     alpha=alpha,
-                    label=f"{algo} ({scenario})" if scenario == 'flat_ground' else None,
-                    edgecolors='black',
-                    linewidth=0.5
+                    label=f"{algo} ({scenario})" if scenario == "flat_ground" else None,
+                    edgecolors="black",
+                    linewidth=0.5,
                 )
 
                 # Add error bars for flat_ground
-                if scenario == 'flat_ground':
+                if scenario == "flat_ground":
                     for _, row in algo_data.iterrows():
-                        if not pd.isna(row['mean_energy']):
+                        if not pd.isna(row["mean_energy"]):
                             ax.errorbar(
-                                row['mean_distance'],
-                                row['mean_energy'],
-                                xerr=row['std_distance'],
-                                fmt='none',
+                                row["mean_distance"],
+                                row["mean_energy"],
+                                xerr=row["std_distance"],
+                                fmt="none",
                                 ecolor=color,
                                 alpha=0.3,
-                                capsize=3
+                                capsize=3,
                             )
 
-        ax.set_xlabel('Forward Distance (m)', fontsize=12, fontweight='bold')
-        ax.set_ylabel('Energy Consumption (J)', fontsize=12, fontweight='bold')
-        ax.set_title('Distance vs Energy Trade-off\n(All Algorithms and Scenarios)',
-                    fontsize=14, fontweight='bold')
-        ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize=9)
+        ax.set_xlabel("Forward Distance (m)", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Energy Consumption (J)", fontsize=12, fontweight="bold")
+        ax.set_title(
+            "Distance vs Energy Trade-off\n(All Algorithms and Scenarios)",
+            fontsize=14,
+            fontweight="bold",
+        )
+        ax.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=9)
         ax.grid(True, alpha=0.3)
 
         plt.tight_layout()
 
         if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            plt.savefig(save_path, dpi=300, bbox_inches="tight")
             print(f"Saved: {save_path}")
 
         plt.close()
@@ -221,8 +229,8 @@ class TradeOffAnalyzer:
 
         # Focus on flat_ground scenario for cleaner Pareto analysis
         flat_data = self.aggregate_df[
-            (self.aggregate_df['scenario'] == 'flat_ground') &
-            (~self.aggregate_df['mean_energy'].isna())
+            (self.aggregate_df["scenario"] == "flat_ground")
+            & (~self.aggregate_df["mean_energy"].isna())
         ].copy()
 
         if len(flat_data) == 0:
@@ -231,79 +239,81 @@ class TradeOffAnalyzer:
 
         # Compute Pareto front (maximize distance, minimize energy)
         pareto_df = self.compute_pareto_front(
-            objectives=['mean_distance', 'mean_energy'],
-            minimize=[False, True]
+            objectives=["mean_distance", "mean_energy"], minimize=[False, True]
         )
 
-        pareto_df = pareto_df[pareto_df['scenario'] == 'flat_ground']
+        pareto_df = pareto_df[pareto_df["scenario"] == "flat_ground"]
 
         # Plot all points
-        for algo in flat_data['algorithm'].unique():
-            algo_data = flat_data[flat_data['algorithm'] == algo]
+        for algo in flat_data["algorithm"].unique():
+            algo_data = flat_data[flat_data["algorithm"] == algo]
 
             ax.scatter(
-                algo_data['mean_distance'],
-                algo_data['mean_energy'],
-                c=self.colors.get(algo, 'gray'),
-                marker=self.markers.get(algo, 'o'),
+                algo_data["mean_distance"],
+                algo_data["mean_energy"],
+                c=self.colors.get(algo, "gray"),
+                marker=self.markers.get(algo, "o"),
                 s=100,
                 alpha=0.6,
                 label=algo,
-                edgecolors='black',
-                linewidth=0.5
+                edgecolors="black",
+                linewidth=0.5,
             )
 
         # Highlight Pareto front
         if len(pareto_df) > 0:
             # Sort by distance for nice line
-            pareto_sorted = pareto_df.sort_values('mean_distance')
+            pareto_sorted = pareto_df.sort_values("mean_distance")
 
             ax.plot(
-                pareto_sorted['mean_distance'],
-                pareto_sorted['mean_energy'],
-                'r--',
+                pareto_sorted["mean_distance"],
+                pareto_sorted["mean_energy"],
+                "r--",
                 linewidth=2,
                 alpha=0.7,
-                label='Pareto Front',
-                zorder=10
+                label="Pareto Front",
+                zorder=10,
             )
 
             # Mark Pareto points with stars
             ax.scatter(
-                pareto_sorted['mean_distance'],
-                pareto_sorted['mean_energy'],
-                marker='*',
+                pareto_sorted["mean_distance"],
+                pareto_sorted["mean_energy"],
+                marker="*",
                 s=400,
-                c='gold',
-                edgecolors='red',
+                c="gold",
+                edgecolors="red",
                 linewidth=2,
                 zorder=11,
-                label='Pareto Optimal'
+                label="Pareto Optimal",
             )
 
             # Annotate Pareto points
             for _, row in pareto_sorted.iterrows():
                 ax.annotate(
-                    row['algorithm'],
-                    (row['mean_distance'], row['mean_energy']),
+                    row["algorithm"],
+                    (row["mean_distance"], row["mean_energy"]),
                     xytext=(10, 10),
-                    textcoords='offset points',
+                    textcoords="offset points",
                     fontsize=9,
-                    fontweight='bold',
-                    bbox=dict(boxstyle='round,pad=0.3', facecolor='yellow', alpha=0.7)
+                    fontweight="bold",
+                    bbox=dict(boxstyle="round,pad=0.3", facecolor="yellow", alpha=0.7),
                 )
 
-        ax.set_xlabel('Forward Distance (m)', fontsize=12, fontweight='bold')
-        ax.set_ylabel('Energy Consumption (J)', fontsize=12, fontweight='bold')
-        ax.set_title('Pareto Front: Distance vs Energy\n(Flat Ground Scenario)',
-                    fontsize=14, fontweight='bold')
+        ax.set_xlabel("Forward Distance (m)", fontsize=12, fontweight="bold")
+        ax.set_ylabel("Energy Consumption (J)", fontsize=12, fontweight="bold")
+        ax.set_title(
+            "Pareto Front: Distance vs Energy\n(Flat Ground Scenario)",
+            fontsize=14,
+            fontweight="bold",
+        )
         ax.legend(fontsize=10)
         ax.grid(True, alpha=0.3)
 
         plt.tight_layout()
 
         if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            plt.savefig(save_path, dpi=300, bbox_inches="tight")
             print(f"Saved: {save_path}")
 
         plt.close()
@@ -313,69 +323,75 @@ class TradeOffAnalyzer:
         fig, ax = plt.subplots(figsize=(12, 8))
 
         # Use flat_ground as baseline
-        flat_data = self.aggregate_df[self.aggregate_df['scenario'] == 'flat_ground']
+        flat_data = self.aggregate_df[self.aggregate_df["scenario"] == "flat_ground"]
 
-        for algo in flat_data['algorithm'].unique():
-            algo_data = flat_data[flat_data['algorithm'] == algo]
+        for algo in flat_data["algorithm"].unique():
+            algo_data = flat_data[flat_data["algorithm"] == algo]
 
             # Performance metric: weighted combination of distance and success
             performance = (
-                algo_data['mean_distance'] *
-                algo_data['success_rate'] *
-                algo_data['mean_stability']
+                algo_data["mean_distance"]
+                * algo_data["success_rate"]
+                * algo_data["mean_stability"]
             )
 
             ax.scatter(
-                algo_data['mean_execution_time'],
+                algo_data["mean_execution_time"],
                 performance,
-                c=self.colors.get(algo, 'gray'),
-                marker=self.markers.get(algo, 'o'),
+                c=self.colors.get(algo, "gray"),
+                marker=self.markers.get(algo, "o"),
                 s=200,
                 alpha=0.7,
                 label=algo,
-                edgecolors='black',
-                linewidth=1.5
+                edgecolors="black",
+                linewidth=1.5,
             )
 
             # Add error bars
             ax.errorbar(
-                algo_data['mean_execution_time'],
+                algo_data["mean_execution_time"],
                 performance,
-                xerr=algo_data['std_execution_time'],
-                fmt='none',
-                ecolor=self.colors.get(algo, 'gray'),
+                xerr=algo_data["std_execution_time"],
+                fmt="none",
+                ecolor=self.colors.get(algo, "gray"),
                 alpha=0.3,
-                capsize=5
+                capsize=5,
             )
 
             # Annotate points
             for _, row in algo_data.iterrows():
                 perf = (
-                    row['mean_distance'] *
-                    row['success_rate'] *
-                    row['mean_stability']
+                    row["mean_distance"] * row["success_rate"] * row["mean_stability"]
                 )
                 ax.annotate(
                     algo,
-                    (row['mean_execution_time'], perf),
+                    (row["mean_execution_time"], perf),
                     xytext=(10, 5),
-                    textcoords='offset points',
+                    textcoords="offset points",
                     fontsize=9,
-                    alpha=0.7
+                    alpha=0.7,
                 )
 
-        ax.set_xlabel('Computational Time per Trial (s)', fontsize=12, fontweight='bold')
-        ax.set_ylabel('Performance Score\n(Distance × Success × Stability)',
-                     fontsize=12, fontweight='bold')
-        ax.set_title('Performance vs Computational Cost\n(Flat Ground Scenario)',
-                    fontsize=14, fontweight='bold')
+        ax.set_xlabel(
+            "Computational Time per Trial (s)", fontsize=12, fontweight="bold"
+        )
+        ax.set_ylabel(
+            "Performance Score\n(Distance × Success × Stability)",
+            fontsize=12,
+            fontweight="bold",
+        )
+        ax.set_title(
+            "Performance vs Computational Cost\n(Flat Ground Scenario)",
+            fontsize=14,
+            fontweight="bold",
+        )
         ax.legend(fontsize=10)
         ax.grid(True, alpha=0.3)
 
         plt.tight_layout()
 
         if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            plt.savefig(save_path, dpi=300, bbox_inches="tight")
             print(f"Saved: {save_path}")
 
         plt.close()
@@ -387,80 +403,97 @@ class TradeOffAnalyzer:
         # Aggregate across all scenarios for robustness
         algo_metrics = []
 
-        for algo in self.aggregate_df['algorithm'].unique():
-            algo_data = self.aggregate_df[self.aggregate_df['algorithm'] == algo]
+        for algo in self.aggregate_df["algorithm"].unique():
+            algo_data = self.aggregate_df[self.aggregate_df["algorithm"] == algo]
 
             # Robustness: mean robustness score across scenarios
-            robustness = algo_data['mean_robustness'].mean()
+            robustness = algo_data["mean_robustness"].mean()
 
             # Performance: weighted by scenario success
             performance = (
-                algo_data['mean_distance'] *
-                algo_data['success_rate']
+                algo_data["mean_distance"] * algo_data["success_rate"]
             ).mean()
 
             # Stability
-            stability = algo_data['mean_stability'].mean()
+            stability = algo_data["mean_stability"].mean()
 
-            algo_metrics.append({
-                'algorithm': algo,
-                'robustness': robustness,
-                'performance': performance,
-                'stability': stability
-            })
+            algo_metrics.append(
+                {
+                    "algorithm": algo,
+                    "robustness": robustness,
+                    "performance": performance,
+                    "stability": stability,
+                }
+            )
 
         metrics_df = pd.DataFrame(algo_metrics)
 
         # Create scatter with size based on stability
         for _, row in metrics_df.iterrows():
             ax.scatter(
-                row['performance'],
-                row['robustness'],
-                c=self.colors.get(row['algorithm'], 'gray'),
-                marker=self.markers.get(row['algorithm'], 'o'),
-                s=row['stability'] * 1000,  # Scale for visibility
+                row["performance"],
+                row["robustness"],
+                c=self.colors.get(row["algorithm"], "gray"),
+                marker=self.markers.get(row["algorithm"], "o"),
+                s=row["stability"] * 1000,  # Scale for visibility
                 alpha=0.7,
-                label=row['algorithm'],
-                edgecolors='black',
-                linewidth=1.5
+                label=row["algorithm"],
+                edgecolors="black",
+                linewidth=1.5,
             )
 
             # Annotate
             ax.annotate(
-                row['algorithm'],
-                (row['performance'], row['robustness']),
+                row["algorithm"],
+                (row["performance"], row["robustness"]),
                 xytext=(10, 10),
-                textcoords='offset points',
+                textcoords="offset points",
                 fontsize=10,
-                fontweight='bold',
-                bbox=dict(boxstyle='round,pad=0.4', facecolor='white', alpha=0.7)
+                fontweight="bold",
+                bbox=dict(boxstyle="round,pad=0.4", facecolor="white", alpha=0.7),
             )
 
         # Add quadrant lines
-        perf_median = metrics_df['performance'].median()
-        robust_median = metrics_df['robustness'].median()
+        perf_median = metrics_df["performance"].median()
+        robust_median = metrics_df["robustness"].median()
 
-        ax.axvline(perf_median, color='gray', linestyle='--', alpha=0.5, linewidth=1)
-        ax.axhline(robust_median, color='gray', linestyle='--', alpha=0.5, linewidth=1)
+        ax.axvline(perf_median, color="gray", linestyle="--", alpha=0.5, linewidth=1)
+        ax.axhline(robust_median, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
         # Label quadrants
-        ax.text(0.98, 0.98, 'High Robustness\nHigh Performance',
-               transform=ax.transAxes, fontsize=10, va='top', ha='right',
-               bbox=dict(boxstyle='round', facecolor='lightgreen', alpha=0.5))
+        ax.text(
+            0.98,
+            0.98,
+            "High Robustness\nHigh Performance",
+            transform=ax.transAxes,
+            fontsize=10,
+            va="top",
+            ha="right",
+            bbox=dict(boxstyle="round", facecolor="lightgreen", alpha=0.5),
+        )
 
-        ax.set_xlabel('Performance Score\n(Mean Distance × Success Rate)',
-                     fontsize=12, fontweight='bold')
-        ax.set_ylabel('Robustness Score\n(Averaged Across Scenarios)',
-                     fontsize=12, fontweight='bold')
-        ax.set_title('Robustness vs Performance\n(Bubble size = Stability)',
-                    fontsize=14, fontweight='bold')
-        ax.legend(fontsize=10, loc='upper left')
+        ax.set_xlabel(
+            "Performance Score\n(Mean Distance × Success Rate)",
+            fontsize=12,
+            fontweight="bold",
+        )
+        ax.set_ylabel(
+            "Robustness Score\n(Averaged Across Scenarios)",
+            fontsize=12,
+            fontweight="bold",
+        )
+        ax.set_title(
+            "Robustness vs Performance\n(Bubble size = Stability)",
+            fontsize=14,
+            fontweight="bold",
+        )
+        ax.legend(fontsize=10, loc="upper left")
         ax.grid(True, alpha=0.3)
 
         plt.tight_layout()
 
         if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            plt.savefig(save_path, dpi=300, bbox_inches="tight")
             print(f"Saved: {save_path}")
 
         plt.close()
@@ -470,135 +503,154 @@ class TradeOffAnalyzer:
 
         # Create subplots
         fig = make_subplots(
-            rows=2, cols=2,
+            rows=2,
+            cols=2,
             subplot_titles=(
-                'Distance vs Energy (All Scenarios)',
-                'Performance vs Computational Cost',
-                'Robustness vs Performance',
-                'Success Rate by Scenario'
+                "Distance vs Energy (All Scenarios)",
+                "Performance vs Computational Cost",
+                "Robustness vs Performance",
+                "Success Rate by Scenario",
             ),
             specs=[
-                [{'type': 'scatter'}, {'type': 'scatter'}],
-                [{'type': 'scatter'}, {'type': 'bar'}]
+                [{"type": "scatter"}, {"type": "scatter"}],
+                [{"type": "scatter"}, {"type": "bar"}],
             ],
             vertical_spacing=0.12,
-            horizontal_spacing=0.1
+            horizontal_spacing=0.1,
         )
 
         # 1. Distance vs Energy
-        for scenario in self.aggregate_df['scenario'].unique():
-            scenario_data = self.aggregate_df[self.aggregate_df['scenario'] == scenario]
+        for scenario in self.aggregate_df["scenario"].unique():
+            scenario_data = self.aggregate_df[self.aggregate_df["scenario"] == scenario]
 
-            for algo in scenario_data['algorithm'].unique():
-                algo_data = scenario_data[scenario_data['algorithm'] == algo]
+            for algo in scenario_data["algorithm"].unique():
+                algo_data = scenario_data[scenario_data["algorithm"] == algo]
 
-                if algo_data['mean_energy'].isna().all():
+                if algo_data["mean_energy"].isna().all():
                     continue
 
                 fig.add_trace(
                     go.Scatter(
-                        x=algo_data['mean_distance'],
-                        y=algo_data['mean_energy'],
-                        mode='markers',
+                        x=algo_data["mean_distance"],
+                        y=algo_data["mean_energy"],
+                        mode="markers",
                         name=f"{algo} ({scenario})",
                         marker=dict(
                             size=12,
-                            color=self.colors.get(algo, 'gray'),
-                            symbol=self._plotly_marker(algo)
+                            color=self.colors.get(algo, "gray"),
+                            symbol=self._plotly_marker(algo),
                         ),
-                        text=[f"{algo}<br>Scenario: {scenario}<br>Distance: {d:.2f}m<br>Energy: {e:.2f}J"
-                              for d, e in zip(algo_data['mean_distance'], algo_data['mean_energy'])],
-                        hoverinfo='text'
+                        text=[
+                            f"{algo}<br>Scenario: {scenario}<br>Distance: {d:.2f}m<br>Energy: {e:.2f}J"
+                            for d, e in zip(
+                                algo_data["mean_distance"], algo_data["mean_energy"]
+                            )
+                        ],
+                        hoverinfo="text",
                     ),
-                    row=1, col=1
+                    row=1,
+                    col=1,
                 )
 
         # 2. Performance vs Computational Cost
-        flat_data = self.aggregate_df[self.aggregate_df['scenario'] == 'flat_ground']
+        flat_data = self.aggregate_df[self.aggregate_df["scenario"] == "flat_ground"]
 
-        for algo in flat_data['algorithm'].unique():
-            algo_data = flat_data[flat_data['algorithm'] == algo]
+        for algo in flat_data["algorithm"].unique():
+            algo_data = flat_data[flat_data["algorithm"] == algo]
             performance = (
-                algo_data['mean_distance'] *
-                algo_data['success_rate'] *
-                algo_data['mean_stability']
+                algo_data["mean_distance"]
+                * algo_data["success_rate"]
+                * algo_data["mean_stability"]
             )
 
             fig.add_trace(
                 go.Scatter(
-                    x=algo_data['mean_execution_time'],
+                    x=algo_data["mean_execution_time"],
                     y=performance,
-                    mode='markers+text',
+                    mode="markers+text",
                     name=algo,
                     marker=dict(
                         size=15,
-                        color=self.colors.get(algo, 'gray'),
-                        symbol=self._plotly_marker(algo)
+                        color=self.colors.get(algo, "gray"),
+                        symbol=self._plotly_marker(algo),
                     ),
                     text=algo,
-                    textposition='top center',
-                    hovertext=[f"{algo}<br>Time: {t:.2f}s<br>Performance: {p:.3f}"
-                              for t, p in zip(algo_data['mean_execution_time'], performance)],
-                    hoverinfo='text',
-                    showlegend=False
+                    textposition="top center",
+                    hovertext=[
+                        f"{algo}<br>Time: {t:.2f}s<br>Performance: {p:.3f}"
+                        for t, p in zip(algo_data["mean_execution_time"], performance)
+                    ],
+                    hoverinfo="text",
+                    showlegend=False,
                 ),
-                row=1, col=2
+                row=1,
+                col=2,
             )
 
         # 3. Robustness vs Performance
         algo_metrics = []
-        for algo in self.aggregate_df['algorithm'].unique():
-            algo_data = self.aggregate_df[self.aggregate_df['algorithm'] == algo]
-            robustness = algo_data['mean_robustness'].mean()
-            performance = (algo_data['mean_distance'] * algo_data['success_rate']).mean()
-            stability = algo_data['mean_stability'].mean()
+        for algo in self.aggregate_df["algorithm"].unique():
+            algo_data = self.aggregate_df[self.aggregate_df["algorithm"] == algo]
+            robustness = algo_data["mean_robustness"].mean()
+            performance = (
+                algo_data["mean_distance"] * algo_data["success_rate"]
+            ).mean()
+            stability = algo_data["mean_stability"].mean()
 
-            algo_metrics.append({
-                'algorithm': algo,
-                'robustness': robustness,
-                'performance': performance,
-                'stability': stability
-            })
+            algo_metrics.append(
+                {
+                    "algorithm": algo,
+                    "robustness": robustness,
+                    "performance": performance,
+                    "stability": stability,
+                }
+            )
 
         metrics_df = pd.DataFrame(algo_metrics)
 
         for _, row in metrics_df.iterrows():
             fig.add_trace(
                 go.Scatter(
-                    x=[row['performance']],
-                    y=[row['robustness']],
-                    mode='markers+text',
-                    name=row['algorithm'],
+                    x=[row["performance"]],
+                    y=[row["robustness"]],
+                    mode="markers+text",
+                    name=row["algorithm"],
                     marker=dict(
-                        size=row['stability'] * 50,
-                        color=self.colors.get(row['algorithm'], 'gray'),
-                        symbol=self._plotly_marker(row['algorithm'])
+                        size=row["stability"] * 50,
+                        color=self.colors.get(row["algorithm"], "gray"),
+                        symbol=self._plotly_marker(row["algorithm"]),
                     ),
-                    text=row['algorithm'],
-                    textposition='top center',
+                    text=row["algorithm"],
+                    textposition="top center",
                     hovertext=f"{row['algorithm']}<br>Performance: {row['performance']:.3f}<br>Robustness: {row['robustness']:.3f}<br>Stability: {row['stability']:.3f}",
-                    hoverinfo='text',
-                    showlegend=False
+                    hoverinfo="text",
+                    showlegend=False,
                 ),
-                row=2, col=1
+                row=2,
+                col=1,
             )
 
         # 4. Success Rate by Scenario
-        for algo in self.aggregate_df['algorithm'].unique():
-            algo_data = self.aggregate_df[self.aggregate_df['algorithm'] == algo]
+        for algo in self.aggregate_df["algorithm"].unique():
+            algo_data = self.aggregate_df[self.aggregate_df["algorithm"] == algo]
 
             fig.add_trace(
                 go.Bar(
-                    x=algo_data['scenario'],
-                    y=algo_data['success_rate'] * 100,
+                    x=algo_data["scenario"],
+                    y=algo_data["success_rate"] * 100,
                     name=algo,
-                    marker_color=self.colors.get(algo, 'gray'),
-                    hovertext=[f"{algo}<br>{s}<br>Success: {sr:.1f}%"
-                              for s, sr in zip(algo_data['scenario'], algo_data['success_rate'] * 100)],
-                    hoverinfo='text',
-                    showlegend=False
+                    marker_color=self.colors.get(algo, "gray"),
+                    hovertext=[
+                        f"{algo}<br>{s}<br>Success: {sr:.1f}%"
+                        for s, sr in zip(
+                            algo_data["scenario"], algo_data["success_rate"] * 100
+                        )
+                    ],
+                    hoverinfo="text",
+                    showlegend=False,
                 ),
-                row=2, col=2
+                row=2,
+                col=2,
             )
 
         # Update axes
@@ -620,14 +672,8 @@ class TradeOffAnalyzer:
             title_font_size=20,
             height=900,
             showlegend=True,
-            legend=dict(
-                orientation="v",
-                yanchor="top",
-                y=1.0,
-                xanchor="left",
-                x=1.02
-            ),
-            hovermode='closest'
+            legend=dict(orientation="v", yanchor="top", y=1.0, xanchor="left", x=1.02),
+            hovermode="closest",
         )
 
         if save_path:
@@ -641,14 +687,14 @@ class TradeOffAnalyzer:
     def _plotly_marker(self, algo: str) -> str:
         """Get Plotly marker symbol for algorithm"""
         marker_map = {
-            'V10_PD': 'circle',
-            'V13_FSM': 'square',
-            'RL_PPO': 'triangle-up',
-            'RL_SAC': 'triangle-down',
-            'Trajectory_Opt': 'diamond',
-            'Virtual_Constraints': 'pentagon'
+            "V10_PD": "circle",
+            "V13_FSM": "square",
+            "RL_PPO": "triangle-up",
+            "RL_SAC": "triangle-down",
+            "Trajectory_Opt": "diamond",
+            "Virtual_Constraints": "pentagon",
         }
-        return marker_map.get(algo, 'circle')
+        return marker_map.get(algo, "circle")
 
     def generate_all_plots(self, output_dir: str = None):
         """Generate all trade-off analysis plots"""
@@ -674,7 +720,9 @@ class TradeOffAnalyzer:
         self.plot_performance_vs_cost(output_dir / "performance_vs_cost.png")
 
         print("4. Robustness vs Performance...")
-        self.plot_robustness_vs_performance(output_dir / "robustness_vs_performance.png")
+        self.plot_robustness_vs_performance(
+            output_dir / "robustness_vs_performance.png"
+        )
 
         # Interactive dashboard
         print("5. Interactive Plotly dashboard...")

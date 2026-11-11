@@ -9,6 +9,7 @@ sys.path.insert(0, str(HW1_ROOT))
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 import numpy as np
 
+
 def check_timing_precision():
     """检查sim_time累积精度"""
 
@@ -18,7 +19,9 @@ def check_timing_precision():
 
     # 测试inner_steps=1 vs inner_steps=5
     for inner_steps in [1, 5]:
-        env = ResidualRLEnvV2(residual_scale=0.05, inner_steps=inner_steps, max_steps=2000)
+        env = ResidualRLEnvV2(
+            residual_scale=0.05, inner_steps=inner_steps, max_steps=2000
+        )
         obs, info = env.reset(seed=0)
 
         print(f"\ninner_steps={inner_steps}:")
@@ -42,6 +45,7 @@ def check_timing_precision():
         env.close()
 
     print()
+
 
 if __name__ == "__main__":
     check_timing_precision()

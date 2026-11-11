@@ -21,7 +21,6 @@ sys.path.insert(0, str(HW1_ROOT))
 
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
-
 BASELINE_DISTANCE_12S = 4.63027587315918
 
 
@@ -104,14 +103,18 @@ def run_policy_on_env(
     return distances, rewards, successes
 
 
-def constant_policy(left_action: float, right_action: float) -> Callable[[ResidualRLEnvV2], np.ndarray]:
+def constant_policy(
+    left_action: float, right_action: float
+) -> Callable[[ResidualRLEnvV2], np.ndarray]:
     def _policy(env: ResidualRLEnvV2) -> np.ndarray:
         return np.array([left_action, right_action], dtype=np.float32)
 
     return _policy
 
 
-def phase_policy(joint: str, phase: int, action_value: float) -> Callable[[ResidualRLEnvV2], np.ndarray]:
+def phase_policy(
+    joint: str, phase: int, action_value: float
+) -> Callable[[ResidualRLEnvV2], np.ndarray]:
     def _policy(env: ResidualRLEnvV2) -> np.ndarray:
         action = np.zeros(2, dtype=np.float32)
         phase_now = env._get_phase(joint)
@@ -234,8 +237,15 @@ def run_sweep(args: argparse.Namespace) -> dict:
             finally:
                 env.close()
 
-    results_sorted = sorted(results, key=lambda item: item.mean_distance_m, reverse=True)
-    good_results = [item for item in results_sorted if item.improvement_pct >= args.pass_improvement_pct and item.success_rate == 1.0]
+    results_sorted = sorted(
+        results, key=lambda item: item.mean_distance_m, reverse=True
+    )
+    good_results = [
+        item
+        for item in results_sorted
+        if item.improvement_pct >= args.pass_improvement_pct
+        and item.success_rate == 1.0
+    ]
 
     print()
     print("Top configurations")

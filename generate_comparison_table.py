@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 
+
 def load_all_results():
     """加载所有可用的结果"""
     base_path = Path(__file__).parent
@@ -18,13 +19,13 @@ def load_all_results():
     if zero_path.exists():
         with open(zero_path) as f:
             data = json.load(f)
-            results['v137_baseline'] = {
-                'name': 'V13.7 FSM + Friction Comp',
-                'distance': data['baseline_distance'],
-                'success_rate': data['statistics']['success_rate'],
-                'std': data['statistics']['std_distance'],
-                'method': 'Model-based FSM',
-                'training': 'N/A'
+            results["v137_baseline"] = {
+                "name": "V13.7 FSM + Friction Comp",
+                "distance": data["baseline_distance"],
+                "success_rate": data["statistics"]["success_rate"],
+                "std": data["statistics"]["std_distance"],
+                "method": "Model-based FSM",
+                "training": "N/A",
             }
 
     # Residual RL V2
@@ -33,22 +34,22 @@ def load_all_results():
         with open(train_path) as f:
             data = json.load(f)
 
-            results['rl_100k'] = {
-                'name': 'Residual RL (100k)',
-                'distance': data['final_eval']['mean_distance_m'],
-                'success_rate': data['final_eval']['success_rate'],
-                'std': data['final_eval']['std_distance_m'],
-                'method': 'FSM + PPO Residual',
-                'training': '100k steps'
+            results["rl_100k"] = {
+                "name": "Residual RL (100k)",
+                "distance": data["final_eval"]["mean_distance_m"],
+                "success_rate": data["final_eval"]["success_rate"],
+                "std": data["final_eval"]["std_distance_m"],
+                "method": "FSM + PPO Residual",
+                "training": "100k steps",
             }
 
-            results['prior_action'] = {
-                'name': 'Prior Action [0.5, 1.0]',
-                'distance': data['prior_eval']['mean_distance_m'],
-                'success_rate': data['prior_eval']['success_rate'],
-                'std': data['prior_eval']['std_distance_m'],
-                'method': 'FSM + Constant Residual',
-                'training': 'Zero-shot'
+            results["prior_action"] = {
+                "name": "Prior Action [0.5, 1.0]",
+                "distance": data["prior_eval"]["mean_distance_m"],
+                "success_rate": data["prior_eval"]["success_rate"],
+                "std": data["prior_eval"]["std_distance_m"],
+                "method": "FSM + Constant Residual",
+                "training": "Zero-shot",
             }
 
     # Sweep best
@@ -56,48 +57,57 @@ def load_all_results():
     if sweep_path.exists():
         with open(sweep_path) as f:
             data = json.load(f)
-            best = data['best_result']
+            best = data["best_result"]
 
-            results['sweep_best'] = {
-                'name': 'Sweep Best [0.5, 1.0]',
-                'distance': best['mean_distance_m'],
-                'success_rate': best['success_rate'],
-                'std': best['std_distance_m'],
-                'method': 'FSM + Constant Residual',
-                'training': 'Grid search'
+            results["sweep_best"] = {
+                "name": "Sweep Best [0.5, 1.0]",
+                "distance": best["mean_distance_m"],
+                "success_rate": best["success_rate"],
+                "std": best["std_distance_m"],
+                "method": "FSM + Constant Residual",
+                "training": "Grid search",
             }
 
     return results
 
-def generate_markdown_table(results, baseline_key='v137_baseline'):
+
+def generate_markdown_table(results, baseline_key="v137_baseline"):
     """生成 Markdown 表格"""
     if baseline_key not in results:
         print(f"Warning: baseline '{baseline_key}' not found")
         baseline_dist = 4.63
     else:
-        baseline_dist = results[baseline_key]['distance']
+        baseline_dist = results[baseline_key]["distance"]
 
     lines = []
     lines.append("# Algorithm Performance Comparison")
     lines.append("")
     lines.append(f"**Generated**: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    lines.append(f"**Baseline**: {baseline_dist:.3f}m (V13.7 FSM + Friction Compensation)")
+    lines.append(
+        f"**Baseline**: {baseline_dist:.3f}m (V13.7 FSM + Friction Compensation)"
+    )
     lines.append("")
 
     # Main table
     lines.append("## Performance Summary")
     lines.append("")
-    lines.append("| Algorithm | Distance (m) | Improvement | Success Rate | Std Dev | Method | Training |")
-    lines.append("|-----------|--------------|-------------|--------------|---------|--------|----------|")
+    lines.append(
+        "| Algorithm | Distance (m) | Improvement | Success Rate | Std Dev | Method | Training |"
+    )
+    lines.append(
+        "|-----------|--------------|-------------|--------------|---------|--------|----------|"
+    )
 
     # Sort by distance (descending)
-    sorted_results = sorted(results.items(), key=lambda x: x[1]['distance'], reverse=True)
+    sorted_results = sorted(
+        results.items(), key=lambda x: x[1]["distance"], reverse=True
+    )
 
     for key, data in sorted_results:
-        dist = data['distance']
+        dist = data["distance"]
         improvement = (dist - baseline_dist) / baseline_dist * 100
-        success = data['success_rate'] * 100
-        std = data['std']
+        success = data["success_rate"] * 100
+        std = data["std"]
 
         lines.append(
             f"| {data['name']} | "
@@ -116,26 +126,35 @@ def generate_markdown_table(results, baseline_key='v137_baseline'):
     lines.append("")
 
     best = sorted_results[0][1]
-    best_improvement = (best['distance'] - baseline_dist) / baseline_dist * 100
+    best_improvement = (best["distance"] - baseline_dist) / baseline_dist * 100
 
-    lines.append(f"- **Best Performance**: {best['name']} achieved {best['distance']:.3f}m (+{best_improvement:.2f}%)")
-    lines.append(f"- **Best RL Result**: Residual RL (100k) shows {results['rl_100k']['distance']:.3f}m")
-    lines.append(f"- **Zero-shot Transfer**: Prior action achieves {results['prior_action']['distance']:.3f}m without training")
-    lines.append(f"- **Robustness**: All methods achieve 100% success rate with std ≈ 0")
+    lines.append(
+        f"- **Best Performance**: {best['name']} achieved {best['distance']:.3f}m (+{best_improvement:.2f}%)"
+    )
+    lines.append(
+        f"- **Best RL Result**: Residual RL (100k) shows {results['rl_100k']['distance']:.3f}m"
+    )
+    lines.append(
+        f"- **Zero-shot Transfer**: Prior action achieves {results['prior_action']['distance']:.3f}m without training"
+    )
+    lines.append(
+        f"- **Robustness**: All methods achieve 100% success rate with std ≈ 0"
+    )
     lines.append("")
 
     return "\n".join(lines)
 
-def generate_latex_table(results, baseline_key='v137_baseline'):
+
+def generate_latex_table(results, baseline_key="v137_baseline"):
     """生成 LaTeX 表格"""
     if baseline_key not in results:
         baseline_dist = 4.63
     else:
-        baseline_dist = results[baseline_key]['distance']
+        baseline_dist = results[baseline_key]["distance"]
 
     lines = []
     lines.append("% Algorithm Performance Comparison Table")
-    lines.append("% Generated: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    lines.append("% Generated: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     lines.append("")
     lines.append("\\begin{table}[htbp]")
     lines.append("\\centering")
@@ -147,16 +166,18 @@ def generate_latex_table(results, baseline_key='v137_baseline'):
     lines.append("\\hline")
 
     # Sort by distance (descending)
-    sorted_results = sorted(results.items(), key=lambda x: x[1]['distance'], reverse=True)
+    sorted_results = sorted(
+        results.items(), key=lambda x: x[1]["distance"], reverse=True
+    )
 
     for key, data in sorted_results:
-        dist = data['distance']
+        dist = data["distance"]
         improvement = (dist - baseline_dist) / baseline_dist * 100
-        success = data['success_rate'] * 100
+        success = data["success_rate"] * 100
 
         # Escape underscores for LaTeX
-        name = data['name'].replace('_', '\\_')
-        method = data['method'].replace('_', '\\_')
+        name = data["name"].replace("_", "\\_")
+        method = data["method"].replace("_", "\\_")
 
         lines.append(
             f"{name} & "
@@ -173,6 +194,7 @@ def generate_latex_table(results, baseline_key='v137_baseline'):
 
     return "\n".join(lines)
 
+
 def generate_detailed_comparison(results):
     """生成详细对比分析"""
     lines = []
@@ -181,18 +203,18 @@ def generate_detailed_comparison(results):
 
     # Method categories
     categories = {
-        'Model-based': [],
-        'Hybrid (FSM + RL)': [],
-        'Hybrid (FSM + Constant)': []
+        "Model-based": [],
+        "Hybrid (FSM + RL)": [],
+        "Hybrid (FSM + Constant)": [],
     }
 
     for key, data in results.items():
-        if 'Model-based' in data['method']:
-            categories['Model-based'].append((key, data))
-        elif 'PPO' in data['method']:
-            categories['Hybrid (FSM + RL)'].append((key, data))
+        if "Model-based" in data["method"]:
+            categories["Model-based"].append((key, data))
+        elif "PPO" in data["method"]:
+            categories["Hybrid (FSM + RL)"].append((key, data))
         else:
-            categories['Hybrid (FSM + Constant)'].append((key, data))
+            categories["Hybrid (FSM + Constant)"].append((key, data))
 
     for category, items in categories.items():
         if not items:
@@ -213,6 +235,7 @@ def generate_detailed_comparison(results):
 
     return "\n".join(lines)
 
+
 def main():
     print("Loading results...")
     results = load_all_results()
@@ -232,7 +255,7 @@ def main():
     print("Generating Markdown table...")
     md_content = generate_markdown_table(results)
     md_file = output_dir / "algorithm_comparison.md"
-    with open(md_file, 'w') as f:
+    with open(md_file, "w") as f:
         f.write(md_content)
     print(f"[OK] Saved: {md_file}")
 
@@ -240,7 +263,7 @@ def main():
     print("Generating LaTeX table...")
     latex_content = generate_latex_table(results)
     latex_file = output_dir / "algorithm_comparison.tex"
-    with open(latex_file, 'w') as f:
+    with open(latex_file, "w") as f:
         f.write(latex_content)
     print(f"[OK] Saved: {latex_file}")
 
@@ -248,7 +271,7 @@ def main():
     print("Generating detailed analysis...")
     detailed_content = generate_detailed_comparison(results)
     detailed_file = output_dir / "detailed_analysis.md"
-    with open(detailed_file, 'w') as f:
+    with open(detailed_file, "w") as f:
         f.write(detailed_content)
     print(f"[OK] Saved: {detailed_file}")
 
@@ -261,6 +284,7 @@ def main():
     print()
     print("[SUCCESS] All comparison tables generated!")
     print(f"Output directory: {output_dir.absolute()}")
+
 
 if __name__ == "__main__":
     main()

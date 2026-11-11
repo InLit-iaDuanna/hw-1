@@ -45,27 +45,29 @@ def check_integrity(generate_report: bool = True, fail_on_error: bool = False):
     print("SUMMARY")
     print("=" * 80)
     print(f"Total assets: {results['total_assets']}")
-    print(f"Valid: {results['summary']['valid']} ({results['summary']['valid_pct']:.1f}%)")
+    print(
+        f"Valid: {results['summary']['valid']} ({results['summary']['valid_pct']:.1f}%)"
+    )
     print(f"Corrupted: {results['summary']['corrupted']}")
     print(f"Missing: {results['summary']['missing']}")
     print()
 
     # 详细错误信息
-    if results['summary']['corrupted'] > 0:
+    if results["summary"]["corrupted"] > 0:
         print("CORRUPTED FILES:")
         print("-" * 80)
-        for item in results['corrupted']:
+        for item in results["corrupted"]:
             print(f"  {item['file_path']}")
             print(f"    Expected: {item['expected_hash']}")
             print(f"    Actual:   {item['actual_hash']}")
         print()
 
-    if results['summary']['missing'] > 0:
+    if results["summary"]["missing"] > 0:
         print("MISSING FILES:")
         print("-" * 80)
-        for file_path in results['missing'][:20]:
+        for file_path in results["missing"][:20]:
             print(f"  {file_path}")
-        if len(results['missing']) > 20:
+        if len(results["missing"]) > 20:
             print(f"  ... and {len(results['missing']) - 20} more")
         print()
 
@@ -81,14 +83,16 @@ def check_integrity(generate_report: bool = True, fail_on_error: bool = False):
 
     for snap in snapshots:
         print(f"\n  {snap['name']}:")
-        snap_result = manager.verify_snapshot_integrity(snap['snapshot_id'])
+        snap_result = manager.verify_snapshot_integrity(snap["snapshot_id"])
 
-        print(f"    Valid: {snap_result['summary']['valid']}/{snap_result['summary']['total']}")
+        print(
+            f"    Valid: {snap_result['summary']['valid']}/{snap_result['summary']['total']}"
+        )
 
-        if snap_result['summary']['corrupted'] > 0:
+        if snap_result["summary"]["corrupted"] > 0:
             print(f"    Corrupted: {snap_result['summary']['corrupted']}")
 
-        if snap_result['summary']['missing'] > 0:
+        if snap_result["summary"]["missing"] > 0:
             print(f"    Missing: {snap_result['summary']['missing']}")
 
     print()
@@ -96,30 +100,34 @@ def check_integrity(generate_report: bool = True, fail_on_error: bool = False):
     # 生成报告文件
     if generate_report:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        report_path = project_root / "data_versioning" / f"integrity_report_{timestamp}.txt"
+        report_path = (
+            project_root / "data_versioning" / f"integrity_report_{timestamp}.txt"
+        )
 
         text_report = restorer.generate_integrity_report(str(report_path))
         print(f"Report saved to: {report_path}")
 
         # 也保存 JSON 格式
-        json_path = report_path.with_suffix('.json')
+        json_path = report_path.with_suffix(".json")
 
         json_results = {
             "checked_at": datetime.now().isoformat(),
-            "summary": results['summary'],
-            "corrupted": results['corrupted'],
-            "missing": results['missing'][:100],  # 限制数量
+            "summary": results["summary"],
+            "corrupted": results["corrupted"],
+            "missing": results["missing"][:100],  # 限制数量
             "snapshots": [
                 {
-                    "snapshot_id": snap['snapshot_id'],
-                    "name": snap['name'],
-                    "verification": manager.verify_snapshot_integrity(snap['snapshot_id'])['summary']
+                    "snapshot_id": snap["snapshot_id"],
+                    "name": snap["name"],
+                    "verification": manager.verify_snapshot_integrity(
+                        snap["snapshot_id"]
+                    )["summary"],
                 }
                 for snap in snapshots
-            ]
+            ],
         }
 
-        with open(json_path, 'w', encoding='utf-8') as f:
+        with open(json_path, "w", encoding="utf-8") as f:
             json.dump(json_results, f, indent=2, ensure_ascii=False)
 
         print(f"JSON report saved to: {json_path}")
@@ -128,7 +136,9 @@ def check_integrity(generate_report: bool = True, fail_on_error: bool = False):
     print("=" * 80)
 
     # 确定退出状态
-    has_errors = results['summary']['corrupted'] > 0 or results['summary']['missing'] > 0
+    has_errors = (
+        results["summary"]["corrupted"] > 0 or results["summary"]["missing"] > 0
+    )
 
     if has_errors:
         print("STATUS: FAILED - Data integrity issues detected")
@@ -146,7 +156,7 @@ def check_integrity(generate_report: bool = True, fail_on_error: bool = False):
     return exit_code
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -154,22 +164,19 @@ if __name__ == '__main__':
     )
 
     parser.add_argument(
-        '--no-report',
-        action='store_true',
-        help="Don't generate report files"
+        "--no-report", action="store_true", help="Don't generate report files"
     )
 
     parser.add_argument(
-        '--fail-on-error',
-        action='store_true',
-        help="Exit with non-zero code if errors detected (for CI)"
+        "--fail-on-error",
+        action="store_true",
+        help="Exit with non-zero code if errors detected (for CI)",
     )
 
     args = parser.parse_args()
 
     exit_code = check_integrity(
-        generate_report=not args.no_report,
-        fail_on_error=args.fail_on_error
+        generate_report=not args.no_report, fail_on_error=args.fail_on_error
     )
 
     if args.fail_on_error:

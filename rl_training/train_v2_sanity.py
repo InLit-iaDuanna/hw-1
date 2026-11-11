@@ -35,6 +35,7 @@ from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 @dataclass
 class EvalResult:
     """评估结果"""
+
     timestep: int
     avg_distance: float
     std_distance: float
@@ -64,12 +65,16 @@ class EvalCallbackV2(BaseCallback):
                 print("=" * 80)
                 print(f"Evaluation at timestep {result.timestep}")
                 print("=" * 80)
-                print(f"  Average distance: {result.avg_distance:.3f} +/- {result.std_distance:.3f} m")
+                print(
+                    f"  Average distance: {result.avg_distance:.3f} +/- {result.std_distance:.3f} m"
+                )
                 print(f"  Average reward: {result.avg_reward:.1f}")
                 print(f"  Success rate: {result.success_rate * 100:.0f}%")
                 print(f"  Failure rate: {result.failure_rate * 100:.0f}%")
                 print(f"  Baseline: 4.63m")
-                print(f"  Improvement: {result.avg_distance - 4.63:+.3f}m ({(result.avg_distance / 4.63 - 1) * 100:+.1f}%)")
+                print(
+                    f"  Improvement: {result.avg_distance - 4.63:+.3f}m ({(result.avg_distance / 4.63 - 1) * 100:+.1f}%)"
+                )
                 print("=" * 80)
                 print()
 
@@ -186,7 +191,9 @@ def train_v2_sanity(
         vf_coef=0.5,
         max_grad_norm=0.5,
         verbose=1,
-        tensorboard_log=str(HW1_ROOT / "rl_training" / "logs" / "residual_rl_v2_sanity" / "tensorboard"),
+        tensorboard_log=str(
+            HW1_ROOT / "rl_training" / "logs" / "residual_rl_v2_sanity" / "tensorboard"
+        ),
     )
 
     # 创建评估回调
@@ -211,13 +218,17 @@ def train_v2_sanity(
     print("FINAL EVALUATION")
     print("=" * 80)
 
-    final_result = eval_callback.eval_results[-1] if len(eval_callback.eval_results) > 0 else None
+    final_result = (
+        eval_callback.eval_results[-1] if len(eval_callback.eval_results) > 0 else None
+    )
 
     if final_result is None:
         print("[ERROR] No evaluation results available")
         return {"diagnosis": "ERROR", "error": "No evaluation results"}
 
-    print(f"Final average distance: {final_result.avg_distance:.3f} +/- {final_result.std_distance:.3f} m")
+    print(
+        f"Final average distance: {final_result.avg_distance:.3f} +/- {final_result.std_distance:.3f} m"
+    )
     print(f"Final average reward: {final_result.avg_reward:.1f}")
     print(f"Final success rate: {final_result.success_rate * 100:.0f}%")
     print(f"Final failure rate: {final_result.failure_rate * 100:.0f}%")
@@ -237,7 +248,9 @@ def train_v2_sanity(
 
     if pass_distance and pass_failure:
         print("[PASS] Sanity check passed!")
-        print(f"  - Final distance {final_result.avg_distance:.3f}m > threshold {threshold:.3f}m")
+        print(
+            f"  - Final distance {final_result.avg_distance:.3f}m > threshold {threshold:.3f}m"
+        )
         print(f"  - Failure rate {final_result.failure_rate * 100:.0f}% = 0%")
         print()
         print("Conclusion: PPO successfully learns to improve over baseline.")
@@ -246,7 +259,9 @@ def train_v2_sanity(
     else:
         print("[FAIL] Sanity check failed")
         if not pass_distance:
-            print(f"  - Final distance {final_result.avg_distance:.3f}m <= threshold {threshold:.3f}m")
+            print(
+                f"  - Final distance {final_result.avg_distance:.3f}m <= threshold {threshold:.3f}m"
+            )
         if not pass_failure:
             print(f"  - Failure rate {final_result.failure_rate * 100:.0f}% > 0%")
         print()
@@ -297,11 +312,21 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Train V2 sanity check")
-    parser.add_argument("--timesteps", type=int, default=100000, help="Total training timesteps")
-    parser.add_argument("--eval-freq", type=int, default=25000, help="Evaluation frequency")
-    parser.add_argument("--eval-episodes", type=int, default=10, help="Number of eval episodes")
-    parser.add_argument("--save", type=str, default="train_v2_sanity_report.json",
-                        help="Save path for results")
+    parser.add_argument(
+        "--timesteps", type=int, default=100000, help="Total training timesteps"
+    )
+    parser.add_argument(
+        "--eval-freq", type=int, default=25000, help="Evaluation frequency"
+    )
+    parser.add_argument(
+        "--eval-episodes", type=int, default=10, help="Number of eval episodes"
+    )
+    parser.add_argument(
+        "--save",
+        type=str,
+        default="train_v2_sanity_report.json",
+        help="Save path for results",
+    )
 
     args = parser.parse_args()
 

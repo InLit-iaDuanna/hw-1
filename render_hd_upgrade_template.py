@@ -41,10 +41,10 @@ with imageio.get_writer(out_path, fps=60) as writer:
 with imageio.get_writer(
     out_path,
     fps=60,
-    codec='libx264',
+    codec="libx264",
     quality=8,  # CRF 值，8=高质量（范围0-51，值越小越好）
-    pixelformat='yuv420p',  # 标准色彩空间，兼容性好
-    macro_block_size=1  # 避免尺寸对齐警告
+    pixelformat="yuv420p",  # 标准色彩空间，兼容性好
+    macro_block_size=1,  # 避免尺寸对齐警告
 ) as writer:
     for frame in frames:
         writer.append_data(frame)
@@ -63,7 +63,8 @@ info_font = ImageFont.truetype(str(FONT), 20)
 
 # NEW (1080p):
 title_font = ImageFont.truetype(str(FONT), 42)  # 28 × 1.5 = 42
-info_font = ImageFont.truetype(str(FONT), 30)   # 20 × 1.5 = 30
+info_font = ImageFont.truetype(str(FONT), 30)  # 20 × 1.5 = 30
+
 
 # 或者使用辅助函数：
 def _font(size: int, scale: float = 1.5):
@@ -72,9 +73,10 @@ def _font(size: int, scale: float = 1.5):
         return ImageFont.truetype(str(FONT), int(size * scale))
     return ImageFont.load_default()
 
+
 # 使用：
 title_font = _font(28, scale=1.5)  # 自动缩放到 42
-info_font = _font(20, scale=1.5)   # 自动缩放到 30
+info_font = _font(20, scale=1.5)  # 自动缩放到 30
 
 
 # ============================================================
@@ -105,13 +107,16 @@ draw.text((66, 174), "信息行2", font=info_font, fill=(172, 255, 191))
 # 第五步：支持 --tag 参数（用于批处理）
 # ============================================================
 
+
 # OLD (硬编码文件名):
 def main() -> None:
     out_path = OUT_DIR / "v10_rolling_foot_walk.mp4"
     preview_path = OUT_DIR / "v10_rolling_foot_walk_preview.png"
 
+
 # NEW (支持 --tag 参数):
 import argparse
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -126,6 +131,7 @@ def main() -> None:
 # ============================================================
 # 第六步：完整示例（对比 V17 渲染脚本）
 # ============================================================
+
 
 # === 720p 原版 ===
 def render_720p():
@@ -149,7 +155,7 @@ def render_720p():
 def render_1080p_hd():
     renderer = mujoco.Renderer(model, height=1080, width=1920)
     title_font = ImageFont.truetype(str(FONT), 42)  # 28 × 1.5
-    info_font = ImageFont.truetype(str(FONT), 30)   # 20 × 1.5
+    info_font = ImageFont.truetype(str(FONT), 30)  # 20 × 1.5
 
     def annotate(frame):
         # 矩形坐标 × 1.5
@@ -162,10 +168,10 @@ def render_1080p_hd():
     with imageio.get_writer(
         out_path,
         fps=60,
-        codec='libx264',
+        codec="libx264",
         quality=8,
-        pixelformat='yuv420p',
-        macro_block_size=1
+        pixelformat="yuv420p",
+        macro_block_size=1,
     ) as writer:
         for frame in frames:
             writer.append_data(annotate(frame))
@@ -175,9 +181,11 @@ def render_1080p_hd():
 # 第七步：辅助函数 - 自动缩放标注坐标
 # ============================================================
 
+
 def scale_coords(coords: tuple, scale: float = 1.5) -> tuple:
     """缩放坐标元组（用于从720p升级到1080p）"""
     return tuple(int(c * scale) for c in coords)
+
 
 # 使用示例：
 # OLD:
@@ -202,18 +210,23 @@ draw.rectangle(rect_1080p, fill=(8, 14, 24, 195))
 # r_frame_rate=60/1
 # codec_name=h264
 
+
 # Python 验证代码：
 def verify_video_quality(video_path: Path):
     """验证生成的视频质量"""
     import subprocess
 
     cmd = [
-        'ffprobe',
-        '-v', 'error',
-        '-select_streams', 'v:0',
-        '-show_entries', 'stream=width,height,r_frame_rate,codec_name',
-        '-of', 'default=noprint_wrappers=1',
-        str(video_path)
+        "ffprobe",
+        "-v",
+        "error",
+        "-select_streams",
+        "v:0",
+        "-show_entries",
+        "stream=width,height,r_frame_rate,codec_name",
+        "-of",
+        "default=noprint_wrappers=1",
+        str(video_path),
     ]
 
     try:

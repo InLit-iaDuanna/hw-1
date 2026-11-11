@@ -364,7 +364,9 @@ class RollingFootGait:
         """
         detail = self.foot_contact_detail()
         left_contact = detail["left_heel"] or detail["left_sole"] or detail["left_toe"]
-        right_contact = detail["right_heel"] or detail["right_sole"] or detail["right_toe"]
+        right_contact = (
+            detail["right_heel"] or detail["right_sole"] or detail["right_toe"]
+        )
         return left_contact, right_contact
 
     def site_margin(self, site_name: str) -> float:

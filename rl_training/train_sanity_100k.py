@@ -81,7 +81,9 @@ def make_env(
             inner_steps=inner_steps,
             max_steps=max_steps,
         )
-        env = ResidualPriorWrapper(env, prior_action=prior_action, delta_scale=delta_scale)
+        env = ResidualPriorWrapper(
+            env, prior_action=prior_action, delta_scale=delta_scale
+        )
         env = Monitor(env)
         env.reset(seed=seed_offset)
         return env
@@ -183,10 +185,18 @@ def evaluate_model(
         success_rate=success_rate,
         failure_rate=float(1.0 - success_rate),
         distances_m=distances,
-        mean_actual_action=action_array.mean(axis=0).tolist() if action_array.size else None,
-        std_actual_action=action_array.std(axis=0).tolist() if action_array.size else None,
-        min_actual_action=action_array.min(axis=0).tolist() if action_array.size else None,
-        max_actual_action=action_array.max(axis=0).tolist() if action_array.size else None,
+        mean_actual_action=(
+            action_array.mean(axis=0).tolist() if action_array.size else None
+        ),
+        std_actual_action=(
+            action_array.std(axis=0).tolist() if action_array.size else None
+        ),
+        min_actual_action=(
+            action_array.min(axis=0).tolist() if action_array.size else None
+        ),
+        max_actual_action=(
+            action_array.max(axis=0).tolist() if action_array.size else None
+        ),
     )
 
 
@@ -237,7 +247,10 @@ def build_diagnosis(
     if not must_have:
         return "FAIL"
 
-    if final_eval.mean_distance_m > nice_target_distance_m and final_eval.std_distance_m < 0.05:
+    if (
+        final_eval.mean_distance_m > nice_target_distance_m
+        and final_eval.std_distance_m < 0.05
+    ):
         return "PASS"
 
     return "CONDITIONAL_PASS"
@@ -272,8 +285,10 @@ def write_task_log(
     best_checkpoint = summary["best_checkpoint"]
     checks = {
         "Training completes without errors": summary["training_completed"],
-        "Final distance > 5.0m": final_eval["mean_distance_m"] > summary["nice_target_distance_m"],
-        "Final distance > sweep best (4.973m)": final_eval["mean_distance_m"] > summary["target_distance_m"],
+        "Final distance > 5.0m": final_eval["mean_distance_m"]
+        > summary["nice_target_distance_m"],
+        "Final distance > sweep best (4.973m)": final_eval["mean_distance_m"]
+        > summary["target_distance_m"],
         "Success rate = 100%": final_eval["success_rate"] == 1.0,
         "Convergence quality: monotonic after 300k, stable std": (
             summary["convergence_quality"]["monotonic_after_300k"]
@@ -336,15 +351,19 @@ def write_analysis(summary: dict[str, Any], path: Path) -> None:
         if summary["training_completed"]
         else f"aborted {final_eval['timestep'] // 1000}k PPO attempt"
     )
-    surpass = next((item for item in eval_history if item["mean_distance_m"] > target), None)
+    surpass = next(
+        (item for item in eval_history if item["mean_distance_m"] > target), None
+    )
     best = summary["best_checkpoint"]
     last_three = eval_history[-3:]
-    oscillation = max((item["mean_distance_m"] for item in last_three), default=0.0) - min(
+    oscillation = max(
         (item["mean_distance_m"] for item in last_three), default=0.0
-    )
+    ) - min((item["mean_distance_m"] for item in last_three), default=0.0)
 
     if surpass is None:
-        surpass_text = "The policy did not surpass the sweep best during recorded checkpoints."
+        surpass_text = (
+            "The policy did not surpass the sweep best during recorded checkpoints."
+        )
     else:
         surpass_text = (
             f"The policy first surpassed the sweep best at {surpass['timestep'] // 1000}k "
@@ -396,8 +415,16 @@ def write_status(summary: dict[str, Any], path: Path) -> None:
     baseline = summary["baseline"]["mean_distance_m"]
     final_improvement = improvement_pct(final_eval["mean_distance_m"], baseline)
     now = datetime.now().strftime("%Y-%m-%d %H:%M +08:00")
-    phase = "500k training complete" if summary["training_completed"] else "500k training aborted"
-    status_label = "COMPLETED" if summary["diagnosis"] in {"PASS", "CONDITIONAL_PASS"} else "FAILED"
+    phase = (
+        "500k training complete"
+        if summary["training_completed"]
+        else "500k training aborted"
+    )
+    status_label = (
+        "COMPLETED"
+        if summary["diagnosis"] in {"PASS", "CONDITIONAL_PASS"}
+        else "FAILED"
+    )
     status = f"""# ResidualRLV2 Implementation Status
 
 **Last Updated**: {now}
@@ -496,7 +523,9 @@ class DistanceEvalCallback(BaseCallback):
             print("=" * 80)
             print(f"Evaluation at {self.num_timesteps} timesteps")
             print("=" * 80)
-            print(f"distance: {result.mean_distance_m:.3f} +/- {result.std_distance_m:.3f} m")
+            print(
+                f"distance: {result.mean_distance_m:.3f} +/- {result.std_distance_m:.3f} m"
+            )
             print(f"reward:   {result.mean_reward:.2f}")
             print(f"success:  {result.success_rate * 100:.0f}%")
             print("=" * 80)
@@ -522,12 +551,22 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         args.report_path,
         log_dir / "train_sanity_100k_report.json",
     )
-    task_log_path = resolve_output_path(args.task_log_path, log_dir / "task4_500k_training.log")
-    analysis_path = resolve_output_path(args.analysis_path, log_dir / "500k_analysis.md")
+    task_log_path = resolve_output_path(
+        args.task_log_path, log_dir / "task4_500k_training.log"
+    )
+    analysis_path = resolve_output_path(
+        args.analysis_path, log_dir / "500k_analysis.md"
+    )
     status_path = resolve_output_path(args.status_path, log_dir / "STATUS.txt")
     checkpoint_dir = model_dir / "checkpoints"
     tensorboard_dir = log_dir / "tensorboard"
-    for path in [log_dir, model_dir, checkpoint_dir, tensorboard_dir, report_path.parent]:
+    for path in [
+        log_dir,
+        model_dir,
+        checkpoint_dir,
+        tensorboard_dir,
+        report_path.parent,
+    ]:
         path.mkdir(parents=True, exist_ok=True)
 
     prior_action = np.array([args.prior_left, args.prior_right], dtype=np.float32)
@@ -625,7 +664,10 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     )
 
     completed_timesteps = int(model.num_timesteps)
-    training_completed = eval_callback.stop_reason == "completed" and completed_timesteps >= args.timesteps
+    training_completed = (
+        eval_callback.stop_reason == "completed"
+        and completed_timesteps >= args.timesteps
+    )
     final_timestep = args.timesteps if training_completed else completed_timesteps
     final_eval = evaluate_model(
         model,
@@ -658,7 +700,9 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     )
     best_model_path = model_dir / "ppo_best.zip"
     final_model_path = model_dir / "ppo_final.zip"
-    checkpoint_files = sorted(checkpoint_dir.glob(f"{args.checkpoint_prefix}_*_steps.zip"))
+    checkpoint_files = sorted(
+        checkpoint_dir.glob(f"{args.checkpoint_prefix}_*_steps.zip")
+    )
     convergence_quality = {
         "monotonic_after_300k": is_monotonic_after(eval_history, 300000),
         "final_std_m": final_eval.std_distance_m,
@@ -682,11 +726,15 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "baseline": asdict(baseline),
         "sweep_best": {
             "mean_distance_m": args.target_distance_m,
-            "improvement_pct": improvement_pct(args.target_distance_m, baseline.mean_distance_m),
+            "improvement_pct": improvement_pct(
+                args.target_distance_m, baseline.mean_distance_m
+            ),
         },
         "sanity_100k": {
             "mean_distance_m": args.sanity_distance_m,
-            "improvement_pct": improvement_pct(args.sanity_distance_m, baseline.mean_distance_m),
+            "improvement_pct": improvement_pct(
+                args.sanity_distance_m, baseline.mean_distance_m
+            ),
         },
         "prior_eval": asdict(prior_eval),
         "pass_threshold_m": threshold,
@@ -698,12 +746,16 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
         "best_checkpoint": {
             "timestep": best_eval.timestep,
             "mean_distance_m": best_eval.mean_distance_m,
-            "improvement_pct": improvement_pct(best_eval.mean_distance_m, baseline.mean_distance_m),
+            "improvement_pct": improvement_pct(
+                best_eval.mean_distance_m, baseline.mean_distance_m
+            ),
         },
         "convergence_quality": convergence_quality,
         "artifacts": {
-            "best_model_exists": best_model_path.exists() and best_model_path.stat().st_size > 100_000,
-            "final_model_exists": final_model_path.exists() and final_model_path.stat().st_size > 100_000,
+            "best_model_exists": best_model_path.exists()
+            and best_model_path.stat().st_size > 100_000,
+            "final_model_exists": final_model_path.exists()
+            and final_model_path.stat().st_size > 100_000,
             "checkpoint_count": len(checkpoint_files),
             "checkpoints": [str(path) for path in checkpoint_files],
         },
@@ -727,7 +779,9 @@ def train(args: argparse.Namespace) -> dict[str, Any]:
     print("Final evaluation")
     print("=" * 80)
     print(f"diagnosis: {diagnosis}")
-    print(f"distance:  {final_eval.mean_distance_m:.3f} +/- {final_eval.std_distance_m:.3f} m")
+    print(
+        f"distance:  {final_eval.mean_distance_m:.3f} +/- {final_eval.std_distance_m:.3f} m"
+    )
     print(f"success:   {final_eval.success_rate * 100:.0f}%")
     print(f"saved:     {report_path}")
 

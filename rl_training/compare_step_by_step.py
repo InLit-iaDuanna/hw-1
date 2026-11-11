@@ -11,6 +11,7 @@ sys.path.insert(0, str(HW1_ROOT))
 from rl_training.test_v137_identity import V137IdentitySimulator
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
+
 def compare_baseline_vs_v2():
     """精确对比baseline和V2环境的每一步"""
 
@@ -38,7 +39,9 @@ def compare_baseline_vs_v2():
     burst_start_t_base = -p_base.gait_period
 
     # === V2 ===
-    env_v2 = ResidualRLEnvV2(residual_scale=0.05, inner_steps=1, max_steps=10000)  # 1ms steps
+    env_v2 = ResidualRLEnvV2(
+        residual_scale=0.05, inner_steps=1, max_steps=10000
+    )  # 1ms steps
     obs, info = env_v2.reset(seed=0)
 
     print("\nComparing first 4000ms (4000 steps):")
@@ -53,20 +56,59 @@ def compare_baseline_vs_v2():
 
         # === BASELINE STEP ===
         E_current_base = _mechanical_energy(p_base, baseline_sim.data)
-        tau_base = control_v136(fsm_base, baseline_sim.data, t, support_foot_base, burst_start_t_base, E_current_base)
+        tau_base = control_v136(
+            fsm_base,
+            baseline_sim.data,
+            t,
+            support_foot_base,
+            burst_start_t_base,
+            E_current_base,
+        )
 
-        l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau_base[0], tau_base[1], tau_base[2], tau_base[3]
+        l_hip_des, l_knee_des, r_hip_des, r_knee_des = (
+            tau_base[0],
+            tau_base[1],
+            tau_base[2],
+            tau_base[3],
+        )
 
         if baseline_sim.params.compensate_friction:
-            l_hip_des = baseline_sim._compensate(l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]), baseline_sim.params.hip_motor)
-            l_knee_des = baseline_sim._compensate(l_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]), baseline_sim.params.knee_motor)
-            r_hip_des = baseline_sim._compensate(r_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]), baseline_sim.params.hip_motor)
-            r_knee_des = baseline_sim._compensate(r_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]), baseline_sim.params.knee_motor)
+            l_hip_des = baseline_sim._compensate(
+                l_hip_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]),
+                baseline_sim.params.hip_motor,
+            )
+            l_knee_des = baseline_sim._compensate(
+                l_knee_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]),
+                baseline_sim.params.knee_motor,
+            )
+            r_hip_des = baseline_sim._compensate(
+                r_hip_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]),
+                baseline_sim.params.hip_motor,
+            )
+            r_knee_des = baseline_sim._compensate(
+                r_knee_des,
+                float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]),
+                baseline_sim.params.knee_motor,
+            )
 
-        l_hip_out, _ = baseline_sim.actuators["left_hip"].compute_actual_torque(l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]]))
-        l_knee_out, _ = baseline_sim.actuators["left_knee"].compute_actual_torque(l_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]))
-        r_hip_out, _ = baseline_sim.actuators["right_hip"].compute_actual_torque(r_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]))
-        r_knee_out, _ = baseline_sim.actuators["right_knee"].compute_actual_torque(r_knee_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]))
+        l_hip_out, _ = baseline_sim.actuators["left_hip"].compute_actual_torque(
+            l_hip_des, float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_hip"]])
+        )
+        l_knee_out, _ = baseline_sim.actuators["left_knee"].compute_actual_torque(
+            l_knee_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["left_knee"]]),
+        )
+        r_hip_out, _ = baseline_sim.actuators["right_hip"].compute_actual_torque(
+            r_hip_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_hip"]]),
+        )
+        r_knee_out, _ = baseline_sim.actuators["right_knee"].compute_actual_torque(
+            r_knee_des,
+            float(baseline_sim.data.qvel[baseline_sim.qvel_addr["right_knee"]]),
+        )
 
         baseline_sim.data.ctrl[:] = (l_hip_out, l_knee_out, r_hip_out, r_knee_out)
         mujoco.mj_step(baseline_sim.model, baseline_sim.data)
@@ -80,13 +122,20 @@ def compare_baseline_vs_v2():
                 if candidate_start_t_base[foot] is None:
                     candidate_start_t_base[foot] = t
                     contact_reported_base[foot] = False
-                if t - float(candidate_start_t_base[foot]) >= p_base.stable_contact_time:
+                if (
+                    t - float(candidate_start_t_base[foot])
+                    >= p_base.stable_contact_time
+                ):
                     stable_feet_base.append(foot)
             else:
                 candidate_start_t_base[foot] = None
                 contact_reported_base[foot] = False
         for foot in stable_feet_base:
-            if (not contact_reported_base[foot] and foot != accepted_contact_base and t - last_event_t_base > p_base.min_event_interval):
+            if (
+                not contact_reported_base[foot]
+                and foot != accepted_contact_base
+                and t - last_event_t_base > p_base.min_event_interval
+            ):
                 accepted_contact_base = foot
                 support_foot_base = foot
                 burst_start_t_base = t
@@ -109,8 +158,12 @@ def compare_baseline_vs_v2():
 
         if step % 100 == 0 or diff > 0.01:
             print(f"Step {step} (t={t:.3f}s):")
-            print(f"  Baseline hip_x: {hip_x_base:.5f}m, support: {support_foot_base}, burst_t: {burst_start_t_base:.4f}")
-            print(f"  V2       hip_x: {hip_x_v2:.5f}m, support: {env_v2.support_foot}, burst_t: {env_v2.burst_start_t:.4f}")
+            print(
+                f"  Baseline hip_x: {hip_x_base:.5f}m, support: {support_foot_base}, burst_t: {burst_start_t_base:.4f}"
+            )
+            print(
+                f"  V2       hip_x: {hip_x_v2:.5f}m, support: {env_v2.support_foot}, burst_t: {env_v2.burst_start_t:.4f}"
+            )
             print(f"  Diff: {diff:.5f}m")
             print()
 
@@ -119,10 +172,13 @@ def compare_baseline_vs_v2():
             break
 
     print("-" * 80)
-    print(f"\nMaximum deviation: {max_diff:.5f}m at step {max_diff_step} (t={max_diff_step * 0.001:.3f}s)")
+    print(
+        f"\nMaximum deviation: {max_diff:.5f}m at step {max_diff_step} (t={max_diff_step * 0.001:.3f}s)"
+    )
     print()
 
     env_v2.close()
+
 
 if __name__ == "__main__":
     compare_baseline_vs_v2()

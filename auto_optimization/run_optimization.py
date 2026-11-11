@@ -63,7 +63,11 @@ def build_parameter_space(config: dict) -> ParameterSpace:
     parameters = []
     for param_config in config["parameters"]:
         param_type = ParameterType(param_config["type"])
-        bounds = tuple(param_config["bounds"]) if "bounds" in param_config else param_config["categories"]
+        bounds = (
+            tuple(param_config["bounds"])
+            if "bounds" in param_config
+            else param_config["categories"]
+        )
         default = param_config.get("default", None)
         description = param_config.get("description", "")
 
@@ -267,7 +271,9 @@ def run_optimization(config_path: Path, optimizer_name: str, output_dir: Path):
     print("=" * 60)
     print(f"最优参数:")
     for key, value in result.best_params.items():
-        print(f"  {key}: {value:.6f}" if isinstance(value, float) else f"  {key}: {value}")
+        print(
+            f"  {key}: {value:.6f}" if isinstance(value, float) else f"  {key}: {value}"
+        )
     print(f"\n最优值: {result.best_value:.6f}")
     print(f"评估次数: {result.n_evaluations}")
     print("=" * 60)

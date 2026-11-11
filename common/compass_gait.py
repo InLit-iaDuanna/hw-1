@@ -22,6 +22,7 @@ class CompassGaitParams:
 
     Supports both kinematic limit-cycle playback and hybrid dynamics simulation.
     """
+
     # Geometry
     slope_deg: float = 5.0
     leg_length: float = 1.0
@@ -67,7 +68,9 @@ class CompassGaitParams:
         """Fixed-point speed for hybrid mode."""
         if self.fixed_speed is not None:
             return self.fixed_speed
-        drop = math.sin(self.gamma) * 2.0 * self.leg_length * math.sin(self.alpha_hybrid)
+        drop = (
+            math.sin(self.gamma) * 2.0 * self.leg_length * math.sin(self.alpha_hybrid)
+        )
         gain = (
             self.energy_gain_scale
             * 2.0
@@ -142,10 +145,14 @@ class CompassGaitParams:
             return cls(**{**asdict(base), "slope_deg": 3.0})
         elif template == "fast":
             base = cls.from_template("hybrid")
-            return cls(**{**asdict(base), "initial_speed": 0.40, "energy_gain_scale": 0.52})
+            return cls(
+                **{**asdict(base), "initial_speed": 0.40, "energy_gain_scale": 0.52}
+            )
         elif template == "slow":
             base = cls.from_template("hybrid")
-            return cls(**{**asdict(base), "initial_speed": 0.18, "energy_gain_scale": 0.32})
+            return cls(
+                **{**asdict(base), "initial_speed": 0.18, "energy_gain_scale": 0.32}
+            )
         else:
             raise ValueError(f"Unknown template: {template}")
 
@@ -196,14 +203,18 @@ class CompassGait:
     def model(self) -> mujoco.MjModel:
         """MuJoCo model (must call load_mujoco_model first)."""
         if self._model is None:
-            raise RuntimeError("MuJoCo model not loaded. Call load_mujoco_model() first.")
+            raise RuntimeError(
+                "MuJoCo model not loaded. Call load_mujoco_model() first."
+            )
         return self._model
 
     @property
     def data(self) -> mujoco.MjData:
         """MuJoCo data (must call load_mujoco_model first)."""
         if self._data is None:
-            raise RuntimeError("MuJoCo model not loaded. Call load_mujoco_model() first.")
+            raise RuntimeError(
+                "MuJoCo model not loaded. Call load_mujoco_model() first."
+            )
         return self._data
 
     def ramp_height(self, x: float) -> float:
@@ -232,9 +243,7 @@ class CompassGait:
             hip_z - self.params.leg_length * math.cos(theta),
         )
 
-    def foot_clearance(
-        self, hip_x: float, hip_z: float, theta: float
-    ) -> float:
+    def foot_clearance(self, hip_x: float, hip_z: float, theta: float) -> float:
         """Compute foot clearance above ramp.
 
         Args:
@@ -262,27 +271,37 @@ class CompassGait:
         t = 0.0
 
         for step in range(self.params.steps):
-            error = abs(speed - (self.params.fixed_speed or self.params.computed_fixed_speed))
+            error = abs(
+                speed - (self.params.fixed_speed or self.params.computed_fixed_speed)
+            )
             step_time = self.params.step_length / max(speed, 0.12)
             step_time = float(np.clip(step_time, 0.68, 1.25))
 
-            poincare.append({
-                "step": float(step),
-                "speed": speed,
-                "fixed_speed": self.params.fixed_speed or self.params.computed_fixed_speed,
-                "error": error,
-                "step_time": step_time,
-            })
+            poincare.append(
+                {
+                    "step": float(step),
+                    "speed": speed,
+                    "fixed_speed": self.params.fixed_speed
+                    or self.params.computed_fixed_speed,
+                    "error": error,
+                    "step_time": step_time,
+                }
+            )
 
             for i in range(self.params.samples_per_step):
                 phase = i / self.params.samples_per_step
                 rows.append(
-                    self._kinematic_state(step, phase, t + phase * step_time, speed, error)
+                    self._kinematic_state(
+                        step, phase, t + phase * step_time, speed, error
+                    )
                 )
 
             t += step_time
-            speed = (self.params.fixed_speed or self.params.computed_fixed_speed) + \
-                    self.params.convergence * (speed - (self.params.fixed_speed or self.params.computed_fixed_speed))
+            speed = (
+                self.params.fixed_speed or self.params.computed_fixed_speed
+            ) + self.params.convergence * (
+                speed - (self.params.fixed_speed or self.params.computed_fixed_speed)
+            )
 
         # Final state
         rows.append(
@@ -291,7 +310,10 @@ class CompassGait:
                 0.0,
                 t,
                 speed,
-                abs(speed - (self.params.fixed_speed or self.params.computed_fixed_speed)),
+                abs(
+                    speed
+                    - (self.params.fixed_speed or self.params.computed_fixed_speed)
+                ),
             )
         )
 
@@ -403,7 +425,9 @@ class CompassGait:
                     break
 
                 if i > 30 and self._event_value(step, y_next) <= 0:
-                    event_t, event_y = self._bisect_event(y, y_next, t, t + self.params.dt, step)
+                    event_t, event_y = self._bisect_event(
+                        y, y_next, t, t + self.params.dt, step
+                    )
                     t, y = event_t, event_y
                     step_rows.append(self._hybrid_state(t, step, y, 1.0, "touchdown"))
                     event_hit = True
@@ -417,18 +441,20 @@ class CompassGait:
             post = self._impact_map(pre)
             speed_error = abs(float(post[2]) - v_star)
 
-            poincare.append({
-                "step": float(step),
-                "time": t,
-                "theta_stance": float(post[0]),
-                "theta_swing": float(post[1]),
-                "omega_stance": float(post[2]),
-                "omega_swing": float(post[3]),
-                "fixed_speed": v_star,
-                "speed_error": speed_error,
-                "event_hit": 1.0 if event_hit else 0.0,
-                "step_duration": t - step_start_t,
-            })
+            poincare.append(
+                {
+                    "step": float(step),
+                    "time": t,
+                    "theta_stance": float(post[0]),
+                    "theta_swing": float(post[1]),
+                    "omega_stance": float(post[2]),
+                    "omega_swing": float(post[3]),
+                    "fixed_speed": v_star,
+                    "speed_error": speed_error,
+                    "event_hit": 1.0 if event_hit else 0.0,
+                    "step_duration": t - step_start_t,
+                }
+            )
 
             y = post
             rows.append(self._hybrid_state(t, step + 1, y, 0.0, "impact_map"))
@@ -445,7 +471,9 @@ class CompassGait:
     ) -> dict[str, float | int | str]:
         """Generate hybrid dynamics state."""
         theta_stance, theta_swing, omega_stance, omega_swing = [float(v) for v in y]
-        stance_x = step * 2.0 * self.params.leg_length * math.sin(self.params.alpha_hybrid)
+        stance_x = (
+            step * 2.0 * self.params.leg_length * math.sin(self.params.alpha_hybrid)
+        )
         stance_z = self.ramp_height(stance_x) + self.sphere_center_clearance()
         hip_x = stance_x + self.params.leg_length * math.sin(theta_stance)
         hip_z = stance_z + self.params.leg_length * math.cos(theta_stance)
@@ -485,7 +513,12 @@ class CompassGait:
     def _dynamics(self, _t: float, y: np.ndarray) -> np.ndarray:
         """Hybrid dynamics equations."""
         theta_stance, theta_swing, omega_stance, omega_swing = y
-        drop = math.sin(self.params.gamma) * 2.0 * self.params.leg_length * math.sin(self.params.alpha_hybrid)
+        drop = (
+            math.sin(self.params.gamma)
+            * 2.0
+            * self.params.leg_length
+            * math.sin(self.params.alpha_hybrid)
+        )
         gain = (
             self.params.energy_gain_scale
             * 2.0
@@ -498,9 +531,14 @@ class CompassGait:
         d_omega_swing = (
             -self.params.passive_hip_stiffness * (theta_swing - target_swing)
             - self.params.swing_damping * omega_swing
-            - 0.10 * self.params.gravity / self.params.leg_length * math.sin(theta_swing)
+            - 0.10
+            * self.params.gravity
+            / self.params.leg_length
+            * math.sin(theta_swing)
         )
-        return np.array([omega_stance, omega_swing, d_omega_stance, d_omega_swing], dtype=float)
+        return np.array(
+            [omega_stance, omega_swing, d_omega_stance, d_omega_swing], dtype=float
+        )
 
     def _rk4_step(self, y: np.ndarray, dt: float, t: float) -> np.ndarray:
         """RK4 integration step."""
@@ -541,9 +579,7 @@ class CompassGait:
         post_speed = self.params.collision_retention * pre_speed
         post_speed = max(0.06, post_speed)
         alpha = self.params.alpha_hybrid
-        return np.array(
-            [-alpha, alpha, post_speed, -0.35 * post_speed], dtype=float
-        )
+        return np.array([-alpha, alpha, post_speed, -0.35 * post_speed], dtype=float)
 
     def set_mujoco_state(self, state: dict[str, float]) -> None:
         """Set MuJoCo model state from trajectory row.

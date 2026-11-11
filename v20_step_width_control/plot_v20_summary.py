@@ -55,13 +55,25 @@ def plot_step_width_performance(summaries: dict[str, dict], output_path: Path) -
 
     # 左图：Alternations
     ax1 = axes[0]
-    bars1 = ax1.bar(range(len(configs)), alternations, color=PHASE_COLORS[3], alpha=0.7, edgecolor="black")
+    bars1 = ax1.bar(
+        range(len(configs)),
+        alternations,
+        color=PHASE_COLORS[3],
+        alpha=0.7,
+        edgecolor="black",
+    )
     ax1.set_xticks(range(len(configs)))
     ax1.set_xticklabels(configs, rotation=45, ha="right")
     ax1.set_ylabel("Alternations", fontsize=11)
     ax1.set_title("V20 步宽控制器性能 - 交替步数", fontweight="bold")
     ax1.grid(True, alpha=0.3, axis="y")
-    ax1.axhline(y=3, color=PALETTE["fail"], linestyle="--", linewidth=2, label="V18/V19 Baseline")
+    ax1.axhline(
+        y=3,
+        color=PALETTE["fail"],
+        linestyle="--",
+        linewidth=2,
+        label="V18/V19 Baseline",
+    )
     ax1.legend()
 
     # 数值标签
@@ -70,7 +82,13 @@ def plot_step_width_performance(summaries: dict[str, dict], output_path: Path) -
 
     # 右图：Forward Distance
     ax2 = axes[1]
-    bars2 = ax2.bar(range(len(configs)), forward_dist, color=PHASE_COLORS[3], alpha=0.7, edgecolor="black")
+    bars2 = ax2.bar(
+        range(len(configs)),
+        forward_dist,
+        color=PHASE_COLORS[3],
+        alpha=0.7,
+        edgecolor="black",
+    )
     ax2.set_xticks(range(len(configs)))
     ax2.set_xticklabels(configs, rotation=45, ha="right")
     ax2.set_ylabel("Forward Distance (m)", fontsize=11)
@@ -103,8 +121,21 @@ def plot_lateral_trajectory(output_path: Path) -> None:
 
         fig, ax = create_figure("medium")
 
-        ax.plot(df["time"], df["torso_y"], color=PHASE_COLORS[3], linewidth=2, label="Torso Y Position")
-        ax.axhline(y=0, color="gray", linestyle="--", linewidth=1, alpha=0.5, label="Center Line")
+        ax.plot(
+            df["time"],
+            df["torso_y"],
+            color=PHASE_COLORS[3],
+            linewidth=2,
+            label="Torso Y Position",
+        )
+        ax.axhline(
+            y=0,
+            color="gray",
+            linestyle="--",
+            linewidth=1,
+            alpha=0.5,
+            label="Center Line",
+        )
 
         ax.set_xlabel("Time (s)", fontsize=11)
         ax.set_ylabel("Lateral Position (m)", fontsize=11)

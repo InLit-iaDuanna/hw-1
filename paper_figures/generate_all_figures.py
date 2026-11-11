@@ -3,6 +3,7 @@
 This script generates all academic-quality figures for the hw-1 project paper,
 using real experimental data from V01-V25 versions.
 """
+
 from __future__ import annotations
 
 import sys
@@ -19,7 +20,9 @@ from generators.fig_stability_domain import create_stability_heatmap
 from generators.fig_energy_analysis import create_energy_analysis_figure
 from generators.fig_phase_portrait import create_phase_portrait
 from generators.fig_hardware_specs import create_hardware_specs_figure
-from generators.fig_advanced_friction_compensation import create_friction_compensation_figure
+from generators.fig_advanced_friction_compensation import (
+    create_friction_compensation_figure,
+)
 from generators.fig_state_estimation_robustness import create_state_estimation_figure
 from generators.fig_3d_failure_analysis import create_3d_failure_analysis_figure
 from generators.fig_poincare_convergence import create_poincare_convergence_figure
@@ -62,6 +65,7 @@ def generate_all_figures():
             print(f"    [ERROR] 失败 ({elapsed:.2f}s): {e}")
             failed_figures.append((title, str(e)))
             import traceback
+
             traceback.print_exc()
 
     print("\n" + "=" * 80)
@@ -71,7 +75,7 @@ def generate_all_figures():
     if generated_files:
         print(f"\n输出目录: {OUTPUT_DIR}")
         print("\n已生成文件:")
-        for fmt in ['pdf', 'png', 'svg']:
+        for fmt in ["pdf", "png", "svg"]:
             fmt_files = sorted(OUTPUT_DIR.glob(f"*.{fmt}"))
             if fmt_files:
                 print(f"\n  {fmt.upper()} ({len(fmt_files)} 个):")

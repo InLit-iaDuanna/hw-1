@@ -29,6 +29,7 @@ from feedback import PDController, GaitPhase
 @dataclass
 class ParameterSet:
     """Container for PD controller parameters."""
+
     kp_stance: float
     kd_stance: float
     kp_swing: float
@@ -44,22 +45,23 @@ class ParameterSet:
 @dataclass
 class PerformanceMetrics:
     """Performance evaluation metrics for controller parameter set."""
+
     # Tracking performance
-    rms_position_error: float       # RMS position tracking error [rad]
-    rms_velocity_error: float       # RMS velocity tracking error [rad/s]
-    max_position_error: float       # Peak position error [rad]
+    rms_position_error: float  # RMS position tracking error [rad]
+    rms_velocity_error: float  # RMS velocity tracking error [rad/s]
+    max_position_error: float  # Peak position error [rad]
 
     # Stability metrics
     torque_saturation_ratio: float  # Fraction of steps with saturated torque
-    control_effort: float           # Mean absolute torque [Nm]
-    control_smoothness: float       # RMS torque derivative [Nm/s]
+    control_effort: float  # Mean absolute torque [Nm]
+    control_smoothness: float  # RMS torque derivative [Nm/s]
 
     # Energy efficiency
-    energy_total: float             # Total energy consumed [J]
-    energy_per_step: float          # Energy per gait cycle [J/cycle]
+    energy_total: float  # Total energy consumed [J]
+    energy_per_step: float  # Energy per gait cycle [J/cycle]
 
     # Distance traveled
-    distance_traveled: float        # Forward distance [m]
+    distance_traveled: float  # Forward distance [m]
 
     # Composite score (lower is better)
     composite_score: float = 0.0
@@ -69,7 +71,7 @@ class PerformanceMetrics:
         w_tracking: float = 1.0,
         w_stability: float = 0.5,
         w_energy: float = 0.3,
-        w_distance: float = -2.0  # Negative = reward distance
+        w_distance: float = -2.0,  # Negative = reward distance
     ) -> float:
         """
         Compute weighted composite score for multi-objective optimization.
@@ -89,10 +91,10 @@ class PerformanceMetrics:
         distance_reward = self.distance_traveled
 
         self.composite_score = (
-            w_tracking * tracking_cost +
-            w_stability * stability_cost +
-            w_energy * energy_cost +
-            w_distance * distance_reward
+            w_tracking * tracking_cost
+            + w_stability * stability_cost
+            + w_energy * energy_cost
+            + w_distance * distance_reward
         )
 
         return self.composite_score
@@ -109,7 +111,7 @@ class SimulationEvaluator:
         self,
         simulation_duration: float = 10.0,
         dt: float = 0.001,
-        torque_limit: float = 6.0
+        torque_limit: float = 6.0,
     ):
         """
         Initialize simulation evaluator.
@@ -141,7 +143,7 @@ class SimulationEvaluator:
             kp_swing=params.kp_swing,
             kd_swing=params.kd_swing,
             torque_limit=self.torque_limit,
-            enable_logging=True
+            enable_logging=True,
         )
 
         # Simulate gait cycle with sinusoidal reference trajectory
@@ -156,7 +158,13 @@ class SimulationEvaluator:
         for t in time_array:
             # Generate reference trajectory (sinusoidal hip angle)
             theta_ref = 0.3 * np.sin(2 * np.pi * gait_frequency * t)  # ±17 deg
-            omega_ref = 0.3 * 2 * np.pi * gait_frequency * np.cos(2 * np.pi * gait_frequency * t)
+            omega_ref = (
+                0.3
+                * 2
+                * np.pi
+                * gait_frequency
+                * np.cos(2 * np.pi * gait_frequency * t)
+            )
 
             # Simulate actual state with some tracking error and dynamics
             theta_actual = theta_ref + 0.05 * np.sin(5 * t)  # Simulated disturbance
@@ -217,7 +225,7 @@ class SimulationEvaluator:
             control_smoothness=control_smoothness,
             energy_total=energy_total,
             energy_per_step=energy_per_step,
-            distance_traveled=distance_traveled
+            distance_traveled=distance_traveled,
         )
 
         metrics.compute_composite_score()
@@ -236,7 +244,7 @@ class GridSearchTuner:
         kp_swing_range: Tuple[float, float, int] = (20.0, 60.0, 5),
         kd_swing_range: Tuple[float, float, int] = (2.0, 8.0, 5),
         parallel: bool = True,
-        max_workers: int = 4
+        max_workers: int = 4,
     ):
         """
         Initialize grid search tuner.
@@ -295,7 +303,9 @@ class GridSearchTuner:
                         results.append((params, metrics))
                         completed += 1
                         if completed % 10 == 0:
-                            print(f"Evaluated {completed}/{len(self.parameter_sets)} parameter sets")
+                            print(
+                                f"Evaluated {completed}/{len(self.parameter_sets)} parameter sets"
+                            )
                     except Exception as e:
                         print(f"Error evaluating {params}: {e}")
         else:
@@ -304,7 +314,9 @@ class GridSearchTuner:
                     metrics = self.evaluator.evaluate(params)
                     results.append((params, metrics))
                     if (i + 1) % 10 == 0:
-                        print(f"Evaluated {i+1}/{len(self.parameter_sets)} parameter sets")
+                        print(
+                            f"Evaluated {i+1}/{len(self.parameter_sets)} parameter sets"
+                        )
                 except Exception as e:
                     print(f"Error evaluating {params}: {e}")
 
@@ -326,7 +338,7 @@ class BayesianOptimizationTuner:
         kd_swing_bounds: Tuple[float, float] = (2.0, 8.0),
         n_calls: int = 50,
         n_initial_points: int = 10,
-        random_state: int = 42
+        random_state: int = 42,
     ):
         """
         Initialize Bayesian optimization tuner.
@@ -346,7 +358,7 @@ class BayesianOptimizationTuner:
             kp_stance_bounds,
             kd_stance_bounds,
             kp_swing_bounds,
-            kd_swing_bounds
+            kd_swing_bounds,
         ]
         self.n_calls = n_calls
         self.n_initial_points = n_initial_points
@@ -356,11 +368,14 @@ class BayesianOptimizationTuner:
         try:
             from skopt import gp_minimize
             from skopt.space import Real
+
             self.gp_minimize = gp_minimize
             self.Real = Real
             self.available = True
         except ImportError:
-            print("WARNING: scikit-optimize not available. Install with: pip install scikit-optimize")
+            print(
+                "WARNING: scikit-optimize not available. Install with: pip install scikit-optimize"
+            )
             self.available = False
 
     def _objective(self, x: List[float]) -> float:
@@ -374,10 +389,7 @@ class BayesianOptimizationTuner:
             Composite performance score (to minimize)
         """
         params = ParameterSet(
-            kp_stance=x[0],
-            kd_stance=x[1],
-            kp_swing=x[2],
-            kd_swing=x[3]
+            kp_stance=x[0], kd_stance=x[1], kp_swing=x[2], kd_swing=x[3]
         )
 
         metrics = self.evaluator.evaluate(params)
@@ -393,10 +405,12 @@ class BayesianOptimizationTuner:
         if not self.available:
             raise RuntimeError("scikit-optimize not available")
 
-        space = [self.Real(*bounds, name=name) for bounds, name in zip(
-            self.bounds,
-            ['kp_stance', 'kd_stance', 'kp_swing', 'kd_swing']
-        )]
+        space = [
+            self.Real(*bounds, name=name)
+            for bounds, name in zip(
+                self.bounds, ["kp_stance", "kd_stance", "kp_swing", "kd_swing"]
+            )
+        ]
 
         print(f"Starting Bayesian optimization with {self.n_calls} iterations...")
 
@@ -406,7 +420,7 @@ class BayesianOptimizationTuner:
             n_calls=self.n_calls,
             n_initial_points=self.n_initial_points,
             random_state=self.random_state,
-            verbose=True
+            verbose=True,
         )
 
         # Extract all evaluated parameter sets
@@ -416,7 +430,7 @@ class BayesianOptimizationTuner:
                 kp_stance=x_eval[0],
                 kd_stance=x_eval[1],
                 kp_swing=x_eval[2],
-                kd_swing=x_eval[3]
+                kd_swing=x_eval[3],
             )
             # Re-evaluate to get full metrics
             metrics = self.evaluator.evaluate(params)
@@ -431,7 +445,7 @@ class BayesianOptimizationTuner:
 def save_results(
     results: List[Tuple[ParameterSet, PerformanceMetrics]],
     output_path: Path,
-    top_n: int = 10
+    top_n: int = 10,
 ):
     """
     Save tuning results to JSON file.
@@ -442,28 +456,25 @@ def save_results(
         top_n: Number of top results to save
     """
     output_data = {
-        'timestamp': time.strftime('%Y-%m-%d %H:%M:%S'),
-        'n_evaluated': len(results),
-        'top_results': []
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "n_evaluated": len(results),
+        "top_results": [],
     }
 
     for rank, (params, metrics) in enumerate(results[:top_n], 1):
-        output_data['top_results'].append({
-            'rank': rank,
-            'parameters': params.to_dict(),
-            'metrics': asdict(metrics)
-        })
+        output_data["top_results"].append(
+            {"rank": rank, "parameters": params.to_dict(), "metrics": asdict(metrics)}
+        )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(output_path, 'w') as f:
+    with open(output_path, "w") as f:
         json.dump(output_data, f, indent=2)
 
     print(f"\nResults saved to: {output_path}")
 
 
 def print_results(
-    results: List[Tuple[ParameterSet, PerformanceMetrics]],
-    top_n: int = 5
+    results: List[Tuple[ParameterSet, PerformanceMetrics]], top_n: int = 5
 ):
     """
     Print top tuning results to console.
@@ -496,71 +507,61 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description='Parameter tuning tool for hw-1 PD controller'
+        description="Parameter tuning tool for hw-1 PD controller"
     )
     parser.add_argument(
-        '--method',
-        choices=['grid', 'bayesian'],
-        default='grid',
-        help='Optimization method (default: grid)'
+        "--method",
+        choices=["grid", "bayesian"],
+        default="grid",
+        help="Optimization method (default: grid)",
     )
     parser.add_argument(
-        '--duration',
+        "--duration",
         type=float,
         default=10.0,
-        help='Simulation duration in seconds (default: 10.0)'
+        help="Simulation duration in seconds (default: 10.0)",
     )
     parser.add_argument(
-        '--parallel',
-        action='store_true',
-        help='Enable parallel evaluation (grid search only)'
+        "--parallel",
+        action="store_true",
+        help="Enable parallel evaluation (grid search only)",
     )
     parser.add_argument(
-        '--workers',
-        type=int,
-        default=4,
-        help='Number of parallel workers (default: 4)'
+        "--workers", type=int, default=4, help="Number of parallel workers (default: 4)"
     )
     parser.add_argument(
-        '--n-calls',
+        "--n-calls",
         type=int,
         default=50,
-        help='Number of iterations for Bayesian optimization (default: 50)'
+        help="Number of iterations for Bayesian optimization (default: 50)",
     )
     parser.add_argument(
-        '--output',
+        "--output",
         type=str,
-        default='tuning_results.json',
-        help='Output file path (default: tuning_results.json)'
+        default="tuning_results.json",
+        help="Output file path (default: tuning_results.json)",
     )
     parser.add_argument(
-        '--top-n',
+        "--top-n",
         type=int,
         default=10,
-        help='Number of top results to save/display (default: 10)'
+        help="Number of top results to save/display (default: 10)",
     )
 
     args = parser.parse_args()
 
     # Initialize evaluator
     evaluator = SimulationEvaluator(
-        simulation_duration=args.duration,
-        dt=0.001,
-        torque_limit=6.0
+        simulation_duration=args.duration, dt=0.001, torque_limit=6.0
     )
 
     # Run optimization
-    if args.method == 'grid':
+    if args.method == "grid":
         tuner = GridSearchTuner(
-            evaluator=evaluator,
-            parallel=args.parallel,
-            max_workers=args.workers
+            evaluator=evaluator, parallel=args.parallel, max_workers=args.workers
         )
     else:  # bayesian
-        tuner = BayesianOptimizationTuner(
-            evaluator=evaluator,
-            n_calls=args.n_calls
-        )
+        tuner = BayesianOptimizationTuner(evaluator=evaluator, n_calls=args.n_calls)
 
     print(f"Starting {args.method} optimization...")
     start_time = time.time()
@@ -588,5 +589,5 @@ def main():
     print(f"# Composite score: {best_metrics.composite_score:.4f}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

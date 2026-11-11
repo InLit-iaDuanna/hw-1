@@ -7,7 +7,7 @@ import io
 from pathlib import Path
 
 # 设置UTF-8输出
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 print("=" * 80)
 print("环境诊断")
@@ -71,6 +71,7 @@ print("尝试导入环境...")
 try:
     sys.path.insert(0, str(RL_DIR))
     from environment import CompassGaitEnv
+
     print("  [OK] CompassGaitEnv导入成功")
 
     # 尝试创建环境
@@ -89,6 +90,7 @@ try:
 except Exception as e:
     print(f"  [FAIL] 错误: {e}")
     import traceback
+
     traceback.print_exc()
 
 print()

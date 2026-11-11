@@ -78,12 +78,18 @@ class SensitivityAnalyzer:
         objectives = np.zeros(n_evals)
 
         for i in range(n_evals):
-            param_dict = {name: float(param_values[i, j]) for j, name in enumerate(self.param_names)}
+            param_dict = {
+                name: float(param_values[i, j])
+                for j, name in enumerate(self.param_names)
+            }
             objectives[i] = objective_func(param_dict)
 
         # Sobol 分析
         Si = sobol_analyze.analyze(
-            self.problem, objectives, calc_second_order=calc_second_order, print_to_console=False
+            self.problem,
+            objectives,
+            calc_second_order=calc_second_order,
+            print_to_console=False,
         )
 
         # 组织结果
@@ -143,11 +149,16 @@ class SensitivityAnalyzer:
         objectives = np.zeros(n_evals)
 
         for i in range(n_evals):
-            param_dict = {name: float(param_values[i, j]) for j, name in enumerate(self.param_names)}
+            param_dict = {
+                name: float(param_values[i, j])
+                for j, name in enumerate(self.param_names)
+            }
             objectives[i] = objective_func(param_dict)
 
         # Morris 分析
-        Si = morris_analyze.analyze(self.problem, param_values, objectives, print_to_console=False)
+        Si = morris_analyze.analyze(
+            self.problem, param_values, objectives, print_to_console=False
+        )
 
         results = {
             "mu": Si["mu"],  # 平均效应
@@ -205,7 +216,9 @@ class SensitivityAnalyzer:
 
         return results
 
-    def rank_parameters(self, results: dict[str, Any], method: str = "sobol") -> list[tuple[str, float]]:
+    def rank_parameters(
+        self, results: dict[str, Any], method: str = "sobol"
+    ) -> list[tuple[str, float]]:
         """根据灵敏度分析结果排序参数。
 
         Args:
@@ -253,7 +266,7 @@ class SensitivityAnalyzer:
         for i in range(n_params):
             for j in range(i + 1, n_params):
                 # Handle both array and scalar values
-                value = float(S2[idx]) if hasattr(S2[idx], '__iter__') else S2[idx]
+                value = float(S2[idx]) if hasattr(S2[idx], "__iter__") else S2[idx]
                 interaction[i, j] = value
                 interaction[j, i] = value  # 对称
                 idx += 1
@@ -283,7 +296,9 @@ def quick_sensitivity_screening(
         Morris 分析结果 + 参数排名
     """
     analyzer = SensitivityAnalyzer(param_names, param_bounds)
-    results = analyzer.morris_screening(objective_func, n_trajectories=n_trajectories, seed=seed)
+    results = analyzer.morris_screening(
+        objective_func, n_trajectories=n_trajectories, seed=seed
+    )
     ranked = analyzer.rank_parameters(results, method="morris")
 
     results["ranked_params"] = ranked
@@ -316,7 +331,10 @@ def comprehensive_sensitivity_analysis(
     """
     analyzer = SensitivityAnalyzer(param_names, param_bounds)
     results = analyzer.sobol_analysis(
-        objective_func, n_samples=n_sobol_samples, calc_second_order=calc_second_order, seed=seed
+        objective_func,
+        n_samples=n_sobol_samples,
+        calc_second_order=calc_second_order,
+        seed=seed,
     )
     ranked = analyzer.rank_parameters(results, method="sobol")
     interaction = analyzer.interaction_matrix(results)

@@ -89,7 +89,7 @@ class TestSpringPotentialEnergy:
     def test_default_reference(self):
         """默认参考位置应为 0。"""
         pe = spring_potential_energy(k=1000.0, extension=0.1)
-        expected = 0.5 * 1000.0 * 0.1 ** 2
+        expected = 0.5 * 1000.0 * 0.1**2
         assert pe == pytest.approx(expected)
 
     def test_stiffness_scaling(self):
@@ -123,7 +123,7 @@ class TestMechanicalEnergySeries:
         result = mechanical_energy_series(rows, mass_kg=10.0, g=9.81)
 
         assert len(result["time"]) == 1
-        assert result["ke"][0] == pytest.approx(0.5 * 10.0 * 1.0 ** 2)
+        assert result["ke"][0] == pytest.approx(0.5 * 10.0 * 1.0**2)
         assert result["pe"][0] == pytest.approx(10.0 * 9.81 * 1.0)
         assert result["total"][0] == pytest.approx(result["ke"][0] + result["pe"][0])
 
@@ -151,7 +151,7 @@ class TestMechanicalEnergySeries:
         )
 
         assert result["time"][0] == 0.0
-        assert result["ke"][0] == pytest.approx(0.5 * 10.0 * 1.0 ** 2)
+        assert result["ke"][0] == pytest.approx(0.5 * 10.0 * 1.0**2)
 
     def test_missing_velocity_defaults_zero(self):
         """缺失速度字段应默认为 0。"""
@@ -164,14 +164,20 @@ class TestMechanicalEnergySeries:
     def test_spring_energy_contribution(self):
         """弹簧势能应正确累加到 PE。"""
         rows = [
-            {"time": 0.0, "hip_x_vel": 0.0, "hip_z_vel": 0.0, "hip_z": 1.0, "spring_ext": 0.1},
+            {
+                "time": 0.0,
+                "hip_x_vel": 0.0,
+                "hip_z_vel": 0.0,
+                "hip_z": 1.0,
+                "spring_ext": 0.1,
+            },
         ]
         springs = [{"k": 1000.0, "ref": 0.0, "key": "spring_ext"}]
 
         result = mechanical_energy_series(rows, mass_kg=10.0, springs=springs)
 
         # PE = m*g*z + 0.5*k*(ext-ref)^2
-        expected_pe = 10.0 * 9.81 * 1.0 + 0.5 * 1000.0 * 0.1 ** 2
+        expected_pe = 10.0 * 9.81 * 1.0 + 0.5 * 1000.0 * 0.1**2
         assert result["pe"][0] == pytest.approx(expected_pe)
 
     def test_multiple_springs(self):
@@ -193,7 +199,7 @@ class TestMechanicalEnergySeries:
 
         result = mechanical_energy_series(rows, mass_kg=10.0, springs=springs)
 
-        spring_pe = 0.5 * 1000.0 * 0.1 ** 2 + 0.5 * 2000.0 * 0.05 ** 2
+        spring_pe = 0.5 * 1000.0 * 0.1**2 + 0.5 * 2000.0 * 0.05**2
         expected_pe = 10.0 * 9.81 * 1.0 + spring_pe
         assert result["pe"][0] == pytest.approx(expected_pe)
 
@@ -231,9 +237,27 @@ class TestCollisionLossPerStep:
     def test_no_support_switching(self):
         """无支撑足切换应返回空列表。"""
         rows = [
-            {"time": 0.0, "support_foot": "left", "hip_x_vel": 1.0, "hip_z_vel": 0.0, "hip_z": 1.0},
-            {"time": 0.1, "support_foot": "left", "hip_x_vel": 1.0, "hip_z_vel": 0.0, "hip_z": 1.0},
-            {"time": 0.2, "support_foot": "left", "hip_x_vel": 1.0, "hip_z_vel": 0.0, "hip_z": 1.0},
+            {
+                "time": 0.0,
+                "support_foot": "left",
+                "hip_x_vel": 1.0,
+                "hip_z_vel": 0.0,
+                "hip_z": 1.0,
+            },
+            {
+                "time": 0.1,
+                "support_foot": "left",
+                "hip_x_vel": 1.0,
+                "hip_z_vel": 0.0,
+                "hip_z": 1.0,
+            },
+            {
+                "time": 0.2,
+                "support_foot": "left",
+                "hip_x_vel": 1.0,
+                "hip_z_vel": 0.0,
+                "hip_z": 1.0,
+            },
         ]
         result = collision_loss_per_step(rows, mass_kg=10.0)
         assert len(result) == 0
@@ -241,10 +265,34 @@ class TestCollisionLossPerStep:
     def test_single_support_switch(self):
         """单次支撑足切换应检测到能量跳变。"""
         rows = [
-            {"time": 0.0, "support_foot": "left", "hip_x_vel": 1.0, "hip_z_vel": 0.0, "hip_z": 1.0},
-            {"time": 0.1, "support_foot": "left", "hip_x_vel": 1.0, "hip_z_vel": 0.0, "hip_z": 1.0},
-            {"time": 0.2, "support_foot": "right", "hip_x_vel": 0.8, "hip_z_vel": 0.0, "hip_z": 0.95},
-            {"time": 0.3, "support_foot": "right", "hip_x_vel": 0.8, "hip_z_vel": 0.0, "hip_z": 0.95},
+            {
+                "time": 0.0,
+                "support_foot": "left",
+                "hip_x_vel": 1.0,
+                "hip_z_vel": 0.0,
+                "hip_z": 1.0,
+            },
+            {
+                "time": 0.1,
+                "support_foot": "left",
+                "hip_x_vel": 1.0,
+                "hip_z_vel": 0.0,
+                "hip_z": 1.0,
+            },
+            {
+                "time": 0.2,
+                "support_foot": "right",
+                "hip_x_vel": 0.8,
+                "hip_z_vel": 0.0,
+                "hip_z": 0.95,
+            },
+            {
+                "time": 0.3,
+                "support_foot": "right",
+                "hip_x_vel": 0.8,
+                "hip_z_vel": 0.0,
+                "hip_z": 0.95,
+            },
         ]
         result = collision_loss_per_step(rows, mass_kg=10.0, window=1)
 
@@ -256,10 +304,34 @@ class TestCollisionLossPerStep:
     def test_multiple_switches(self):
         """多次切换应检测到多个碰撞事件。"""
         rows = [
-            {"time": 0.0, "support_foot": "left", "hip_x_vel": 1.0, "hip_z_vel": 0.0, "hip_z": 1.0},
-            {"time": 0.1, "support_foot": "right", "hip_x_vel": 0.9, "hip_z_vel": 0.0, "hip_z": 0.98},
-            {"time": 0.2, "support_foot": "left", "hip_x_vel": 0.85, "hip_z_vel": 0.0, "hip_z": 0.96},
-            {"time": 0.3, "support_foot": "right", "hip_x_vel": 0.8, "hip_z_vel": 0.0, "hip_z": 0.94},
+            {
+                "time": 0.0,
+                "support_foot": "left",
+                "hip_x_vel": 1.0,
+                "hip_z_vel": 0.0,
+                "hip_z": 1.0,
+            },
+            {
+                "time": 0.1,
+                "support_foot": "right",
+                "hip_x_vel": 0.9,
+                "hip_z_vel": 0.0,
+                "hip_z": 0.98,
+            },
+            {
+                "time": 0.2,
+                "support_foot": "left",
+                "hip_x_vel": 0.85,
+                "hip_z_vel": 0.0,
+                "hip_z": 0.96,
+            },
+            {
+                "time": 0.3,
+                "support_foot": "right",
+                "hip_x_vel": 0.8,
+                "hip_z_vel": 0.0,
+                "hip_z": 0.94,
+            },
         ]
         result = collision_loss_per_step(rows, mass_kg=10.0, window=0)
 
@@ -290,5 +362,5 @@ class TestEdgeCases:
         rows = [{"time": 0.0, "hip_x_vel": 100.0, "hip_z_vel": 50.0, "hip_z": 10.0}]
         result = mechanical_energy_series(rows, mass_kg=10.0)
 
-        expected_ke = 0.5 * 10.0 * (100.0 ** 2 + 50.0 ** 2)
+        expected_ke = 0.5 * 10.0 * (100.0**2 + 50.0**2)
         assert result["ke"][0] == pytest.approx(expected_ke)

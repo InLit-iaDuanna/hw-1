@@ -92,6 +92,7 @@ class ResidualRLEnv(gym.Env):
         # 参数
         if params is None:
             from simulate_v14c import make_v14c_params
+
             base_params = make_v14c_params(slope_deg=0.0)
             params = V137Params(
                 base=base_params,
@@ -139,10 +140,7 @@ class ResidualRLEnv(gym.Env):
         # Gymnasium空间定义
         # Action: 4维residual [left_hip, left_knee, right_hip, right_knee]
         self.action_space = spaces.Box(
-            low=-residual_limit,
-            high=residual_limit,
-            shape=(4,),
-            dtype=np.float32
+            low=-residual_limit, high=residual_limit, shape=(4,), dtype=np.float32
         )
 
         # Observation: 20维或24维（可选扩展）
@@ -153,21 +151,57 @@ class ResidualRLEnv(gym.Env):
             # 基础观测：20维 [joint_angles(6), joint_velocities(6), hip_pos(2), hip_vel(2), contact(4)]
             obs_dim = 20
 
-        obs_low = np.array([
-            -np.pi, 0, -np.pi/6, -np.pi, 0, -np.pi/6,  # joint angles (rad)
-            -10, -10, -10, -10, -10, -10,  # joint velocities (rad/s)
-            -np.inf, 0.0,  # hip position x, z
-            -10, -10,  # hip velocity vx, vz
-            0, 0, 0, 0  # contact states
-        ], dtype=np.float32)
+        obs_low = np.array(
+            [
+                -np.pi,
+                0,
+                -np.pi / 6,
+                -np.pi,
+                0,
+                -np.pi / 6,  # joint angles (rad)
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,  # joint velocities (rad/s)
+                -np.inf,
+                0.0,  # hip position x, z
+                -10,
+                -10,  # hip velocity vx, vz
+                0,
+                0,
+                0,
+                0,  # contact states
+            ],
+            dtype=np.float32,
+        )
 
-        obs_high = np.array([
-            np.pi, np.pi*70/180, np.pi/6, np.pi, np.pi*70/180, np.pi/6,
-            10, 10, 10, 10, 10, 10,
-            np.inf, 2.0,
-            10, 10,
-            1, 1, 1, 1
-        ], dtype=np.float32)
+        obs_high = np.array(
+            [
+                np.pi,
+                np.pi * 70 / 180,
+                np.pi / 6,
+                np.pi,
+                np.pi * 70 / 180,
+                np.pi / 6,
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,
+                np.inf,
+                2.0,
+                10,
+                10,
+                1,
+                1,
+                1,
+                1,
+            ],
+            dtype=np.float32,
+        )
 
         if self.use_extended_obs:
             # 添加扩展维度
@@ -175,9 +209,7 @@ class ResidualRLEnv(gym.Env):
             obs_high = np.concatenate([obs_high, [1, 1, 1.0, 10.0]])
 
         self.observation_space = spaces.Box(
-            low=obs_low,
-            high=obs_high,
-            dtype=np.float32
+            low=obs_low, high=obs_high, dtype=np.float32
         )
 
         # 状态跟踪
@@ -195,6 +227,7 @@ class ResidualRLEnv(gym.Env):
         """初始化渲染器。"""
         if self.render_mode == "human":
             from mujoco import viewer
+
             self.renderer = viewer.launch_passive(self.model, self.data)
         elif self.render_mode == "rgb_array":
             self.renderer = mujoco.Renderer(self.model, height=480, width=640)
@@ -214,7 +247,7 @@ class ResidualRLEnv(gym.Env):
             self.sim_time,
             self.support_foot,
             self.burst_start_t,
-            E_current
+            E_current,
         )
         l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau[0], tau[1], tau[2], tau[3]
 
@@ -255,7 +288,9 @@ class ResidualRLEnv(gym.Env):
             r_knee_des, float(self.data.qvel[self.qvel_addr["right_knee"]])
         )
 
-        return np.array([l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float64)
+        return np.array(
+            [l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float64
+        )
 
     def _update_fsm_state(self):
         """更新FSM状态（触地事件检测）。"""
@@ -276,24 +311,28 @@ class ResidualRLEnv(gym.Env):
             观测数组
         """
         # Joint angles (6): [left_hip, left_knee, left_ankle, right_hip, right_knee, right_ankle]
-        joint_angles = np.array([
-            self.data.qpos[2],  # left_hip
-            self.data.qpos[3],  # left_knee
-            self.data.qpos[4],  # left_ankle
-            self.data.qpos[5],  # right_hip
-            self.data.qpos[6],  # right_knee
-            self.data.qpos[7],  # right_ankle
-        ])
+        joint_angles = np.array(
+            [
+                self.data.qpos[2],  # left_hip
+                self.data.qpos[3],  # left_knee
+                self.data.qpos[4],  # left_ankle
+                self.data.qpos[5],  # right_hip
+                self.data.qpos[6],  # right_knee
+                self.data.qpos[7],  # right_ankle
+            ]
+        )
 
         # Joint velocities (6)
-        joint_velocities = np.array([
-            self.data.qvel[2],  # left_hip
-            self.data.qvel[3],  # left_knee
-            self.data.qvel[4],  # left_ankle
-            self.data.qvel[5],  # right_hip
-            self.data.qvel[6],  # right_knee
-            self.data.qvel[7],  # right_ankle
-        ])
+        joint_velocities = np.array(
+            [
+                self.data.qvel[2],  # left_hip
+                self.data.qvel[3],  # left_knee
+                self.data.qvel[4],  # left_ankle
+                self.data.qvel[5],  # right_hip
+                self.data.qvel[6],  # right_knee
+                self.data.qvel[7],  # right_ankle
+            ]
+        )
 
         # Hip position (2): x, z
         hip_body_id = self.model.body("hip").id
@@ -305,13 +344,9 @@ class ResidualRLEnv(gym.Env):
         # Contact states (4): binary indicator
         contact_states = self._get_contact_states()
 
-        obs = np.concatenate([
-            joint_angles,
-            joint_velocities,
-            hip_pos,
-            hip_vel,
-            contact_states
-        ]).astype(np.float32)
+        obs = np.concatenate(
+            [joint_angles, joint_velocities, hip_pos, hip_vel, contact_states]
+        ).astype(np.float32)
 
         # 可选：添加扩展观测
         if self.use_extended_obs:
@@ -320,7 +355,10 @@ class ResidualRLEnv(gym.Env):
             time_since_touchdown = min(self.sim_time - self.burst_start_t, 1.0)
             E_current = _mechanical_energy(self.params.base, self.data)
 
-            extended_obs = np.array([support_left, support_right, time_since_touchdown, E_current], dtype=np.float32)
+            extended_obs = np.array(
+                [support_left, support_right, time_since_touchdown, E_current],
+                dtype=np.float32,
+            )
             obs = np.concatenate([obs, extended_obs])
 
         return obs
@@ -366,11 +404,13 @@ class ResidualRLEnv(gym.Env):
             forward_reward = 10.0 * hip_vel_x
 
             # Residual惩罚（鼓励小修正，使用L2范数）
-            residual_penalty = 0.1 * np.sum(action ** 2)
+            residual_penalty = 0.1 * np.sum(action**2)
 
             # 能耗惩罚（近似：力矩×角速度）
             energy_cost = 0.0
-            for i, joint_name in enumerate(["left_hip", "left_knee", "right_hip", "right_knee"]):
+            for i, joint_name in enumerate(
+                ["left_hip", "left_knee", "right_hip", "right_knee"]
+            ):
                 qvel_idx = self.qvel_addr[joint_name]
                 tau = self.data.ctrl[i]
                 vel = self.data.qvel[qvel_idx]
@@ -387,12 +427,12 @@ class ResidualRLEnv(gym.Env):
             forward_reward = 5.0 * hip_vel_x
 
             # 能量成本（包括residual）
-            energy_cost = np.sum(action ** 2)
+            energy_cost = np.sum(action**2)
             self.cumulative_energy += energy_cost
             energy_penalty = 0.01 * energy_cost
 
             # 平滑性惩罚
-            if hasattr(self, 'last_action'):
+            if hasattr(self, "last_action"):
                 smoothness_penalty = 0.001 * np.sum((action - self.last_action) ** 2)
             else:
                 smoothness_penalty = 0.0
@@ -432,7 +472,7 @@ class ResidualRLEnv(gym.Env):
         if self.np_random is not None:
             noise = self.np_random.normal(0, 0.01, size=6)
             for i in range(6):
-                self.data.qpos[i+2] += noise[i]
+                self.data.qpos[i + 2] += noise[i]
 
         mujoco.mj_forward(self.model, self.data)
 
@@ -445,8 +485,8 @@ class ResidualRLEnv(gym.Env):
         self.support_foot = "left"
         self.burst_start_t = 0.0
 
-        if hasattr(self, 'last_action'):
-            delattr(self, 'last_action')
+        if hasattr(self, "last_action"):
+            delattr(self, "last_action")
 
         observation = self._get_obs()
         info = {"hip_x": self.last_hip_x}
@@ -547,9 +587,11 @@ def make_residual_env(residual_scale: float = 1.0, **kwargs):
         residual_scale: curriculum缩放系数
         **kwargs: 其他ResidualRLEnv参数
     """
+
     def _init():
         env = ResidualRLEnv(residual_scale=residual_scale, **kwargs)
         return env
+
     return _init
 
 
@@ -666,12 +708,22 @@ def train_residual_rl(
 
 def main():
     parser = argparse.ArgumentParser(description="训练Residual RL策略")
-    parser.add_argument("--total-timesteps", type=int, default=500000, help="总训练步数")
+    parser.add_argument(
+        "--total-timesteps", type=int, default=500000, help="总训练步数"
+    )
     parser.add_argument("--learning-rate", type=float, default=3e-4, help="学习率")
-    parser.add_argument("--residual-limit", type=float, default=0.5, help="Residual动作范围")
-    parser.add_argument("--inner-steps", type=int, default=20, help="内环步数（20=50Hz）")
-    parser.add_argument("--log-dir", type=str, default="logs/residual_rl", help="日志目录")
-    parser.add_argument("--model-save-path", type=str, default="models/residual_rl", help="模型保存路径")
+    parser.add_argument(
+        "--residual-limit", type=float, default=0.5, help="Residual动作范围"
+    )
+    parser.add_argument(
+        "--inner-steps", type=int, default=20, help="内环步数（20=50Hz）"
+    )
+    parser.add_argument(
+        "--log-dir", type=str, default="logs/residual_rl", help="日志目录"
+    )
+    parser.add_argument(
+        "--model-save-path", type=str, default="models/residual_rl", help="模型保存路径"
+    )
 
     args = parser.parse_args()
 

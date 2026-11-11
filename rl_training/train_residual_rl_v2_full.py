@@ -10,6 +10,5 @@ sys.path.insert(0, str(HW1_ROOT))
 
 from rl_training.train_sanity_100k import main
 
-
 if __name__ == "__main__":
     raise SystemExit(main())

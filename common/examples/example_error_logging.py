@@ -100,6 +100,7 @@ def save_results(data: dict, output_path: Path):
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     import json
+
     with open(output_path, "w") as f:
         json.dump(data, f, indent=2)
 
@@ -322,7 +323,9 @@ def main():
                 success=result["success"],
                 duration=elapsed,
                 metrics={
-                    "avg_speed": result["simulation_report"]["steps_per_second"]["mean"],
+                    "avg_speed": result["simulation_report"]["steps_per_second"][
+                        "mean"
+                    ],
                 },
             )
 

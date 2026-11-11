@@ -25,34 +25,34 @@ class Palette:
     """Clinical color palette. All values are hex strings."""
 
     # Surfaces
-    window: str = "#eef2f6"        # app background, cool clinical grey-blue
-    surface: str = "#ffffff"       # card / panel background
-    surface_alt: str = "#f6f8fb"   # subtle alternate fill
-    border: str = "#d8e0e8"        # hairline card border
-    grid: str = "#e3e9f0"          # plot gridlines
+    window: str = "#eef2f6"  # app background, cool clinical grey-blue
+    surface: str = "#ffffff"  # card / panel background
+    surface_alt: str = "#f6f8fb"  # subtle alternate fill
+    border: str = "#d8e0e8"  # hairline card border
+    grid: str = "#e3e9f0"  # plot gridlines
 
     # Text
-    text: str = "#1f2d3d"          # primary text, near-black slate
-    text_muted: str = "#5b6b7b"    # secondary labels
+    text: str = "#1f2d3d"  # primary text, near-black slate
+    text_muted: str = "#5b6b7b"  # secondary labels
     text_inverse: str = "#ffffff"
 
     # Brand / accents
-    accent: str = "#2b6cb0"        # primary action blue
+    accent: str = "#2b6cb0"  # primary action blue
     accent_dark: str = "#22517f"
     accent_soft: str = "#e8f1fb"
 
     # Clinical zones (symmetry index)
-    zone_green: str = "#2f9e6f"    # < 10% — symmetric
-    zone_yellow: str = "#e2a13b"   # 10-20% — mild asymmetry
-    zone_red: str = "#d6533c"      # > 20% — marked asymmetry
+    zone_green: str = "#2f9e6f"  # < 10% — symmetric
+    zone_yellow: str = "#e2a13b"  # 10-20% — mild asymmetry
+    zone_red: str = "#d6533c"  # > 20% — marked asymmetry
     zone_unknown: str = "#9aa7b4"
 
     # Body-side semantics (left vs right)
-    left: str = "#d6533c"          # warm — left side
+    left: str = "#d6533c"  # warm — left side
     left_soft: str = "#f3a18f"
-    right: str = "#2b6cb0"         # cool — right side
+    right: str = "#2b6cb0"  # cool — right side
     right_soft: str = "#8fb8df"
-    left_accent: str = "#e07a2f"   # secondary left trace (e.g. hip)
+    left_accent: str = "#e07a2f"  # secondary left trace (e.g. hip)
     right_accent: str = "#3aa6a0"  # secondary right trace (e.g. hip)
 
 

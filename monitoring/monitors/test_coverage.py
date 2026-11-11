@@ -69,9 +69,7 @@ class TestCoverageMonitor:
                 for file_path, file_data in cov_data.get("files", {}).items():
                     summary = file_data.get("summary", {})
                     files_coverage[file_path] = {
-                        "percent_covered": round(
-                            summary.get("percent_covered", 0), 2
-                        ),
+                        "percent_covered": round(summary.get("percent_covered", 0), 2),
                         "covered_lines": summary.get("covered_lines", 0),
                         "missing_lines": summary.get("missing_lines", 0),
                     }

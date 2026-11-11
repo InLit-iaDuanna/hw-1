@@ -15,7 +15,7 @@ import sys
 import os
 
 # Add parent directory to path for imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from phase_fsm import PhaseStateMachine, PhaseState
 
@@ -225,7 +225,7 @@ class TestPhaseStateMachine(unittest.TestCase):
         self.fsm.update(contact=False)  # -> SWING_THRUST
         time.sleep(0.21)
         self.fsm.update(contact=False)  # -> SWING_RETRACT
-        self.fsm.update(contact=True)   # -> STANCE_EARLY
+        self.fsm.update(contact=True)  # -> STANCE_EARLY
 
         self.assertEqual(self.fsm.phase_counts[PhaseState.STANCE_EARLY], 2)
         self.assertEqual(self.fsm.phase_counts[PhaseState.SWING_THRUST], 1)
@@ -258,15 +258,15 @@ class TestPhaseStateMachine(unittest.TestCase):
 
         stats = self.fsm.get_statistics()
 
-        self.assertIn('current_phase', stats)
-        self.assertIn('phase_time', stats)
-        self.assertIn('phase_progress', stats)
-        self.assertIn('total_transitions', stats)
-        self.assertIn('phase_counts', stats)
+        self.assertIn("current_phase", stats)
+        self.assertIn("phase_time", stats)
+        self.assertIn("phase_progress", stats)
+        self.assertIn("total_transitions", stats)
+        self.assertIn("phase_counts", stats)
 
-        self.assertEqual(stats['current_phase'], 'SWING_THRUST')
-        self.assertEqual(stats['total_transitions'], 2)
-        self.assertIsInstance(stats['phase_counts'], dict)
+        self.assertEqual(stats["current_phase"], "SWING_THRUST")
+        self.assertEqual(stats["total_transitions"], 2)
+        self.assertIsInstance(stats["phase_counts"], dict)
 
     def test_edge_case_missed_toe_off(self):
         """Timeout should handle missed toe-off sensor event"""
@@ -375,5 +375,5 @@ class TestPhaseStateEnum(unittest.TestCase):
         self.assertEqual(PhaseState.SWING_RETRACT.name, "SWING_RETRACT")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)

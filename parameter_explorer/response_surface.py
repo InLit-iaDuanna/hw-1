@@ -70,7 +70,12 @@ class GaussianProcessSurface(ResponseSurface):
     - 大样本时较慢
     """
 
-    def __init__(self, kernel: str = "matern", noise_level: float = 0.1, random_state: int | None = None):
+    def __init__(
+        self,
+        kernel: str = "matern",
+        noise_level: float = 0.1,
+        random_state: int | None = None,
+    ):
         """
         Args:
             kernel: 核函数类型 ("matern", "rbf", "rq")
@@ -85,7 +90,9 @@ class GaussianProcessSurface(ResponseSurface):
         elif kernel == "rq":
             from sklearn.gaussian_process.kernels import RationalQuadratic
 
-            base_kernel = ConstantKernel(1.0) * RationalQuadratic(length_scale=1.0, alpha=1.0)
+            base_kernel = ConstantKernel(1.0) * RationalQuadratic(
+                length_scale=1.0, alpha=1.0
+            )
         else:
             raise ValueError(f"Unknown kernel: {kernel}")
 
@@ -135,7 +142,9 @@ class PolynomialSurface(ResponseSurface):
         """
         self.degree = degree
         self.model = make_pipeline(
-            PolynomialFeatures(degree=degree, interaction_only=interaction_only, include_bias=True),
+            PolynomialFeatures(
+                degree=degree, interaction_only=interaction_only, include_bias=True
+            ),
             StandardScaler(),
             LinearRegression(),
         )
@@ -170,7 +179,12 @@ class RBFSurface(ResponseSurface):
     - 参数敏感
     """
 
-    def __init__(self, function: str = "multiquadric", epsilon: float | None = None, smooth: float = 0.0):
+    def __init__(
+        self,
+        function: str = "multiquadric",
+        epsilon: float | None = None,
+        smooth: float = 0.0,
+    ):
         """
         Args:
             function: RBF 函数类型 ("multiquadric", "inverse", "gaussian", "linear", "cubic", "quintic", "thin_plate")
@@ -185,7 +199,9 @@ class RBFSurface(ResponseSurface):
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         # RBF 需要转置（每行是一个维度）
         X_T = X.T
-        self.rbf = Rbf(*X_T, y, function=self.function, epsilon=self.epsilon, smooth=self.smooth)
+        self.rbf = Rbf(
+            *X_T, y, function=self.function, epsilon=self.epsilon, smooth=self.smooth
+        )
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         if self.rbf is None:
@@ -197,14 +213,18 @@ class RBFSurface(ResponseSurface):
 class EnsembleSurface(ResponseSurface):
     """集成响应曲面（多模型平均）。"""
 
-    def __init__(self, models: list[ResponseSurface], weights: list[float] | None = None):
+    def __init__(
+        self, models: list[ResponseSurface], weights: list[float] | None = None
+    ):
         """
         Args:
             models: 响应曲面模型列表
             weights: 模型权重（None 则等权）
         """
         self.models = models
-        self.weights = weights if weights is not None else [1.0 / len(models)] * len(models)
+        self.weights = (
+            weights if weights is not None else [1.0 / len(models)] * len(models)
+        )
 
         if len(self.weights) != len(self.models):
             raise ValueError("Number of weights must match number of models")
@@ -234,7 +254,8 @@ class EnsembleSurface(ResponseSurface):
         y_pred = (predictions * weights).sum(axis=0)
         # 不确定性：模型间方差 + 加权平均的模型内不确定性
         y_std = np.sqrt(
-            ((predictions - y_pred) ** 2 * weights).sum(axis=0) + (stds**2 * weights).sum(axis=0)
+            ((predictions - y_pred) ** 2 * weights).sum(axis=0)
+            + (stds**2 * weights).sum(axis=0)
         )
 
         return y_pred, y_std

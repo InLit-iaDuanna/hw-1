@@ -32,7 +32,10 @@ for step in range(1000):
 
     if step % 100 == 0:
         from simulate_passive_arms_v14 import classify_failure
-        failure_reason = classify_failure(env.model, env.data, env.params.base, env.start_x, env.sim_time)
+
+        failure_reason = classify_failure(
+            env.model, env.data, env.params.base, env.start_x, env.sim_time
+        )
 
         print(
             f"Step {step:4d}: "

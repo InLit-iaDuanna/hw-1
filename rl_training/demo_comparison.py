@@ -22,8 +22,7 @@ def run_constant_residual(episodes=5, render=False):
     print("=" * 80)
 
     env = ResidualRLEnvV2(
-        max_steps=2400,  # 12秒
-        render_mode="human" if render else None
+        max_steps=2400, render_mode="human" if render else None  # 12秒
     )
 
     constant_action = np.array([0.5, 1.0], dtype=np.float32)
@@ -52,7 +51,9 @@ def run_constant_residual(episodes=5, render=False):
         successes.append(success)
 
         status = "SUCCESS" if success else "FAIL"
-        print(f"  Episode {ep+1}: {final_distance:.3f}m [{status}] (耗时: {elapsed:.2f}s)")
+        print(
+            f"  Episode {ep+1}: {final_distance:.3f}m [{status}] (耗时: {elapsed:.2f}s)"
+        )
 
     env.close()
 
@@ -82,7 +83,9 @@ def run_rl_policy(episodes=5, render=False):
     print("=" * 80)
 
     # 加载模型
-    model_path = HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    model_path = (
+        HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    )
 
     if not model_path.exists():
         print(f"ERROR: 模型文件不存在: {model_path}")
@@ -95,8 +98,7 @@ def run_rl_policy(episodes=5, render=False):
     print()
 
     env = ResidualRLEnvV2(
-        max_steps=2400,  # 12秒
-        render_mode="human" if render else None
+        max_steps=2400, render_mode="human" if render else None  # 12秒
     )
 
     distances = []
@@ -124,7 +126,9 @@ def run_rl_policy(episodes=5, render=False):
         successes.append(success)
 
         status = "SUCCESS" if success else "FAIL"
-        print(f"  Episode {ep+1}: {final_distance:.3f}m [{status}] (耗时: {elapsed:.2f}s)")
+        print(
+            f"  Episode {ep+1}: {final_distance:.3f}m [{status}] (耗时: {elapsed:.2f}s)"
+        )
 
     env.close()
 
@@ -163,7 +167,9 @@ def print_comparison(constant_result, rl_result):
     diff_dist = rl_dist - const_dist
     pct_dist = (diff_dist / const_dist) * 100
 
-    print(f"{'平均距离 (m)':<20} {const_dist:<20.3f} {rl_dist:<20.3f} {diff_dist:+.3f} ({pct_dist:+.1f}%)")
+    print(
+        f"{'平均距离 (m)':<20} {const_dist:<20.3f} {rl_dist:<20.3f} {diff_dist:+.3f} ({pct_dist:+.1f}%)"
+    )
 
     # 成功率对比
     const_success = constant_result["success_rate"]
@@ -204,7 +210,9 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="对比 Constant vs 100k RL 策略")
-    parser.add_argument("--episodes", type=int, default=5, help="每个方案运行的 episode 数")
+    parser.add_argument(
+        "--episodes", type=int, default=5, help="每个方案运行的 episode 数"
+    )
     parser.add_argument("--render", action="store_true", help="是否渲染可视化")
     parser.add_argument("--only-constant", action="store_true", help="只运行 Constant")
     parser.add_argument("--only-rl", action="store_true", help="只运行 RL")
@@ -222,7 +230,9 @@ def main():
     rl_result = None
 
     if not args.only_rl:
-        constant_result = run_constant_residual(episodes=args.episodes, render=args.render)
+        constant_result = run_constant_residual(
+            episodes=args.episodes, render=args.render
+        )
 
     if not args.only_constant:
         rl_result = run_rl_policy(episodes=args.episodes, render=args.render)

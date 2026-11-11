@@ -23,4 +23,3 @@ __all__ = [
     "encode_frame",
     "encode_sample_frame",
 ]
-

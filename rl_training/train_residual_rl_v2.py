@@ -152,23 +152,17 @@ class ResidualRLEnvV2(gym.Env):
         self.E_ref_mean = 52.66  # 归一化用，使用swing_thrust.E_target
         # baseline_dx_per_step: V13.7在12s内走4.63m，在2.5s内应该走约0.965m
         # 每个PPO step (5ms): 0.965m / 500steps = 0.00193m/step
-        self.baseline_dx_per_step = 4.63 / 12.0 * (self.inner_steps * self.dt)  # 每PPO step的baseline距离
+        self.baseline_dx_per_step = (
+            4.63 / 12.0 * (self.inner_steps * self.dt)
+        )  # 每PPO step的baseline距离
 
         # Action空间：仅2维 [left_hip, right_hip]
-        self.action_space = spaces.Box(
-            low=-1.0,
-            high=1.0,
-            shape=(2,),
-            dtype=np.float32
-        )
+        self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(2,), dtype=np.float32)
 
         # Observation空间：42维
         obs_dim = 42
         self.observation_space = spaces.Box(
-            low=-np.inf,
-            high=np.inf,
-            shape=(obs_dim,),
-            dtype=np.float32
+            low=-np.inf, high=np.inf, shape=(obs_dim,), dtype=np.float32
         )
 
         # 状态跟踪
@@ -238,7 +232,7 @@ class ResidualRLEnvV2(gym.Env):
             t,
             self.support_foot,
             self.burst_start_t,
-            E_current
+            E_current,
         )
         self.last_mode_label = str(tau[4])
         self.last_left_phase_label = str(tau[5])
@@ -282,7 +276,9 @@ class ResidualRLEnvV2(gym.Env):
             r_knee_des, float(self.data.qvel[self.qvel_addr["right_knee"]])
         )
 
-        return np.array([l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float32)
+        return np.array(
+            [l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float32
+        )
 
     def _update_fsm_state(self, t: float):
         """更新FSM状态（触地事件检测）。"""
@@ -325,23 +321,29 @@ class ResidualRLEnvV2(gym.Env):
             42维观测数组
         """
         # 原始20维观测
-        joint_angles = np.array([
-            self.data.qpos[2],  # left_hip
-            self.data.qpos[3],  # left_knee
-            self.data.qpos[4],  # left_ankle
-            self.data.qpos[5],  # right_hip
-            self.data.qpos[6],  # right_knee
-            self.data.qpos[7],  # right_ankle
-        ], dtype=np.float32)
+        joint_angles = np.array(
+            [
+                self.data.qpos[2],  # left_hip
+                self.data.qpos[3],  # left_knee
+                self.data.qpos[4],  # left_ankle
+                self.data.qpos[5],  # right_hip
+                self.data.qpos[6],  # right_knee
+                self.data.qpos[7],  # right_ankle
+            ],
+            dtype=np.float32,
+        )
 
-        joint_velocities = np.array([
-            self.data.qvel[2],  # left_hip
-            self.data.qvel[3],  # left_knee
-            self.data.qvel[4],  # left_ankle
-            self.data.qvel[5],  # right_hip
-            self.data.qvel[6],  # right_knee
-            self.data.qvel[7],  # right_ankle
-        ], dtype=np.float32)
+        joint_velocities = np.array(
+            [
+                self.data.qvel[2],  # left_hip
+                self.data.qvel[3],  # left_knee
+                self.data.qvel[4],  # left_ankle
+                self.data.qvel[5],  # right_hip
+                self.data.qvel[6],  # right_knee
+                self.data.qvel[7],  # right_ankle
+            ],
+            dtype=np.float32,
+        )
 
         hip_body_id = self.model.body("hip").id
         hip_pos = self.data.xpos[hip_body_id][[0, 2]].astype(np.float32)
@@ -378,7 +380,9 @@ class ResidualRLEnvV2(gym.Env):
 
         # 6. E_current, E_current-E_ref (2维，归一化)
         E_current = _mechanical_energy(self.params.base, self.data)
-        E_ref = self.params.fsm.swing_thrust.E_target  # 从swing_thrust phase获取E_target
+        E_ref = (
+            self.params.fsm.swing_thrust.E_target
+        )  # 从swing_thrust phase获取E_target
         E_current_norm = E_current / self.E_ref_mean
         E_diff_norm = (E_current - E_ref) / self.E_ref_mean
 
@@ -389,22 +393,24 @@ class ResidualRLEnvV2(gym.Env):
         last_residuals_norm = self.last_residuals / max(self.residual_scale, 1e-6)
 
         # 拼接所有观测
-        obs = np.concatenate([
-            joint_angles,           # 6
-            joint_velocities,       # 6
-            hip_pos,                # 2
-            hip_vel,                # 2
-            contact_states,         # 4
-            left_phase_onehot,      # 4
-            right_phase_onehot,     # 4
-            support_onehot,         # 2
-            [t_since_contact_norm], # 1
-            [t_since_burst_norm],   # 1
-            [E_current_norm],       # 1
-            [E_diff_norm],          # 1
-            base_torques_norm,      # 4
-            last_residuals_norm,    # 4
-        ]).astype(np.float32)
+        obs = np.concatenate(
+            [
+                joint_angles,  # 6
+                joint_velocities,  # 6
+                hip_pos,  # 2
+                hip_vel,  # 2
+                contact_states,  # 4
+                left_phase_onehot,  # 4
+                right_phase_onehot,  # 4
+                support_onehot,  # 2
+                [t_since_contact_norm],  # 1
+                [t_since_burst_norm],  # 1
+                [E_current_norm],  # 1
+                [E_diff_norm],  # 1
+                base_torques_norm,  # 4
+                last_residuals_norm,  # 4
+            ]
+        ).astype(np.float32)
 
         return obs
 
@@ -444,10 +450,10 @@ class ResidualRLEnvV2(gym.Env):
         forward_reward = 50.0 * (dx - dx_ref)
 
         # 2. Residual cost（鼓励小修正）
-        residual_cost = np.sum(self.last_residuals ** 2)
+        residual_cost = np.sum(self.last_residuals**2)
 
         # 3. Smoothness cost（动作平滑）
-        if hasattr(self, 'prev_residuals'):
+        if hasattr(self, "prev_residuals"):
             smooth_cost = np.sum((self.last_residuals - self.prev_residuals) ** 2)
         else:
             smooth_cost = 0.0
@@ -457,7 +463,9 @@ class ResidualRLEnvV2(gym.Env):
         # 近似：residual力矩 × 关节速度
         work = 0.0
         work += abs(self.last_residuals[0] * self.data.qvel[self.qvel_addr["left_hip"]])
-        work += abs(self.last_residuals[2] * self.data.qvel[self.qvel_addr["right_hip"]])
+        work += abs(
+            self.last_residuals[2] * self.data.qvel[self.qvel_addr["right_hip"]]
+        )
         excess_work = work * self.dt * self.inner_steps
         self.episode_work += excess_work
 
@@ -472,7 +480,9 @@ class ResidualRLEnvV2(gym.Env):
 
     def _is_terminated(self) -> bool:
         """检查是否摔倒。"""
-        failure = classify_failure(self.model, self.data, self.params.base, self.start_x, self.last_control_t)
+        failure = classify_failure(
+            self.model, self.data, self.params.base, self.start_x, self.last_control_t
+        )
         self.failure_reason = failure or ""
         return bool(failure)
 
@@ -515,8 +525,8 @@ class ResidualRLEnvV2(gym.Env):
         self.episode_distance = 0.0
         self.episode_work = 0.0
 
-        if hasattr(self, 'prev_residuals'):
-            delattr(self, 'prev_residuals')
+        if hasattr(self, "prev_residuals"):
+            delattr(self, "prev_residuals")
 
         observation = self._get_obs()
         info = {"hip_x": self.last_hip_x}
@@ -538,9 +548,9 @@ class ResidualRLEnvV2(gym.Env):
         # 映射到4维residual [left_hip, 0, right_hip, 0]
         residual = np.zeros(4, dtype=np.float32)
         residual[0] = self.residual_scale * action[0]  # left_hip
-        residual[1] = 0.0                              # left_knee
+        residual[1] = 0.0  # left_knee
         residual[2] = self.residual_scale * action[1]  # right_hip
-        residual[3] = 0.0                              # right_knee
+        residual[3] = 0.0  # right_knee
 
         self.last_residuals = residual.copy()
 
@@ -609,7 +619,9 @@ class ResidualRLEnvV2(gym.Env):
         # Episode结束时的额外奖励
         if truncated:
             # 完整episode成功，给予改进奖励
-            final_improvement = self.episode_distance - (self.baseline_dx_per_step * self.max_steps)
+            final_improvement = self.episode_distance - (
+                self.baseline_dx_per_step * self.max_steps
+            )
             total_reward += 100.0 * final_improvement
 
         if terminated:
@@ -660,9 +672,11 @@ class ResidualRLEnvV2(gym.Env):
 
 def make_residual_env_v2(**kwargs):
     """创建Residual RL V2环境工厂函数。"""
+
     def _init():
         env = ResidualRLEnvV2(**kwargs)
         return env
+
     return _init
 
 

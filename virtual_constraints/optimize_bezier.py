@@ -8,8 +8,10 @@ import numpy as np
 import mujoco
 import os
 from pathlib import Path
+
 try:
     import cma
+
     CMA_AVAILABLE = True
 except ImportError:
     CMA_AVAILABLE = False
@@ -19,6 +21,7 @@ except ImportError:
 XML_PATH = Path(__file__).parent.parent / "hw_scene.xml"
 SIMULATION_TIME = 10.0  # seconds
 DT = 0.002
+
 
 class BezierVirtualConstraint:
     """Virtual constraint using cubic Bezier curve"""
@@ -56,7 +59,7 @@ class GaitSimulator:
         self.hip_actuator_ids = []
         for i in range(self.model.nu):
             name = mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_ACTUATOR, i)
-            if name and 'hip' in name.lower():
+            if name and "hip" in name.lower():
                 self.hip_actuator_ids.append(i)
 
         if not self.hip_actuator_ids:
@@ -73,7 +76,7 @@ class GaitSimulator:
     def step(self, ctrl):
         """Step simulation forward"""
         self.data.ctrl[:] = 0
-        for i, act_id in enumerate(self.hip_actuator_ids[:len(ctrl)]):
+        for i, act_id in enumerate(self.hip_actuator_ids[: len(ctrl)]):
             self.data.ctrl[act_id] = ctrl[i]
         mujoco.mj_step(self.model, self.data)
 
@@ -182,7 +185,9 @@ def evaluate_bezier_params(params, xml_path, duration=SIMULATION_TIME, verbose=F
     cost = -forward_distance + 0.1 * avg_energy
 
     if verbose:
-        print(f"Distance: {forward_distance:.3f}m, Energy: {avg_energy:.3f}, Cost: {cost:.3f}")
+        print(
+            f"Distance: {forward_distance:.3f}m, Energy: {avg_energy:.3f}, Cost: {cost:.3f}"
+        )
 
     return cost
 
@@ -205,14 +210,14 @@ def parameter_explorer(xml_path, n_samples=50, duration=5.0):
     # Reasonable bounds for hip angle trajectory (radians)
     # a0: initial angle, a1: linear term, a2/a3: curvature
     bounds = [
-        (-0.2, 0.2),   # a0: roughly straight
-        (-1.0, 1.0),   # a1: swing amplitude
-        (-0.5, 0.5),   # a2: curvature
-        (-0.5, 0.5),   # a3: curvature
+        (-0.2, 0.2),  # a0: roughly straight
+        (-1.0, 1.0),  # a1: swing amplitude
+        (-0.5, 0.5),  # a2: curvature
+        (-0.5, 0.5),  # a3: curvature
     ]
 
     best_params = None
-    best_cost = float('inf')
+    best_cost = float("inf")
     results = []
 
     for i in range(n_samples):
@@ -225,7 +230,9 @@ def parameter_explorer(xml_path, n_samples=50, duration=5.0):
         if cost < best_cost:
             best_cost = cost
             best_params = params
-            print(f"[{i+1}/{n_samples}] New best! Cost={cost:.3f}, params={[f'{p:.3f}' for p in params]}")
+            print(
+                f"[{i+1}/{n_samples}] New best! Cost={cost:.3f}, params={[f'{p:.3f}' for p in params]}"
+            )
 
         if (i + 1) % 10 == 0:
             print(f"[{i+1}/{n_samples}] Progress... Current best cost: {best_cost:.3f}")
@@ -261,11 +268,11 @@ def cma_es_optimize(xml_path, duration=5.0, max_evals=100):
     bounds = [[-0.5, -2.0, -1.0, -1.0], [0.5, 2.0, 1.0, 1.0]]
 
     opts = {
-        'bounds': bounds,
-        'maxfevals': max_evals,
-        'verb_disp': 1,
-        'verb_log': 0,
-        'tolfun': 1e-3,
+        "bounds": bounds,
+        "maxfevals": max_evals,
+        "verb_disp": 1,
+        "verb_log": 0,
+        "tolfun": 1e-3,
     }
 
     es = cma.CMAEvolutionStrategy(x0, sigma0, opts)
@@ -282,7 +289,9 @@ def cma_es_optimize(xml_path, duration=5.0, max_evals=100):
             eval_count += 1
 
             if eval_count % 10 == 0:
-                print(f"Evaluations: {eval_count}/{max_evals}, Best so far: {es.result.fbest:.3f}")
+                print(
+                    f"Evaluations: {eval_count}/{max_evals}, Best so far: {es.result.fbest:.3f}"
+                )
 
         es.tell(solutions, fitness)
 
@@ -309,7 +318,9 @@ def compare_with_v13_fsm(xml_path, bezier_params, duration=10.0):
 
     # Run Bezier controller
     print("\n[Bezier Controller]")
-    bezier_cost = evaluate_bezier_params(bezier_params, xml_path, duration, verbose=True)
+    bezier_cost = evaluate_bezier_params(
+        bezier_params, xml_path, duration, verbose=True
+    )
 
     print("\n[V13.7 FSM Baseline]")
     print("Note: FSM comparison requires V13.7 implementation.")
@@ -323,14 +334,16 @@ def compare_with_v13_fsm(xml_path, bezier_params, duration=10.0):
     print(f"\nComparison:")
     print(f"  Bezier Cost: {bezier_cost:.3f}")
     print(f"  FSM Cost (est): {fsm_cost_estimate:.3f}")
-    print(f"  Improvement: {((fsm_cost_estimate - bezier_cost) / abs(fsm_cost_estimate) * 100):.1f}%")
+    print(
+        f"  Improvement: {((fsm_cost_estimate - bezier_cost) / abs(fsm_cost_estimate) * 100):.1f}%"
+    )
 
 
 def save_results(params, cost, output_path="best_bezier_params.txt"):
     """Save optimized parameters to file"""
     output_file = Path(__file__).parent / output_path
 
-    with open(output_file, 'w') as f:
+    with open(output_file, "w") as f:
         f.write("# Optimized Bezier Virtual Constraint Parameters\n")
         f.write("# Cubic Bezier: q(s) = a0 + a1*s + a2*s^2 + a3*s^3\n")
         f.write(f"# Cost: {cost:.6f}\n\n")
@@ -359,16 +372,12 @@ def main():
     if use_cma:
         # CMA-ES optimization
         best_params, best_cost = cma_es_optimize(
-            XML_PATH,
-            duration=5.0,  # Shorter for faster optimization
-            max_evals=100
+            XML_PATH, duration=5.0, max_evals=100  # Shorter for faster optimization
         )
     else:
         # Parameter explorer (grid/random search)
         best_params, best_cost, _ = parameter_explorer(
-            XML_PATH,
-            n_samples=50,
-            duration=5.0
+            XML_PATH, n_samples=50, duration=5.0
         )
 
     if best_params is None:
@@ -377,7 +386,9 @@ def main():
 
     # Validate with longer simulation
     print("\n=== Final Validation (10s simulation) ===")
-    final_cost = evaluate_bezier_params(best_params, XML_PATH, duration=10.0, verbose=True)
+    final_cost = evaluate_bezier_params(
+        best_params, XML_PATH, duration=10.0, verbose=True
+    )
 
     # Save results
     save_results(best_params, final_cost)
@@ -386,8 +397,10 @@ def main():
     compare_with_v13_fsm(XML_PATH, best_params, duration=10.0)
 
     print("\n=== Optimization Complete ===")
-    print(f"Final parameters: a0={best_params[0]:.3f}, a1={best_params[1]:.3f}, "
-          f"a2={best_params[2]:.3f}, a3={best_params[3]:.3f}")
+    print(
+        f"Final parameters: a0={best_params[0]:.3f}, a1={best_params[1]:.3f}, "
+        f"a2={best_params[2]:.3f}, a3={best_params[3]:.3f}"
+    )
 
 
 if __name__ == "__main__":

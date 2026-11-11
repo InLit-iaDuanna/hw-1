@@ -17,12 +17,13 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 def test_imports():
     """Test that all modules can be imported."""
-    print("="*70)
+    print("=" * 70)
     print("TEST 1: Module Imports")
-    print("="*70)
+    print("=" * 70)
 
     try:
         import extract_contact_forces
+
         print("[PASS] extract_contact_forces")
     except Exception as e:
         print(f"[FAIL] extract_contact_forces: {e}")
@@ -30,6 +31,7 @@ def test_imports():
 
     try:
         import generate_fea_boundary_conditions
+
         print("[PASS] generate_fea_boundary_conditions")
     except Exception as e:
         print(f"[FAIL] generate_fea_boundary_conditions: {e}")
@@ -37,6 +39,7 @@ def test_imports():
 
     try:
         import parse_fea_results
+
         print("[PASS] parse_fea_results")
     except Exception as e:
         print(f"[FAIL] parse_fea_results: {e}")
@@ -44,6 +47,7 @@ def test_imports():
 
     try:
         import design_constraint_validator
+
         print("[PASS] design_constraint_validator")
     except Exception as e:
         print(f"[FAIL] design_constraint_validator: {e}")
@@ -51,6 +55,7 @@ def test_imports():
 
     try:
         import workflow_example
+
         print("[PASS] workflow_example")
     except Exception as e:
         print(f"[FAIL] workflow_example: {e}")
@@ -62,9 +67,9 @@ def test_imports():
 
 def test_data_structures():
     """Test that data structures are correctly defined."""
-    print("="*70)
+    print("=" * 70)
     print("TEST 2: Data Structures")
-    print("="*70)
+    print("=" * 70)
 
     from extract_contact_forces import ContactEvent, ContactForceHistory
     from generate_fea_boundary_conditions import FEABoundaryCondition
@@ -81,9 +86,11 @@ def test_data_structures():
         contact_position_z=0.0,
         body_velocity_x=0.8,
         body_velocity_z=-0.75,
-        event_type="heel_strike"
+        event_type="heel_strike",
     )
-    print(f"[PASS] ContactEvent: force={event.force_normal}N, velocity={event.body_velocity_z}m/s")
+    print(
+        f"[PASS] ContactEvent: force={event.force_normal}N, velocity={event.body_velocity_z}m/s"
+    )
 
     # Test MaterialProperties
     mat = MaterialProperties(
@@ -109,7 +116,9 @@ def test_data_structures():
         min_safety_factor_yield=1.5,
         target_gait_cycles=100000,
     )
-    print(f"[PASS] DesignRequirements: SF>={req.min_safety_factor_yield}, cycles>={req.target_gait_cycles}")
+    print(
+        f"[PASS] DesignRequirements: SF>={req.min_safety_factor_yield}, cycles>={req.target_gait_cycles}"
+    )
 
     print("\n[PASS] All data structures working\n")
     return True
@@ -117,9 +126,9 @@ def test_data_structures():
 
 def test_contact_force_extraction():
     """Test contact force extraction with synthetic data."""
-    print("="*70)
+    print("=" * 70)
     print("TEST 3: Contact Force Extraction")
-    print("="*70)
+    print("=" * 70)
 
     import numpy as np
     from extract_contact_forces import detect_contact_events
@@ -139,7 +148,7 @@ def test_contact_force_extraction():
         # Gaussian impact profile
         for j in range(-50, 50):
             if 0 <= impact_idx + j < n_steps:
-                contact_force[impact_idx + j] = 350.0 * np.exp(-j**2 / 200.0)
+                contact_force[impact_idx + j] = 350.0 * np.exp(-(j**2) / 200.0)
 
     data = {
         "time": time,
@@ -148,12 +157,16 @@ def test_contact_force_extraction():
     }
 
     # Extract events
-    events = detect_contact_events(data, foot="left", event_type="heel_strike", force_threshold=50.0)
+    events = detect_contact_events(
+        data, foot="left", event_type="heel_strike", force_threshold=50.0
+    )
 
     print(f"✓ Detected {len(events)} heel-strike events")
     if events:
         print(f"  Event 1: t={events[0].time:.3f}s, F={events[0].force_normal:.1f}N")
-        print(f"  Event {len(events)}: t={events[-1].time:.3f}s, F={events[-1].force_normal:.1f}N")
+        print(
+            f"  Event {len(events)}: t={events[-1].time:.3f}s, F={events[-1].force_normal:.1f}N"
+        )
 
     assert len(events) == 6, f"Expected 6 events, got {len(events)}"
     print("\n✓ Contact force extraction working\n")
@@ -162,9 +175,9 @@ def test_contact_force_extraction():
 
 def test_boundary_condition_generation():
     """Test FEA boundary condition generation."""
-    print("="*70)
+    print("=" * 70)
     print("TEST 4: Boundary Condition Generation")
-    print("="*70)
+    print("=" * 70)
 
     from generate_fea_boundary_conditions import contact_forces_to_fea_bc
 
@@ -176,7 +189,7 @@ def test_boundary_condition_generation():
             "peak_force_avg_N": 380.5,
             "velocity_z_avg_m_s": -0.758,
             "velocity_x_avg_m_s": 0.05,
-        }
+        },
     }
 
     # Generate initial velocity BC
@@ -198,9 +211,9 @@ def test_boundary_condition_generation():
 
 def test_result_parsing():
     """Test FEA result parsing."""
-    print("="*70)
+    print("=" * 70)
     print("TEST 5: FEA Result Parsing")
-    print("="*70)
+    print("=" * 70)
 
     from parse_fea_results import parse_abaqus_json_results, MATERIALS
     import json
@@ -218,7 +231,7 @@ def test_result_parsing():
     }
 
     # Write to temp file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
         json.dump(fea_results, f)
         temp_path = Path(f.name)
 
@@ -243,9 +256,9 @@ def test_result_parsing():
 
 def test_design_validation():
     """Test design constraint validation."""
-    print("="*70)
+    print("=" * 70)
     print("TEST 6: Design Validation")
-    print("="*70)
+    print("=" * 70)
 
     from design_constraint_validator import (
         validate_structural_integrity,
@@ -280,9 +293,9 @@ def test_design_validation():
 
 def test_workflow_class():
     """Test workflow manager class."""
-    print("="*70)
+    print("=" * 70)
     print("TEST 7: Workflow Manager")
-    print("="*70)
+    print("=" * 70)
 
     from workflow_example import MuJoCoFEAWorkflow
 
@@ -292,7 +305,7 @@ def test_workflow_class():
         workflow = MuJoCoFEAWorkflow(
             version="v10",
             material="PLA",
-            output_dir=Path(__file__).parent / "out" / "test_workflow"
+            output_dir=Path(__file__).parent / "out" / "test_workflow",
         )
         print(f"✓ Workflow initialized: {workflow.version}")
         print(f"  Material: {workflow.material}")
@@ -311,9 +324,9 @@ def test_workflow_class():
 
 def run_all_tests():
     """Run all integration tests."""
-    print("\n" + "#"*70)
+    print("\n" + "#" * 70)
     print("# MuJoCo-FEA Integration Test Suite")
-    print("#"*70 + "\n")
+    print("#" * 70 + "\n")
 
     tests = [
         ("Module Imports", test_imports),
@@ -334,13 +347,14 @@ def run_all_tests():
             print(f"\n✗ TEST FAILED: {name}")
             print(f"  Error: {e}")
             import traceback
+
             traceback.print_exc()
             results.append((name, False))
 
     # Summary
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print("TEST SUMMARY")
-    print("="*70)
+    print("=" * 70)
 
     passed = sum(1 for _, success in results if success)
     total = len(results)
@@ -349,9 +363,9 @@ def run_all_tests():
         status = "✓ PASS" if success else "✗ FAIL"
         print(f"{status:8s} | {name}")
 
-    print("="*70)
+    print("=" * 70)
     print(f"TOTAL: {passed}/{total} tests passed ({passed/total*100:.1f}%)")
-    print("="*70 + "\n")
+    print("=" * 70 + "\n")
 
     return passed == total
 

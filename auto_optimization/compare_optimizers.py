@@ -165,7 +165,13 @@ def plot_comparison(results: dict, times: dict, output_path: Path):
         result = data["result"]
         display_name = data["display_name"]
         curve = result.convergence_curve
-        ax1.plot(range(1, len(curve) + 1), curve, marker="o", markersize=3, label=display_name)
+        ax1.plot(
+            range(1, len(curve) + 1),
+            curve,
+            marker="o",
+            markersize=3,
+            label=display_name,
+        )
 
     ax1.set_xlabel("评估次数", fontsize=12)
     ax1.set_ylabel("最优值", fontsize=12)

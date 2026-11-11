@@ -30,7 +30,9 @@ print(f"Current support: {env.support_foot}")
 print(f"Last event: {env.last_event_t:.3f}s")
 print(f"Accepted contact: '{env.accepted_contact}'")
 
-print(f"\n{'Step':<6} {'Time':<8} {'Left_C':<8} {'Right_C':<8} {'Cand_L':<10} {'Cand_R':<10} {'Support':<8} {'Event':<6}")
+print(
+    f"\n{'Step':<6} {'Time':<8} {'Left_C':<8} {'Right_C':<8} {'Cand_L':<10} {'Cand_R':<10} {'Support':<8} {'Event':<6}"
+)
 print("-" * 80)
 
 for step in range(200, 500):  # 1.0s到2.5s
@@ -38,8 +40,16 @@ for step in range(200, 500):  # 1.0s到2.5s
 
     obs, reward, terminated, truncated, info = env.step(action)
 
-    cand_l = f"{env.candidate_start_t['left']:.3f}" if env.candidate_start_t['left'] is not None else "None"
-    cand_r = f"{env.candidate_start_t['right']:.3f}" if env.candidate_start_t['right'] is not None else "None"
+    cand_l = (
+        f"{env.candidate_start_t['left']:.3f}"
+        if env.candidate_start_t["left"] is not None
+        else "None"
+    )
+    cand_r = (
+        f"{env.candidate_start_t['right']:.3f}"
+        if env.candidate_start_t["right"] is not None
+        else "None"
+    )
 
     event_marker = ""
     if step == 200 or abs(env.last_event_t - env.sim_time) < 0.01:

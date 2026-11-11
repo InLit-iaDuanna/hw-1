@@ -16,11 +16,25 @@ def run_task(task_name: str):
     tasks = {
         "1": {
             "name": "失败案例 (roll_k=100)",
-            "args": ["--mode", "single", "--roll-stiffness", "100", "--duration", "6.0"],
+            "args": [
+                "--mode",
+                "single",
+                "--roll-stiffness",
+                "100",
+                "--duration",
+                "6.0",
+            ],
         },
         "2": {
             "name": "稳定案例 (roll_k=500)",
-            "args": ["--mode", "single", "--roll-stiffness", "500", "--duration", "6.0"],
+            "args": [
+                "--mode",
+                "single",
+                "--roll-stiffness",
+                "500",
+                "--duration",
+                "6.0",
+            ],
         },
         "3": {
             "name": "对比动画 (100 vs 500)",
@@ -49,12 +63,18 @@ def run_task(task_name: str):
         # 参数扫描
         for k in [50, 150, 300]:
             print(f"\n>>> 渲染 roll_k={k}")
-            subprocess.run([
-                str(PYTHON), str(RENDER_SCRIPT),
-                "--mode", "single",
-                "--roll-stiffness", str(k),
-                "--duration", "5.0"
-            ])
+            subprocess.run(
+                [
+                    str(PYTHON),
+                    str(RENDER_SCRIPT),
+                    "--mode",
+                    "single",
+                    "--roll-stiffness",
+                    str(k),
+                    "--duration",
+                    "5.0",
+                ]
+            )
     else:
         subprocess.run([str(PYTHON), str(RENDER_SCRIPT)] + task["args"])
 
@@ -64,9 +84,9 @@ def run_task(task_name: str):
 
 
 def main():
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("V18 侧向稳定性渲染 - 快速任务")
-    print("="*60)
+    print("=" * 60)
     print("\n可用任务:")
     print("  1. 失败案例 (roll_k=100) - 侧视+前视")
     print("  2. 稳定案例 (roll_k=500) - 侧视+前视")
@@ -77,7 +97,7 @@ def main():
     print(f"  python {Path(__file__).name} <任务编号>")
     print("\n示例:")
     print(f"  python {Path(__file__).name} 3")
-    print("="*60 + "\n")
+    print("=" * 60 + "\n")
 
     if len(sys.argv) < 2:
         print("请指定任务编号 (1-5)")

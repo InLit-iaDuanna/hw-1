@@ -38,19 +38,25 @@ class VersionTracker:
         if not self.registry_path.exists():
             raise FileNotFoundError(f"Registry not found: {self.registry_path}")
 
-        with open(self.registry_path, 'r', encoding='utf-8') as f:
+        with open(self.registry_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
 
     def _save_registry(self):
         """保存数据注册表"""
-        with open(self.registry_path, 'w', encoding='utf-8') as f:
-            yaml.dump(self.registry, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+        with open(self.registry_path, "w", encoding="utf-8") as f:
+            yaml.dump(
+                self.registry,
+                f,
+                default_flow_style=False,
+                allow_unicode=True,
+                sort_keys=False,
+            )
 
     def _compute_file_hash(self, file_path: Path) -> str:
         """计算文件 SHA256 哈希值"""
         sha256 = hashlib.sha256()
 
-        with open(file_path, 'rb') as f:
+        with open(file_path, "rb") as f:
             while chunk := f.read(8192):
                 sha256.update(chunk)
 
@@ -70,8 +76,8 @@ class VersionTracker:
         """根据路径模式判断文件类别"""
         relative_path = file_path.relative_to(self.project_root).as_posix()
 
-        for category, info in self.registry['categories'].items():
-            patterns = info['patterns']
+        for category, info in self.registry["categories"].items():
+            patterns = info["patterns"]
 
             for pattern in patterns:
                 # 简单的 glob 匹配
@@ -83,6 +89,7 @@ class VersionTracker:
     def _match_pattern(self, path: str, pattern: str) -> bool:
         """简单的 glob 模式匹配"""
         from fnmatch import fnmatch
+
         return fnmatch(path, pattern)
 
     def register_file(
@@ -146,24 +153,26 @@ class VersionTracker:
         }
 
         # 检查是否已存在
-        existing_assets = self.registry.get('assets', [])
+        existing_assets = self.registry.get("assets", [])
 
         # 查找相同路径的资产
-        same_path_assets = [a for a in existing_assets if a['file_path'] == relative_path]
+        same_path_assets = [
+            a for a in existing_assets if a["file_path"] == relative_path
+        ]
 
         if same_path_assets:
             # 检查哈希是否相同
-            if same_path_assets[-1]['hash'] == file_hash:
+            if same_path_assets[-1]["hash"] == file_hash:
                 print(f"File already registered with same hash: {relative_path}")
                 return same_path_assets[-1]
             else:
                 print(f"File changed, registering new version: {relative_path}")
 
         # 添加新资产
-        if 'assets' not in self.registry:
-            self.registry['assets'] = []
+        if "assets" not in self.registry:
+            self.registry["assets"] = []
 
-        self.registry['assets'].append(asset)
+        self.registry["assets"].append(asset)
         self._save_registry()
 
         print(f"Registered: {relative_path} ({category})")
@@ -175,9 +184,9 @@ class VersionTracker:
 
         for part in parts:
             # 匹配 v01, v13, V19 等
-            if part.lower().startswith('v') and len(part) >= 3:
+            if part.lower().startswith("v") and len(part) >= 3:
                 # 提取版本号部分
-                version_num = part[1:].split('_')[0]
+                version_num = part[1:].split("_")[0]
                 if version_num.isdigit():
                     return f"V{version_num.zfill(2)}"
 
@@ -215,9 +224,9 @@ class VersionTracker:
         assets = []
 
         if recursive:
-            file_iter = directory.rglob('*')
+            file_iter = directory.rglob("*")
         else:
-            file_iter = directory.glob('*')
+            file_iter = directory.glob("*")
 
         for file_path in file_iter:
             if not file_path.is_file():
@@ -249,24 +258,24 @@ class VersionTracker:
 
         relative_path = file_path.as_posix()
 
-        assets = self.registry.get('assets', [])
+        assets = self.registry.get("assets", [])
 
         # 返回最新版本
         for asset in reversed(assets):
-            if asset['file_path'] == relative_path:
+            if asset["file_path"] == relative_path:
                 return asset
 
         return None
 
     def get_assets_by_version(self, version_tag: str) -> List[Dict[str, Any]]:
         """获取特定版本的所有资产"""
-        assets = self.registry.get('assets', [])
-        return [a for a in assets if a.get('version_tag') == version_tag]
+        assets = self.registry.get("assets", [])
+        return [a for a in assets if a.get("version_tag") == version_tag]
 
     def get_assets_by_category(self, category: str) -> List[Dict[str, Any]]:
         """获取特定类别的所有资产"""
-        assets = self.registry.get('assets', [])
-        return [a for a in assets if a.get('category') == category]
+        assets = self.registry.get("assets", [])
+        return [a for a in assets if a.get("category") == category]
 
     def verify_file_integrity(self, file_path: str) -> Dict[str, Any]:
         """
@@ -292,12 +301,12 @@ class VersionTracker:
             return {
                 "status": "missing",
                 "message": "File does not exist",
-                "registered_hash": asset['hash'],
+                "registered_hash": asset["hash"],
             }
 
         current_hash = self._compute_file_hash(file_path)
 
-        if current_hash == asset['hash']:
+        if current_hash == asset["hash"]:
             return {
                 "status": "valid",
                 "message": "File integrity verified",
@@ -307,7 +316,7 @@ class VersionTracker:
             return {
                 "status": "corrupted",
                 "message": "File hash mismatch",
-                "registered_hash": asset['hash'],
+                "registered_hash": asset["hash"],
                 "current_hash": current_hash,
             }
 
@@ -320,12 +329,12 @@ class VersionTracker:
 
         relative_path = file_path.as_posix()
 
-        assets = self.registry.get('assets', [])
-        return [a for a in assets if a['file_path'] == relative_path]
+        assets = self.registry.get("assets", [])
+        return [a for a in assets if a["file_path"] == relative_path]
 
     def get_statistics(self) -> Dict[str, Any]:
         """获取注册表统计信息"""
-        assets = self.registry.get('assets', [])
+        assets = self.registry.get("assets", [])
 
         if not assets:
             return {
@@ -335,12 +344,12 @@ class VersionTracker:
                 "versions": {},
             }
 
-        total_size = sum(a['size_bytes'] for a in assets)
+        total_size = sum(a["size_bytes"] for a in assets)
 
         # 按类别统计
         categories = {}
         for asset in assets:
-            cat = asset.get('category', 'unknown')
+            cat = asset.get("category", "unknown")
             if cat not in categories:
                 categories[cat] = 0
             categories[cat] += 1
@@ -348,7 +357,7 @@ class VersionTracker:
         # 按版本统计
         versions = {}
         for asset in assets:
-            ver = asset.get('version_tag')
+            ver = asset.get("version_tag")
             if ver:
                 if ver not in versions:
                     versions[ver] = 0
@@ -359,7 +368,7 @@ class VersionTracker:
             "total_size_mb": round(total_size / 1024 / 1024, 2),
             "categories": categories,
             "versions": versions,
-            "last_registered": assets[-1]['registered_at'] if assets else None,
+            "last_registered": assets[-1]["registered_at"] if assets else None,
         }
 
 
@@ -383,33 +392,34 @@ def auto_register_simulation_output(
     metadata = {}
 
     if params:
-        metadata['params'] = params
+        metadata["params"] = params
 
     # 尝试从 Git 获取 commit hash
     try:
         import subprocess
+
         result = subprocess.run(
-            ['git', 'rev-parse', 'HEAD'],
+            ["git", "rev-parse", "HEAD"],
             cwd=tracker.project_root,
             capture_output=True,
             text=True,
             timeout=5,
         )
         if result.returncode == 0:
-            metadata['git_commit'] = result.stdout.strip()
+            metadata["git_commit"] = result.stdout.strip()
     except Exception:
         pass
 
     tracker.register_file(
         output_file,
-        category='simulation_results',
+        category="simulation_results",
         version_tag=version_tag,
         experiment_id=experiment_id,
         metadata=metadata,
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 示例用法
     project_root = r"D:\Dunna\Documents\hw-1"
     tracker = VersionTracker(project_root)

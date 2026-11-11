@@ -1,7 +1,11 @@
 import math
 
 from hardware_v1_detection.pc_receiver.pipeline import RealtimePipeline
-from hardware_v1_detection.pc_receiver.protocol import SAMPLE_VALUE_COUNT, FrameParser, encode_sample_frame
+from hardware_v1_detection.pc_receiver.protocol import (
+    SAMPLE_VALUE_COUNT,
+    FrameParser,
+    encode_sample_frame,
+)
 
 
 def _counts_for_pitch(pitch_deg, accel_scale=4096.0):
@@ -12,7 +16,15 @@ def _counts_for_pitch(pitch_deg, accel_scale=4096.0):
     return ax, ay, az
 
 
-def _frame(seq, t_s, pitches=None, left_gyro=0.0, right_gyro=0.0, left_accel_gain=1.0, right_accel_gain=1.0):
+def _frame(
+    seq,
+    t_s,
+    pitches=None,
+    left_gyro=0.0,
+    right_gyro=0.0,
+    left_accel_gain=1.0,
+    right_accel_gain=1.0,
+):
     pitches = pitches or {}
     values = []
     for name in (
@@ -23,9 +35,17 @@ def _frame(seq, t_s, pitches=None, left_gyro=0.0, right_gyro=0.0, left_accel_gai
         "left_thigh",
         "right_thigh",
     ):
-        gain = left_accel_gain if name == "left_foot" else right_accel_gain if name == "right_foot" else 1.0
+        gain = (
+            left_accel_gain
+            if name == "left_foot"
+            else right_accel_gain if name == "right_foot" else 1.0
+        )
         ax, ay, az = _counts_for_pitch(pitches.get(name, 0.0))
-        gy = left_gyro if name == "left_foot" else right_gyro if name == "right_foot" else 0.0
+        gy = (
+            left_gyro
+            if name == "left_foot"
+            else right_gyro if name == "right_foot" else 0.0
+        )
         values.extend(
             [
                 int(round(ax * gain)),
@@ -39,7 +59,9 @@ def _frame(seq, t_s, pitches=None, left_gyro=0.0, right_gyro=0.0, left_accel_gai
     ax, ay, az = _counts_for_pitch(pitches.get("pelvis", 0.0), accel_scale=256.0)
     values.extend([ax, ay, az, 0, 0, 0, 0, 0, 0])
     assert len(values) == SAMPLE_VALUE_COUNT
-    packet = encode_sample_frame(seq=seq, ts_us=int(t_s * 1_000_000), status=0, values=values)
+    packet = encode_sample_frame(
+        seq=seq, ts_us=int(t_s * 1_000_000), status=0, values=values
+    )
     return FrameParser().feed(packet)[0]
 
 

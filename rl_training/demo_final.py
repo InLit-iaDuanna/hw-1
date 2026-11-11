@@ -19,6 +19,7 @@ from train_residual_rl_v2 import ResidualRLEnvV2
 
 class ResidualPriorWrapper(gym.ActionWrapper):
     """与训练时相同的 wrapper"""
+
     def __init__(self, env: gym.Env, prior_action: np.ndarray, delta_scale: float):
         super().__init__(env)
         self.prior_action = np.asarray(prior_action, dtype=np.float32)
@@ -41,7 +42,9 @@ def demo_rl_with_wrapper():
     print()
 
     # 加载模型
-    model_path = HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    model_path = (
+        HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    )
 
     if not model_path.exists():
         print(f"错误：模型文件不存在")
@@ -81,7 +84,9 @@ def demo_rl_with_wrapper():
             inner_steps=inner_steps,
             max_steps=max_steps,
         )
-        env = ResidualPriorWrapper(base_env, prior_action=prior_action, delta_scale=delta_scale)
+        env = ResidualPriorWrapper(
+            base_env, prior_action=prior_action, delta_scale=delta_scale
+        )
 
         obs, info = env.reset(seed=ep)
         done = False
@@ -104,7 +109,10 @@ def demo_rl_with_wrapper():
             if step % 200 == 0:
                 t = step * 0.005
                 distance = distance_history[-1]
-                print(f"  Episode {ep+1} | 时间: {t:5.2f}s | 距离: {distance:6.3f}m", end="\r")
+                print(
+                    f"  Episode {ep+1} | 时间: {t:5.2f}s | 距离: {distance:6.3f}m",
+                    end="\r",
+                )
 
         final_distance = distance_history[-1]
         success = truncated and not terminated
@@ -118,7 +126,9 @@ def demo_rl_with_wrapper():
         std_action = actions_arr.std(axis=0)
 
         status = "成功" if success else "失败"
-        print(f"  Episode {ep+1} | 最终距离: {final_distance:6.3f}m | 状态: {status:4s} | Action均值: [{mean_action[0]:.3f}, {mean_action[1]:.3f}]")
+        print(
+            f"  Episode {ep+1} | 最终距离: {final_distance:6.3f}m | 状态: {status:4s} | Action均值: [{mean_action[0]:.3f}, {mean_action[1]:.3f}]"
+        )
 
         env.close()
 
@@ -140,7 +150,9 @@ def demo_rl_with_wrapper():
 
     if success_rate == 1.0:
         print("所有 episodes 都成功完成！")
-        print(f"相比 V13.7 baseline (4.63m)，提升了 {(mean_dist - 4.63) / 4.63 * 100:.1f}%")
+        print(
+            f"相比 V13.7 baseline (4.63m)，提升了 {(mean_dist - 4.63) / 4.63 * 100:.1f}%"
+        )
     else:
         print(f"注意：有 {int((1-success_rate)*5)} 个 episodes 失败")
 
@@ -191,7 +203,10 @@ def demo_constant():
             if step % 200 == 0:
                 t = step * 0.005
                 distance = float(env.data.qpos[0])
-                print(f"  Episode {ep+1} | 时间: {t:5.2f}s | 距离: {distance:6.3f}m", end="\r")
+                print(
+                    f"  Episode {ep+1} | 时间: {t:5.2f}s | 距离: {distance:6.3f}m",
+                    end="\r",
+                )
 
         final_distance = float(env.data.qpos[0])
         success = truncated and not terminated
@@ -200,7 +215,9 @@ def demo_constant():
         successes.append(success)
 
         status = "成功" if success else "失败"
-        print(f"  Episode {ep+1} | 最终距离: {final_distance:6.3f}m | 状态: {status:4s}")
+        print(
+            f"  Episode {ep+1} | 最终距离: {final_distance:6.3f}m | 状态: {status:4s}"
+        )
 
         env.close()
 
@@ -227,8 +244,9 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="演示行走策略（无可视化）")
-    parser.add_argument("--mode", choices=["rl", "constant", "both"], default="both",
-                       help="演示模式")
+    parser.add_argument(
+        "--mode", choices=["rl", "constant", "both"], default="both", help="演示模式"
+    )
 
     args = parser.parse_args()
 
@@ -255,4 +273,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n\n错误: {e}")
         import traceback
+
         traceback.print_exc()

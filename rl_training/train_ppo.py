@@ -26,6 +26,7 @@ def make_env(rank, seed=0):
         rank: Index of the subprocess
         seed: Random seed
     """
+
     def _init():
         # Import here to avoid issues with multiprocessing
         from environment import CompassGaitEnv
@@ -85,7 +86,7 @@ def train_ppo():
         verbose=1,
         device="auto",
         seed=None,
-        _init_setup_model=True
+        _init_setup_model=True,
     )
 
     print(f"Using device: {model.device}")
@@ -96,7 +97,7 @@ def train_ppo():
         save_path=checkpoint_dir,
         name_prefix="ppo_gait_model",
         save_replay_buffer=False,
-        save_vecnormalize=True
+        save_vecnormalize=True,
     )
 
     print(f"\nStarting training for {total_timesteps:,} timesteps...")
@@ -118,7 +119,7 @@ def train_ppo():
             log_interval=10,
             tb_log_name="PPO_gait_training",
             reset_num_timesteps=True,
-            progress_bar=False  # Avoid rich dependency
+            progress_bar=False,  # Avoid rich dependency
         )
 
         print("\nTraining completed successfully!")
@@ -141,8 +142,9 @@ def train_ppo():
 if __name__ == "__main__":
     # Set multiprocessing start method for Windows compatibility
     import multiprocessing
+
     try:
-        multiprocessing.set_start_method('spawn')
+        multiprocessing.set_start_method("spawn")
     except RuntimeError:
         pass
 

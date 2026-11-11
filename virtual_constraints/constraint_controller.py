@@ -17,6 +17,7 @@ from dataclasses import dataclass
 @dataclass
 class BezierParameters:
     """Bezier polynomial parameters for desired output trajectory"""
+
     coefficients: np.ndarray  # [a0, a1, a2, ..., aM]
 
     def __call__(self, s: float) -> float:
@@ -29,7 +30,7 @@ class BezierParameters:
         M = len(self.coefficients) - 1
         if M == 0:
             return 0.0
-        return sum(i * self.coefficients[i] * s**(i-1) for i in range(1, M + 1))
+        return sum(i * self.coefficients[i] * s ** (i - 1) for i in range(1, M + 1))
 
 
 class VirtualConstraintController:
@@ -43,13 +44,15 @@ class VirtualConstraintController:
     4. Apply PD control to drive outputs to zero: y - y_d(s) → 0
     """
 
-    def __init__(self,
-                 output_functions: list[Callable],
-                 bezier_params: list[BezierParameters],
-                 phase_variable_fn: Callable,
-                 kp: np.ndarray,
-                 kd: np.ndarray,
-                 epsilon: float = 1e-6):
+    def __init__(
+        self,
+        output_functions: list[Callable],
+        bezier_params: list[BezierParameters],
+        phase_variable_fn: Callable,
+        kp: np.ndarray,
+        kd: np.ndarray,
+        epsilon: float = 1e-6,
+    ):
         """
         Args:
             output_functions: List of output functions h_i(q)
@@ -226,26 +229,28 @@ class VirtualConstraintController:
 
         # Debugging information
         info = {
-            'phase': s,
-            'phase_dot': s_dot,
-            'output': y,
-            'desired_output': y_d,
-            'output_error': output_error,
-            'output_derivative': dy_dt,
-            'desired_output_derivative': dy_d_dt,
-            'virtual_control': mu,
-            'jacobian': J
+            "phase": s,
+            "phase_dot": s_dot,
+            "output": y,
+            "desired_output": y_d,
+            "output_error": output_error,
+            "output_derivative": dy_dt,
+            "desired_output_derivative": dy_d_dt,
+            "virtual_control": mu,
+            "jacobian": J,
         }
 
         return tau, info
 
-    def compute_control_feedback_linearization(self,
-                                               q: np.ndarray,
-                                               dq: np.ndarray,
-                                               M: np.ndarray,
-                                               C: np.ndarray,
-                                               G: np.ndarray,
-                                               B: np.ndarray) -> Tuple[np.ndarray, dict]:
+    def compute_control_feedback_linearization(
+        self,
+        q: np.ndarray,
+        dq: np.ndarray,
+        M: np.ndarray,
+        C: np.ndarray,
+        G: np.ndarray,
+        B: np.ndarray,
+    ) -> Tuple[np.ndarray, dict]:
         """
         Compute control using input-output feedback linearization (for underactuated systems)
 
@@ -289,7 +294,9 @@ class VirtualConstraintController:
 
         # Check if decoupling matrix is invertible
         if np.linalg.matrix_rank(L_g_L_f_h) < min(L_g_L_f_h.shape):
-            raise ValueError("Decoupling matrix is singular - outputs may not have relative degree 2")
+            raise ValueError(
+                "Decoupling matrix is singular - outputs may not have relative degree 2"
+            )
 
         # Desired outputs
         y_d = self.compute_desired_output(s)
@@ -307,16 +314,16 @@ class VirtualConstraintController:
 
         # Debugging information
         info = {
-            'phase': s,
-            'phase_dot': s_dot,
-            'output': y,
-            'desired_output': y_d,
-            'output_error': output_error,
-            'L_f_h': L_f_h,
-            'L_f2_h': L_f2_h,
-            'L_g_L_f_h': L_g_L_f_h,
-            'virtual_control': v,
-            'jacobian': J
+            "phase": s,
+            "phase_dot": s_dot,
+            "output": y,
+            "desired_output": y_d,
+            "output_error": output_error,
+            "L_f_h": L_f_h,
+            "L_f2_h": L_f2_h,
+            "L_g_L_f_h": L_g_L_f_h,
+            "virtual_control": v,
+            "jacobian": J,
         }
 
         return u, info
@@ -362,9 +369,7 @@ if __name__ == "__main__":
     # y_d(s) = a0 + a1*s + a2*s^2 + a3*s^3 + a4*s^4 + a5*s^5
 
     # Hip angle trajectory: smooth curve from 0 to π/4
-    hip_bezier = BezierParameters(
-        coefficients=np.array([0.0, 0.2, 0.3, 0.2, 0.1, 0.0])
-    )
+    hip_bezier = BezierParameters(coefficients=np.array([0.0, 0.2, 0.3, 0.2, 0.1, 0.0]))
 
     # Swing knee: lift and extend
     swing_knee_bezier = BezierParameters(
@@ -382,11 +387,13 @@ if __name__ == "__main__":
         bezier_params=[hip_bezier, swing_knee_bezier, stance_knee_bezier],
         phase_variable_fn=phase_variable_stance_angle,
         kp=np.array([100.0, 80.0, 60.0]),
-        kd=np.array([10.0, 8.0, 6.0])
+        kd=np.array([10.0, 8.0, 6.0]),
     )
 
     # Test with sample configuration
-    q_test = np.array([0.0, 0.1, 0.3, 0.5])  # [stance_hip, stance_knee, swing_hip, swing_knee]
+    q_test = np.array(
+        [0.0, 0.1, 0.3, 0.5]
+    )  # [stance_hip, stance_knee, swing_hip, swing_knee]
     dq_test = np.array([0.5, 0.2, 0.8, -0.3])
 
     # Compute control (simple Jacobian transpose method)

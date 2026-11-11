@@ -46,13 +46,15 @@ def run_zero_residual_episode(env, seed: int, verbose: bool = False):
         episode_length += 1
 
         if verbose and episode_length % 50 == 0:
-            print(f"    Step {episode_length}: hip_x={info['hip_x']:.3f}m, "
-                  f"hip_vel_x={info['hip_vel_x']:.3f}m/s, height={info['hip_height']:.3f}m")
+            print(
+                f"    Step {episode_length}: hip_x={info['hip_x']:.3f}m, "
+                f"hip_vel_x={info['hip_vel_x']:.3f}m/s, height={info['hip_height']:.3f}m"
+            )
 
         if terminated or truncated:
             break
 
-    return info['hip_x'], episode_length, info['sim_time'], terminated
+    return info["hip_x"], episode_length, info["sim_time"], terminated
 
 
 def test_zero_residual_identity(n_episodes: int = 20):
@@ -77,7 +79,9 @@ def test_zero_residual_identity(n_episodes: int = 20):
     )
 
     print(f"  PPO频率: {1000 / env.inner_steps:.0f} Hz")
-    print(f"  最大episode长度: {env.max_steps} PPO steps = {env.max_steps * env.inner_steps / 1000:.1f}s")
+    print(
+        f"  最大episode长度: {env.max_steps} PPO steps = {env.max_steps * env.inner_steps / 1000:.1f}s"
+    )
 
     # 运行测试
     print(f"\n运行{n_episodes}个episodes（residual=0）...\n")
@@ -96,8 +100,10 @@ def test_zero_residual_identity(n_episodes: int = 20):
             success_count += 1
 
         status = "摔倒" if terminated else "完成"
-        print(f"  Episode {i+1:2d} (seed={seed}): {distance:.4f}m | {ep_len:3d} steps | "
-              f"{sim_time:.2f}s | {status}")
+        print(
+            f"  Episode {i+1:2d} (seed={seed}): {distance:.4f}m | {ep_len:3d} steps | "
+            f"{sim_time:.2f}s | {status}"
+        )
 
     env.close()
 
@@ -129,7 +135,9 @@ def test_zero_residual_identity(n_episodes: int = 20):
     print("=" * 80)
     print(f"期望:    {baseline_mean:.4f}m ± {baseline_std:.4f}m")
     print(f"实际:    {mean_dist:.4f}m ± {std_dist:.4f}m")
-    print(f"差异:    {mean_dist - baseline_mean:+.4f}m ({(mean_dist/baseline_mean - 1)*100:+.1f}%)")
+    print(
+        f"差异:    {mean_dist - baseline_mean:+.4f}m ({(mean_dist/baseline_mean - 1)*100:+.1f}%)"
+    )
 
     # 判定
     tolerance = 0.05  # 5%容差
@@ -139,12 +147,18 @@ def test_zero_residual_identity(n_episodes: int = 20):
     if mean_diff_pct < tolerance:
         print("[PASS] Zero Residual Identity Test passed!")
         print(f"  Environment correctly reproduces V13.7 baseline at residual=0")
-        print(f"  Error within {tolerance*100:.0f}% tolerance ({mean_diff_pct*100:.2f}%)")
+        print(
+            f"  Error within {tolerance*100:.0f}% tolerance ({mean_diff_pct*100:.2f}%)"
+        )
         print("\nReady to start Residual RL training.")
     else:
         print("[FAIL] Zero Residual Identity Test failed!")
-        print(f"  Environment output ({mean_dist:.4f}m) differs too much from baseline ({baseline_mean:.4f}m)")
-        print(f"  Error {mean_diff_pct*100:.2f}% exceeds {tolerance*100:.0f}% tolerance")
+        print(
+            f"  Environment output ({mean_dist:.4f}m) differs too much from baseline ({baseline_mean:.4f}m)"
+        )
+        print(
+            f"  Error {mean_diff_pct*100:.2f}% exceeds {tolerance*100:.0f}% tolerance"
+        )
         print("\nDiagnosis needed:")
         print("  1. Check V13.7 controller integration")
         print("  2. Check FSM state update logic")

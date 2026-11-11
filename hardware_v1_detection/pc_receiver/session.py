@@ -38,7 +38,9 @@ def load_gyro_bias(path: str | Path | None) -> dict:
 
 
 class SessionWriter:
-    def __init__(self, output_dir: str | Path | None = None, calibration: dict | None = None):
+    def __init__(
+        self, output_dir: str | Path | None = None, calibration: dict | None = None
+    ):
         self.path = timestamped_session_dir(output_dir)
         self.calibration = calibration or {}
         self.stats = CaptureStats()
@@ -53,8 +55,12 @@ class SessionWriter:
         self._node_temp_c: list[float] = []
 
         self._raw_file = (self.path / "raw.csv").open("w", newline="", encoding="utf-8")
-        self._scaled_file = (self.path / "scaled.csv").open("w", newline="", encoding="utf-8")
-        self._node_file = (self.path / "node_raw.csv").open("w", newline="", encoding="utf-8")
+        self._scaled_file = (self.path / "scaled.csv").open(
+            "w", newline="", encoding="utf-8"
+        )
+        self._node_file = (self.path / "node_raw.csv").open(
+            "w", newline="", encoding="utf-8"
+        )
         self._raw_writer = csv.DictWriter(
             self._raw_file,
             fieldnames=[
@@ -221,7 +227,9 @@ class SessionWriter:
             }
         )
 
-    def close(self, parser: FrameParser | None = None, extra: dict | None = None) -> Path:
+    def close(
+        self, parser: FrameParser | None = None, extra: dict | None = None
+    ) -> Path:
         self._raw_file.flush()
         self._scaled_file.flush()
         self._node_file.flush()

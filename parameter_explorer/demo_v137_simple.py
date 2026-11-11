@@ -106,7 +106,9 @@ def demo_exploration():
 
     # 6. Morris 灵敏度筛选
     print("\n[Step 3/7] Morris Sensitivity Screening...")
-    morris_results = explorer.sensitivity_analysis(method="morris", n_samples=20, seed=42)
+    morris_results = explorer.sensitivity_analysis(
+        method="morris", n_samples=20, seed=42
+    )
 
     print("\nParameter Importance Ranking:")
     for i, (name, score) in enumerate(morris_results["ranked_params"], 1):

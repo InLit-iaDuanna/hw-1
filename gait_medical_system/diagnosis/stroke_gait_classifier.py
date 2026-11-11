@@ -6,6 +6,7 @@
 import numpy as np
 from typing import Dict, List, Tuple
 
+
 class StrokeGaitClassifier:
     """
     脑卒中步态分类和诊断建议生成器
@@ -28,21 +29,21 @@ class StrokeGaitClassifier:
 
         # 定义诊断规则权重
         self.rule_weights = {
-            'asymmetry': 0.35,
-            'rom_limitation': 0.25,
-            'cadence_deviation': 0.15,
-            'energy_efficiency': 0.15,
-            'stability': 0.10
+            "asymmetry": 0.35,
+            "rom_limitation": 0.25,
+            "cadence_deviation": 0.15,
+            "energy_efficiency": 0.15,
+            "stability": 0.10,
         }
 
     def _load_default_baseline(self):
         """加载默认健康基准（与baseline_extractor.py一致）"""
         return {
-            'stride_length': 1.05,
-            'cadence': 60,
-            'knee_rom': 60,
-            'hip_rom': 40,
-            'symmetry_threshold': 10  # %
+            "stride_length": 1.05,
+            "cadence": 60,
+            "knee_rom": 60,
+            "hip_rom": 40,
+            "symmetry_threshold": 10,  # %
         }
 
     def classify_gait_pattern(self, patient_features: Dict) -> Dict:
@@ -68,47 +69,51 @@ class StrokeGaitClassifier:
             - confidence: float (0-1)
         """
         diagnosis = {
-            'pattern_type': 'unknown',
-            'severity_score': 0,
-            'affected_side': 'unknown',
-            'confidence': 0.0,
-            'features': {}
+            "pattern_type": "unknown",
+            "severity_score": 0,
+            "affected_side": "unknown",
+            "confidence": 0.0,
+            "features": {},
         }
 
         # 1. 计算对称性指数
         asymmetry = self._calculate_asymmetry(patient_features)
-        diagnosis['features']['asymmetry'] = asymmetry
+        diagnosis["features"]["asymmetry"] = asymmetry
 
         # 2. 识别步态模式
-        if asymmetry['stride_length'] > 30:
-            diagnosis['pattern_type'] = 'hemiplegic_gait'
-            diagnosis['severity_score'] = min(asymmetry['stride_length'] * 2, 100)
-            diagnosis['affected_side'] = asymmetry['affected_side']
-            diagnosis['confidence'] = 0.9
+        if asymmetry["stride_length"] > 30:
+            diagnosis["pattern_type"] = "hemiplegic_gait"
+            diagnosis["severity_score"] = min(asymmetry["stride_length"] * 2, 100)
+            diagnosis["affected_side"] = asymmetry["affected_side"]
+            diagnosis["confidence"] = 0.9
 
-        elif asymmetry['stride_length'] > 20:
-            diagnosis['pattern_type'] = 'mild_hemiplegic_gait'
-            diagnosis['severity_score'] = asymmetry['stride_length'] * 1.5
-            diagnosis['affected_side'] = asymmetry['affected_side']
-            diagnosis['confidence'] = 0.75
+        elif asymmetry["stride_length"] > 20:
+            diagnosis["pattern_type"] = "mild_hemiplegic_gait"
+            diagnosis["severity_score"] = asymmetry["stride_length"] * 1.5
+            diagnosis["affected_side"] = asymmetry["affected_side"]
+            diagnosis["confidence"] = 0.75
 
         # 3. 检测特定异常
-        if 'knee_rom_left' in patient_features and 'knee_rom_right' in patient_features:
+        if "knee_rom_left" in patient_features and "knee_rom_right" in patient_features:
             knee_issues = self._detect_knee_issues(patient_features)
-            if knee_issues['has_issue']:
-                diagnosis['features']['knee_pathology'] = knee_issues
-                if diagnosis['pattern_type'] == 'unknown':
-                    diagnosis['pattern_type'] = knee_issues['type']
-                    diagnosis['severity_score'] = knee_issues['severity']
+            if knee_issues["has_issue"]:
+                diagnosis["features"]["knee_pathology"] = knee_issues
+                if diagnosis["pattern_type"] == "unknown":
+                    diagnosis["pattern_type"] = knee_issues["type"]
+                    diagnosis["severity_score"] = knee_issues["severity"]
 
         # 4. 步频异常
-        if 'cadence' in patient_features:
-            cadence_dev = (patient_features['cadence'] - self.baseline['cadence']) / self.baseline['cadence'] * 100
-            diagnosis['features']['cadence_deviation'] = cadence_dev
+        if "cadence" in patient_features:
+            cadence_dev = (
+                (patient_features["cadence"] - self.baseline["cadence"])
+                / self.baseline["cadence"]
+                * 100
+            )
+            diagnosis["features"]["cadence_deviation"] = cadence_dev
 
             if cadence_dev < -20:
-                diagnosis['features']['slow_walking'] = True
-                diagnosis['severity_score'] += 15
+                diagnosis["features"]["slow_walking"] = True
+                diagnosis["severity_score"] += 15
 
         return diagnosis
 
@@ -123,47 +128,47 @@ class StrokeGaitClassifier:
         asymmetry = {}
 
         # 步长不对称
-        if 'stride_length_left' in features and 'stride_length_right' in features:
-            left = features['stride_length_left']
-            right = features['stride_length_right']
+        if "stride_length_left" in features and "stride_length_right" in features:
+            left = features["stride_length_left"]
+            right = features["stride_length_right"]
 
             si = abs(left - right) / (0.5 * (left + right)) * 100
-            asymmetry['stride_length'] = si
-            asymmetry['affected_side'] = 'left' if left < right else 'right'
-            asymmetry['shorter_side_value'] = min(left, right)
-            asymmetry['longer_side_value'] = max(left, right)
+            asymmetry["stride_length"] = si
+            asymmetry["affected_side"] = "left" if left < right else "right"
+            asymmetry["shorter_side_value"] = min(left, right)
+            asymmetry["longer_side_value"] = max(left, right)
 
         # 步态时间不对称
-        if 'stance_time_left' in features and 'stance_time_right' in features:
-            left = features['stance_time_left']
-            right = features['stance_time_right']
-            asymmetry['stance_time'] = abs(left - right) / (0.5 * (left + right)) * 100
+        if "stance_time_left" in features and "stance_time_right" in features:
+            left = features["stance_time_left"]
+            right = features["stance_time_right"]
+            asymmetry["stance_time"] = abs(left - right) / (0.5 * (left + right)) * 100
 
         return asymmetry
 
     def _detect_knee_issues(self, features: Dict) -> Dict:
         """检测膝关节相关问题"""
-        knee_left = features.get('knee_rom_left', self.baseline['knee_rom'])
-        knee_right = features.get('knee_rom_right', self.baseline['knee_rom'])
-        baseline_knee = self.baseline['knee_rom']
+        knee_left = features.get("knee_rom_left", self.baseline["knee_rom"])
+        knee_right = features.get("knee_rom_right", self.baseline["knee_rom"])
+        baseline_knee = self.baseline["knee_rom"]
 
-        knee_issues = {
-            'has_issue': False,
-            'type': 'normal',
-            'severity': 0
-        }
+        knee_issues = {"has_issue": False, "type": "normal", "severity": 0}
 
         # 膝关节屈曲受限
         if min(knee_left, knee_right) < baseline_knee * 0.7:  # <42°
-            knee_issues['has_issue'] = True
-            knee_issues['type'] = 'knee_flexion_limitation'
-            knee_issues['severity'] = (1 - min(knee_left, knee_right) / baseline_knee) * 100
+            knee_issues["has_issue"] = True
+            knee_issues["type"] = "knee_flexion_limitation"
+            knee_issues["severity"] = (
+                1 - min(knee_left, knee_right) / baseline_knee
+            ) * 100
 
         # 膝过伸
         if max(knee_left, knee_right) > baseline_knee * 1.2:  # >72°
-            knee_issues['has_issue'] = True
-            knee_issues['type'] = 'knee_hyperextension'
-            knee_issues['severity'] = (max(knee_left, knee_right) / baseline_knee - 1) * 100
+            knee_issues["has_issue"] = True
+            knee_issues["type"] = "knee_hyperextension"
+            knee_issues["severity"] = (
+                max(knee_left, knee_right) / baseline_knee - 1
+            ) * 100
 
         return knee_issues
 
@@ -174,11 +179,11 @@ class StrokeGaitClassifier:
         基于V11鲁棒性边界和V13.7能量效率目标
         """
         recommendations = []
-        pattern = diagnosis['pattern_type']
-        severity = diagnosis['severity_score']
+        pattern = diagnosis["pattern_type"]
+        severity = diagnosis["severity_score"]
 
         # 偏瘫步态建议
-        if 'hemiplegic' in pattern:
+        if "hemiplegic" in pattern:
             if severity > 50:
                 recommendations.append(
                     "严重偏瘫步态：建议每日进行患侧下肢肌力强化训练（2组×15次）"
@@ -192,29 +197,29 @@ class StrokeGaitClassifier:
                 )
 
             # 对称性改善目标（基于V10对称步态）
-            asymmetry = diagnosis['features'].get('asymmetry', {})
-            if 'stride_length' in asymmetry:
-                current_si = asymmetry['stride_length']
+            asymmetry = diagnosis["features"].get("asymmetry", {})
+            if "stride_length" in asymmetry:
+                current_si = asymmetry["stride_length"]
                 target_si = 10  # V10基准：对称性指数<10%为正常
                 recommendations.append(
                     f"对称性改善目标：当前{current_si:.1f}% → 目标<{target_si}%"
                 )
 
         # 膝关节问题建议
-        if 'knee_pathology' in diagnosis['features']:
-            knee_issue = diagnosis['features']['knee_pathology']
-            if knee_issue['type'] == 'knee_flexion_limitation':
+        if "knee_pathology" in diagnosis["features"]:
+            knee_issue = diagnosis["features"]["knee_pathology"]
+            if knee_issue["type"] == "knee_flexion_limitation":
                 recommendations.append(
                     "膝关节屈曲受限：进行被动/主动ROM训练，目标达到60°（V10基准）"
                 )
-            elif knee_issue['type'] == 'knee_hyperextension':
+            elif knee_issue["type"] == "knee_hyperextension":
                 recommendations.append(
                     "膝过伸：加强股四头肌离心控制训练，考虑使用膝关节矫形器"
                 )
 
         # 步行速度改善（基于V13.7能量效率）
-        if 'cadence_deviation' in diagnosis['features']:
-            if diagnosis['features']['cadence_deviation'] < -20:
+        if "cadence_deviation" in diagnosis["features"]:
+            if diagnosis["features"]["cadence_deviation"] < -20:
                 recommendations.append(
                     "步行速度明显下降：渐进式增加步行速度训练，使用节拍器辅助（目标60步/分）"
                 )
@@ -242,62 +247,65 @@ class StrokeGaitClassifier:
         risk_factors = []
 
         # 对称性差 → 高跌倒风险
-        if 'stride_length_left' in patient_features and 'stride_length_right' in patient_features:
+        if (
+            "stride_length_left" in patient_features
+            and "stride_length_right" in patient_features
+        ):
             asymmetry = self._calculate_asymmetry(patient_features)
-            if asymmetry.get('stride_length', 0) > 30:
+            if asymmetry.get("stride_length", 0) > 30:
                 risk_score += 40
-                risk_factors.append('severe_asymmetry')
+                risk_factors.append("severe_asymmetry")
 
         # 步频过慢 → 不稳定
-        if patient_features.get('cadence', 100) < 50:
+        if patient_features.get("cadence", 100) < 50:
             risk_score += 20
-            risk_factors.append('slow_cadence')
+            risk_factors.append("slow_cadence")
 
         # 关节活动度受限 → 无法应对扰动
-        if patient_features.get('knee_rom_left', 60) < 40:
+        if patient_features.get("knee_rom_left", 60) < 40:
             risk_score += 15
-            risk_factors.append('limited_knee_rom')
+            risk_factors.append("limited_knee_rom")
 
         # 评级
         if risk_score > 60:
-            risk_level = 'high'
+            risk_level = "high"
         elif risk_score > 30:
-            risk_level = 'moderate'
+            risk_level = "moderate"
         else:
-            risk_level = 'low'
+            risk_level = "low"
 
         return {
-            'risk_score': risk_score,
-            'risk_level': risk_level,
-            'risk_factors': risk_factors,
-            'recommendation': self._get_fall_prevention_advice(risk_level)
+            "risk_score": risk_score,
+            "risk_level": risk_level,
+            "risk_factors": risk_factors,
+            "recommendation": self._get_fall_prevention_advice(risk_level),
         }
 
     def _get_fall_prevention_advice(self, risk_level: str) -> str:
         """跌倒预防建议"""
-        if risk_level == 'high':
+        if risk_level == "high":
             return "高跌倒风险：建议使用助行器，避免独自行走，加强平衡训练"
-        elif risk_level == 'moderate':
+        elif risk_level == "moderate":
             return "中等跌倒风险：注意避免不平地面（V11基准：<28.6mm），使用防滑鞋"
         else:
             return "低跌倒风险：保持当前训练，逐步增加行走距离"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 测试分类器
     classifier = StrokeGaitClassifier()
 
     # 模拟患者数据
     patient_data = {
-        'stride_length_left': 0.75,    # 患侧显著缩短
-        'stride_length_right': 1.10,   # 健侧接近正常
-        'cadence': 55,                  # 步频偏慢
-        'knee_rom_left': 42,            # 患侧膝关节受限
-        'knee_rom_right': 62,
-        'hip_rom_left': 32,
-        'hip_rom_right': 41,
-        'stance_time_left': 0.75,
-        'stance_time_right': 0.55
+        "stride_length_left": 0.75,  # 患侧显著缩短
+        "stride_length_right": 1.10,  # 健侧接近正常
+        "cadence": 55,  # 步频偏慢
+        "knee_rom_left": 42,  # 患侧膝关节受限
+        "knee_rom_right": 62,
+        "hip_rom_left": 32,
+        "hip_rom_right": 41,
+        "stance_time_left": 0.75,
+        "stance_time_right": 0.55,
     }
 
     print("=== 脑卒中步态分类示例 ===\n")
@@ -310,7 +318,7 @@ if __name__ == '__main__':
     print(f"诊断信心: {diagnosis['confidence']*100:.0f}%")
 
     print(f"\n步态特征:")
-    for key, value in diagnosis['features'].items():
+    for key, value in diagnosis["features"].items():
         print(f"  {key}: {value}")
 
     # 康复建议

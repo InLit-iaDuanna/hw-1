@@ -80,16 +80,17 @@ def run_simulation_example(
         t = step * params.timestep
 
         # Compute control
-        left_hip_tau, left_knee_tau, right_hip_tau, right_knee_tau, mode = \
+        left_hip_tau, left_knee_tau, right_hip_tau, right_knee_tau, mode = (
             gait.compute_control(t, support_foot, burst_start_t)
+        )
         data.ctrl[:] = [left_hip_tau, left_knee_tau, right_hip_tau, right_knee_tau]
 
         # Calculate power and energy
         input_power = (
-            float(data.ctrl[0]) * float(data.qvel[2]) +
-            float(data.ctrl[1]) * float(data.qvel[3]) +
-            float(data.ctrl[2]) * float(data.qvel[5]) +
-            float(data.ctrl[3]) * float(data.qvel[6])
+            float(data.ctrl[0]) * float(data.qvel[2])
+            + float(data.ctrl[1]) * float(data.qvel[3])
+            + float(data.ctrl[2]) * float(data.qvel[5])
+            + float(data.ctrl[3]) * float(data.qvel[6])
         )
         positive_input_energy += max(0.0, input_power) * params.timestep
         net_work += input_power * params.timestep
@@ -132,39 +133,43 @@ def run_simulation_example(
                 last_event_t = t
                 contact_reported[foot] = True
                 contact_events.append({"time": t, "foot": foot})
-                print(f"  t={t:.3f}s: {foot} foot touchdown (alternation #{alternations})")
+                print(
+                    f"  t={t:.3f}s: {foot} foot touchdown (alternation #{alternations})"
+                )
                 break
 
         # Record data
         if step % sample_stride == 0:
             detail = gait.foot_contact_detail()
-            rows.append({
-                "time": t,
-                "hip_x": float(data.qpos[0]),
-                "hip_z": float(data.qpos[1]),
-                "left_hip": float(data.qpos[2]),
-                "left_knee": float(data.qpos[3]),
-                "left_ankle": float(data.qpos[4]),
-                "right_hip": float(data.qpos[5]),
-                "right_knee": float(data.qpos[6]),
-                "right_ankle": float(data.qpos[7]),
-                "left_contact": int(left_contact),
-                "right_contact": int(right_contact),
-                "left_heel_contact": int(detail["left_heel"]),
-                "left_sole_contact": int(detail["left_sole"]),
-                "left_toe_contact": int(detail["left_toe"]),
-                "right_heel_contact": int(detail["right_heel"]),
-                "right_sole_contact": int(detail["right_sole"]),
-                "right_toe_contact": int(detail["right_toe"]),
-                "support_foot": support_foot,
-                "mode": mode,
-                "left_hip_tau": left_hip_tau,
-                "left_knee_tau": left_knee_tau,
-                "right_hip_tau": right_hip_tau,
-                "right_knee_tau": right_knee_tau,
-                "input_power": input_power,
-                "input_energy": positive_input_energy,
-            })
+            rows.append(
+                {
+                    "time": t,
+                    "hip_x": float(data.qpos[0]),
+                    "hip_z": float(data.qpos[1]),
+                    "left_hip": float(data.qpos[2]),
+                    "left_knee": float(data.qpos[3]),
+                    "left_ankle": float(data.qpos[4]),
+                    "right_hip": float(data.qpos[5]),
+                    "right_knee": float(data.qpos[6]),
+                    "right_ankle": float(data.qpos[7]),
+                    "left_contact": int(left_contact),
+                    "right_contact": int(right_contact),
+                    "left_heel_contact": int(detail["left_heel"]),
+                    "left_sole_contact": int(detail["left_sole"]),
+                    "left_toe_contact": int(detail["left_toe"]),
+                    "right_heel_contact": int(detail["right_heel"]),
+                    "right_sole_contact": int(detail["right_sole"]),
+                    "right_toe_contact": int(detail["right_toe"]),
+                    "support_foot": support_foot,
+                    "mode": mode,
+                    "left_hip_tau": left_hip_tau,
+                    "left_knee_tau": left_knee_tau,
+                    "right_hip_tau": right_hip_tau,
+                    "right_knee_tau": right_knee_tau,
+                    "input_power": input_power,
+                    "input_energy": positive_input_energy,
+                }
+            )
 
         # Check for failure
         failure = gait.classify_failure(start_x, t)

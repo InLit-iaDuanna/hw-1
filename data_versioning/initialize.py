@@ -31,17 +31,17 @@ def initialize_data_versioning():
     directories_to_register = [
         {
             "path": "out",
-            "patterns": ['*.csv', '*.json'],
+            "patterns": ["*.csv", "*.json"],
             "description": "Main output directory",
         },
         {
             "path": "data_storage",
-            "patterns": ['*.db'],
+            "patterns": ["*.db"],
             "description": "SQLite database",
         },
         {
             "path": "paper_figures/output",
-            "patterns": ['*.pdf', '*.png', '*.svg'],
+            "patterns": ["*.pdf", "*.png", "*.svg"],
             "description": "Paper figures",
         },
     ]
@@ -84,15 +84,15 @@ def initialize_data_versioning():
     print(f"Total size: {stats['total_size_mb']:.2f} MB")
     print()
 
-    if stats['categories']:
+    if stats["categories"]:
         print("By category:")
-        for category, count in stats['categories'].items():
+        for category, count in stats["categories"].items():
             print(f"  {category}: {count}")
         print()
 
-    if stats['versions']:
+    if stats["versions"]:
         print("By version:")
-        for version, count in sorted(stats['versions'].items()):
+        for version, count in sorted(stats["versions"].items()):
             print(f"  {version}: {count}")
         print()
 
@@ -133,5 +133,5 @@ def initialize_data_versioning():
     print()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     initialize_data_versioning()

@@ -16,7 +16,8 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import matplotlib
-matplotlib.use('Agg')  # 使用非交互式后端
+
+matplotlib.use("Agg")  # 使用非交互式后端
 import matplotlib.pyplot as plt
 import mujoco
 import numpy as np
@@ -24,8 +25,8 @@ from matplotlib.patches import Circle
 from PIL import Image, ImageDraw, ImageFont
 
 # 设置中文字体
-plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS']
-plt.rcParams['axes.unicode_minus'] = False
+plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "Arial Unicode MS"]
+plt.rcParams["axes.unicode_minus"] = False
 
 ROOT = Path(__file__).resolve().parent
 HW1 = ROOT.parent
@@ -207,8 +208,14 @@ def create_perturbation_recovery_video(
             else:
                 # 超时则保持最后一帧
                 subframe = render_gait_frame(
-                    renderer, camera, sim_data, float(data["time"][-1]),
-                    data, case, fixed_point, lambda_slow
+                    renderer,
+                    camera,
+                    sim_data,
+                    float(data["time"][-1]),
+                    data,
+                    case,
+                    fixed_point,
+                    lambda_slow,
                 )
             subframes.append(subframe)
 
@@ -273,104 +280,167 @@ def create_phase_portrait_video(
         for ax in axes:
             ax.clear()
 
-        colors = ['C0', 'C1', 'C2', 'C3']
+        colors = ["C0", "C1", "C2", "C3"]
 
         # 子图 0: 右髋相平面
         ax = axes[0]
         for i, (section_pts, case) in enumerate(zip(all_sections, cases)):
             if step <= len(section_pts):
                 pts = section_pts[:step]
-                ax.plot(pts[:, 0], pts[:, 1], 'o-', color=colors[i],
-                       alpha=0.6, markersize=4, label=case["axis"])
+                ax.plot(
+                    pts[:, 0],
+                    pts[:, 1],
+                    "o-",
+                    color=colors[i],
+                    alpha=0.6,
+                    markersize=4,
+                    label=case["axis"],
+                )
                 # 当前点高亮
-                ax.plot(pts[-1, 0], pts[-1, 1], 'o', color=colors[i],
-                       markersize=8, markeredgecolor='white', markeredgewidth=1.5)
-        ax.plot(fixed_point[0], fixed_point[1], 'rx', markersize=12,
-               markeredgewidth=2, label='极限环')
+                ax.plot(
+                    pts[-1, 0],
+                    pts[-1, 1],
+                    "o",
+                    color=colors[i],
+                    markersize=8,
+                    markeredgecolor="white",
+                    markeredgewidth=1.5,
+                )
+        ax.plot(
+            fixed_point[0],
+            fixed_point[1],
+            "rx",
+            markersize=12,
+            markeredgewidth=2,
+            label="极限环",
+        )
         ax.set_xlim(hip_range)
         ax.set_ylim(hip_vel_range)
-        ax.set_xlabel('right_hip (rad)')
-        ax.set_ylabel('right_hip_vel (rad/s)')
-        ax.set_title('右髋相平面轨迹')
+        ax.set_xlabel("right_hip (rad)")
+        ax.set_ylabel("right_hip_vel (rad/s)")
+        ax.set_title("右髋相平面轨迹")
         ax.grid(True, alpha=0.3)
-        ax.legend(fontsize=8, loc='best')
+        ax.legend(fontsize=8, loc="best")
 
         # 子图 1: 右膝相平面
         ax = axes[1]
         for i, (section_pts, case) in enumerate(zip(all_sections, cases)):
             if step <= len(section_pts):
                 pts = section_pts[:step]
-                ax.plot(pts[:, 2], pts[:, 3], 'o-', color=colors[i],
-                       alpha=0.6, markersize=4, label=case["axis"])
-                ax.plot(pts[-1, 2], pts[-1, 3], 'o', color=colors[i],
-                       markersize=8, markeredgecolor='white', markeredgewidth=1.5)
-        ax.plot(fixed_point[2], fixed_point[3], 'rx', markersize=12,
-               markeredgewidth=2, label='极限环')
+                ax.plot(
+                    pts[:, 2],
+                    pts[:, 3],
+                    "o-",
+                    color=colors[i],
+                    alpha=0.6,
+                    markersize=4,
+                    label=case["axis"],
+                )
+                ax.plot(
+                    pts[-1, 2],
+                    pts[-1, 3],
+                    "o",
+                    color=colors[i],
+                    markersize=8,
+                    markeredgecolor="white",
+                    markeredgewidth=1.5,
+                )
+        ax.plot(
+            fixed_point[2],
+            fixed_point[3],
+            "rx",
+            markersize=12,
+            markeredgewidth=2,
+            label="极限环",
+        )
         ax.set_xlim(knee_range)
         ax.set_ylim(knee_vel_range)
-        ax.set_xlabel('right_knee (rad)')
-        ax.set_ylabel('right_knee_vel (rad/s)')
-        ax.set_title('右膝相平面轨迹')
+        ax.set_xlabel("right_knee (rad)")
+        ax.set_ylabel("right_knee_vel (rad/s)")
+        ax.set_title("右膝相平面轨迹")
         ax.grid(True, alpha=0.3)
-        ax.legend(fontsize=8, loc='best')
+        ax.legend(fontsize=8, loc="best")
 
         # 子图 2: 到极限环的距离衰减曲线
         ax = axes[2]
         for i, (section_pts, case) in enumerate(zip(all_sections, cases)):
             if step <= len(section_pts):
-                distances = np.linalg.norm(section_pts[:step] - fixed_point[None, :], axis=1)
+                distances = np.linalg.norm(
+                    section_pts[:step] - fixed_point[None, :], axis=1
+                )
                 k_arr = np.arange(len(distances))
-                ax.semilogy(k_arr, distances, 'o-', color=colors[i],
-                           alpha=0.7, markersize=4, label=case["axis"])
+                ax.semilogy(
+                    k_arr,
+                    distances,
+                    "o-",
+                    color=colors[i],
+                    alpha=0.7,
+                    markersize=4,
+                    label=case["axis"],
+                )
                 # 理论曲线
                 if len(distances) > 0:
                     d0 = float(distances[0]) if distances[0] > 0 else 1e-3
                     k_th = np.arange(len(distances))
-                    ax.semilogy(k_th, d0 * np.power(lambda_slow, k_th),
-                               '--', color=colors[i], alpha=0.4, linewidth=1.5)
-        ax.set_xlabel('Poincaré 步 k')
-        ax.set_ylabel('||x_k - fp|| (log)')
-        ax.set_title(f'扰动衰减 (理论 |λ|={lambda_slow:.3f})')
-        ax.grid(True, which='both', alpha=0.3)
-        ax.legend(fontsize=8, loc='best')
+                    ax.semilogy(
+                        k_th,
+                        d0 * np.power(lambda_slow, k_th),
+                        "--",
+                        color=colors[i],
+                        alpha=0.4,
+                        linewidth=1.5,
+                    )
+        ax.set_xlabel("Poincaré 步 k")
+        ax.set_ylabel("||x_k - fp|| (log)")
+        ax.set_title(f"扰动衰减 (理论 |λ|={lambda_slow:.3f})")
+        ax.grid(True, which="both", alpha=0.3)
+        ax.legend(fontsize=8, loc="best")
 
         # 子图 3: Floquet 乘子复平面标注
         ax = axes[3]
         theta = np.linspace(0, 2 * np.pi, 200)
-        ax.plot(np.cos(theta), np.sin(theta), 'k--', lw=1, alpha=0.5, label='单位圆')
+        ax.plot(np.cos(theta), np.sin(theta), "k--", lw=1, alpha=0.5, label="单位圆")
 
         # 加载 Floquet 特征值
         summary = json.loads((OUT_DIR / "v13b_floquet_summary.json").read_text())
         eigvals_real = np.array(summary["eigvals_real"])
         eigvals_imag = np.array(summary["eigvals_imag"])
 
-        ax.scatter(eigvals_real, eigvals_imag, s=100, c='red', marker='x',
-                  linewidths=2, label='Floquet 乘子', zorder=10)
+        ax.scatter(
+            eigvals_real,
+            eigvals_imag,
+            s=100,
+            c="red",
+            marker="x",
+            linewidths=2,
+            label="Floquet 乘子",
+            zorder=10,
+        )
 
         # 标注慢模
         slow_idx = np.argmax(np.abs(eigvals_real + 1j * eigvals_imag))
         ax.annotate(
-            f'慢模\n|λ|={lambda_slow:.3f}',
+            f"慢模\n|λ|={lambda_slow:.3f}",
             xy=(eigvals_real[slow_idx], eigvals_imag[slow_idx]),
             xytext=(eigvals_real[slow_idx] + 0.3, eigvals_imag[slow_idx] + 0.2),
             fontsize=10,
-            arrowprops=dict(arrowstyle='->', color='red', lw=1.5),
-            bbox=dict(boxstyle='round,pad=0.3', facecolor='yellow', alpha=0.7)
+            arrowprops=dict(arrowstyle="->", color="red", lw=1.5),
+            bbox=dict(boxstyle="round,pad=0.3", facecolor="yellow", alpha=0.7),
         )
 
         ax.set_xlim(-1.2, 1.2)
         ax.set_ylim(-1.2, 1.2)
-        ax.set_aspect('equal')
-        ax.set_xlabel('Re')
-        ax.set_ylabel('Im')
-        ax.set_title('Floquet 乘子谱')
+        ax.set_aspect("equal")
+        ax.set_xlabel("Re")
+        ax.set_ylabel("Im")
+        ax.set_title("Floquet 乘子谱")
         ax.grid(True, alpha=0.3)
-        ax.legend(fontsize=8, loc='best')
+        ax.legend(fontsize=8, loc="best")
 
         fig.suptitle(
-            f'V13b 极限环收敛过程 (Poincaré 步 {step}/{max_steps})\n'
-            f'Floquet 慢模 |λ|={lambda_slow:.3f}  理论周期倍增时间 ln(2)/ln(1/|λ|)≈12 步',
-            fontsize=13
+            f"V13b 极限环收敛过程 (Poincaré 步 {step}/{max_steps})\n"
+            f"Floquet 慢模 |λ|={lambda_slow:.3f}  理论周期倍增时间 ln(2)/ln(1/|λ|)≈12 步",
+            fontsize=13,
         )
         fig.tight_layout()
 

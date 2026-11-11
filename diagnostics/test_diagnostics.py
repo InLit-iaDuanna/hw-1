@@ -33,7 +33,7 @@ def test_error_detector():
         "failure": "fall_down",
         "hip_height": 0.3,
         "forward": 0.5,
-        "alternation_count": 2
+        "alternation_count": 2,
     }
 
     errors = detector.detect_from_data(test_data_1)
@@ -45,11 +45,7 @@ def test_error_detector():
     assert any(e[0] == "fall_down" for e in errors), "应包含 fall_down"
 
     # 测试 2: 从数据检测 NaN
-    test_data_2 = {
-        "success": False,
-        "failure": "nan_or_unstable",
-        "has_nan": True
-    }
+    test_data_2 = {"success": False, "failure": "nan_or_unstable", "has_nan": True}
 
     errors = detector.detect_from_data(test_data_2)
     print(f"\n测试数据 2 (NaN): 检测到 {len(errors)} 个错误")
@@ -60,6 +56,7 @@ def test_error_detector():
 
     # 测试 3: 时间序列检测
     import numpy as np
+
     qpos_with_nan = np.array([0.0, 0.5, 1.0, np.nan, 0.8])
     errors = detector.detect_from_timeseries(qpos=qpos_with_nan)
     print(f"\n测试数据 3 (时间序列 NaN): 检测到 {len(errors)} 个错误")
@@ -104,7 +101,9 @@ def test_solution_database():
     assert len(results) > 0, "应找到包含 'fall' 的错误"
 
     # 测试 4: 推荐解决方案
-    recommendations = db.recommend_solutions(["simulation_nan", "fall_down"], max_solutions_per_error=2)
+    recommendations = db.recommend_solutions(
+        ["simulation_nan", "fall_down"], max_solutions_per_error=2
+    )
     print(f"\n[OK] 为 2 个错误推荐解决方案:")
     for error_type, solutions in recommendations.items():
         print(f"  [{error_type}]: {len(solutions)} 个方案")
@@ -130,10 +129,10 @@ def test_health_checker():
     print(f"[WARN] 失败: {summary['failed_checks']}")
 
     # 显示失败项
-    if summary['failed_checks'] > 0:
+    if summary["failed_checks"] > 0:
         print("\n失败的检查项:")
-        for check in summary['checks']:
-            if not check['passed']:
+        for check in summary["checks"]:
+            if not check["passed"]:
                 print(f"  [FAIL] {check['name']}: {check['details']}")
 
     # 运行 smoke test
@@ -166,7 +165,7 @@ def test_integration():
         "forward": 1.2,
         "alternation_count": 3,
         "hip_height": 0.45,
-        "duration": 2.5
+        "duration": 2.5,
     }
 
     print("\n仿真结果:")
@@ -185,10 +184,10 @@ def test_integration():
     print(f"  - 严重性: {report['severity']}")
 
     # 获取解决方案
-    if report['has_errors']:
+    if report["has_errors"]:
         print(f"\n推荐解决方案:")
-        for error_info in report['errors'][:2]:  # 显示前 2 个
-            error_type = error_info['type']
+        for error_info in report["errors"][:2]:  # 显示前 2 个
+            error_type = error_info["type"]
             entry = db.get(error_type)
 
             if entry:
@@ -220,6 +219,7 @@ def main():
     except Exception as e:
         print(f"\n[ERROR] 测试错误: {e}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 

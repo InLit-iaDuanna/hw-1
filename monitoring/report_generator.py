@@ -75,7 +75,9 @@ class ReportGenerator:
 
                 report.append(f"**状态**: {status_emoji} {status_text}\n")
                 report.append(f"**健康分数**: {health_score:.1f}/100\n")
-                report.append(f"**检查项**: {total} 项 ({passed} 通过, {failed} 失败, {warnings} 警告)\n")
+                report.append(
+                    f"**检查项**: {total} 项 ({passed} 通过, {failed} 失败, {warnings} 警告)\n"
+                )
             else:
                 report.append("**状态**: ⚪ 无数据\n")
 
@@ -129,9 +131,7 @@ class ReportGenerator:
             report.append(
                 f"- 输出目录: {storage.get('output_directory_size', 'N/A')}\n"
             )
-            report.append(
-                f"- 缓存目录: {storage.get('cache_directory_size', 'N/A')}\n"
-            )
+            report.append(f"- 缓存目录: {storage.get('cache_directory_size', 'N/A')}\n")
 
         report.append("\n---\n")
 
@@ -168,9 +168,7 @@ class ReportGenerator:
         if "metrics" in data:
             cov = data["metrics"].get("testing", {}).get("coverage_percentage")
             if cov is not None and cov < 80:
-                suggestions.append(
-                    f"- 提高测试覆盖率（当前 {cov}%，建议 ≥ 80%）"
-                )
+                suggestions.append(f"- 提高测试覆盖率（当前 {cov}%，建议 ≥ 80%）")
 
         if "health" in data:
             failed = data["health"].get("summary", {}).get("failed", 0)

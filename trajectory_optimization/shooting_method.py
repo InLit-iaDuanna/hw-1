@@ -33,7 +33,7 @@ class SingleShootingOptimizer:
         target_state: np.ndarray,
         n_steps: int,
         dt: float,
-        control_bounds: Tuple[np.ndarray, np.ndarray]
+        control_bounds: Tuple[np.ndarray, np.ndarray],
     ):
         """
         Args:
@@ -89,9 +89,9 @@ class SingleShootingOptimizer:
             t_span,
             self.x0,
             t_eval=t_eval,
-            method='RK45',
+            method="RK45",
             rtol=1e-6,
-            atol=1e-8
+            atol=1e-8,
         )
 
         return sol.y.T  # Shape: (n_steps+1, n_states)
@@ -115,7 +115,7 @@ class SingleShootingOptimizer:
 
         # Control effort cost
         U = controls.reshape(self.n_steps, self.n_controls)
-        control_cost = 0.1 * np.sum(U ** 2) * self.dt
+        control_cost = 0.1 * np.sum(U**2) * self.dt
 
         # Control smoothness (penalize rapid changes)
         smoothness_cost = 1.0 * np.sum(np.diff(U, axis=0) ** 2)
@@ -139,9 +139,9 @@ class SingleShootingOptimizer:
     def optimize(
         self,
         initial_guess: Optional[np.ndarray] = None,
-        method: str = 'SLSQP',
+        method: str = "SLSQP",
         max_iter: int = 200,
-        verbose: bool = True
+        verbose: bool = True,
     ) -> Dict:
         """
         Run single shooting optimization.
@@ -168,11 +168,7 @@ class SingleShootingOptimizer:
                 bounds.append((self.u_min[i], self.u_max[i]))
 
         # Optimization options
-        options = {
-            'maxiter': max_iter,
-            'disp': verbose,
-            'ftol': 1e-6
-        }
+        options = {"maxiter": max_iter, "disp": verbose, "ftol": 1e-6}
 
         if verbose:
             print("Starting single shooting optimization...")
@@ -182,11 +178,7 @@ class SingleShootingOptimizer:
 
         # Run optimization
         self.result = minimize(
-            self._objective,
-            u_guess,
-            method=method,
-            bounds=bounds,
-            options=options
+            self._objective, u_guess, method=method, bounds=bounds, options=options
         )
 
         # Extract results
@@ -197,15 +189,17 @@ class SingleShootingOptimizer:
             print(f"\nOptimization {'succeeded' if self.result.success else 'failed'}")
             print(f"  Final cost: {self.result.fun:.6f}")
             print(f"  Iterations: {self.result.nit}")
-            print(f"  Terminal error: {np.linalg.norm(self.optimal_trajectory[-1] - self.xf):.6f}")
+            print(
+                f"  Terminal error: {np.linalg.norm(self.optimal_trajectory[-1] - self.xf):.6f}"
+            )
 
         return {
-            'success': self.result.success,
-            'cost': self.result.fun,
-            'controls': self.optimal_controls,
-            'trajectory': self.optimal_trajectory,
-            'iterations': self.result.nit,
-            'message': self.result.message
+            "success": self.result.success,
+            "cost": self.result.fun,
+            "controls": self.optimal_controls,
+            "trajectory": self.optimal_trajectory,
+            "iterations": self.result.nit,
+            "message": self.result.message,
         }
 
     def plot_results(self, save_path: Optional[str] = None):
@@ -222,31 +216,35 @@ class SingleShootingOptimizer:
         # Plot states
         ax = axes[0]
         for i in range(self.n_states):
-            ax.plot(t, self.optimal_trajectory[:, i], label=f'State {i+1}')
-        ax.axhline(y=0, color='k', linestyle='--', alpha=0.3)
-        ax.plot(t[-1], self.xf, 'ro', markersize=8, label='Target')
-        ax.set_xlabel('Time (s)')
-        ax.set_ylabel('State')
-        ax.set_title('Optimal State Trajectory (Single Shooting)')
+            ax.plot(t, self.optimal_trajectory[:, i], label=f"State {i+1}")
+        ax.axhline(y=0, color="k", linestyle="--", alpha=0.3)
+        ax.plot(t[-1], self.xf, "ro", markersize=8, label="Target")
+        ax.set_xlabel("Time (s)")
+        ax.set_ylabel("State")
+        ax.set_title("Optimal State Trajectory (Single Shooting)")
         ax.legend()
         ax.grid(True, alpha=0.3)
 
         # Plot controls
         ax = axes[1]
         for i in range(self.n_controls):
-            ax.step(t_control, self.optimal_controls[:, i],
-                   where='post', label=f'Control {i+1}')
-        ax.axhline(y=0, color='k', linestyle='--', alpha=0.3)
-        ax.set_xlabel('Time (s)')
-        ax.set_ylabel('Control')
-        ax.set_title('Optimal Control Inputs')
+            ax.step(
+                t_control,
+                self.optimal_controls[:, i],
+                where="post",
+                label=f"Control {i+1}",
+            )
+        ax.axhline(y=0, color="k", linestyle="--", alpha=0.3)
+        ax.set_xlabel("Time (s)")
+        ax.set_ylabel("Control")
+        ax.set_title("Optimal Control Inputs")
         ax.legend()
         ax.grid(True, alpha=0.3)
 
         plt.tight_layout()
 
         if save_path:
-            plt.savefig(save_path, dpi=150, bbox_inches='tight')
+            plt.savefig(save_path, dpi=150, bbox_inches="tight")
             print(f"Plot saved to {save_path}")
         else:
             plt.show()
@@ -255,6 +253,7 @@ class SingleShootingOptimizer:
 # ============================================================================
 # Example: Double Integrator
 # ============================================================================
+
 
 def double_integrator_dynamics(t, x, u):
     """
@@ -288,7 +287,7 @@ def example_double_integrator():
         target_state=xf,
         n_steps=n_steps,
         dt=dt,
-        control_bounds=(u_min, u_max)
+        control_bounds=(u_min, u_max),
     )
 
     # Optimize
@@ -303,6 +302,7 @@ def example_double_integrator():
 # ============================================================================
 # Example: Pendulum Swing-Up
 # ============================================================================
+
 
 def pendulum_dynamics(t, x, u):
     """
@@ -332,8 +332,8 @@ def example_pendulum_swingup():
     print("=" * 60)
 
     # Problem setup
-    x0 = np.array([0.0, 0.0])      # Hanging down at rest
-    xf = np.array([np.pi, 0.0])    # Upright at rest
+    x0 = np.array([0.0, 0.0])  # Hanging down at rest
+    xf = np.array([np.pi, 0.0])  # Upright at rest
 
     n_steps = 80
     dt = 0.05
@@ -348,13 +348,13 @@ def example_pendulum_swingup():
         target_state=xf,
         n_steps=n_steps,
         dt=dt,
-        control_bounds=(u_min, u_max)
+        control_bounds=(u_min, u_max),
     )
 
     # Initial guess: bang-bang control
     u_guess = np.zeros((n_steps, 1))
-    u_guess[:n_steps//2] = u_max
-    u_guess[n_steps//2:] = u_min
+    u_guess[: n_steps // 2] = u_max
+    u_guess[n_steps // 2 :] = u_min
 
     # Optimize
     result = optimizer.optimize(initial_guess=u_guess, verbose=True)
@@ -365,7 +365,7 @@ def example_pendulum_swingup():
     return optimizer, result
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Run examples
     print("\n\n")
     opt1, res1 = example_double_integrator()
