@@ -9,6 +9,7 @@ from pathlib import Path
 
 import imageio.v2 as imageio
 import mujoco
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
