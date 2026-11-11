@@ -5,22 +5,48 @@ import json
 import math
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent
 OUT = ROOT / "out"
 
 
 VERSION_META = {
-    "v01": ("V1 MuJoCo 指南针步态", "早期 MuJoCo 指南针模型，用来观察髋部位移、腿角和脚端几何轨迹。"),
-    "v02": ("V2 Rimless 极限环对照", "无膝轮足/rimless wheel 对照，用来说明极限环步态的离散碰撞和周期相位。"),
-    "v03": ("V3 指南针极限环数据", "指南针步态的数学/参数化对照版本，用 Poincare 误差观察周期收敛趋势。"),
-    "v04": ("V4 带膝极限环对照", "加入大腿、小腿、膝关节变量的带膝对照版本，用来解释 MVE 机构升级。"),
-    "v05": ("V5 混合动力学证明版", "最终的纯被动极限环证明层：连续单支撑动力学、触地事件、碰撞换腿、Poincare 收敛。"),
-    "v06": ("V6 MVE 作业表达版", "作业展示层：把被动步态机制转译成带膝 MVE 机械单元和分相动作。"),
-    "v07": ("V7 真实接触探索版", "MuJoCo 真实接触纯被动探索层，用来说明真实接触下参数很敏感。"),
-    "v08": ("V8 准被动补能探索版", "弱髋部补能探索层：不是纯被动，用最小输入补偿碰撞损失，但当前最佳结果仍会跌倒。"),
-    "v09": ("V9 仿生准被动稳定版", "稳定仿生展示层：髋/膝小力矩补能，真实接触中完成长时间交替行走。"),
+    "v01": (
+        "V1 MuJoCo 指南针步态",
+        "早期 MuJoCo 指南针模型，用来观察髋部位移、腿角和脚端几何轨迹。",
+    ),
+    "v02": (
+        "V2 Rimless 极限环对照",
+        "无膝轮足/rimless wheel 对照，用来说明极限环步态的离散碰撞和周期相位。",
+    ),
+    "v03": (
+        "V3 指南针极限环数据",
+        "指南针步态的数学/参数化对照版本，用 Poincare 误差观察周期收敛趋势。",
+    ),
+    "v04": (
+        "V4 带膝极限环对照",
+        "加入大腿、小腿、膝关节变量的带膝对照版本，用来解释 MVE 机构升级。",
+    ),
+    "v05": (
+        "V5 混合动力学证明版",
+        "最终的纯被动极限环证明层：连续单支撑动力学、触地事件、碰撞换腿、Poincare 收敛。",
+    ),
+    "v06": (
+        "V6 MVE 作业表达版",
+        "作业展示层：把被动步态机制转译成带膝 MVE 机械单元和分相动作。",
+    ),
+    "v07": (
+        "V7 真实接触探索版",
+        "MuJoCo 真实接触纯被动探索层，用来说明真实接触下参数很敏感。",
+    ),
+    "v08": (
+        "V8 准被动补能探索版",
+        "弱髋部补能探索层：不是纯被动，用最小输入补偿碰撞损失，但当前最佳结果仍会跌倒。",
+    ),
+    "v09": (
+        "V9 仿生准被动稳定版",
+        "稳定仿生展示层：髋/膝小力矩补能，真实接触中完成长时间交替行走。",
+    ),
 }
 
 PARAM_JSONS = {
@@ -185,7 +211,9 @@ def build_markdown(version: str) -> str:
         if rng:
             angle_text.append(f"{name}: {rng} rad")
     if not angle_text:
-        angle_text.append("本版本没有明确的角度字段，报告图会显示前几个数值变量作为预览。")
+        angle_text.append(
+            "本版本没有明确的角度字段，报告图会显示前几个数值变量作为预览。"
+        )
 
     torque_names = [name for name in header if name.endswith("_tau")]
     torque_text = []
@@ -235,7 +263,9 @@ def build_markdown(version: str) -> str:
         "",
     ]
     if hip_delta is None:
-        markdown.append("这一栏没有 `hip_x` 字段，因此报告图用可用数值变量代替。它不能直接说明整体前进距离。")
+        markdown.append(
+            "这一栏没有 `hip_x` 字段，因此报告图用可用数值变量代替。它不能直接说明整体前进距离。"
+        )
     else:
         markdown.append(
             f"髋部 x 随时间的变化用来判断模型是否真的向前推进。本版本髋部前进约 {hip_delta:.3f} m，"
@@ -259,7 +289,9 @@ def build_markdown(version: str) -> str:
             f"support 切换约 {support_changes if support_changes is not None else '无'} 次，可用来表达换腿事件。"
         )
     else:
-        markdown.append("这一版没有明确的脚地接触字段，因此这张子图更多是关键变量预览，不能单独证明真实触地换腿。")
+        markdown.append(
+            "这一版没有明确的脚地接触字段，因此这张子图更多是关键变量预览，不能单独证明真实触地换腿。"
+        )
 
     markdown += [
         "",
@@ -290,17 +322,29 @@ def build_markdown(version: str) -> str:
     ]
 
     if version == "v05":
-        markdown.append("V5 的相图和 Poincare 误差是证明重点：它说明混合动力学在触地截面上接近固定点，所以可作为纯被动极限环证明。")
+        markdown.append(
+            "V5 的相图和 Poincare 误差是证明重点：它说明混合动力学在触地截面上接近固定点，所以可作为纯被动极限环证明。"
+        )
     elif version == "v01":
-        markdown.append("V1 的相图使用左腿角与左腿角速度绘制。它能看出早期指南针模型的摆动状态，但曲线还没有形成稳定闭合环，因此只能作为早期尝试。")
+        markdown.append(
+            "V1 的相图使用左腿角与左腿角速度绘制。它能看出早期指南针模型的摆动状态，但曲线还没有形成稳定闭合环，因此只能作为早期尝试。"
+        )
     elif version == "v02":
-        markdown.append("V2 的相图使用 theta 与 theta_dot 绘制。它适合说明 rimless wheel 的周期碰撞思想，是极限环概念的简化对照。")
+        markdown.append(
+            "V2 的相图使用 theta 与 theta_dot 绘制。它适合说明 rimless wheel 的周期碰撞思想，是极限环概念的简化对照。"
+        )
     elif version == "v03":
-        markdown.append("V3 的相图使用腿角与支撑腿角速度绘制，同时结合 poincare_error 看收敛趋势。它比 V1/V2 更接近指南针极限环表达。")
+        markdown.append(
+            "V3 的相图使用腿角与支撑腿角速度绘制，同时结合 poincare_error 看收敛趋势。它比 V1/V2 更接近指南针极限环表达。"
+        )
     elif version == "v04":
-        markdown.append("V4 的相图使用左大腿角与由数据差分估计的角速度绘制。它主要说明带膝机构的周期趋势，但证明力度仍弱于 V5。")
+        markdown.append(
+            "V4 的相图使用左大腿角与由数据差分估计的角速度绘制。它主要说明带膝机构的周期趋势，但证明力度仍弱于 V5。"
+        )
     elif version in {"v08", "v09"}:
-        markdown.append("V8/V9 的相图可说明动作是否稳定重复，但因为存在主动补能力矩，它证明的是准被动仿生行走，不是纯被动极限环。")
+        markdown.append(
+            "V8/V9 的相图可说明动作是否稳定重复，但因为存在主动补能力矩，它证明的是准被动仿生行走，不是纯被动极限环。"
+        )
     else:
         markdown.append("这一版相图主要用于对照和展示模型演进，证明力度弱于 V5。")
 
@@ -310,17 +354,29 @@ def build_markdown(version: str) -> str:
         "",
     ]
     if version == "v05":
-        markdown.append("建议放在“原理验证/极限环证明”页：强调无 actuator、无奖励函数、Poincare 截面收敛。")
+        markdown.append(
+            "建议放在“原理验证/极限环证明”页：强调无 actuator、无奖励函数、Poincare 截面收敛。"
+        )
     elif version == "v06":
-        markdown.append("建议放在“仿生 MVE 结构转译”页：强调髋轴、带膝双腿、支撑相/摆动相/触地换腿的机械表达。")
+        markdown.append(
+            "建议放在“仿生 MVE 结构转译”页：强调髋轴、带膝双腿、支撑相/摆动相/触地换腿的机械表达。"
+        )
     elif version == "v07":
-        markdown.append("建议放在“真实接触探索与问题”页：说明纯被动真实接触模型容易跌倒或卡住，是后续补能版本的合理动机。")
+        markdown.append(
+            "建议放在“真实接触探索与问题”页：说明纯被动真实接触模型容易跌倒或卡住，是后续补能版本的合理动机。"
+        )
     elif version == "v08":
-        markdown.append("建议放在“准被动补能探索”页：说明生物并非完全无输入，弱髋部补能能改善步态，但该版仍不是最终稳定结果。")
+        markdown.append(
+            "建议放在“准被动补能探索”页：说明生物并非完全无输入，弱髋部补能能改善步态，但该版仍不是最终稳定结果。"
+        )
     elif version == "v09":
-        markdown.append("建议放在“最终仿生行走展示”页：强调真实接触、连续交替触地、长时间前进，以及补能输入被明确记录。")
+        markdown.append(
+            "建议放在“最终仿生行走展示”页：强调真实接触、连续交替触地、长时间前进，以及补能输入被明确记录。"
+        )
     else:
-        markdown.append("建议作为版本演进材料：说明从简化模型逐步走向 V5 证明、V6 机构表达和 V9 稳定展示。")
+        markdown.append(
+            "建议作为版本演进材料：说明从简化模型逐步走向 V5 证明、V6 机构表达和 V9 稳定展示。"
+        )
 
     markdown += [
         "",

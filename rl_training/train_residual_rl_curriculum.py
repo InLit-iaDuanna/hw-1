@@ -21,7 +21,11 @@ from typing import Optional
 
 import numpy as np
 from stable_baselines3 import PPO
-from stable_baselines3.common.callbacks import BaseCallback, EvalCallback, CheckpointCallback
+from stable_baselines3.common.callbacks import (
+    BaseCallback,
+    EvalCallback,
+    CheckpointCallback,
+)
 from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecNormalize
 
 # 添加路径
@@ -64,9 +68,9 @@ class ResidualScaleCurriculumCallback(BaseCallback):
                 new_scale = self.scales[self.current_scale_idx]
 
                 # 更新所有环境的residual_scale
-                if hasattr(self.training_env, 'envs'):
+                if hasattr(self.training_env, "envs"):
                     for env in self.training_env.envs:
-                        if hasattr(env, 'residual_scale'):
+                        if hasattr(env, "residual_scale"):
                             env.residual_scale = new_scale
 
                 if self.verbose > 0:
@@ -125,7 +129,7 @@ class PeriodicEvalCallback(BaseCallback):
                         # 从VecEnv获取info
                         if isinstance(info, list):
                             info = info[0]
-                        episode_distances.append(info.get('hip_x', 0.0))
+                        episode_distances.append(info.get("hip_x", 0.0))
 
                 episode_rewards.append(episode_reward)
 
@@ -136,7 +140,9 @@ class PeriodicEvalCallback(BaseCallback):
             if self.verbose > 0:
                 print(f"  Mean Reward: {mean_reward:.2f}")
                 print(f"  Mean Distance: {mean_distance:.4f}m ± {std_distance:.4f}m")
-                print(f"  Distance Range: [{np.min(episode_distances):.4f}m, {np.max(episode_distances):.4f}m]")
+                print(
+                    f"  Distance Range: [{np.min(episode_distances):.4f}m, {np.max(episode_distances):.4f}m]"
+                )
                 print(f"{'='*60}\n")
 
             # 记录到TensorBoard
@@ -211,6 +217,7 @@ def train_residual_rl_with_curriculum(
                 reward_type="forward_velocity",
             )
             return env
+
         return _init
 
     # 创建并行环境
@@ -221,7 +228,9 @@ def train_residual_rl_with_curriculum(
 
     # 创建评估环境（单个环境）
     eval_env = DummyVecEnv([make_env(0)])
-    eval_env = VecNormalize(eval_env, norm_obs=True, norm_reward=False, clip_obs=10.0, training=False)
+    eval_env = VecNormalize(
+        eval_env, norm_obs=True, norm_reward=False, clip_obs=10.0, training=False
+    )
 
     # 回调
     curriculum_callback = ResidualScaleCurriculumCallback(
@@ -283,14 +292,29 @@ def train_residual_rl_with_curriculum(
 
 
 def main():
-    parser = argparse.ArgumentParser(description="训练Residual RL策略（Curriculum Learning）")
-    parser.add_argument("--total-timesteps", type=int, default=500000, help="总训练步数")
+    parser = argparse.ArgumentParser(
+        description="训练Residual RL策略（Curriculum Learning）"
+    )
+    parser.add_argument(
+        "--total-timesteps", type=int, default=500000, help="总训练步数"
+    )
     parser.add_argument("--n-envs", type=int, default=8, help="并行环境数量")
     parser.add_argument("--learning-rate", type=float, default=3e-4, help="学习率")
-    parser.add_argument("--residual-limit", type=float, default=0.5, help="Residual动作范围")
-    parser.add_argument("--inner-steps", type=int, default=5, help="内环步数（5=200Hz）")
-    parser.add_argument("--log-dir", type=str, default="logs/residual_rl_curriculum", help="日志目录")
-    parser.add_argument("--model-save-path", type=str, default="models/residual_rl_curriculum", help="模型保存路径")
+    parser.add_argument(
+        "--residual-limit", type=float, default=0.5, help="Residual动作范围"
+    )
+    parser.add_argument(
+        "--inner-steps", type=int, default=5, help="内环步数（5=200Hz）"
+    )
+    parser.add_argument(
+        "--log-dir", type=str, default="logs/residual_rl_curriculum", help="日志目录"
+    )
+    parser.add_argument(
+        "--model-save-path",
+        type=str,
+        default="models/residual_rl_curriculum",
+        help="模型保存路径",
+    )
     parser.add_argument("--no-subproc", action="store_true", help="禁用多进程环境")
 
     args = parser.parse_args()

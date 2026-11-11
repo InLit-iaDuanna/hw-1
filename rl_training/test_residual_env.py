@@ -53,8 +53,10 @@ def test_environment():
         total_reward += reward
 
         if i % 3 == 0:
-            print(f"  Step {i}: hip_x={info['hip_x']:.3f}m, "
-                  f"hip_vel_x={info['hip_vel_x']:.3f}m/s, reward={reward:.2f}")
+            print(
+                f"  Step {i}: hip_x={info['hip_x']:.3f}m, "
+                f"hip_vel_x={info['hip_vel_x']:.3f}m/s, reward={reward:.2f}"
+            )
 
         if terminated or truncated:
             print(f"  Episode结束于step {i}")
@@ -74,8 +76,10 @@ def test_environment():
         total_reward += reward
 
         if i % 3 == 0:
-            print(f"  Step {i}: residual={random_action[:2]}, "
-                  f"hip_x={info['hip_x']:.3f}m, reward={reward:.2f}")
+            print(
+                f"  Step {i}: residual={random_action[:2]}, "
+                f"hip_x={info['hip_x']:.3f}m, reward={reward:.2f}"
+            )
 
         if terminated or truncated:
             print(f"  Episode结束于step {i}")
@@ -114,7 +118,9 @@ def test_environment():
 
     # 打印推荐训练命令
     print("\n推荐训练命令:")
-    print("  python rl_training/train_residual_rl.py --inner-steps 5 --total-timesteps 500000")
+    print(
+        "  python rl_training/train_residual_rl.py --inner-steps 5 --total-timesteps 500000"
+    )
 
 
 if __name__ == "__main__":

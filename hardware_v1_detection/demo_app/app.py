@@ -51,7 +51,9 @@ class CaptureWorker(QtCore.QThread):
     status_changed = QtCore.pyqtSignal(str)
     finished_session = QtCore.pyqtSignal(str)
 
-    def __init__(self, port: str, baud: int, output_dir: str, calibration_path: str | None):
+    def __init__(
+        self, port: str, baud: int, output_dir: str, calibration_path: str | None
+    ):
         super().__init__()
         self.port = port
         self.baud = baud
@@ -212,8 +214,13 @@ class MainWindow(QtWidgets.QMainWindow):
             ("right_toe_off", "t"),
         ):
             self.event_curves[key] = self.event_plot.plot(
-                [], [], pen=None, symbol=symbol,
-                symbolBrush=EVENT_COLORS[key], symbolPen=None, symbolSize=11
+                [],
+                [],
+                pen=None,
+                symbol=symbol,
+                symbolBrush=EVENT_COLORS[key],
+                symbolPen=None,
+                symbolSize=11,
             )
         grid.addWidget(self._card(self.event_plot), 1, 0)
 
@@ -312,8 +319,12 @@ class MainWindow(QtWidgets.QMainWindow):
             plot.setLabel("left", "norm")
             style_plot(plot)
             acc_curve = plot.plot(pen=pg.mkPen(PALETTE.right, width=2), name="acc |g|")
-            gyro_curve = plot.plot(pen=pg.mkPen(PALETTE.left_accent, width=2), name="gyro |dps|")
-            mag_curve = plot.plot(pen=pg.mkPen(PALETTE.zone_green, width=2), name="mag raw")
+            gyro_curve = plot.plot(
+                pen=pg.mkPen(PALETTE.left_accent, width=2), name="gyro |dps|"
+            )
+            mag_curve = plot.plot(
+                pen=pg.mkPen(PALETTE.zone_green, width=2), name="mag raw"
+            )
             self.curves[name] = {"acc": acc_curve, "gyro": gyro_curve, "mag": mag_curve}
             self.raw_tabs.addTab(self._card(plot), name)
         self.tabs.addTab(self.raw_tabs, "Raw debug")
@@ -343,7 +354,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.worker.frame_received.connect(self.on_frame)
         self.worker.node_frame_received.connect(self.on_node_frame)
         self.worker.status_changed.connect(self.status_label.setText)
-        self.worker.finished_session.connect(lambda path: self.status_label.setText(f"saved {path}"))
+        self.worker.finished_session.connect(
+            lambda path: self.status_label.setText(f"saved {path}")
+        )
         self.worker.start()
         self.start_button.setEnabled(False)
         self.stop_button.setEnabled(True)
@@ -498,7 +511,9 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         x: list[float] = []
         y: list[float] = []
-        for time_s, value in zip(self.joint_buffers[name]["t"], self.joint_buffers[name]["value"]):
+        for time_s, value in zip(
+            self.joint_buffers[name]["t"], self.joint_buffers[name]["value"]
+        ):
             if start <= time_s <= end:
                 x.append((time_s - start) / span * 100.0)
                 y.append(value)

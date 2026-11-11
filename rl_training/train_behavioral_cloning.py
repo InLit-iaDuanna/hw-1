@@ -101,7 +101,7 @@ def train_behavioral_cloning(
     batch_size: int = 256,
     learning_rate: float = 1e-3,
     validation_split: float = 0.2,
-    device: str = "auto"
+    device: str = "auto",
 ) -> dict:
     """
     训练行为克隆模型
@@ -143,8 +143,7 @@ def train_behavioral_cloning(
     n_train = n_total - n_val
 
     train_dataset, val_dataset = torch.utils.data.random_split(
-        dataset, [n_train, n_val],
-        generator=torch.Generator().manual_seed(42)
+        dataset, [n_train, n_val], generator=torch.Generator().manual_seed(42)
     )
 
     print(f"数据分割:")
@@ -157,14 +156,11 @@ def train_behavioral_cloning(
         train_dataset,
         batch_size=batch_size,
         shuffle=True,
-        num_workers=0  # Windows兼容性
+        num_workers=0,  # Windows兼容性
     )
 
     val_loader = DataLoader(
-        val_dataset,
-        batch_size=batch_size,
-        shuffle=False,
-        num_workers=0
+        val_dataset, batch_size=batch_size, shuffle=False, num_workers=0
     )
 
     # 创建模型
@@ -183,7 +179,7 @@ def train_behavioral_cloning(
 
     train_losses = []
     val_losses = []
-    best_val_loss = float('inf')
+    best_val_loss = float("inf")
 
     for epoch in range(num_epochs):
         # 训练阶段
@@ -240,13 +236,16 @@ def train_behavioral_cloning(
         if avg_val_loss < best_val_loss:
             best_val_loss = avg_val_loss
             best_model_path = RL_TRAINING_DIR / f"best_{save_path}"
-            torch.save({
-                'epoch': epoch,
-                'model_state_dict': policy.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
-                'train_loss': avg_train_loss,
-                'val_loss': avg_val_loss,
-            }, best_model_path)
+            torch.save(
+                {
+                    "epoch": epoch,
+                    "model_state_dict": policy.state_dict(),
+                    "optimizer_state_dict": optimizer.state_dict(),
+                    "train_loss": avg_train_loss,
+                    "val_loss": avg_val_loss,
+                },
+                best_model_path,
+            )
 
     print()
     print("=" * 80)
@@ -257,15 +256,18 @@ def train_behavioral_cloning(
 
     # 保存最终模型
     final_model_path = RL_TRAINING_DIR / save_path
-    torch.save({
-        'epoch': num_epochs - 1,
-        'model_state_dict': policy.state_dict(),
-        'optimizer_state_dict': optimizer.state_dict(),
-        'train_loss': train_losses[-1],
-        'val_loss': val_losses[-1],
-        'train_losses': train_losses,
-        'val_losses': val_losses,
-    }, final_model_path)
+    torch.save(
+        {
+            "epoch": num_epochs - 1,
+            "model_state_dict": policy.state_dict(),
+            "optimizer_state_dict": optimizer.state_dict(),
+            "train_loss": train_losses[-1],
+            "val_loss": val_losses[-1],
+            "train_losses": train_losses,
+            "val_losses": val_losses,
+        },
+        final_model_path,
+    )
 
     print(f"模型已保存到: {final_model_path}")
     print(f"最佳模型已保存到: {best_model_path}")
@@ -314,10 +316,15 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="行为克隆预训练")
-    parser.add_argument("--trajectories", type=str, default="v137_expert_trajectories.pkl",
-                        help="专家轨迹数据路径")
-    parser.add_argument("--save", type=str, default="bc_policy_weights.pth",
-                        help="模型保存路径")
+    parser.add_argument(
+        "--trajectories",
+        type=str,
+        default="v137_expert_trajectories.pkl",
+        help="专家轨迹数据路径",
+    )
+    parser.add_argument(
+        "--save", type=str, default="bc_policy_weights.pth", help="模型保存路径"
+    )
     parser.add_argument("--epochs", type=int, default=50, help="训练轮数")
     parser.add_argument("--batch-size", type=int, default=256, help="批大小")
     parser.add_argument("--lr", type=float, default=1e-3, help="学习率")
@@ -331,5 +338,5 @@ if __name__ == "__main__":
         num_epochs=args.epochs,
         batch_size=args.batch_size,
         learning_rate=args.lr,
-        device=args.device
+        device=args.device,
     )

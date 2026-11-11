@@ -1,4 +1,4 @@
-﻿"""Version Evolution Timeline: V01-V24 performance metrics and milestones."""
+"""Version Evolution Timeline: V01-V24 performance metrics and milestones."""
 
 from __future__ import annotations
 

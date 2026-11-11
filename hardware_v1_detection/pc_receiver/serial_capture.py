@@ -80,10 +80,16 @@ def build_arg_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--port", help="Serial port, e.g. COM5")
     p.add_argument("--baud", type=int, default=921600)
-    p.add_argument("--duration", type=float, default=None, help="Capture duration in seconds")
+    p.add_argument(
+        "--duration", type=float, default=None, help="Capture duration in seconds"
+    )
     p.add_argument("--output", default=None, help="Output root directory")
-    p.add_argument("--calibration", default=None, help="gyro_bias.json from calibration")
-    p.add_argument("--list-ports", action="store_true", help="List serial ports and exit")
+    p.add_argument(
+        "--calibration", default=None, help="gyro_bias.json from calibration"
+    )
+    p.add_argument(
+        "--list-ports", action="store_true", help="List serial ports and exit"
+    )
     return p
 
 
@@ -97,7 +103,9 @@ def main(argv: list[str] | None = None) -> int:
         ports = ", ".join(list_serial_ports()) or "none"
         print(f"--port is required. Available ports: {ports}", file=sys.stderr)
         return 2
-    session_dir = capture(args.port, args.baud, args.duration, args.output, args.calibration)
+    session_dir = capture(
+        args.port, args.baud, args.duration, args.output, args.calibration
+    )
     print(f"saved session: {session_dir}")
     return 0
 

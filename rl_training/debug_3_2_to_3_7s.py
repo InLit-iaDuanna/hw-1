@@ -10,6 +10,7 @@ sys.path.insert(0, str(HW1_ROOT))
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 from simulate_passive_arms_v14 import contact_flags
 
+
 def debug_3_2s_to_3_7s():
     """调试3.2-3.7s之间发生了什么"""
 
@@ -51,12 +52,16 @@ def debug_3_2s_to_3_7s():
 
         # Check if FSM switched
         if env.support_foot != old_support or env.burst_start_t != old_burst:
-            print(f"[{t:.3f}s] FSM SWITCH: support={old_support}->{env.support_foot}, burst_t={old_burst:.4f}->{env.burst_start_t:.4f}")
+            print(
+                f"[{t:.3f}s] FSM SWITCH: support={old_support}->{env.support_foot}, burst_t={old_burst:.4f}->{env.burst_start_t:.4f}"
+            )
 
         # Print detailed state every 50ms
         if step % 50 == 0:
             left_c, right_c = contact_flags(env.model, env.data)
-            print(f"t={t:.3f}s: L={int(left_c)} R={int(right_c)} | candidate_L={env.candidate_start_t['left']} | hip_x={env.data.qpos[0]:.4f}m | support={env.support_foot}")
+            print(
+                f"t={t:.3f}s: L={int(left_c)} R={int(right_c)} | candidate_L={env.candidate_start_t['left']} | hip_x={env.data.qpos[0]:.4f}m | support={env.support_foot}"
+            )
 
         if terminated:
             print(f"\n[TERMINATED at t={t:.3f}s]")
@@ -70,6 +75,7 @@ def debug_3_2s_to_3_7s():
     print()
 
     env.close()
+
 
 if __name__ == "__main__":
     debug_3_2s_to_3_7s()

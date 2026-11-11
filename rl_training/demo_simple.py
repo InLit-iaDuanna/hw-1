@@ -23,7 +23,9 @@ def demo_rl_policy():
     print()
 
     # 加载模型
-    model_path = HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    model_path = (
+        HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    )
 
     if not model_path.exists():
         print(f"错误：模型文件不存在")
@@ -41,7 +43,7 @@ def demo_rl_policy():
         residual_scale=0.2,
         inner_steps=5,
         max_steps=2400,  # 12秒
-        render_mode="human"  # 打开可视化
+        render_mode="human",  # 打开可视化
     )
     print("[OK] 环境创建成功")
     print()
@@ -81,7 +83,10 @@ def demo_rl_policy():
             t = step * 0.005  # step * dt * inner_steps
             distance = float(env.data.qpos[0])
             hip_height = float(env.data.qpos[2])
-            print(f"时间: {t:5.2f}s | 距离: {distance:6.3f}m | 髋高: {hip_height:5.3f}m | Step: {step:4d}/2400", end="\r")
+            print(
+                f"时间: {t:5.2f}s | 距离: {distance:6.3f}m | 髋高: {hip_height:5.3f}m | Step: {step:4d}/2400",
+                end="\r",
+            )
             last_print_time = current_time
 
     elapsed = time.time() - start_time
@@ -104,7 +109,9 @@ def demo_rl_policy():
     if success:
         print()
         print("PPO 策略成功完成 12 秒行走！")
-        print(f"   相比 V13.7 baseline (4.63m)，提升了 {(final_distance - 4.63) / 4.63 * 100:.1f}%")
+        print(
+            f"   相比 V13.7 baseline (4.63m)，提升了 {(final_distance - 4.63) / 4.63 * 100:.1f}%"
+        )
 
     print("=" * 80)
 
@@ -120,10 +127,7 @@ def demo_constant_policy():
 
     print("正在创建仿真环境...")
     env = ResidualRLEnvV2(
-        residual_scale=0.2,
-        inner_steps=5,
-        max_steps=2400,
-        render_mode="human"
+        residual_scale=0.2, inner_steps=5, max_steps=2400, render_mode="human"
     )
     print("✓ 环境创建成功")
     print()
@@ -157,7 +161,10 @@ def demo_constant_policy():
             t = step * 0.005
             distance = float(env.data.qpos[0])
             hip_height = float(env.data.qpos[2])
-            print(f"时间: {t:5.2f}s | 距离: {distance:6.3f}m | 髋高: {hip_height:5.3f}m | Step: {step:4d}/2400", end="\r")
+            print(
+                f"时间: {t:5.2f}s | 距离: {distance:6.3f}m | 髋高: {hip_height:5.3f}m | Step: {step:4d}/2400",
+                end="\r",
+            )
             last_print_time = current_time
 
     elapsed = time.time() - start_time
@@ -186,8 +193,12 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="可视化演示行走策略")
-    parser.add_argument("--mode", choices=["rl", "constant", "both"], default="rl",
-                       help="演示模式: rl=100k RL策略, constant=固定策略, both=两者对比")
+    parser.add_argument(
+        "--mode",
+        choices=["rl", "constant", "both"],
+        default="rl",
+        help="演示模式: rl=100k RL策略, constant=固定策略, both=两者对比",
+    )
 
     args = parser.parse_args()
 
@@ -215,4 +226,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n\n错误: {e}")
         import traceback
+
         traceback.print_exc()

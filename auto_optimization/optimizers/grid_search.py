@@ -87,7 +87,9 @@ class GridSearch:
         total = len(all_combinations)
 
         if verbose:
-            print(f"网格搜索：{total} 个参数组合 ({self.n_points_per_dim}^{len(bounds)})")
+            print(
+                f"网格搜索：{total} 个参数组合 ({self.n_points_per_dim}^{len(bounds)})"
+            )
 
         best_params = None
         best_value = float("-inf")

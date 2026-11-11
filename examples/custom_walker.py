@@ -20,15 +20,16 @@ import numpy as np
 
 # 从 common 模块导入基类
 import sys
+
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from common.controllers import Controller, PDController
 from common.compass_gait import CompassGait, CompassGaitParams
 
-
 # ============================================================================
 # 1. 自定义控制器示例
 # ============================================================================
+
 
 class AdaptivePDController(Controller):
     """自适应 PD 控制器
@@ -220,12 +221,14 @@ class PhaseBasedController(Controller):
 # 2. 自定义参数配置示例
 # ============================================================================
 
+
 @dataclass(frozen=True)
 class RobustWalkerParams(CompassGaitParams):
     """鲁棒步行机器人参数
 
     继承 CompassGaitParams，增加鲁棒性相关参数。
     """
+
     # 新增参数：扰动鲁棒性
     disturbance_rejection: float = 0.8  # 扰动抑制能力 [0, 1]
     recovery_speed: float = 0.5  # 姿态恢复速度
@@ -241,9 +244,7 @@ class RobustWalkerParams(CompassGaitParams):
         return math.radians(self.max_lean_angle_deg)
 
     @classmethod
-    def from_template(
-        cls, template: str
-    ) -> RobustWalkerParams:
+    def from_template(cls, template: str) -> RobustWalkerParams:
         """扩展模板方法，支持新的配置模板"""
         # 先调用父类方法获取基础配置
         base_template = template
@@ -294,6 +295,7 @@ class RobustWalkerParams(CompassGaitParams):
 # ============================================================================
 # 3. 自定义步态模型示例
 # ============================================================================
+
 
 class RobustWalker(CompassGait):
     """鲁棒步行机器人模型
@@ -422,6 +424,7 @@ class RobustWalker(CompassGait):
 # ============================================================================
 # 4. 使用示例
 # ============================================================================
+
 
 def example_custom_controllers():
     """示例：使用自定义控制器"""

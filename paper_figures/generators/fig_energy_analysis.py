@@ -1,4 +1,4 @@
-﻿"""Energy Analysis: CoT comparison and mechanical energy decomposition."""
+"""Energy Analysis: CoT comparison and mechanical energy decomposition."""
 
 from __future__ import annotations
 

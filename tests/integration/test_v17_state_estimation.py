@@ -139,7 +139,9 @@ class TestV17StateEstimator:
         assert state_estimator is not None
         assert state_estimator.dt == 0.001
 
-    def test_estimator_processes_sensor_data(self, v17_model, sensor_model, state_estimator):
+    def test_estimator_processes_sensor_data(
+        self, v17_model, sensor_model, state_estimator
+    ):
         """估计器应处理传感器数据。"""
         model, data, _ = v17_model
 
@@ -155,7 +157,9 @@ class TestV17StateEstimator:
         assert hasattr(estimated_state, "hip_z")
         assert hasattr(estimated_state, "joint_angles")
 
-    def test_estimated_position_reasonable(self, v17_model, sensor_model, state_estimator):
+    def test_estimated_position_reasonable(
+        self, v17_model, sensor_model, state_estimator
+    ):
         """估计位置应在合理范围内。"""
         model, data, _ = v17_model
 

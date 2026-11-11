@@ -343,7 +343,8 @@ class SEAActuator:
         energy_error = energy_input - energy_output
         energy_error_pct = (
             100.0 * energy_error / max(abs(energy_input), 1e-9)
-            if energy_input != 0 else 0.0
+            if energy_input != 0
+            else 0.0
         )
 
         return {
@@ -354,9 +355,7 @@ class SEAActuator:
             "PE_spring_initial_J": self.PE_spring_initial,
             "PE_spring_final_J": PE_spring_final,
             "spring_pe_max_J": self.spring_pe_max,
-            "spring_pe_mean_J": (
-                self.spring_pe_sum / max(1, self.audit_samples)
-            ),
+            "spring_pe_mean_J": (self.spring_pe_sum / max(1, self.audit_samples)),
             "q_link_max_deg": math.degrees(self.q_link_max),
             "energy_balance_error_J": energy_error,
             "energy_balance_error_pct": energy_error_pct,
@@ -381,7 +380,8 @@ class SEAActuator:
         energy_error = energy_input - energy_output
         energy_error_pct = (
             100.0 * energy_error / max(abs(energy_input), 1e-9)
-            if energy_input != 0 else 0.0
+            if energy_input != 0
+            else 0.0
         )
 
         return {
@@ -392,9 +392,7 @@ class SEAActuator:
             "PE_spring_initial_J": self.PE_spring_initial,
             "PE_spring_final_J": PE_spring_final,
             "spring_pe_max_J": self.spring_pe_max,
-            "spring_pe_mean_J": (
-                self.spring_pe_sum / max(1, self.audit_samples)
-            ),
+            "spring_pe_mean_J": (self.spring_pe_sum / max(1, self.audit_samples)),
             "q_link_max_deg": math.degrees(self.q_link_max),
             "energy_balance_error_J": energy_error,
             "energy_balance_error_pct": energy_error_pct,

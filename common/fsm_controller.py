@@ -22,7 +22,6 @@ from typing import Optional
 import mujoco
 import numpy as np
 
-
 G = 9.81
 
 
@@ -37,6 +36,7 @@ class PhaseParams:
     - kd: derivative (damping) gain
     - E_target: target mechanical energy (used only when k_E > 0)
     """
+
     k_E: float
     k_PD: float
     tau_max: float
@@ -54,6 +54,7 @@ class FSMParams:
       - swing_thrust: 0-50% of swing phase (energy injection)
       - swing_retract: 50-100% of swing phase (passive return)
     """
+
     stance_early: PhaseParams = field(
         default_factory=lambda: PhaseParams(k_E=0.0, k_PD=30.0, tau_max=4.0, kd=6.0)
     )
@@ -73,6 +74,7 @@ class FSMParams:
 @dataclass(frozen=True)
 class BaseGaitParams:
     """Base gait parameters needed for FSM controller."""
+
     gait_period: float = 0.80
     gamma: float = 0.0  # hip angle offset
     stance_front_deg: float = 0.0
@@ -242,9 +244,7 @@ class FSMController:
         z = float(data.qpos[1])
         return 0.5 * m * (vx * vx + vz * vz) + m * G * z
 
-    def _leg_phase(
-        self, is_support: bool, u: float, clearance: float
-    ) -> str:
+    def _leg_phase(self, is_support: bool, u: float, clearance: float) -> str:
         """Determine current phase for a leg.
 
         Args:
@@ -339,9 +339,7 @@ class FSMController:
         hip_x = float(data.qpos[0])
         hip_z = float(data.qpos[1])
         clearance = hip_z - ramp_height(hip_x, self.base)
-        u = min(
-            max((t - burst_start_t) / max(self.base.gait_period, 1e-6), 0.0), 1.0
-        )
+        u = min(max((t - burst_start_t) / max(self.base.gait_period, 1e-6), 0.0), 1.0)
 
         # Safety: compress phase if hip drops too low
         if clearance < self.base.recovery_clearance:

@@ -14,7 +14,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from model_3d_v20 import V20Params, MODEL_PATH, write_model
 import simulate_v20
-from common import get_contact_flags, get_joint_address, limited_pd, ramp_height, smoothstep
+from common import (
+    get_contact_flags,
+    get_joint_address,
+    limited_pd,
+    ramp_height,
+    smoothstep,
+)
 
 ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "out"
@@ -72,16 +78,24 @@ def main():
 
     # Simple 2D IK for swing leg
     px, pz = hxi - p.swing_foot_x, hzi - (sz + p.swing_foot_clearance)
-    d = float(np.clip(math.hypot(px, pz),
-                     abs(p.thigh_length - p.shank_length) + 1e-5,
-                     p.leg_length - 1e-5))
+    d = float(
+        np.clip(
+            math.hypot(px, pz),
+            abs(p.thigh_length - p.shank_length) + 1e-5,
+            p.leg_length - 1e-5,
+        )
+    )
     cd = (p.thigh_length**2 + d**2 - p.shank_length**2) / (2.0 * p.thigh_length * d)
     rhi = math.atan2(px, pz) - math.acos(float(np.clip(cd, -1.0, 1.0)))
     kx = hxi - p.thigh_length * math.sin(rhi)
     kz = hzi - p.thigh_length * math.cos(rhi)
-    rki = float(np.clip(
-        math.atan2(kx - p.swing_foot_x, kz - (sz + p.swing_foot_clearance)) - rhi,
-        0.0, math.radians(p.knee_limit_deg)))
+    rki = float(
+        np.clip(
+            math.atan2(kx - p.swing_foot_x, kz - (sz + p.swing_foot_clearance)) - rhi,
+            0.0,
+            math.radians(p.knee_limit_deg),
+        )
+    )
 
     data.qpos[hx_q] = hxi
     data.qpos[hy_q] = p.init_hip_y
@@ -126,33 +140,75 @@ def main():
             u = min(u, 0.55)
         s = smoothstep(u)
 
-        st = p.gamma + math.radians(p.stance_front_deg + (p.stance_back_deg - p.stance_front_deg) * s)
-        sw = p.gamma + math.radians(p.swing_back_deg + (p.swing_front_deg - p.swing_back_deg) * s)
+        st = p.gamma + math.radians(
+            p.stance_front_deg + (p.stance_back_deg - p.stance_front_deg) * s
+        )
+        sw = p.gamma + math.radians(
+            p.swing_back_deg + (p.swing_front_deg - p.swing_back_deg) * s
+        )
         skn = math.radians(p.swing_knee_flex_deg * math.sin(math.pi * u))
         skst = math.radians(p.stance_knee_deg)
         ls = support == "left"
 
-        lh_t = limited_pd(float(data.qpos[lh_q]), float(data.qvel[lh_v]),
-                         st if ls else sw, p.hip_kp, p.hip_kd, p.hip_torque_limit)
-        lk_t = limited_pd(float(data.qpos[lk_q]), float(data.qvel[lk_v]),
-                         skst if ls else skn, p.knee_kp, p.knee_kd, p.knee_torque_limit)
-        rh_t = limited_pd(float(data.qpos[rh_q]), float(data.qvel[rh_v]),
-                         st if not ls else sw, p.hip_kp, p.hip_kd, p.hip_torque_limit)
-        rk_t = limited_pd(float(data.qpos[rk_q]), float(data.qvel[rk_v]),
-                         skst if not ls else skn, p.knee_kp, p.knee_kd, p.knee_torque_limit)
+        lh_t = limited_pd(
+            float(data.qpos[lh_q]),
+            float(data.qvel[lh_v]),
+            st if ls else sw,
+            p.hip_kp,
+            p.hip_kd,
+            p.hip_torque_limit,
+        )
+        lk_t = limited_pd(
+            float(data.qpos[lk_q]),
+            float(data.qvel[lk_v]),
+            skst if ls else skn,
+            p.knee_kp,
+            p.knee_kd,
+            p.knee_torque_limit,
+        )
+        rh_t = limited_pd(
+            float(data.qpos[rh_q]),
+            float(data.qvel[rh_v]),
+            st if not ls else sw,
+            p.hip_kp,
+            p.hip_kd,
+            p.hip_torque_limit,
+        )
+        rk_t = limited_pd(
+            float(data.qpos[rk_q]),
+            float(data.qvel[rk_v]),
+            skst if not ls else skn,
+            p.knee_kp,
+            p.knee_kd,
+            p.knee_torque_limit,
+        )
 
         # V20 step width control (baseline: hip_y feedback like V19)
         hip_y_err = hy
         lat_correction = p.abd_kp * hip_y_err + p.abd_kd * vy
-        lat_correction = float(np.clip(lat_correction, -p.abd_torque_limit, p.abd_torque_limit))
+        lat_correction = float(
+            np.clip(lat_correction, -p.abd_torque_limit, p.abd_torque_limit)
+        )
 
         if ls:
             la_t = -lat_correction
-            ra_t = limited_pd(float(data.qpos[ra_q]), float(data.qvel[ra_v]),
-                            abd_tgt, p.abd_kp * 0.3, p.abd_kd * 0.3, p.abd_torque_limit)
+            ra_t = limited_pd(
+                float(data.qpos[ra_q]),
+                float(data.qvel[ra_v]),
+                abd_tgt,
+                p.abd_kp * 0.3,
+                p.abd_kd * 0.3,
+                p.abd_torque_limit,
+            )
         else:
-            la_t = limited_pd(float(data.qpos[la_q]), float(data.qvel[la_v]),
-                            abd_tgt, p.abd_kp * 0.3, p.abd_kd * 0.3, p.abd_torque_limit)
+            la_t = limited_pd(
+                float(data.qpos[la_q]),
+                float(data.qvel[la_v]),
+                abd_tgt,
+                p.abd_kp * 0.3,
+                p.abd_kd * 0.3,
+                p.abd_torque_limit,
+            )
             ra_t = lat_correction
 
         data.ctrl[:] = (lh_t, lk_t, rh_t, rk_t, la_t, ra_t)
@@ -169,8 +225,11 @@ def main():
                     cand[foot] = t
                     crep[foot] = False
                 if t - float(cand[foot]) >= p.stable_contact_time:
-                    if (not crep[foot] and foot != accepted
-                        and t - last_ev > p.min_event_interval):
+                    if (
+                        not crep[foot]
+                        and foot != accepted
+                        and t - last_ev > p.min_event_interval
+                    ):
                         if accepted in {"left", "right"}:
                             alternations += 1
                         accepted = foot

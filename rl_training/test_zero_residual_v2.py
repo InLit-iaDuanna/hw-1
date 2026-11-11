@@ -30,6 +30,7 @@ from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 @dataclass
 class ZeroResidualResult:
     """Zero residual测试结果"""
+
     episode_id: int
     distance: float
     sim_time: float
@@ -66,12 +67,16 @@ def test_zero_residual(num_episodes: int = 10, save_trajectory: bool = False) ->
     for ep in range(num_episodes):
         obs, info = env.reset(seed=ep)
 
-        episode_trajectory = {
-            "episode_id": ep,
-            "states": [],
-            "actions": [],
-            "rewards": [],
-        } if save_trajectory else None
+        episode_trajectory = (
+            {
+                "episode_id": ep,
+                "states": [],
+                "actions": [],
+                "rewards": [],
+            }
+            if save_trajectory
+            else None
+        )
 
         terminated = False
         truncated = False
@@ -136,7 +141,9 @@ def test_zero_residual(num_episodes: int = 10, save_trajectory: bool = False) ->
     print(f"  Average: {avg_distance:.3f} +/- {std_distance:.3f} m")
     print(f"  Range: [{min_distance:.3f}, {max_distance:.3f}] m")
     print(f"  Baseline: 4.630 m")
-    print(f"  Deviation: {avg_distance - 4.63:+.3f} m ({(avg_distance / 4.63 - 1) * 100:+.1f}%)")
+    print(
+        f"  Deviation: {avg_distance - 4.63:+.3f} m ({(avg_distance / 4.63 - 1) * 100:+.1f}%)"
+    )
     print()
 
     print(f"Time Statistics:")
@@ -144,7 +151,9 @@ def test_zero_residual(num_episodes: int = 10, save_trajectory: bool = False) ->
     print(f"  Expected: 12.00 s (max_steps=2400, inner_steps=5)")
     print()
 
-    print(f"Success Rate: {success_rate * 100:.0f}% ({sum(successes)}/{len(successes)})")
+    print(
+        f"Success Rate: {success_rate * 100:.0f}% ({sum(successes)}/{len(successes)})"
+    )
     print()
 
     # 诊断
@@ -168,7 +177,9 @@ def test_zero_residual(num_episodes: int = 10, save_trajectory: bool = False) ->
         if success_rate < 0.8:
             print(f"  - Success rate too low: {success_rate * 100:.0f}%")
         if abs(avg_distance - BASELINE_DISTANCE) >= tolerance:
-            print(f"  - Distance deviation too large: {avg_distance - BASELINE_DISTANCE:+.3f}m")
+            print(
+                f"  - Distance deviation too large: {avg_distance - BASELINE_DISTANCE:+.3f}m"
+            )
         diagnosis = "FAIL"
 
     print()
@@ -196,16 +207,30 @@ def test_zero_residual(num_episodes: int = 10, save_trajectory: bool = False) ->
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Test zero residual for V2 environment")
-    parser.add_argument("--episodes", type=int, default=10, help="Number of test episodes")
-    parser.add_argument("--save", type=str, default="logs/residual_rl_v2/test_zero_residual_v2_report.json",
-                        help="Save path for results")
-    parser.add_argument("--save-trajectory", action="store_true", help="Save full observation/action trajectory")
+    parser = argparse.ArgumentParser(
+        description="Test zero residual for V2 environment"
+    )
+    parser.add_argument(
+        "--episodes", type=int, default=10, help="Number of test episodes"
+    )
+    parser.add_argument(
+        "--save",
+        type=str,
+        default="logs/residual_rl_v2/test_zero_residual_v2_report.json",
+        help="Save path for results",
+    )
+    parser.add_argument(
+        "--save-trajectory",
+        action="store_true",
+        help="Save full observation/action trajectory",
+    )
 
     args = parser.parse_args()
 
     # 运行测试
-    summary = test_zero_residual(num_episodes=args.episodes, save_trajectory=args.save_trajectory)
+    summary = test_zero_residual(
+        num_episodes=args.episodes, save_trajectory=args.save_trajectory
+    )
 
     # 保存结果
     save_path = Path(args.save)

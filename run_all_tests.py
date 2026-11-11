@@ -67,33 +67,15 @@ def run_test_suite(
 def main() -> int:
     """主函数。"""
     parser = argparse.ArgumentParser(description="运行 hw-1 项目测试套件")
-    parser.add_argument(
-        "--unit", action="store_true", help="仅运行单元测试"
-    )
-    parser.add_argument(
-        "--integration", action="store_true", help="仅运行集成测试"
-    )
-    parser.add_argument(
-        "--regression", action="store_true", help="仅运行回归测试"
-    )
-    parser.add_argument(
-        "--coverage", action="store_true", help="生成覆盖率报告"
-    )
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="详细输出"
-    )
-    parser.add_argument(
-        "--fast", action="store_true", help="快速模式（跳过慢速测试）"
-    )
-    parser.add_argument(
-        "--failfast", "-x", action="store_true", help="首次失败时停止"
-    )
-    parser.add_argument(
-        "--markers", type=str, help="pytest marker 表达式"
-    )
-    parser.add_argument(
-        "--test", "-k", type=str, help="仅运行匹配的测试"
-    )
+    parser.add_argument("--unit", action="store_true", help="仅运行单元测试")
+    parser.add_argument("--integration", action="store_true", help="仅运行集成测试")
+    parser.add_argument("--regression", action="store_true", help="仅运行回归测试")
+    parser.add_argument("--coverage", action="store_true", help="生成覆盖率报告")
+    parser.add_argument("--verbose", "-v", action="store_true", help="详细输出")
+    parser.add_argument("--fast", action="store_true", help="快速模式（跳过慢速测试）")
+    parser.add_argument("--failfast", "-x", action="store_true", help="首次失败时停止")
+    parser.add_argument("--markers", type=str, help="pytest marker 表达式")
+    parser.add_argument("--test", "-k", type=str, help="仅运行匹配的测试")
 
     args = parser.parse_args()
 
@@ -115,11 +97,13 @@ def main() -> int:
         pytest_args.extend(["-m", "not slow"])
 
     if args.coverage:
-        pytest_args.extend([
-            "--cov=common",
-            "--cov-report=html",
-            "--cov-report=term",
-        ])
+        pytest_args.extend(
+            [
+                "--cov=common",
+                "--cov-report=html",
+                "--cov-report=term",
+            ]
+        )
 
     # 确定运行哪些测试套件
     run_unit = args.unit or not (args.integration or args.regression)

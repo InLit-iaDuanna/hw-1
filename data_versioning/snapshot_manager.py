@@ -39,13 +39,19 @@ class SnapshotManager:
         if not self.registry_path.exists():
             raise FileNotFoundError(f"Registry not found: {self.registry_path}")
 
-        with open(self.registry_path, 'r', encoding='utf-8') as f:
+        with open(self.registry_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
 
     def _save_registry(self):
         """保存数据注册表"""
-        with open(self.registry_path, 'w', encoding='utf-8') as f:
-            yaml.dump(self.registry, f, default_flow_style=False, allow_unicode=True, sort_keys=False)
+        with open(self.registry_path, "w", encoding="utf-8") as f:
+            yaml.dump(
+                self.registry,
+                f,
+                default_flow_style=False,
+                allow_unicode=True,
+                sort_keys=False,
+            )
 
     def create_snapshot(
         self,
@@ -73,38 +79,40 @@ class SnapshotManager:
         snapshot_id = f"snap_{timestamp.strftime('%Y%m%d_%H%M%S')}"
 
         # 获取当前资产列表
-        assets = self.registry.get('assets', [])
+        assets = self.registry.get("assets", [])
 
         # 过滤资产
         filtered_assets = []
 
         for asset in assets:
             # 类别过滤
-            if include_categories and asset.get('category') not in include_categories:
+            if include_categories and asset.get("category") not in include_categories:
                 continue
 
             # 版本过滤
-            if include_versions and asset.get('version_tag') not in include_versions:
+            if include_versions and asset.get("version_tag") not in include_versions:
                 continue
 
             # 验证文件存在性
-            file_path = self.project_root / asset['file_path']
+            file_path = self.project_root / asset["file_path"]
 
             if not file_path.exists():
                 print(f"Warning: File missing, skipping: {asset['file_path']}")
                 continue
 
-            filtered_assets.append({
-                "asset_id": asset['asset_id'],
-                "file_path": asset['file_path'],
-                "hash": asset['hash'],
-                "size_bytes": asset['size_bytes'],
-                "category": asset.get('category'),
-                "version_tag": asset.get('version_tag'),
-            })
+            filtered_assets.append(
+                {
+                    "asset_id": asset["asset_id"],
+                    "file_path": asset["file_path"],
+                    "hash": asset["hash"],
+                    "size_bytes": asset["size_bytes"],
+                    "category": asset.get("category"),
+                    "version_tag": asset.get("version_tag"),
+                }
+            )
 
         # 计算快照统计
-        total_size = sum(a['size_bytes'] for a in filtered_assets)
+        total_size = sum(a["size_bytes"] for a in filtered_assets)
 
         # 创建快照条目
         snapshot = {
@@ -119,10 +127,10 @@ class SnapshotManager:
         }
 
         # 添加到注册表
-        if 'snapshots' not in self.registry:
-            self.registry['snapshots'] = []
+        if "snapshots" not in self.registry:
+            self.registry["snapshots"] = []
 
-        self.registry['snapshots'].append(snapshot)
+        self.registry["snapshots"].append(snapshot)
         self._save_registry()
 
         print(f"Created snapshot '{name}' ({snapshot_id})")
@@ -133,52 +141,52 @@ class SnapshotManager:
 
     def list_snapshots(self) -> List[Dict[str, Any]]:
         """列出所有快照"""
-        snapshots = self.registry.get('snapshots', [])
+        snapshots = self.registry.get("snapshots", [])
 
         return [
             {
-                "snapshot_id": s['snapshot_id'],
-                "name": s['name'],
-                "created_at": s['created_at'],
-                "asset_count": s['asset_count'],
-                "total_size_mb": s['total_size_mb'],
-                "tags": s.get('tags', []),
-                "description": s.get('description'),
+                "snapshot_id": s["snapshot_id"],
+                "name": s["name"],
+                "created_at": s["created_at"],
+                "asset_count": s["asset_count"],
+                "total_size_mb": s["total_size_mb"],
+                "tags": s.get("tags", []),
+                "description": s.get("description"),
             }
             for s in snapshots
         ]
 
     def get_snapshot(self, snapshot_id: str) -> Optional[Dict[str, Any]]:
         """获取快照详情"""
-        snapshots = self.registry.get('snapshots', [])
+        snapshots = self.registry.get("snapshots", [])
 
         for snapshot in snapshots:
-            if snapshot['snapshot_id'] == snapshot_id:
+            if snapshot["snapshot_id"] == snapshot_id:
                 return snapshot
 
         return None
 
     def get_snapshot_by_name(self, name: str) -> Optional[Dict[str, Any]]:
         """根据名称获取快照"""
-        snapshots = self.registry.get('snapshots', [])
+        snapshots = self.registry.get("snapshots", [])
 
         for snapshot in snapshots:
-            if snapshot['name'] == name:
+            if snapshot["name"] == name:
                 return snapshot
 
         return None
 
     def tag_snapshot(self, snapshot_id: str, tag: str):
         """为快照添加标签"""
-        snapshots = self.registry.get('snapshots', [])
+        snapshots = self.registry.get("snapshots", [])
 
         for snapshot in snapshots:
-            if snapshot['snapshot_id'] == snapshot_id:
-                if 'tags' not in snapshot:
-                    snapshot['tags'] = []
+            if snapshot["snapshot_id"] == snapshot_id:
+                if "tags" not in snapshot:
+                    snapshot["tags"] = []
 
-                if tag not in snapshot['tags']:
-                    snapshot['tags'].append(tag)
+                if tag not in snapshot["tags"]:
+                    snapshot["tags"].append(tag)
                     self._save_registry()
                     print(f"Tagged snapshot {snapshot_id} with '{tag}'")
                     return
@@ -199,18 +207,18 @@ class SnapshotManager:
             snapshot_id: 快照 ID
             date: 日期（默认为当前日期）
         """
-        milestones = self.registry.get('milestones', [])
+        milestones = self.registry.get("milestones", [])
 
         for milestone in milestones:
-            if milestone['name'] == milestone_name:
-                milestone['snapshot_id'] = snapshot_id
-                milestone['date'] = date or datetime.now().isoformat()
+            if milestone["name"] == milestone_name:
+                milestone["snapshot_id"] = snapshot_id
+                milestone["date"] = date or datetime.now().isoformat()
                 self._save_registry()
                 print(f"Marked milestone '{milestone_name}' at snapshot {snapshot_id}")
                 return
 
         print(f"Milestone not found: {milestone_name}")
-        print("Available milestones:", [m['name'] for m in milestones])
+        print("Available milestones:", [m["name"] for m in milestones])
 
     def compare_snapshots(
         self,
@@ -236,8 +244,8 @@ class SnapshotManager:
             raise ValueError(f"Snapshot not found: {snapshot2_id}")
 
         # 构建资产字典（按路径索引）
-        assets1 = {a['file_path']: a for a in snap1['assets']}
-        assets2 = {a['file_path']: a for a in snap2['assets']}
+        assets1 = {a["file_path"]: a for a in snap1["assets"]}
+        assets2 = {a["file_path"]: a for a in snap2["assets"]}
 
         # 查找差异
         all_paths = set(assets1.keys()) | set(assets2.keys())
@@ -252,28 +260,31 @@ class SnapshotManager:
                 added.append(assets2[path])
             elif path not in assets2:
                 removed.append(assets1[path])
-            elif assets1[path]['hash'] != assets2[path]['hash']:
-                modified.append({
-                    "file_path": path,
-                    "old_hash": assets1[path]['hash'][:16],
-                    "new_hash": assets2[path]['hash'][:16],
-                    "old_size": assets1[path]['size_bytes'],
-                    "new_size": assets2[path]['size_bytes'],
-                    "size_diff": assets2[path]['size_bytes'] - assets1[path]['size_bytes'],
-                })
+            elif assets1[path]["hash"] != assets2[path]["hash"]:
+                modified.append(
+                    {
+                        "file_path": path,
+                        "old_hash": assets1[path]["hash"][:16],
+                        "new_hash": assets2[path]["hash"][:16],
+                        "old_size": assets1[path]["size_bytes"],
+                        "new_size": assets2[path]["size_bytes"],
+                        "size_diff": assets2[path]["size_bytes"]
+                        - assets1[path]["size_bytes"],
+                    }
+                )
             else:
                 unchanged.append(path)
 
         report = {
             "snapshot1": {
                 "id": snapshot1_id,
-                "name": snap1['name'],
-                "created_at": snap1['created_at'],
+                "name": snap1["name"],
+                "created_at": snap1["created_at"],
             },
             "snapshot2": {
                 "id": snapshot2_id,
-                "name": snap2['name'],
-                "created_at": snap2['created_at'],
+                "name": snap2["name"],
+                "created_at": snap2["created_at"],
             },
             "summary": {
                 "added": len(added),
@@ -313,27 +324,29 @@ class SnapshotManager:
             "missing": [],
         }
 
-        for asset in snapshot['assets']:
-            file_path = self.project_root / asset['file_path']
+        for asset in snapshot["assets"]:
+            file_path = self.project_root / asset["file_path"]
 
             if not file_path.exists():
-                results["missing"].append(asset['file_path'])
+                results["missing"].append(asset["file_path"])
                 continue
 
             # 验证哈希
-            verification = self.tracker.verify_file_integrity(asset['file_path'])
+            verification = self.tracker.verify_file_integrity(asset["file_path"])
 
-            if verification['status'] == 'valid':
-                results["valid"].append(asset['file_path'])
-            elif verification['status'] == 'corrupted':
-                results["corrupted"].append({
-                    "file_path": asset['file_path'],
-                    "expected_hash": asset['hash'][:16],
-                    "actual_hash": verification['current_hash'][:16],
-                })
+            if verification["status"] == "valid":
+                results["valid"].append(asset["file_path"])
+            elif verification["status"] == "corrupted":
+                results["corrupted"].append(
+                    {
+                        "file_path": asset["file_path"],
+                        "expected_hash": asset["hash"][:16],
+                        "actual_hash": verification["current_hash"][:16],
+                    }
+                )
 
         results["summary"] = {
-            "total": len(snapshot['assets']),
+            "total": len(snapshot["assets"]),
             "valid": len(results["valid"]),
             "corrupted": len(results["corrupted"]),
             "missing": len(results["missing"]),
@@ -345,7 +358,7 @@ class SnapshotManager:
         self,
         snapshot_id: str,
         output_path: str,
-        format: str = 'json',
+        format: str = "json",
     ):
         """
         导出快照清单
@@ -363,11 +376,11 @@ class SnapshotManager:
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        if format == 'json':
-            with open(output_path, 'w', encoding='utf-8') as f:
+        if format == "json":
+            with open(output_path, "w", encoding="utf-8") as f:
                 json.dump(snapshot, f, indent=2, ensure_ascii=False)
-        elif format == 'yaml':
-            with open(output_path, 'w', encoding='utf-8') as f:
+        elif format == "yaml":
+            with open(output_path, "w", encoding="utf-8") as f:
                 yaml.dump(snapshot, f, default_flow_style=False, allow_unicode=True)
         else:
             raise ValueError(f"Unsupported format: {format}")
@@ -376,10 +389,10 @@ class SnapshotManager:
 
     def delete_snapshot(self, snapshot_id: str):
         """删除快照（仅删除元数据，不删除实际文件）"""
-        snapshots = self.registry.get('snapshots', [])
+        snapshots = self.registry.get("snapshots", [])
 
         for i, snapshot in enumerate(snapshots):
-            if snapshot['snapshot_id'] == snapshot_id:
+            if snapshot["snapshot_id"] == snapshot_id:
                 del snapshots[i]
                 self._save_registry()
                 print(f"Deleted snapshot: {snapshot_id}")
@@ -404,7 +417,7 @@ def create_initial_snapshot(project_root: str) -> str:
     return snapshot_id
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 示例用法
     project_root = r"D:\Dunna\Documents\hw-1"
     manager = SnapshotManager(project_root)
@@ -414,7 +427,9 @@ if __name__ == '__main__':
     print("Existing snapshots:")
 
     for snap in snapshots:
-        print(f"  - {snap['name']} ({snap['snapshot_id']}): {snap['asset_count']} assets, {snap['total_size_mb']} MB")
+        print(
+            f"  - {snap['name']} ({snap['snapshot_id']}): {snap['asset_count']} assets, {snap['total_size_mb']} MB"
+        )
 
     # 创建新快照
     # snapshot_id = manager.create_snapshot(

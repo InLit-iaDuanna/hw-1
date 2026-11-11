@@ -20,6 +20,7 @@ from typing import Optional, Dict, List
 @dataclass
 class SensorData:
     """Container for sensor readings."""
+
     joint_angles: np.ndarray  # [rad] for each joint
     joint_velocities: np.ndarray  # [rad/s] for each joint
     contact_states: np.ndarray  # [0/1] for each contact sensor
@@ -29,6 +30,7 @@ class SensorData:
 @dataclass
 class MotorCommand:
     """Container for motor commands."""
+
     torques: np.ndarray  # [Nm] for each actuator
     timestamp: float  # [s] time of command
 
@@ -93,16 +95,18 @@ class HardwareInterface(ABC):
 class MuJoCoInterface(HardwareInterface):
     """MuJoCo simulation interface for testing."""
 
-    def __init__(self,
-                 model,
-                 data,
-                 joint_ids: List[int],
-                 actuator_ids: List[int],
-                 contact_geom_ids: List[int],
-                 joint_names: Optional[List[str]] = None,
-                 contact_names: Optional[List[str]] = None,
-                 max_torque: float = 100.0,
-                 contact_threshold: float = 1.0):
+    def __init__(
+        self,
+        model,
+        data,
+        joint_ids: List[int],
+        actuator_ids: List[int],
+        contact_geom_ids: List[int],
+        joint_names: Optional[List[str]] = None,
+        contact_names: Optional[List[str]] = None,
+        max_torque: float = 100.0,
+        contact_threshold: float = 1.0,
+    ):
         """Initialize MuJoCo interface.
 
         Args:
@@ -122,8 +126,12 @@ class MuJoCoInterface(HardwareInterface):
         self.actuator_ids = np.array(actuator_ids, dtype=int)
         self.contact_geom_ids = contact_geom_ids
 
-        self.joint_names_list = joint_names or [f"joint{i}" for i in range(len(joint_ids))]
-        self.contact_names_list = contact_names or [f"contact{i}" for i in range(len(contact_geom_ids))]
+        self.joint_names_list = joint_names or [
+            f"joint{i}" for i in range(len(joint_ids))
+        ]
+        self.contact_names_list = contact_names or [
+            f"contact{i}" for i in range(len(contact_geom_ids))
+        ]
 
         self.max_torque = max_torque
         self.contact_threshold = contact_threshold
@@ -175,7 +183,7 @@ class MuJoCoInterface(HardwareInterface):
             joint_angles=joint_angles,
             joint_velocities=joint_velocities,
             contact_states=contact_states,
-            timestamp=timestamp
+            timestamp=timestamp,
         )
 
     def _detect_contacts(self) -> np.ndarray:
@@ -215,7 +223,9 @@ class MuJoCoInterface(HardwareInterface):
 
         # Validate command size
         if len(command.torques) != len(self.actuator_ids):
-            print(f"Command size mismatch: got {len(command.torques)}, expected {len(self.actuator_ids)}")
+            print(
+                f"Command size mismatch: got {len(command.torques)}, expected {len(self.actuator_ids)}"
+            )
             return False
 
         # Safety check: clamp torques to max
@@ -223,7 +233,9 @@ class MuJoCoInterface(HardwareInterface):
 
         # Check if clamping occurred
         if not np.allclose(command.torques, clamped_torques):
-            print(f"Warning: Torques clamped from {command.torques} to {clamped_torques}")
+            print(
+                f"Warning: Torques clamped from {command.torques} to {clamped_torques}"
+            )
 
         # Write to MuJoCo actuators
         self.data.ctrl[self.actuator_ids] = clamped_torques
@@ -329,10 +341,12 @@ class RealtimeLoop:
 class SafetyMonitor:
     """Monitor and enforce safety limits."""
 
-    def __init__(self,
-                 joint_limits: Optional[np.ndarray] = None,
-                 velocity_limits: Optional[np.ndarray] = None,
-                 torque_limits: Optional[np.ndarray] = None):
+    def __init__(
+        self,
+        joint_limits: Optional[np.ndarray] = None,
+        velocity_limits: Optional[np.ndarray] = None,
+        torque_limits: Optional[np.ndarray] = None,
+    ):
         """Initialize safety monitor.
 
         Args:
@@ -359,16 +373,24 @@ class SafetyMonitor:
 
         # Check joint limits
         if self.joint_limits is not None:
-            for i, (angle, limits) in enumerate(zip(sensor_data.joint_angles, self.joint_limits)):
+            for i, (angle, limits) in enumerate(
+                zip(sensor_data.joint_angles, self.joint_limits)
+            ):
                 if angle < limits[0] or angle > limits[1]:
-                    self._violations.append(f"Joint {i} angle {angle:.3f} outside limits {limits}")
+                    self._violations.append(
+                        f"Joint {i} angle {angle:.3f} outside limits {limits}"
+                    )
                     safe = False
 
         # Check velocity limits
         if self.velocity_limits is not None:
-            for i, (vel, limit) in enumerate(zip(sensor_data.joint_velocities, self.velocity_limits)):
+            for i, (vel, limit) in enumerate(
+                zip(sensor_data.joint_velocities, self.velocity_limits)
+            ):
                 if abs(vel) > limit:
-                    self._violations.append(f"Joint {i} velocity {vel:.3f} exceeds limit {limit}")
+                    self._violations.append(
+                        f"Joint {i} velocity {vel:.3f} exceeds limit {limit}"
+                    )
                     safe = False
 
         return safe
@@ -386,9 +408,13 @@ class SafetyMonitor:
 
         # Check torque limits
         if self.torque_limits is not None:
-            for i, (torque, limit) in enumerate(zip(command.torques, self.torque_limits)):
+            for i, (torque, limit) in enumerate(
+                zip(command.torques, self.torque_limits)
+            ):
                 if abs(torque) > limit:
-                    self._violations.append(f"Actuator {i} torque {torque:.3f} exceeds limit {limit}")
+                    self._violations.append(
+                        f"Actuator {i} torque {torque:.3f} exceeds limit {limit}"
+                    )
                     safe = False
 
         return safe

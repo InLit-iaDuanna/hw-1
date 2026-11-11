@@ -11,6 +11,7 @@ from rl_training.test_v137_identity import V137IdentitySimulator
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 from simulate_passive_arms_v14 import initialize
 
+
 def check_initial_conditions():
     """检查初始条件是否完全一致"""
 
@@ -49,6 +50,7 @@ def check_initial_conditions():
         print("\n[FAIL] Initial conditions differ!")
 
     env_v2.close()
+
 
 if __name__ == "__main__":
     check_initial_conditions()

@@ -2,6 +2,7 @@
 特征提取模块
 提取步态周期、能量、稳定性、接触等特征
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -16,6 +17,7 @@ from data_loader import GaitData
 @dataclass
 class GaitFeatures:
     """步态特征容器"""
+
     version: str
     label: str
 
@@ -201,14 +203,20 @@ class FeatureExtractor:
         single_support = (left_contact > 0.5) ^ (right_contact > 0.5)
         total_time = gait_data.duration
 
-        features["double_support_ratio"] = float(np.sum(double_support) / len(double_support))
-        features["single_support_ratio"] = float(np.sum(single_support) / len(single_support))
+        features["double_support_ratio"] = float(
+            np.sum(double_support) / len(double_support)
+        )
+        features["single_support_ratio"] = float(
+            np.sum(single_support) / len(single_support)
+        )
 
         # 计算左右对称性
         if len(left_strikes) > 1 and len(right_strikes) > 1:
             left_period = np.mean(np.diff(left_strikes))
             right_period = np.mean(np.diff(right_strikes))
-            features["left_right_symmetry"] = 1.0 - abs(left_period - right_period) / max(left_period, right_period)
+            features["left_right_symmetry"] = 1.0 - abs(
+                left_period - right_period
+            ) / max(left_period, right_period)
 
         return features
 
@@ -245,7 +253,10 @@ class FeatureExtractor:
                 tau_key = f"{joint}_tau"
                 vel_key = f"{joint}_vel"
 
-                if tau_key in gait_data.torques and vel_key in gait_data.joint_velocities:
+                if (
+                    tau_key in gait_data.torques
+                    and vel_key in gait_data.joint_velocities
+                ):
                     torque = gait_data.torques[tau_key]
                     velocity = gait_data.joint_velocities[vel_key]
                     power = torque * velocity
@@ -263,7 +274,9 @@ class FeatureExtractor:
             gravity = 9.81
 
             if distance > 0:
-                features["cost_of_transport"] = features["input_energy"] / (mass * gravity * distance)
+                features["cost_of_transport"] = features["input_energy"] / (
+                    mass * gravity * distance
+                )
 
         return features
 
@@ -297,7 +310,9 @@ class FeatureExtractor:
                 "hip_x": gait_data.hip_x[idx],
                 "hip_z": gait_data.hip_z[idx],
                 "left_hip": gait_data.joint_angles.get("left_hip", np.array([0]))[idx],
-                "right_hip": gait_data.joint_angles.get("right_hip", np.array([0]))[idx],
+                "right_hip": gait_data.joint_angles.get("right_hip", np.array([0]))[
+                    idx
+                ],
             }
             poincare_states.append(state)
 
@@ -308,8 +323,8 @@ class FeatureExtractor:
                 s1 = poincare_states[i]
                 s2 = poincare_states[i + 1]
                 diff = np.sqrt(
-                    (s2["left_hip"] - s1["left_hip"])**2 +
-                    (s2["right_hip"] - s1["right_hip"])**2
+                    (s2["left_hip"] - s1["left_hip"]) ** 2
+                    + (s2["right_hip"] - s1["right_hip"]) ** 2
                 )
                 diffs.append(diff)
 
@@ -332,8 +347,8 @@ class FeatureExtractor:
             radii = []
             for s in poincare_states:
                 radius = np.sqrt(
-                    (s["left_hip"] - mean_left_hip)**2 +
-                    (s["right_hip"] - mean_right_hip)**2
+                    (s["left_hip"] - mean_left_hip) ** 2
+                    + (s["right_hip"] - mean_right_hip) ** 2
                 )
                 radii.append(radius)
 
@@ -461,7 +476,9 @@ class FeatureExtractor:
             **all_features,
         )
 
-        print(f"  Extracted {len([k for k, v in all_features.items() if v is not None])} features")
+        print(
+            f"  Extracted {len([k for k, v in all_features.items() if v is not None])} features"
+        )
 
         return features
 
@@ -493,11 +510,31 @@ def main():
     features = extractor.extract_all_features(processed)
 
     print(f"\nExtracted features:")
-    print(f"  Period: {features.period_length:.3f}s" if features.period_length else "  Period: N/A")
-    print(f"  Stride length: {features.stride_length:.3f}m" if features.stride_length else "  Stride length: N/A")
-    print(f"  CoT: {features.cost_of_transport:.4f}" if features.cost_of_transport else "  CoT: N/A")
-    print(f"  Duty factor: {features.duty_factor:.3f}" if features.duty_factor else "  Duty factor: N/A")
-    print(f"  Symmetry: {features.left_right_symmetry:.3f}" if features.left_right_symmetry else "  Symmetry: N/A")
+    print(
+        f"  Period: {features.period_length:.3f}s"
+        if features.period_length
+        else "  Period: N/A"
+    )
+    print(
+        f"  Stride length: {features.stride_length:.3f}m"
+        if features.stride_length
+        else "  Stride length: N/A"
+    )
+    print(
+        f"  CoT: {features.cost_of_transport:.4f}"
+        if features.cost_of_transport
+        else "  CoT: N/A"
+    )
+    print(
+        f"  Duty factor: {features.duty_factor:.3f}"
+        if features.duty_factor
+        else "  Duty factor: N/A"
+    )
+    print(
+        f"  Symmetry: {features.left_right_symmetry:.3f}"
+        if features.left_right_symmetry
+        else "  Symmetry: N/A"
+    )
 
 
 if __name__ == "__main__":

@@ -10,11 +10,11 @@ from .snapshot_manager import SnapshotManager
 from .restore_data import DataRestorer
 
 __all__ = [
-    'VersionTracker',
-    'auto_register_simulation_output',
-    'DataDiffer',
-    'SnapshotManager',
-    'DataRestorer',
+    "VersionTracker",
+    "auto_register_simulation_output",
+    "DataDiffer",
+    "SnapshotManager",
+    "DataRestorer",
 ]
 
-__version__ = '1.0.0'
+__version__ = "1.0.0"

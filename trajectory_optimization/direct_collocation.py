@@ -43,7 +43,7 @@ class DirectCollocation:
         self,
         n_points: int = 100,
         gait_period: float = 1.0,
-        params: Optional[Dict] = None
+        params: Optional[Dict] = None,
     ):
         """
         Initialize direct collocation optimizer.
@@ -67,13 +67,13 @@ class DirectCollocation:
         if params is None:
             params = {}
         self.params = {
-            'leg_length': params.get('leg_length', 1.0),
-            'mass_hip': params.get('mass_hip', 10.0),
-            'mass_leg': params.get('mass_leg', 5.0),
-            'gravity': params.get('gravity', 9.81),
-            'slope_deg': params.get('slope_deg', 5.0),
-            'joint_damping': params.get('joint_damping', 0.02),
-            'foot_radius': params.get('foot_radius', 0.04),
+            "leg_length": params.get("leg_length", 1.0),
+            "mass_hip": params.get("mass_hip", 10.0),
+            "mass_leg": params.get("mass_leg", 5.0),
+            "gravity": params.get("gravity", 9.81),
+            "slope_deg": params.get("slope_deg", 5.0),
+            "joint_damping": params.get("joint_damping", 0.02),
+            "foot_radius": params.get("foot_radius", 0.04),
         }
 
         # State: [theta_stance, theta_swing, theta_stance_dot, theta_swing_dot]
@@ -96,12 +96,12 @@ class DirectCollocation:
         self.U = self.opti.variable(self.n_controls, self.n_points - 1)
 
         # Extract parameters
-        L = self.params['leg_length']
-        m_H = self.params['mass_hip']
-        m_L = self.params['mass_leg']
-        g = self.params['gravity']
-        gamma = np.deg2rad(self.params['slope_deg'])
-        b = self.params['joint_damping']
+        L = self.params["leg_length"]
+        m_H = self.params["mass_hip"]
+        m_L = self.params["mass_leg"]
+        g = self.params["gravity"]
+        gamma = np.deg2rad(self.params["slope_deg"])
+        b = self.params["joint_damping"]
 
         # Objective: minimize control effort (proxy for energy)
         obj = 0
@@ -138,12 +138,12 @@ class DirectCollocation:
         theta_swing_min, theta_swing_max = np.deg2rad(-40), np.deg2rad(40)
 
         for k in range(self.n_points):
-            self.opti.subject_to(self.opti.bounded(
-                theta_stance_min, self.X[0, k], theta_stance_max
-            ))
-            self.opti.subject_to(self.opti.bounded(
-                theta_swing_min, self.X[1, k], theta_swing_max
-            ))
+            self.opti.subject_to(
+                self.opti.bounded(theta_stance_min, self.X[0, k], theta_stance_max)
+            )
+            self.opti.subject_to(
+                self.opti.bounded(theta_swing_min, self.X[1, k], theta_swing_max)
+            )
 
         # Contact constraints (foot clearance during swing)
         for k in range(self.n_points):
@@ -160,14 +160,14 @@ class DirectCollocation:
 
         # Solver options
         opts = {
-            'ipopt.print_level': 3,
-            'ipopt.max_iter': 2000,
-            'ipopt.tol': 1e-6,
-            'ipopt.acceptable_tol': 1e-4,
-            'ipopt.warm_start_init_point': 'yes',
-            'print_time': False,
+            "ipopt.print_level": 3,
+            "ipopt.max_iter": 2000,
+            "ipopt.tol": 1e-6,
+            "ipopt.acceptable_tol": 1e-4,
+            "ipopt.warm_start_init_point": "yes",
+            "print_time": False,
         }
-        self.opti.solver('ipopt', opts)
+        self.opti.solver("ipopt", opts)
 
     def _compass_dynamics(self, x: ca.MX, u: ca.MX) -> ca.MX:
         """
@@ -187,12 +187,12 @@ class DirectCollocation:
         tau_hip = u[0]
 
         # Extract parameters
-        L = self.params['leg_length']
-        m_H = self.params['mass_hip']
-        m_L = self.params['mass_leg']
-        g = self.params['gravity']
-        gamma = np.deg2rad(self.params['slope_deg'])
-        b = self.params['joint_damping']
+        L = self.params["leg_length"]
+        m_H = self.params["mass_hip"]
+        m_L = self.params["mass_leg"]
+        g = self.params["gravity"]
+        gamma = np.deg2rad(self.params["slope_deg"])
+        b = self.params["joint_damping"]
 
         # Simplified compass gait dynamics (stance phase)
         # Mass matrix M(theta) and forces h(theta, theta_dot)
@@ -204,10 +204,7 @@ class DirectCollocation:
         M12 = -m_L * L**2 / 6.0
         M22 = m_L * L**2 / 3.0  # Swing leg inertia
 
-        M = ca.vertcat(
-            ca.horzcat(M11, M12),
-            ca.horzcat(M12, M22)
-        )
+        M = ca.vertcat(ca.horzcat(M11, M12), ca.horzcat(M12, M22))
 
         # Gravitational and Coriolis terms
         h1 = m_H * g * L * ca.sin(theta_st - gamma) + b * theta_st_dot
@@ -239,9 +236,9 @@ class DirectCollocation:
         theta_st = x[0]
         theta_sw = x[1]
 
-        L = self.params['leg_length']
-        gamma = np.deg2rad(self.params['slope_deg'])
-        r_foot = self.params['foot_radius']
+        L = self.params["leg_length"]
+        gamma = np.deg2rad(self.params["slope_deg"])
+        r_foot = self.params["foot_radius"]
 
         # Assume stance foot at origin, hip moves along arc
         hip_x = L * ca.sin(theta_st)
@@ -260,9 +257,7 @@ class DirectCollocation:
         return clearance
 
     def set_initial_guess(
-        self,
-        X_guess: Optional[np.ndarray] = None,
-        U_guess: Optional[np.ndarray] = None
+        self, X_guess: Optional[np.ndarray] = None, U_guess: Optional[np.ndarray] = None
     ):
         """
         Set initial guess for optimization.
@@ -279,14 +274,13 @@ class DirectCollocation:
             theta_stance = 0.2 * np.sin(2 * np.pi * t / self.T)
             theta_swing = 0.3 * np.sin(2 * np.pi * t / self.T + np.pi)
             theta_stance_dot = 0.2 * 2 * np.pi / self.T * np.cos(2 * np.pi * t / self.T)
-            theta_swing_dot = 0.3 * 2 * np.pi / self.T * np.cos(2 * np.pi * t / self.T + np.pi)
+            theta_swing_dot = (
+                0.3 * 2 * np.pi / self.T * np.cos(2 * np.pi * t / self.T + np.pi)
+            )
 
-            X_guess = np.vstack([
-                theta_stance,
-                theta_swing,
-                theta_stance_dot,
-                theta_swing_dot
-            ])
+            X_guess = np.vstack(
+                [theta_stance, theta_swing, theta_stance_dot, theta_swing_dot]
+            )
 
         if U_guess is None:
             U_guess = np.zeros((self.n_controls, self.n_points - 1))
@@ -294,7 +288,9 @@ class DirectCollocation:
         self.opti.set_initial(self.X, X_guess)
         self.opti.set_initial(self.U, U_guess)
 
-    def load_initial_guess_from_v137(self, trajectory_file: Path) -> Tuple[np.ndarray, np.ndarray]:
+    def load_initial_guess_from_v137(
+        self, trajectory_file: Path
+    ) -> Tuple[np.ndarray, np.ndarray]:
         """
         Load initial guess from V13.7 simulation trajectory.
 
@@ -313,12 +309,16 @@ class DirectCollocation:
 
         # Extract one gait cycle (from heel strike to next heel strike)
         # Detect heel strikes (theta_swing crosses zero with positive velocity)
-        theta_sw = df['left_hip_angle'].values if 'left_hip_angle' in df.columns else df['theta_swing'].values
+        theta_sw = (
+            df["left_hip_angle"].values
+            if "left_hip_angle" in df.columns
+            else df["theta_swing"].values
+        )
 
         # Find first two heel strikes
         heel_strikes = []
         for i in range(1, len(theta_sw) - 1):
-            if theta_sw[i-1] < 0 and theta_sw[i] >= 0:
+            if theta_sw[i - 1] < 0 and theta_sw[i] >= 0:
                 heel_strikes.append(i)
             if len(heel_strikes) == 2:
                 break
@@ -334,27 +334,50 @@ class DirectCollocation:
 
         # Resample to n_points
         from scipy.interpolate import interp1d
-        t_orig = cycle_data['time'].values - cycle_data['time'].values[0]
+
+        t_orig = cycle_data["time"].values - cycle_data["time"].values[0]
         t_new = np.linspace(0, t_orig[-1], self.n_points)
 
         # Interpolate states
-        states_orig = np.vstack([
-            cycle_data['theta_stance'].values if 'theta_stance' in cycle_data.columns else cycle_data['right_hip_angle'].values,
-            cycle_data['theta_swing'].values if 'theta_swing' in cycle_data.columns else cycle_data['left_hip_angle'].values,
-            cycle_data['theta_stance_dot'].values if 'theta_stance_dot' in cycle_data.columns else np.gradient(cycle_data['right_hip_angle'].values, t_orig),
-            cycle_data['theta_swing_dot'].values if 'theta_swing_dot' in cycle_data.columns else np.gradient(cycle_data['left_hip_angle'].values, t_orig),
-        ])
+        states_orig = np.vstack(
+            [
+                (
+                    cycle_data["theta_stance"].values
+                    if "theta_stance" in cycle_data.columns
+                    else cycle_data["right_hip_angle"].values
+                ),
+                (
+                    cycle_data["theta_swing"].values
+                    if "theta_swing" in cycle_data.columns
+                    else cycle_data["left_hip_angle"].values
+                ),
+                (
+                    cycle_data["theta_stance_dot"].values
+                    if "theta_stance_dot" in cycle_data.columns
+                    else np.gradient(cycle_data["right_hip_angle"].values, t_orig)
+                ),
+                (
+                    cycle_data["theta_swing_dot"].values
+                    if "theta_swing_dot" in cycle_data.columns
+                    else np.gradient(cycle_data["left_hip_angle"].values, t_orig)
+                ),
+            ]
+        )
 
         X_guess = np.zeros((self.n_states, self.n_points))
         for i in range(self.n_states):
-            interp = interp1d(t_orig, states_orig[i, :], kind='cubic', fill_value='extrapolate')
+            interp = interp1d(
+                t_orig, states_orig[i, :], kind="cubic", fill_value="extrapolate"
+            )
             X_guess[i, :] = interp(t_new)
 
         # Extract controls (if available, otherwise zero)
-        if 'tau_hip' in cycle_data.columns:
-            tau_orig = cycle_data['tau_hip'].values
+        if "tau_hip" in cycle_data.columns:
+            tau_orig = cycle_data["tau_hip"].values
             t_control = t_new[:-1]
-            interp_u = interp1d(t_orig, tau_orig, kind='linear', fill_value='extrapolate')
+            interp_u = interp1d(
+                t_orig, tau_orig, kind="linear", fill_value="extrapolate"
+            )
             U_guess = interp_u(t_control).reshape(1, -1)
         else:
             U_guess = np.zeros((self.n_controls, self.n_points - 1))
@@ -386,13 +409,13 @@ class DirectCollocation:
             cost = sol.value(self.opti.f)
 
             self.result = {
-                'success': True,
-                'X': X_opt,
-                'U': U_opt,
-                'cost': cost,
-                'time': np.linspace(0, self.T, self.n_points),
-                'iterations': sol.stats()['iter_count'],
-                'status': sol.stats()['return_status'],
+                "success": True,
+                "X": X_opt,
+                "U": U_opt,
+                "cost": cost,
+                "time": np.linspace(0, self.T, self.n_points),
+                "iterations": sol.stats()["iter_count"],
+                "status": sol.stats()["return_status"],
             }
 
         except Exception as e:
@@ -408,13 +431,13 @@ class DirectCollocation:
                 cost = np.inf
 
             self.result = {
-                'success': False,
-                'X': X_opt,
-                'U': U_opt,
-                'cost': cost,
-                'time': np.linspace(0, self.T, self.n_points),
-                'iterations': 0,
-                'status': str(e),
+                "success": False,
+                "X": X_opt,
+                "U": U_opt,
+                "cost": cost,
+                "time": np.linspace(0, self.T, self.n_points),
+                "iterations": 0,
+                "status": str(e),
             }
 
         return self.result
@@ -431,20 +454,20 @@ class DirectCollocation:
 
         # Convert numpy arrays to lists for JSON serialization
         result_json = {
-            'success': self.result['success'],
-            'cost': float(self.result['cost']),
-            'iterations': int(self.result['iterations']),
-            'status': self.result['status'],
-            'time': self.result['time'].tolist(),
-            'states': self.result['X'].tolist(),
-            'controls': self.result['U'].tolist(),
-            'parameters': self.params,
-            'n_points': self.n_points,
-            'gait_period': self.T,
+            "success": self.result["success"],
+            "cost": float(self.result["cost"]),
+            "iterations": int(self.result["iterations"]),
+            "status": self.result["status"],
+            "time": self.result["time"].tolist(),
+            "states": self.result["X"].tolist(),
+            "controls": self.result["U"].tolist(),
+            "parameters": self.params,
+            "n_points": self.n_points,
+            "gait_period": self.T,
         }
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             json.dump(result_json, f, indent=2)
 
         print(f"Result saved to {output_path}")
@@ -461,34 +484,34 @@ class DirectCollocation:
 
         import matplotlib.pyplot as plt
 
-        t = self.result['time']
-        X = self.result['X']
-        U = self.result['U']
+        t = self.result["time"]
+        X = self.result["X"]
+        U = self.result["U"]
         t_control = t[:-1]
 
         fig, axes = plt.subplots(3, 1, figsize=(10, 8))
 
         # States
-        axes[0].plot(t, np.rad2deg(X[0, :]), label='Stance angle')
-        axes[0].plot(t, np.rad2deg(X[1, :]), label='Swing angle')
-        axes[0].set_ylabel('Angle (deg)')
-        axes[0].set_title('Joint Angles')
+        axes[0].plot(t, np.rad2deg(X[0, :]), label="Stance angle")
+        axes[0].plot(t, np.rad2deg(X[1, :]), label="Swing angle")
+        axes[0].set_ylabel("Angle (deg)")
+        axes[0].set_title("Joint Angles")
         axes[0].legend()
         axes[0].grid(True)
 
         # Velocities
-        axes[1].plot(t, X[2, :], label='Stance velocity')
-        axes[1].plot(t, X[3, :], label='Swing velocity')
-        axes[1].set_ylabel('Angular velocity (rad/s)')
-        axes[1].set_title('Joint Velocities')
+        axes[1].plot(t, X[2, :], label="Stance velocity")
+        axes[1].plot(t, X[3, :], label="Swing velocity")
+        axes[1].set_ylabel("Angular velocity (rad/s)")
+        axes[1].set_title("Joint Velocities")
         axes[1].legend()
         axes[1].grid(True)
 
         # Controls
-        axes[2].plot(t_control, U[0, :], label='Hip torque')
-        axes[2].set_xlabel('Time (s)')
-        axes[2].set_ylabel('Torque (N·m)')
-        axes[2].set_title('Control Inputs')
+        axes[2].plot(t_control, U[0, :], label="Hip torque")
+        axes[2].set_xlabel("Time (s)")
+        axes[2].set_ylabel("Torque (N·m)")
+        axes[2].set_title("Control Inputs")
         axes[2].legend()
         axes[2].grid(True)
 
@@ -509,13 +532,13 @@ def main():
         n_points=100,
         gait_period=1.0,
         params={
-            'leg_length': 1.0,
-            'mass_hip': 10.0,
-            'mass_leg': 5.0,
-            'gravity': 9.81,
-            'slope_deg': 5.0,
-            'joint_damping': 0.02,
-        }
+            "leg_length": 1.0,
+            "mass_hip": 10.0,
+            "mass_leg": 5.0,
+            "gravity": 9.81,
+            "slope_deg": 5.0,
+            "joint_damping": 0.02,
+        },
     )
 
     # Set up optimization problem
@@ -536,7 +559,7 @@ def main():
     print("Optimizing...")
     result = optimizer.optimize()
 
-    if result['success']:
+    if result["success"]:
         print(f"Optimization succeeded!")
         print(f"  Cost: {result['cost']:.4f}")
         print(f"  Iterations: {result['iterations']}")

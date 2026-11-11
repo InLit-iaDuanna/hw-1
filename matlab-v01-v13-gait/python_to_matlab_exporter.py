@@ -2,6 +2,7 @@
 Python to MATLAB Data Exporter
 Automatically export Python simulation results to MATLAB .mat format.
 """
+
 from __future__ import annotations
 
 import csv
@@ -13,6 +14,7 @@ import numpy as np
 
 try:
     import scipy.io
+
     HAS_SCIPY = True
 except ImportError:
     HAS_SCIPY = False
@@ -64,7 +66,9 @@ def export_to_mat(
         version_title: Human-readable title
     """
     if not HAS_SCIPY:
-        raise RuntimeError("scipy is required for .mat export. Install with: pip install scipy")
+        raise RuntimeError(
+            "scipy is required for .mat export. Install with: pip install scipy"
+        )
 
     print(f"[{version_id}] Loading data from {csv_path.name}")
     data = load_csv_data(csv_path)
@@ -88,7 +92,9 @@ def export_to_mat(
     # Add common derived metrics
     if "time" in data and len(data["time"]) > 0:
         mat_data["duration_s"] = float(data["time"][-1])
-        mat_data["dt_s"] = float(data["time"][1] - data["time"][0]) if len(data["time"]) > 1 else 0.0
+        mat_data["dt_s"] = (
+            float(data["time"][1] - data["time"][0]) if len(data["time"]) > 1 else 0.0
+        )
 
     if "hip_x" in data:
         mat_data["forward_distance_m"] = float(data["hip_x"][-1] - data["hip_x"][0])
@@ -101,12 +107,14 @@ def export_to_mat(
 
     # Save to .mat file (MATLAB v7 format for compatibility)
     output_mat_path.parent.mkdir(parents=True, exist_ok=True)
-    scipy.io.savemat(str(output_mat_path), mat_data, format='5', do_compression=True)
+    scipy.io.savemat(str(output_mat_path), mat_data, format="5", do_compression=True)
     print(f"[{version_id}] Exported to {output_mat_path}")
     print(f"           {mat_data['n_rows']} rows × {mat_data['n_cols']} columns")
 
 
-def export_version(version_id: str, version_dir: Path, output_dir: Path, version_title: str) -> bool:
+def export_version(
+    version_id: str, version_dir: Path, output_dir: Path, version_title: str
+) -> bool:
     """
     Export a single version's data to MATLAB format.
 
@@ -131,7 +139,9 @@ def export_version(version_id: str, version_dir: Path, output_dir: Path, version
     csv_path = csv_candidates[0]  # Use first match
 
     # Find JSON parameters
-    json_candidates = list(version_dir.glob("out/*_params.json")) + list(version_dir.glob("out/*_summary.json"))
+    json_candidates = list(version_dir.glob("out/*_params.json")) + list(
+        version_dir.glob("out/*_summary.json")
+    )
     json_path = json_candidates[0] if json_candidates else None
 
     # Export to .mat
@@ -188,7 +198,9 @@ def export_all_versions(repo_root: Path, output_dir: Path) -> None:
         print()
 
     print("=" * 70)
-    print(f"Export complete: {success_count}/{total_count} versions exported successfully")
+    print(
+        f"Export complete: {success_count}/{total_count} versions exported successfully"
+    )
     print(f"Output directory: {output_dir}")
     print("=" * 70)
 
@@ -197,7 +209,9 @@ def main() -> None:
     """Main entry point for command-line usage."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Export Python simulation data to MATLAB .mat format")
+    parser = argparse.ArgumentParser(
+        description="Export Python simulation data to MATLAB .mat format"
+    )
     parser.add_argument(
         "--repo-root",
         type=Path,
@@ -233,12 +247,21 @@ def main() -> None:
             "v05": ("v05_hybrid_compass_proof", "V5 hybrid passive proof"),
             "v06": ("v06_mve_gait_homework", "V6 MVE homework expression"),
             "v07": ("v07_true_contact_exploration", "V7 true contact exploration"),
-            "v08": ("v08_quasi_passive_assisted", "V8 quasi-passive assist exploration"),
+            "v08": (
+                "v08_quasi_passive_assisted",
+                "V8 quasi-passive assist exploration",
+            ),
             "v09": ("v09_stable_biomimetic_gait", "V9 stable biomimetic contact gait"),
-            "v10": ("v10_rolling_foot_biomimetic_gait", "V10 rolling-foot biomimetic gait"),
+            "v10": (
+                "v10_rolling_foot_biomimetic_gait",
+                "V10 rolling-foot biomimetic gait",
+            ),
             "v11": ("v11_rugged_terrain_robustness", "V11 rugged terrain robustness"),
             "v12": ("v12_energy_cot_analysis", "V12 energy and CoT analysis"),
-            "v13": ("v13_parameter_sensitivity_atlas", "V13 parameter sensitivity atlas"),
+            "v13": (
+                "v13_parameter_sensitivity_atlas",
+                "V13 parameter sensitivity atlas",
+            ),
         }
 
         if args.version not in versions:

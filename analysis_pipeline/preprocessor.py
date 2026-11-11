@@ -2,6 +2,7 @@
 数据预处理模块
 包括异常值检测、滤波、插值、时间对齐等
 """
+
 from __future__ import annotations
 
 from typing import Literal
@@ -29,9 +30,7 @@ class DataPreprocessor:
         self.interp_config = config.get("interpolation", {})
         self.align_config = config.get("time_alignment", {})
 
-    def detect_outliers_iqr(
-        self, data: np.ndarray, factor: float = 1.5
-    ) -> np.ndarray:
+    def detect_outliers_iqr(self, data: np.ndarray, factor: float = 1.5) -> np.ndarray:
         """
         使用 IQR 方法检测异常值
 
@@ -101,7 +100,9 @@ class DataPreprocessor:
         cleaned[outliers] = np.nan
         num_outliers = np.sum(outliers)
         if num_outliers > 0:
-            print(f"    Removed {num_outliers} outliers ({100*num_outliers/len(data):.2f}%)")
+            print(
+                f"    Removed {num_outliers} outliers ({100*num_outliers/len(data):.2f}%)"
+            )
         return cleaned
 
     def filter_savgol(
@@ -380,15 +381,21 @@ class DataPreprocessor:
 
             # 重采样关节角度
             for key in joint_angles.keys():
-                _, joint_angles[key] = self.resample_uniform(old_time, joint_angles[key], target_rate)
+                _, joint_angles[key] = self.resample_uniform(
+                    old_time, joint_angles[key], target_rate
+                )
 
             # 重采样关节速度
             for key in joint_velocities.keys():
-                _, joint_velocities[key] = self.resample_uniform(old_time, joint_velocities[key], target_rate)
+                _, joint_velocities[key] = self.resample_uniform(
+                    old_time, joint_velocities[key], target_rate
+                )
 
             # 重采样力矩
             for key in torques.keys():
-                _, torques[key] = self.resample_uniform(old_time, torques[key], target_rate)
+                _, torques[key] = self.resample_uniform(
+                    old_time, torques[key], target_rate
+                )
 
             # 重采样功率
             if power is not None:
@@ -402,7 +409,10 @@ class DataPreprocessor:
             if self.align_config.get("enabled", False):
                 # 最近邻插值（保持离散性）
                 from scipy import interpolate
-                f = interpolate.interp1d(gait_data.time, data, kind='nearest', fill_value="extrapolate")
+
+                f = interpolate.interp1d(
+                    gait_data.time, data, kind="nearest", fill_value="extrapolate"
+                )
                 contact_states[key] = f(time)
             else:
                 contact_states[key] = data

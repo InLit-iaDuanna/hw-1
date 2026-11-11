@@ -41,6 +41,7 @@ class ComplexityAnalyzer:
             source = inspect.getsource(func)
             # Remove leading indentation
             import textwrap
+
             source = textwrap.dedent(source)
             tree = ast.parse(source)
         except (OSError, TypeError, IndentationError) as e:
@@ -75,7 +76,11 @@ class ComplexityAnalyzer:
                     complexity = f"O(n^{nested_level})"
                     severity = "high" if nested_level >= 3 else "medium"
 
-                    code_snippet = ast.unparse(node) if hasattr(ast, "unparse") else "<nested loops>"
+                    code_snippet = (
+                        ast.unparse(node)
+                        if hasattr(ast, "unparse")
+                        else "<nested loops>"
+                    )
 
                     issues.append(
                         ComplexityIssue(
@@ -85,7 +90,9 @@ class ComplexityAnalyzer:
                             issue_type="nested_loops",
                             severity=severity,
                             description=f"{nested_level} 层嵌套循环，复杂度为 {complexity}",
-                            recommendation=self._recommend_nested_loop_fix(nested_level),
+                            recommendation=self._recommend_nested_loop_fix(
+                                nested_level
+                            ),
                             code_snippet=code_snippet[:200],
                         )
                     )
@@ -247,9 +254,7 @@ class ComplexityAnalyzer:
             "estimated_complexity": complexity_guess,
         }
 
-    def _guess_complexity(
-        self, sizes: list[int], times: list[float]
-    ) -> str:
+    def _guess_complexity(self, sizes: list[int], times: list[float]) -> str:
         """基于运行时间猜测复杂度。"""
         if len(sizes) < 2:
             return "insufficient_data"

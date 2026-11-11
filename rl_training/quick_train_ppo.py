@@ -8,6 +8,7 @@ checkpoint -> reload) on a small budget. NOT meant to produce a good gait.
 Run:
   .venv-mujoco\\Scripts\\python.exe rl_training\\quick_train_ppo.py --steps 20000
 """
+
 import sys
 import time
 import argparse
@@ -31,6 +32,7 @@ def make_env(reward_type, seed):
         env = Monitor(env)
         env.reset(seed=seed)
         return env
+
     return _init
 
 
@@ -45,16 +47,25 @@ def main():
     out_dir = RL_DIR / "smoke_run"
     out_dir.mkdir(exist_ok=True)
 
-    print(f"torch {torch.__version__} | cuda={torch.cuda.is_available()} "
-          f"({torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'cpu'})")
+    print(
+        f"torch {torch.__version__} | cuda={torch.cuda.is_available()} "
+        f"({torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'cpu'})"
+    )
 
     env = DummyVecEnv([make_env(args.reward, 100 + i) for i in range(args.n_envs)])
 
     model = PPO(
-        "MlpPolicy", env,
-        learning_rate=3e-4, n_steps=512, batch_size=64, n_epochs=5,
-        gamma=0.99, gae_lambda=0.95, verbose=1,
-        device=args.device, seed=0,
+        "MlpPolicy",
+        env,
+        learning_rate=3e-4,
+        n_steps=512,
+        batch_size=64,
+        n_epochs=5,
+        gamma=0.99,
+        gae_lambda=0.95,
+        verbose=1,
+        device=args.device,
+        seed=0,
         tensorboard_log=str(out_dir / "tb"),
     )
     print(f"PPO device: {model.device}")

@@ -365,7 +365,9 @@ def save_to_database(
 
         try:
             conn = get_connection(db_path)
-            sim_id = import_summary_json(conn, version_name, temp_path, sim_type="auto_saved")
+            sim_id = import_summary_json(
+                conn, version_name, temp_path, sim_type="auto_saved"
+            )
             conn.close()
             return sim_id
         finally:

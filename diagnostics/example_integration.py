@@ -41,7 +41,7 @@ def run_simulation_with_diagnostics(config: dict) -> dict:
         "hip_height": 0.42,
         "duration": 2.5,
         "last_valid_time": 2.3,
-        "config": config
+        "config": config,
     }
 
     print(f"   仿真在 {simulation_result['last_valid_time']} 秒时失败")
@@ -98,13 +98,9 @@ def run_simulation_with_diagnostics(config: dict) -> dict:
                     "errors": report["errors"],
                     "primary_error": primary_error,
                     "recommended_solutions": [
-                        {
-                            "action": sol.action,
-                            "details": sol.details,
-                            "code": sol.code
-                        }
+                        {"action": sol.action, "details": sol.details, "code": sol.code}
                         for sol in entry.solutions[:3]
-                    ]
+                    ],
                 }
 
         else:
@@ -158,11 +154,7 @@ def main():
     print("\n示例: 集成诊断系统到仿真脚本\n")
 
     # 仿真配置
-    config = {
-        "dt": 0.002,
-        "duration": 5.0,
-        "model_path": "models/biped.xml"
-    }
+    config = {"dt": 0.002, "duration": 5.0, "model_path": "models/biped.xml"}
 
     # 运行仿真并诊断
     result = run_simulation_with_diagnostics(config)

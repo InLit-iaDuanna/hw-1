@@ -34,10 +34,14 @@ class ProgressBar:
 
         progress = self.current / self.total
         filled = int(self.width * progress)
-        bar = '█' * filled + '░' * (self.width - filled)
+        bar = "█" * filled + "░" * (self.width - filled)
 
         percent = progress * 100
-        print(f'\r[{bar}] {percent:.1f}% | {self.current}/{self.total} | ETA: {eta}', end='', flush=True)
+        print(
+            f"\r[{bar}] {percent:.1f}% | {self.current}/{self.total} | ETA: {eta}",
+            end="",
+            flush=True,
+        )
 
         if self.current >= self.total:
             print()  # New line when complete
@@ -59,7 +63,7 @@ def run_benchmark(script_path: Path) -> Tuple[str, bool, str, float]:
             capture_output=True,
             text=True,
             timeout=3600,  # 1 hour timeout per benchmark
-            cwd=script_path.parent
+            cwd=script_path.parent,
         )
         duration = time.time() - start_time
 
@@ -79,19 +83,14 @@ def run_benchmark(script_path: Path) -> Tuple[str, bool, str, float]:
 
 def find_benchmark_scripts(base_dir: Path) -> List[Path]:
     """Find all benchmark scripts in the directory"""
-    patterns = [
-        'benchmark_*.py',
-        '*_benchmark.py',
-        'test_*.py',
-        'run_*.py'
-    ]
+    patterns = ["benchmark_*.py", "*_benchmark.py", "test_*.py", "run_*.py"]
 
     scripts = []
     for pattern in patterns:
         scripts.extend(base_dir.glob(pattern))
 
     # Remove this master script from the list
-    scripts = [s for s in scripts if s.name != 'run_all_benchmarks.py']
+    scripts = [s for s in scripts if s.name != "run_all_benchmarks.py"]
 
     return sorted(set(scripts))
 
@@ -102,12 +101,7 @@ def run_sequential(scripts: List[Path], verbose: bool = False) -> Dict:
     print(f"Running {len(scripts)} benchmarks SEQUENTIALLY")
     print(f"{'='*70}\n")
 
-    results = {
-        'total': len(scripts),
-        'passed': 0,
-        'failed': 0,
-        'details': []
-    }
+    results = {"total": len(scripts), "passed": 0, "failed": 0, "details": []}
 
     progress = ProgressBar(len(scripts))
 
@@ -118,17 +112,19 @@ def run_sequential(scripts: List[Path], verbose: bool = False) -> Dict:
 
         script_name, success, output, duration = run_benchmark(script)
 
-        results['details'].append({
-            'script': script_name,
-            'success': success,
-            'duration': duration,
-            'output': output
-        })
+        results["details"].append(
+            {
+                "script": script_name,
+                "success": success,
+                "duration": duration,
+                "output": output,
+            }
+        )
 
         if success:
-            results['passed'] += 1
+            results["passed"] += 1
         else:
-            results['failed'] += 1
+            results["failed"] += 1
 
         if verbose:
             print(output)
@@ -140,27 +136,27 @@ def run_sequential(scripts: List[Path], verbose: bool = False) -> Dict:
     return results
 
 
-def run_parallel(scripts: List[Path], max_workers: int = None, verbose: bool = False) -> Dict:
+def run_parallel(
+    scripts: List[Path], max_workers: int = None, verbose: bool = False
+) -> Dict:
     """Run benchmarks in parallel with progress tracking"""
     if max_workers is None:
         import os
+
         max_workers = min(len(scripts), os.cpu_count() or 4)
 
     print(f"\n{'='*70}")
     print(f"Running {len(scripts)} benchmarks in PARALLEL (workers={max_workers})")
     print(f"{'='*70}\n")
 
-    results = {
-        'total': len(scripts),
-        'passed': 0,
-        'failed': 0,
-        'details': []
-    }
+    results = {"total": len(scripts), "passed": 0, "failed": 0, "details": []}
 
     progress = ProgressBar(len(scripts))
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
-        future_to_script = {executor.submit(run_benchmark, script): script for script in scripts}
+        future_to_script = {
+            executor.submit(run_benchmark, script): script for script in scripts
+        }
 
         for future in as_completed(future_to_script):
             script = future_to_script[future]
@@ -168,36 +164,42 @@ def run_parallel(scripts: List[Path], max_workers: int = None, verbose: bool = F
             try:
                 script_name, success, output, duration = future.result()
 
-                results['details'].append({
-                    'script': script_name,
-                    'success': success,
-                    'duration': duration,
-                    'output': output
-                })
+                results["details"].append(
+                    {
+                        "script": script_name,
+                        "success": success,
+                        "duration": duration,
+                        "output": output,
+                    }
+                )
 
                 if success:
-                    results['passed'] += 1
+                    results["passed"] += 1
                 else:
-                    results['failed'] += 1
+                    results["failed"] += 1
 
                 if verbose:
-                    print(f"\n\n{script_name}: {'✓ PASSED' if success else '✗ FAILED'} ({duration:.2f}s)")
+                    print(
+                        f"\n\n{script_name}: {'✓ PASSED' if success else '✗ FAILED'} ({duration:.2f}s)"
+                    )
                     if not success:
                         print(output)
 
             except Exception as e:
-                results['details'].append({
-                    'script': script.name,
-                    'success': False,
-                    'duration': 0,
-                    'output': f"Exception: {str(e)}"
-                })
-                results['failed'] += 1
+                results["details"].append(
+                    {
+                        "script": script.name,
+                        "success": False,
+                        "duration": 0,
+                        "output": f"Exception: {str(e)}",
+                    }
+                )
+                results["failed"] += 1
 
             progress.update()
 
     # Sort results by script name for consistent output
-    results['details'].sort(key=lambda x: x['script'])
+    results["details"].sort(key=lambda x: x["script"])
 
     return results
 
@@ -218,29 +220,29 @@ def print_summary(results: Dict, total_duration: float):
     print("INDIVIDUAL RESULTS")
     print(f"{'='*70}\n")
 
-    for detail in results['details']:
-        status = "✓ PASS" if detail['success'] else "✗ FAIL"
+    for detail in results["details"]:
+        status = "✓ PASS" if detail["success"] else "✗ FAIL"
         duration_str = f"{detail['duration']:.2f}s"
         print(f"{status:8} {detail['script']:40} {duration_str:>10}")
 
-    if results['failed'] > 0:
+    if results["failed"] > 0:
         print(f"\n{'='*70}")
         print("FAILED BENCHMARK DETAILS")
         print(f"{'='*70}\n")
 
-        for detail in results['details']:
-            if not detail['success']:
+        for detail in results["details"]:
+            if not detail["success"]:
                 print(f"\n{detail['script']}:")
                 print("-" * 70)
-                print(detail['output'][:500])  # First 500 chars
-                if len(detail['output']) > 500:
+                print(detail["output"][:500])  # First 500 chars
+                if len(detail["output"]) > 500:
                     print("... (truncated)")
                 print()
 
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Run all benchmark scripts with progress tracking',
+        description="Run all benchmark scripts with progress tracking",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -255,40 +257,41 @@ Examples:
 
   # Run only specific pattern
   python run_all_benchmarks.py --pattern "benchmark_*.py"
-        """
+        """,
     )
 
     parser.add_argument(
-        '--parallel',
-        action='store_true',
-        help='Run benchmarks in parallel instead of sequentially'
+        "--parallel",
+        action="store_true",
+        help="Run benchmarks in parallel instead of sequentially",
     )
 
     parser.add_argument(
-        '--workers',
+        "--workers",
         type=int,
         default=None,
-        help='Number of parallel workers (default: CPU count)'
+        help="Number of parallel workers (default: CPU count)",
     )
 
     parser.add_argument(
-        '--verbose', '-v',
-        action='store_true',
-        help='Print verbose output from each benchmark'
+        "--verbose",
+        "-v",
+        action="store_true",
+        help="Print verbose output from each benchmark",
     )
 
     parser.add_argument(
-        '--pattern',
+        "--pattern",
         type=str,
         default=None,
-        help='Glob pattern to filter benchmark scripts (e.g., "benchmark_*.py")'
+        help='Glob pattern to filter benchmark scripts (e.g., "benchmark_*.py")',
     )
 
     parser.add_argument(
-        '--dir',
+        "--dir",
         type=str,
         default=None,
-        help='Directory containing benchmark scripts (default: current directory)'
+        help="Directory containing benchmark scripts (default: current directory)",
     )
 
     args = parser.parse_args()
@@ -306,7 +309,7 @@ Examples:
     # Find benchmark scripts
     if args.pattern:
         scripts = sorted(base_dir.glob(args.pattern))
-        scripts = [s for s in scripts if s.name != 'run_all_benchmarks.py']
+        scripts = [s for s in scripts if s.name != "run_all_benchmarks.py"]
     else:
         scripts = find_benchmark_scripts(base_dir)
 
@@ -333,8 +336,8 @@ Examples:
     print_summary(results, total_duration)
 
     # Exit with appropriate code
-    sys.exit(0 if results['failed'] == 0 else 1)
+    sys.exit(0 if results["failed"] == 0 else 1)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

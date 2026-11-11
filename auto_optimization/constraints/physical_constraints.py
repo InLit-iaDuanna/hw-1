@@ -101,7 +101,10 @@ class PDGainRatioConstraint(Constraint):
             kp = params[self.kp_param]
             kd = params[self.kd_param]
             if kd * kd >= 4.0 * kp:
-                return False, f"PD 增益不满足稳定性条件: K_d^2 ({kd**2:.3f}) >= 4*K_p ({4*kp:.3f})"
+                return (
+                    False,
+                    f"PD 增益不满足稳定性条件: K_d^2 ({kd**2:.3f}) >= 4*K_p ({4*kp:.3f})",
+                )
         return True, "PD 增益比约束满足"
 
 

@@ -90,6 +90,7 @@ class DomainRandomizationEnv(gym.Wrapper):
 
 class ResidualPriorWrapper(gym.ActionWrapper):
     """Prior-guided action wrapper"""
+
     def __init__(self, env: gym.Env, prior_action: np.ndarray, delta_scale: float):
         super().__init__(env)
         self.prior_action = np.asarray(prior_action, dtype=np.float32)
@@ -106,6 +107,7 @@ class ResidualPriorWrapper(gym.ActionWrapper):
 
 def make_dr_env(seed: int):
     """创建 Domain Randomization 环境"""
+
     def _init():
         env = ResidualRLEnvV2(
             residual_scale=0.2,
@@ -116,12 +118,11 @@ def make_dr_env(seed: int):
         env = DomainRandomizationEnv(env)
         # 包装 Prior-guided action
         env = ResidualPriorWrapper(
-            env,
-            prior_action=np.array([0.5, 1.0]),
-            delta_scale=0.3
+            env, prior_action=np.array([0.5, 1.0]), delta_scale=0.3
         )
         env.reset(seed=seed)
         return env
+
     return _init
 
 
@@ -231,6 +232,7 @@ def main():
     print()
 
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--train", action="store_true", help="开始训练（需要较长时间）")
     args = parser.parse_args()

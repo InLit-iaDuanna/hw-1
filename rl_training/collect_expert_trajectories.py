@@ -55,6 +55,7 @@ from common.motor_dynamics import (
 @dataclass
 class ExpertTransition:
     """专家轨迹中的单个转换（RL频率：50Hz = 20ms）"""
+
     observation: np.ndarray  # 环境观测（20维）
     action: np.ndarray  # FSM控制输出（4维）
     next_observation: np.ndarray  # 下一个观测
@@ -66,6 +67,7 @@ class ExpertTransition:
 @dataclass
 class ExpertEpisode:
     """专家轨迹的一个完整episode"""
+
     episode_id: int
     transitions: List[ExpertTransition]
     total_reward: float
@@ -96,6 +98,7 @@ class V137ExpertCollector:
         )
 
         from dataclasses import replace
+
         base = replace(base0, **overrides)
         fsm_params = make_v137_fsm(base)
         motor = MOTOR_PRESETS["mx64ar"]
@@ -136,21 +139,33 @@ class V137ExpertCollector:
         """设置RL观测提取所需的索引"""
         # Joint names for observation
         self.joint_names = [
-            "left_hip", "left_knee", "left_ankle",
-            "right_hip", "right_knee", "right_ankle"
+            "left_hip",
+            "left_knee",
+            "left_ankle",
+            "right_hip",
+            "right_knee",
+            "right_ankle",
         ]
-        self.joint_ids = [mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, name)
-                          for name in self.joint_names]
-        self.joint_qposadr = [int(self.model.jnt_qposadr[jid]) for jid in self.joint_ids]
+        self.joint_ids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, name)
+            for name in self.joint_names
+        ]
+        self.joint_qposadr = [
+            int(self.model.jnt_qposadr[jid]) for jid in self.joint_ids
+        ]
         self.joint_dofadr = [int(self.model.jnt_dofadr[jid]) for jid in self.joint_ids]
 
         # Hip body for position/velocity
-        self.hip_body_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, "hip")
+        self.hip_body_id = mujoco.mj_name2id(
+            self.model, mujoco.mjtObj.mjOBJ_BODY, "hip"
+        )
 
         # Foot geoms for contact detection
         self.foot_geom_names = ["left_heel", "left_toe", "right_heel", "right_toe"]
-        self.foot_geom_ids = [mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, name)
-                              for name in self.foot_geom_names]
+        self.foot_geom_ids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, name)
+            for name in self.foot_geom_names
+        ]
 
     def _get_rl_observation(self) -> np.ndarray:
         """
@@ -160,31 +175,37 @@ class V137ExpertCollector:
             20维观测: [joint_angles(6), joint_velocities(6), hip_pos(2), hip_vel(2), contact(4)]
         """
         # Joint angles (6)
-        joint_angles = np.array([self.data.qpos[self.joint_qposadr[i]] for i in range(6)])
+        joint_angles = np.array(
+            [self.data.qpos[self.joint_qposadr[i]] for i in range(6)]
+        )
 
         # Joint velocities (6)
-        joint_velocities = np.array([self.data.qvel[self.joint_dofadr[i]] for i in range(6)])
+        joint_velocities = np.array(
+            [self.data.qvel[self.joint_dofadr[i]] for i in range(6)]
+        )
 
         # Hip position (2): x and z
         hip_pos = self.data.xpos[self.hip_body_id][[0, 2]]
 
         # Hip velocity (2): vx and vz
         hip_vel_full = np.zeros(6)  # [linear_vel(3), angular_vel(3)]
-        mujoco.mj_objectVelocity(self.model, self.data, mujoco.mjtObj.mjOBJ_BODY,
-                                  self.hip_body_id, hip_vel_full, 0)
+        mujoco.mj_objectVelocity(
+            self.model,
+            self.data,
+            mujoco.mjtObj.mjOBJ_BODY,
+            self.hip_body_id,
+            hip_vel_full,
+            0,
+        )
         hip_vel = hip_vel_full[[0, 2]]  # Extract x and z components
 
         # Contact states (4): binary flags for each foot geom
         contact_states = self._detect_contacts()
 
         # Concatenate all components
-        obs = np.concatenate([
-            joint_angles,
-            joint_velocities,
-            hip_pos,
-            hip_vel,
-            contact_states
-        ]).astype(np.float32)
+        obs = np.concatenate(
+            [joint_angles, joint_velocities, hip_pos, hip_vel, contact_states]
+        ).astype(np.float32)
 
         return obs
 
@@ -203,8 +224,9 @@ class V137ExpertCollector:
 
         return contacts
 
-    def _compute_reward(self, prev_hip_x: float, current_hip_x: float,
-                       action: np.ndarray, dt: float) -> float:
+    def _compute_reward(
+        self, prev_hip_x: float, current_hip_x: float, action: np.ndarray, dt: float
+    ) -> float:
         """
         计算RL奖励（energy_efficient类型）
 
@@ -222,13 +244,12 @@ class V137ExpertCollector:
         velocity_reward = forward_velocity
 
         # Energy penalty (torque squared)
-        energy_penalty = 0.001 * np.sum(action ** 2) * dt
+        energy_penalty = 0.001 * np.sum(action**2) * dt
 
         # Total reward
         reward = velocity_reward - energy_penalty
 
         return float(reward)
-
 
     def run_episode(self) -> ExpertEpisode | None:
         """
@@ -280,36 +301,36 @@ class V137ExpertCollector:
 
             # 调用V13.6 FSM控制律
             tau = control_v136(
-                fsm,
-                self.data,
-                t,
-                support_foot,
-                burst_start_t,
-                E_current
+                fsm, self.data, t, support_foot, burst_start_t, E_current
             )
-            l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau[0], tau[1], tau[2], tau[3]
+            l_hip_des, l_knee_des, r_hip_des, r_knee_des = (
+                tau[0],
+                tau[1],
+                tau[2],
+                tau[3],
+            )
 
             # === V13.7核心：前馈摩擦补偿 ===
             if self.params.compensate_friction:
                 l_hip_des = self._compensate(
                     l_hip_des,
                     float(self.data.qvel[self.qvel_addr["left_hip"]]),
-                    self.params.hip_motor
+                    self.params.hip_motor,
                 )
                 l_knee_des = self._compensate(
                     l_knee_des,
                     float(self.data.qvel[self.qvel_addr["left_knee"]]),
-                    self.params.knee_motor
+                    self.params.knee_motor,
                 )
                 r_hip_des = self._compensate(
                     r_hip_des,
                     float(self.data.qvel[self.qvel_addr["right_hip"]]),
-                    self.params.hip_motor
+                    self.params.hip_motor,
                 )
                 r_knee_des = self._compensate(
                     r_knee_des,
                     float(self.data.qvel[self.qvel_addr["right_knee"]]),
-                    self.params.knee_motor
+                    self.params.knee_motor,
                 )
 
             # L1电机模型（饱和 + 库仑摩擦）
@@ -326,7 +347,9 @@ class V137ExpertCollector:
                 r_knee_des, float(self.data.qvel[self.qvel_addr["right_knee"]])
             )
 
-            action = np.array([l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float32)
+            action = np.array(
+                [l_hip_out, l_knee_out, r_hip_out, r_knee_out], dtype=np.float32
+            )
             self.data.ctrl[:] = action
 
             # MuJoCo step
@@ -339,8 +362,12 @@ class V137ExpertCollector:
 
                 # 如果有前一个观测，保存transition
                 if prev_obs is not None and prev_action is not None:
-                    reward = self._compute_reward(prev_hip_x, current_hip_x, prev_action,
-                                                  RL_FRAME_SKIP * p.timestep)
+                    reward = self._compute_reward(
+                        prev_hip_x,
+                        current_hip_x,
+                        prev_action,
+                        RL_FRAME_SKIP * p.timestep,
+                    )
                     total_reward += reward
 
                     terminated = bool(failure)
@@ -352,7 +379,7 @@ class V137ExpertCollector:
                         next_observation=current_obs.copy(),
                         reward=reward,
                         terminated=terminated,
-                        truncated=truncated
+                        truncated=truncated,
                     )
                     transitions.append(transition)
 
@@ -423,7 +450,7 @@ class V137ExpertCollector:
                 forward_distance=forward_distance,
                 simulated_time=simulated_time,
                 alternating_touchdowns=alternations,
-                success=True
+                success=True,
             )
         else:
             return None
@@ -435,8 +462,7 @@ class V137ExpertCollector:
 
 
 def collect_expert_trajectories(
-    num_episodes: int = 50,
-    save_path: str = "v137_expert_trajectories.pkl"
+    num_episodes: int = 50, save_path: str = "v137_expert_trajectories.pkl"
 ) -> Dict[str, Any]:
     """
     收集V13.7专家轨迹（运行完整1kHz仿真，下采样到RL频率）
@@ -495,16 +521,10 @@ def collect_expert_trajectories(
         else:
             # 失败
             failed_episodes += 1
-            print(
-                f"[FAIL] Episode {episode_count} | "
-                f"失败（未满足成功条件）"
-            )
+            print(f"[FAIL] Episode {episode_count} | " f"失败（未满足成功条件）")
 
             failed_episodes += 1
-            print(
-                f"[FAIL] Episode {episode_count} | "
-                f"失败（未满足成功条件）"
-            )
+            print(f"[FAIL] Episode {episode_count} | " f"失败（未满足成功条件）")
 
     print()
     print("=" * 80)
@@ -521,7 +541,9 @@ def collect_expert_trajectories(
     print(f"成功episodes: {len(successful_episodes)}/{episode_count}")
     print(f"失败episodes: {failed_episodes}")
     print(f"总transitions: {total_transitions}")
-    print(f"平均transitions/episode: {total_transitions / len(successful_episodes):.1f}")
+    print(
+        f"平均transitions/episode: {total_transitions / len(successful_episodes):.1f}"
+    )
     print(f"平均距离: {avg_distance:.3f}m")
     print(f"平均时间: {avg_time:.2f}s")
     print(f"平均触地次数: {avg_touchdowns:.1f}")
@@ -535,7 +557,9 @@ def collect_expert_trajectories(
         "statistics": {
             "num_episodes": len(successful_episodes),
             "total_transitions": total_transitions,
-            "avg_transitions_per_episode": float(total_transitions / len(successful_episodes)),
+            "avg_transitions_per_episode": float(
+                total_transitions / len(successful_episodes)
+            ),
             "avg_distance": float(avg_distance),
             "avg_time": float(avg_time),
             "avg_touchdowns": float(avg_touchdowns),
@@ -546,7 +570,7 @@ def collect_expert_trajectories(
             "sampling_frequency_hz": 50,
             "frame_skip": 20,
             "reward_type": "energy_efficient",
-        }
+        },
     }
 
     with open(save_path_full, "wb") as f:
@@ -571,11 +595,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="收集V13.7专家轨迹")
     parser.add_argument("--episodes", type=int, default=50, help="收集的episode数量")
-    parser.add_argument("--save", type=str, default="v137_expert_trajectories.pkl", help="保存路径")
+    parser.add_argument(
+        "--save", type=str, default="v137_expert_trajectories.pkl", help="保存路径"
+    )
 
     args = parser.parse_args()
 
-    stats = collect_expert_trajectories(
-        num_episodes=args.episodes,
-        save_path=args.save
-    )
+    stats = collect_expert_trajectories(num_episodes=args.episodes, save_path=args.save)

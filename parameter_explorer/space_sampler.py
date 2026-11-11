@@ -42,7 +42,9 @@ class ParameterRange:
                 return np.random.uniform(self.min_value, self.max_value, size=n)
         elif method == "linspace":
             if self.log_scale:
-                return np.logspace(np.log10(self.min_value), np.log10(self.max_value), n)
+                return np.logspace(
+                    np.log10(self.min_value), np.log10(self.max_value), n
+                )
             else:
                 return np.linspace(self.min_value, self.max_value, n)
         else:
@@ -111,7 +113,9 @@ class SpaceSampler:
 
         return samples, param_dicts
 
-    def random_sample(self, n_samples: int, seed: int | None = None) -> tuple[np.ndarray, list[dict[str, float]]]:
+    def random_sample(
+        self, n_samples: int, seed: int | None = None
+    ) -> tuple[np.ndarray, list[dict[str, float]]]:
         """随机采样（Monte Carlo）。
 
         Args:
@@ -136,7 +140,9 @@ class SpaceSampler:
 
         return samples, param_dicts
 
-    def lhs_sample(self, n_samples: int, seed: int | None = None) -> tuple[np.ndarray, list[dict[str, float]]]:
+    def lhs_sample(
+        self, n_samples: int, seed: int | None = None
+    ) -> tuple[np.ndarray, list[dict[str, float]]]:
         """拉丁超立方采样（LHS）。
 
         更高效的空间覆盖，适合高维参数空间。
@@ -156,7 +162,9 @@ class SpaceSampler:
         # 反归一化到实际参数范围
         samples = np.zeros_like(normalized_samples)
         for i, param in enumerate(self.param_ranges):
-            samples[:, i] = np.array([param.denormalize(x) for x in normalized_samples[:, i]])
+            samples[:, i] = np.array(
+                [param.denormalize(x) for x in normalized_samples[:, i]]
+            )
 
         param_dicts = [
             {name: float(samples[i, j]) for j, name in enumerate(self.param_names)}
@@ -165,7 +173,9 @@ class SpaceSampler:
 
         return samples, param_dicts
 
-    def sobol_sample(self, n_samples: int, seed: int | None = None) -> tuple[np.ndarray, list[dict[str, float]]]:
+    def sobol_sample(
+        self, n_samples: int, seed: int | None = None
+    ) -> tuple[np.ndarray, list[dict[str, float]]]:
         """Sobol 序列采样（低差异序列）。
 
         比 LHS 更均匀的空间填充，适合灵敏度分析。
@@ -183,7 +193,9 @@ class SpaceSampler:
 
         samples = np.zeros_like(normalized_samples)
         for i, param in enumerate(self.param_ranges):
-            samples[:, i] = np.array([param.denormalize(x) for x in normalized_samples[:, i]])
+            samples[:, i] = np.array(
+                [param.denormalize(x) for x in normalized_samples[:, i]]
+            )
 
         param_dicts = [
             {name: float(samples[i, j]) for j, name in enumerate(self.param_names)}
@@ -249,7 +261,9 @@ class SpaceSampler:
 
             # 评估新样本
             new_sample = new_sample_normalized.reshape(1, -1)
-            new_dict = {name: float(new_sample[0, j]) for j, name in enumerate(self.param_names)}
+            new_dict = {
+                name: float(new_sample[0, j]) for j, name in enumerate(self.param_names)
+            }
             new_obj = objective_func(new_dict)
 
             samples = np.vstack([samples, new_sample])

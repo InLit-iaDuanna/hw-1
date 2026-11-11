@@ -1,4 +1,4 @@
-﻿"""Phase Portrait: Limit cycle and Poincare section analysis."""
+"""Phase Portrait: Limit cycle and Poincare section analysis."""
 
 from __future__ import annotations
 

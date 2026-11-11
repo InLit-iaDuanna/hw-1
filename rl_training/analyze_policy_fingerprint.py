@@ -21,7 +21,9 @@ sys.path.insert(0, str(HW1_ROOT / "rl_training"))
 from train_residual_rl_v2 import ResidualRLEnvV2
 
 
-def collect_fingerprint(model_path: str, env: ResidualRLEnvV2, episodes: int = 10) -> pd.DataFrame:
+def collect_fingerprint(
+    model_path: str, env: ResidualRLEnvV2, episodes: int = 10
+) -> pd.DataFrame:
     """收集策略的 phase-conditioned action fingerprint
 
     Args:
@@ -61,7 +63,12 @@ def collect_fingerprint(model_path: str, env: ResidualRLEnvV2, episodes: int = 1
             # 根据 train_residual_rl_v2.py:L354-361，phase onehot 在 obs[20:28]
             left_phase_idx = int(np.argmax(obs[20:24]))
             right_phase_idx = int(np.argmax(obs[24:28]))
-            phase_names = ["stance_early", "stance_late", "swing_thrust", "swing_retract"]
+            phase_names = [
+                "stance_early",
+                "stance_late",
+                "swing_thrust",
+                "swing_retract",
+            ]
 
             row["left_phase"] = phase_names[left_phase_idx]
             row["right_phase"] = phase_names[right_phase_idx]
@@ -83,13 +90,17 @@ def collect_fingerprint(model_path: str, env: ResidualRLEnvV2, episodes: int = 1
 
             if done:
                 row["final_distance"] = float(env.data.qpos[0])
-                print(f"  Episode {ep}: distance={row['final_distance']:.3f}m, "
-                      f"steps={step}, terminated={terminated}")
+                print(
+                    f"  Episode {ep}: distance={row['final_distance']:.3f}m, "
+                    f"steps={step}, terminated={terminated}"
+                )
 
     return pd.DataFrame(rows)
 
 
-def analyze_checkpoint(checkpoint_path: str, checkpoint_name: str, env: ResidualRLEnvV2) -> Dict[str, Any]:
+def analyze_checkpoint(
+    checkpoint_path: str, checkpoint_name: str, env: ResidualRLEnvV2
+) -> Dict[str, Any]:
     """分析单个 checkpoint 的行为模式
 
     Args:
@@ -108,7 +119,9 @@ def analyze_checkpoint(checkpoint_path: str, checkpoint_name: str, env: Residual
 
     # 1. 全局统计
     print(f"\n## Global Statistics")
-    global_stats = df[["action_l", "action_r", "delta_l", "delta_r", "hip_height", "reward"]].describe()
+    global_stats = df[
+        ["action_l", "action_r", "delta_l", "delta_r", "hip_height", "reward"]
+    ].describe()
     print(global_stats)
 
     # 2. Phase-conditioned 统计
@@ -135,10 +148,25 @@ def analyze_checkpoint(checkpoint_path: str, checkpoint_name: str, env: Residual
         for ep_id in failed_episodes.index[:3]:  # 只显示前3个失败案例
             fail_data = df[df["episode"] == ep_id]
             fail_t = fail_data[fail_data["terminated"] == True]["t"].iloc[0]
-            pre_fail = fail_data[(fail_data["t"] >= fail_t - 0.5) & (fail_data["t"] <= fail_t)]
+            pre_fail = fail_data[
+                (fail_data["t"] >= fail_t - 0.5) & (fail_data["t"] <= fail_t)
+            ]
 
             print(f"\n### Episode {ep_id} (fail at {fail_t:.3f}s):")
-            print(pre_fail[["t", "left_phase", "right_phase", "delta_l", "delta_r", "hip_height"]].tail(10).to_string())
+            print(
+                pre_fail[
+                    [
+                        "t",
+                        "left_phase",
+                        "right_phase",
+                        "delta_l",
+                        "delta_r",
+                        "hip_height",
+                    ]
+                ]
+                .tail(10)
+                .to_string()
+            )
 
     # 4. 计算 final distance 统计
     final_distances = []
@@ -153,7 +181,9 @@ def analyze_checkpoint(checkpoint_path: str, checkpoint_name: str, env: Residual
     print(f"Max: {np.max(final_distances):.3f}m")
 
     # 保存详细数据
-    output_path = HW1_ROOT / "logs" / "residual_rl_v2" / f"fingerprint_{checkpoint_name}.csv"
+    output_path = (
+        HW1_ROOT / "logs" / "residual_rl_v2" / f"fingerprint_{checkpoint_name}.csv"
+    )
     df.to_csv(output_path, index=False)
     print(f"\n[OK] Saved to {output_path}")
 
@@ -175,19 +205,27 @@ def compare_checkpoints(results: Dict[str, Dict[str, Any]]):
 
     # 1. 成功率和距离对比
     print(f"\n## Performance Comparison")
-    print(f"{'Checkpoint':<10} {'Success Rate':<15} {'Mean Distance':<15} {'Std Distance':<15}")
+    print(
+        f"{'Checkpoint':<10} {'Success Rate':<15} {'Mean Distance':<15} {'Std Distance':<15}"
+    )
     print("-" * 55)
     for name in ["100k", "150k", "200k", "350k"]:
         if name in results:
             r = results[name]
-            print(f"{name:<10} {r['success_rate']:<15.1%} {r['mean_distance']:<15.3f} {r['std_distance']:<15.3f}")
+            print(
+                f"{name:<10} {r['success_rate']:<15.1%} {r['mean_distance']:<15.3f} {r['std_distance']:<15.3f}"
+            )
 
     # 2. 读取原始数据进行 phase-level 对比
     print(f"\n## Phase-Level Action Delta Comparison (200k vs 350k)")
 
     if "200k" in results and "350k" in results:
-        df_200k = pd.read_csv(HW1_ROOT / "logs" / "residual_rl_v2" / "fingerprint_200k.csv")
-        df_350k = pd.read_csv(HW1_ROOT / "logs" / "residual_rl_v2" / "fingerprint_350k.csv")
+        df_200k = pd.read_csv(
+            HW1_ROOT / "logs" / "residual_rl_v2" / "fingerprint_200k.csv"
+        )
+        df_350k = pd.read_csv(
+            HW1_ROOT / "logs" / "residual_rl_v2" / "fingerprint_350k.csv"
+        )
 
         # 对比每个 phase pair 的 delta 均值
         phase_pairs = [
@@ -197,12 +235,18 @@ def compare_checkpoints(results: Dict[str, Dict[str, Any]]):
             ("swing_retract", "stance_early"),
         ]
 
-        print(f"\n{'Left Phase':<15} {'Right Phase':<15} {'200k delta_l':<12} {'350k delta_l':<12} {'Diff':<10} {'200k delta_r':<12} {'350k delta_r':<12} {'Diff':<10}")
+        print(
+            f"\n{'Left Phase':<15} {'Right Phase':<15} {'200k delta_l':<12} {'350k delta_l':<12} {'Diff':<10} {'200k delta_r':<12} {'350k delta_r':<12} {'Diff':<10}"
+        )
         print("-" * 110)
 
         for left_p, right_p in phase_pairs:
-            mask_200k = (df_200k["left_phase"] == left_p) & (df_200k["right_phase"] == right_p)
-            mask_350k = (df_350k["left_phase"] == left_p) & (df_350k["right_phase"] == right_p)
+            mask_200k = (df_200k["left_phase"] == left_p) & (
+                df_200k["right_phase"] == right_p
+            )
+            mask_350k = (df_350k["left_phase"] == left_p) & (
+                df_350k["right_phase"] == right_p
+            )
 
             if mask_200k.sum() > 0 and mask_350k.sum() > 0:
                 delta_l_200k = df_200k[mask_200k]["delta_l"].mean()
@@ -213,15 +257,17 @@ def compare_checkpoints(results: Dict[str, Dict[str, Any]]):
                 diff_l = delta_l_350k - delta_l_200k
                 diff_r = delta_r_350k - delta_r_200k
 
-                print(f"{left_p:<15} {right_p:<15} {delta_l_200k:<12.4f} {delta_l_350k:<12.4f} {diff_l:<10.4f} {delta_r_200k:<12.4f} {delta_r_350k:<12.4f} {diff_r:<10.4f}")
+                print(
+                    f"{left_p:<15} {right_p:<15} {delta_l_200k:<12.4f} {delta_l_350k:<12.4f} {diff_l:<10.4f} {delta_r_200k:<12.4f} {delta_r_350k:<12.4f} {diff_r:<10.4f}"
+                )
 
 
 def main():
     """主函数：执行 Policy Fingerprint 诊断"""
-    print("="*80)
+    print("=" * 80)
     print("Policy Fingerprint Diagnosis Tool")
     print("Goal: Locate which phase causes 350k checkpoint collapse")
-    print("="*80)
+    print("=" * 80)
 
     # 创建环境（修正：12秒 duration = 12000ms / 5ms = 2400 steps）
     print("\nInitializing environment...")
@@ -260,12 +306,12 @@ def main():
         json.dump(report, f, indent=2, ensure_ascii=False)
 
     print(f"\n[OK] Report saved to {report_path}")
-    print("\n" + "="*80)
+    print("\n" + "=" * 80)
     print("Diagnosis Complete! Check:")
     print("  1. fingerprint_*.csv - Step-by-step data")
     print("  2. fingerprint_diagnosis.json - Summary statistics")
     print("  3. Console output - Phase-level action delta comparison")
-    print("="*80)
+    print("=" * 80)
 
 
 if __name__ == "__main__":

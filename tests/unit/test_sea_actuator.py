@@ -172,15 +172,15 @@ class TestSEAActuator:
         audit = sea.finalize_energy_audit(q_link_final=0.0)
 
         # Energy balance check
-        W_in = audit['W_motor_input_J']
-        W_out = audit['W_link_useful_J']
-        W_loss = audit['W_damper_loss_J']
-        dPE = audit['dPE_spring_J']
+        W_in = audit["W_motor_input_J"]
+        W_out = audit["W_link_useful_J"]
+        W_loss = audit["W_damper_loss_J"]
+        dPE = audit["dPE_spring_J"]
 
         # The energy balance may not be exact because the test uses
         # simplified kinematics. We just verify accounting is self-consistent.
         # In real V15.1 simulations with MuJoCo dynamics, balance is much tighter.
-        assert audit['energy_balance_error_pct'] < 100.0  # Reasonable range
+        assert audit["energy_balance_error_pct"] < 100.0  # Reasonable range
 
     def test_reset(self):
         """Test reset functionality."""
@@ -260,8 +260,8 @@ class TestXMLGeneration:
         xml = build_sea_xml_fragment("test", params, 0.0)
 
         assert "1234.5" in xml  # k_sea
-        assert "6.78" in xml    # c_sea (manual)
-        assert "0.02" in xml    # rotor mass
+        assert "6.78" in xml  # c_sea (manual)
+        assert "0.02" in xml  # rotor mass
 
 
 class TestV151Integration:

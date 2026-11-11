@@ -211,7 +211,10 @@ class BayesianOptimizer:
 
     def _format_params(self, params: dict[str, Any]) -> str:
         """格式化参数显示。"""
-        items = [f"{k}={v:.3f}" if isinstance(v, float) else f"{k}={v}" for k, v in params.items()]
+        items = [
+            f"{k}={v:.3f}" if isinstance(v, float) else f"{k}={v}"
+            for k, v in params.items()
+        ]
         return "{" + ", ".join(items) + "}"
 
     def save_results(self, result: OptimizationResult, filepath: Path) -> None:

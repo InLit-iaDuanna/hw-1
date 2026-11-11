@@ -9,6 +9,7 @@ sys.path.insert(0, str(HW1_ROOT))
 
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
+
 def test_inner_steps_impact():
     """测试inner_steps对结果的影响"""
 
@@ -38,8 +39,8 @@ def test_inner_steps_impact():
             action = np.array([0.0, 0.0], dtype=np.float32)
             obs, reward, terminated, truncated, info = env.step(action)
 
-        distance = info['episode_distance']
-        sim_time = info['sim_time']
+        distance = info["episode_distance"]
+        sim_time = info["sim_time"]
         success = truncated and not terminated
 
         status = "[SUCCESS]" if success else "[FAIL]"
@@ -52,6 +53,7 @@ def test_inner_steps_impact():
         env.close()
 
     print("\n" + "=" * 80)
+
 
 if __name__ == "__main__":
     test_inner_steps_impact()

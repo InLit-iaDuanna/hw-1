@@ -67,7 +67,13 @@ class CompassGaitEnv(gym.Env):
         # Locate model file
         if model_path is None:
             base_path = Path(__file__).parent.parent
-            model_path = base_path / "v13_7_friction_compensation" / "out" / "v13_7_models" / "friction_comp_walker.xml"
+            model_path = (
+                base_path
+                / "v13_7_friction_compensation"
+                / "out"
+                / "v13_7_models"
+                / "friction_comp_walker.xml"
+            )
 
         self.model_path = str(model_path)
         self.reward_type = reward_type
@@ -85,34 +91,63 @@ class CompassGaitEnv(gym.Env):
         self._setup_indices()
 
         # Define action space: 4 joint torques [-6, 6] N·m
-        self.action_space = spaces.Box(
-            low=-6.0,
-            high=6.0,
-            shape=(4,),
-            dtype=np.float32
-        )
+        self.action_space = spaces.Box(low=-6.0, high=6.0, shape=(4,), dtype=np.float32)
 
         # Define observation space: 20-dimensional state
-        obs_low = np.array([
-            -np.pi, 0, -np.pi/6, -np.pi, 0, -np.pi/6,  # joint angles (rad)
-            -10, -10, -10, -10, -10, -10,  # joint velocities (rad/s)
-            -np.inf, 0.0,  # hip position x, z
-            -10, -10,  # hip velocity vx, vz
-            0, 0, 0, 0  # contact states
-        ], dtype=np.float32)
+        obs_low = np.array(
+            [
+                -np.pi,
+                0,
+                -np.pi / 6,
+                -np.pi,
+                0,
+                -np.pi / 6,  # joint angles (rad)
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,
+                -10,  # joint velocities (rad/s)
+                -np.inf,
+                0.0,  # hip position x, z
+                -10,
+                -10,  # hip velocity vx, vz
+                0,
+                0,
+                0,
+                0,  # contact states
+            ],
+            dtype=np.float32,
+        )
 
-        obs_high = np.array([
-            np.pi, np.pi*70/180, np.pi/6, np.pi, np.pi*70/180, np.pi/6,  # joint angles
-            10, 10, 10, 10, 10, 10,  # joint velocities
-            np.inf, 2.0,  # hip position
-            10, 10,  # hip velocity
-            1, 1, 1, 1  # contact states
-        ], dtype=np.float32)
+        obs_high = np.array(
+            [
+                np.pi,
+                np.pi * 70 / 180,
+                np.pi / 6,
+                np.pi,
+                np.pi * 70 / 180,
+                np.pi / 6,  # joint angles
+                10,
+                10,
+                10,
+                10,
+                10,
+                10,  # joint velocities
+                np.inf,
+                2.0,  # hip position
+                10,
+                10,  # hip velocity
+                1,
+                1,
+                1,
+                1,  # contact states
+            ],
+            dtype=np.float32,
+        )
 
         self.observation_space = spaces.Box(
-            low=obs_low,
-            high=obs_high,
-            dtype=np.float32
+            low=obs_low, high=obs_high, dtype=np.float32
         )
 
         # State tracking
@@ -136,47 +171,66 @@ class CompassGaitEnv(gym.Env):
         """Extract joint, actuator, and sensor indices from model."""
         # Joint indices (exclude hip_x and hip_z which are free slides)
         self.joint_names = [
-            "left_hip", "left_knee", "left_ankle",
-            "right_hip", "right_knee", "right_ankle"
+            "left_hip",
+            "left_knee",
+            "left_ankle",
+            "right_hip",
+            "right_knee",
+            "right_ankle",
         ]
-        self.joint_ids = [mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, name)
-                          for name in self.joint_names]
+        self.joint_ids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_JOINT, name)
+            for name in self.joint_names
+        ]
         # qpos / qvel addresses for each named joint.
         # NOTE: mj_name2id returns the joint index; the actual slot in qpos/qvel
         # must be looked up via jnt_qposadr / jnt_dofadr. Do NOT hard-code "+2".
-        self.joint_qposadr = [int(self.model.jnt_qposadr[jid]) for jid in self.joint_ids]
+        self.joint_qposadr = [
+            int(self.model.jnt_qposadr[jid]) for jid in self.joint_ids
+        ]
         self.joint_dofadr = [int(self.model.jnt_dofadr[jid]) for jid in self.joint_ids]
 
         # Actuator indices
         self.actuator_names = [
-            "left_hip_muscle", "left_knee_stabilizer",
-            "right_hip_muscle", "right_knee_stabilizer"
+            "left_hip_muscle",
+            "left_knee_stabilizer",
+            "right_hip_muscle",
+            "right_knee_stabilizer",
         ]
-        self.actuator_ids = [mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
-                             for name in self.actuator_names]
+        self.actuator_ids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
+            for name in self.actuator_names
+        ]
 
         # Body indices
-        self.hip_body_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_BODY, "hip")
+        self.hip_body_id = mujoco.mj_name2id(
+            self.model, mujoco.mjtObj.mjOBJ_BODY, "hip"
+        )
 
         # Site indices for contact detection
         self.contact_site_names = [
-            "left_heel_site", "left_toe_site",
-            "right_heel_site", "right_toe_site"
+            "left_heel_site",
+            "left_toe_site",
+            "right_heel_site",
+            "right_toe_site",
         ]
-        self.contact_site_ids = [mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_SITE, name)
-                                 for name in self.contact_site_names]
+        self.contact_site_ids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_SITE, name)
+            for name in self.contact_site_names
+        ]
 
         # Geom indices for contact detection (alternative method)
-        self.foot_geom_names = [
-            "left_heel", "left_toe", "right_heel", "right_toe"
+        self.foot_geom_names = ["left_heel", "left_toe", "right_heel", "right_toe"]
+        self.foot_geom_ids = [
+            mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, name)
+            for name in self.foot_geom_names
         ]
-        self.foot_geom_ids = [mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_GEOM, name)
-                              for name in self.foot_geom_names]
 
     def _setup_renderer(self):
         """Initialize MuJoCo renderer."""
         if self.render_mode == "human":
             from mujoco import viewer
+
             self.renderer = viewer.launch_passive(self.model, self.data)
         elif self.render_mode == "rgb_array":
             self.renderer = mujoco.Renderer(self.model, height=480, width=640)
@@ -189,10 +243,14 @@ class CompassGaitEnv(gym.Env):
             20-dimensional observation array
         """
         # Joint angles (6)
-        joint_angles = np.array([self.data.qpos[self.joint_qposadr[i]] for i in range(6)])
+        joint_angles = np.array(
+            [self.data.qpos[self.joint_qposadr[i]] for i in range(6)]
+        )
 
         # Joint velocities (6)
-        joint_velocities = np.array([self.data.qvel[self.joint_dofadr[i]] for i in range(6)])
+        joint_velocities = np.array(
+            [self.data.qvel[self.joint_dofadr[i]] for i in range(6)]
+        )
 
         # Hip position (2): x and z
         hip_pos = self.data.xpos[self.hip_body_id][[0, 2]]
@@ -203,13 +261,9 @@ class CompassGaitEnv(gym.Env):
         # Contact states (4): binary indicator for each foot contact point
         contact_states = self._get_contact_states()
 
-        obs = np.concatenate([
-            joint_angles,
-            joint_velocities,
-            hip_pos,
-            hip_vel,
-            contact_states
-        ]).astype(np.float32)
+        obs = np.concatenate(
+            [joint_angles, joint_velocities, hip_pos, hip_vel, contact_states]
+        ).astype(np.float32)
 
         return obs
 
@@ -232,7 +286,9 @@ class CompassGaitEnv(gym.Env):
             for j, foot_geom_id in enumerate(self.foot_geom_ids):
                 if geom1 == foot_geom_id or geom2 == foot_geom_id:
                     # Contact detected, check if force magnitude is significant
-                    if np.linalg.norm(contact.frame[:3]) > 0.1:  # Normal force threshold
+                    if (
+                        np.linalg.norm(contact.frame[:3]) > 0.1
+                    ):  # Normal force threshold
                         contact_states[j] = 1.0
 
         return contact_states
@@ -287,7 +343,7 @@ class CompassGaitEnv(gym.Env):
         hip_vel_x = self.data.cvel[self.hip_body_id][3]
 
         # Energy cost: sum of squared torques
-        energy_cost = np.sum(action ** 2)
+        energy_cost = np.sum(action**2)
         self.cumulative_energy += energy_cost
 
         # Reward: forward velocity minus energy penalty
@@ -295,7 +351,7 @@ class CompassGaitEnv(gym.Env):
         energy_penalty = 0.01 * energy_cost
 
         # Smoothness penalty: discourage abrupt control changes
-        if hasattr(self, 'last_action'):
+        if hasattr(self, "last_action"):
             smoothness_penalty = 0.001 * np.sum((action - self.last_action) ** 2)
         else:
             smoothness_penalty = 0.0
@@ -318,7 +374,9 @@ class CompassGaitEnv(gym.Env):
         left_knee_angle = self.data.qpos[self.joint_qposadr[1]]
         right_knee_angle = self.data.qpos[self.joint_qposadr[4]]
 
-        gait_phase = np.array([left_hip_angle, right_hip_angle, left_knee_angle, right_knee_angle])
+        gait_phase = np.array(
+            [left_hip_angle, right_hip_angle, left_knee_angle, right_knee_angle]
+        )
         self.gait_phase_history.append(gait_phase)
 
         # Keep history bounded
@@ -402,9 +460,7 @@ class CompassGaitEnv(gym.Env):
         return self.steps >= self.max_steps
 
     def reset(
-        self,
-        seed: Optional[int] = None,
-        options: Optional[Dict[str, Any]] = None
+        self, seed: Optional[int] = None, options: Optional[Dict[str, Any]] = None
     ) -> Tuple[np.ndarray, Dict[str, Any]]:
         """
         Reset the environment to initial state with random perturbations.
@@ -424,17 +480,23 @@ class CompassGaitEnv(gym.Env):
 
         # Set initial position: hip at (0, 1.0), standing upright
         self.data.qpos[0] = 0.0  # hip_x (forward position)
-        self.data.qpos[1] = 1.0  # hip_z (height) - CORRECT: qpos[1] is hip_z based on jnt_qposadr verification
+        self.data.qpos[1] = (
+            1.0  # hip_z (height) - CORRECT: qpos[1] is hip_z based on jnt_qposadr verification
+        )
 
         # Add random perturbations to joint angles
         if self.reset_noise_scale > 0:
-            noise = self.np_random.normal(0, self.reset_noise_scale, size=len(self.joint_ids))
+            noise = self.np_random.normal(
+                0, self.reset_noise_scale, size=len(self.joint_ids)
+            )
             for i in range(len(self.joint_ids)):
                 self.data.qpos[self.joint_qposadr[i]] += noise[i]
 
         # Add small random velocities
         if self.reset_noise_scale > 0:
-            vel_noise = self.np_random.normal(0, self.reset_noise_scale * 0.5, size=len(self.joint_ids))
+            vel_noise = self.np_random.normal(
+                0, self.reset_noise_scale * 0.5, size=len(self.joint_ids)
+            )
             for i in range(len(self.joint_ids)):
                 self.data.qvel[self.joint_dofadr[i]] = vel_noise[i]
 
@@ -446,8 +508,8 @@ class CompassGaitEnv(gym.Env):
         self.last_hip_x = self.data.xpos[self.hip_body_id][0]
         self.cumulative_energy = 0.0
         self.gait_phase_history = []
-        if hasattr(self, 'last_action'):
-            delattr(self, 'last_action')
+        if hasattr(self, "last_action"):
+            delattr(self, "last_action")
 
         observation = self._get_obs()
         info = {
@@ -458,8 +520,7 @@ class CompassGaitEnv(gym.Env):
         return observation, info
 
     def step(
-        self,
-        action: np.ndarray
+        self, action: np.ndarray
     ) -> Tuple[np.ndarray, float, bool, bool, Dict[str, Any]]:
         """
         Execute one environment step.

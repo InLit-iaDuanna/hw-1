@@ -16,7 +16,6 @@ sys.path.insert(0, str(HW1_ROOT / "v10_rolling_foot_biomimetic_gait"))
 
 from simulate_rolling_foot_gait_v10 import RollingFootParams, run_simulation
 
-
 # ============================================================================
 # 原始串行实现
 # ============================================================================
@@ -252,7 +251,11 @@ if __name__ == "__main__":
     # 示例 2: 生成代码模板
     print("\n\n示例 2: 生成并行化代码模板")
     print("=" * 80)
-    scan_file = HW1_ROOT / "v10_rolling_foot_biomimetic_gait" / "scan_rolling_foot_params_v10.py"
+    scan_file = (
+        HW1_ROOT
+        / "v10_rolling_foot_biomimetic_gait"
+        / "scan_rolling_foot_params_v10.py"
+    )
     template = create_parallel_scan_template(scan_file)
     print(template)
 

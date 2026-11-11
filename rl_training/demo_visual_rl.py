@@ -78,7 +78,9 @@ def run_rl_walker_visual():
     print()
 
     # 加载 PPO 模型
-    model_path = HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    model_path = (
+        HW1_ROOT / "models/residual_rl_v2_500k/checkpoints/ppo_500k_100000_steps.zip"
+    )
 
     if not model_path.exists():
         print(f"错误：模型文件不存在")
@@ -103,6 +105,7 @@ def run_rl_walker_visual():
 
     # 初始化
     from simulate_passive_arms_v14 import initialize
+
     initialize(mj_model, mj_data, v137_params.base)
 
     # FSM 状态
@@ -121,10 +124,18 @@ def run_rl_walker_visual():
     }
 
     qvel_addr = {
-        "left_hip": mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_JOINT, "left_hip_joint"),
-        "left_knee": mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_JOINT, "left_knee_joint"),
-        "right_hip": mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_JOINT, "right_hip_joint"),
-        "right_knee": mujoco.mj_name2id(mj_model, mujoco.mjtObj.mjOBJ_JOINT, "right_knee_joint"),
+        "left_hip": mujoco.mj_name2id(
+            mj_model, mujoco.mjtObj.mjOBJ_JOINT, "left_hip_joint"
+        ),
+        "left_knee": mujoco.mj_name2id(
+            mj_model, mujoco.mjtObj.mjOBJ_JOINT, "left_knee_joint"
+        ),
+        "right_hip": mujoco.mj_name2id(
+            mj_model, mujoco.mjtObj.mjOBJ_JOINT, "right_hip_joint"
+        ),
+        "right_knee": mujoco.mj_name2id(
+            mj_model, mujoco.mjtObj.mjOBJ_JOINT, "right_knee_joint"
+        ),
     }
 
     print("正在启动可视化窗口...")
@@ -147,15 +158,19 @@ def run_rl_walker_visual():
         hip_vel = mj_data.qvel[[0, 1]].copy()  # hip vx, vz
 
         left_c, right_c = contact_flags(mj_model, mj_data)
-        contact_states = np.array([
-            float(left_c), float(not left_c),
-            float(right_c), float(not right_c)
-        ], dtype=np.float32)
+        contact_states = np.array(
+            [float(left_c), float(not left_c), float(right_c), float(not right_c)],
+            dtype=np.float32,
+        )
 
         # 后 22 维（扩展观测）- 简化版
         left_phase_onehot = np.array([1, 0, 0, 0], dtype=np.float32)  # stance_early
         right_phase_onehot = np.array([0, 0, 1, 0], dtype=np.float32)  # swing_thrust
-        support_onehot = np.array([1, 0], dtype=np.float32) if support_foot == "left" else np.array([0, 1], dtype=np.float32)
+        support_onehot = (
+            np.array([1, 0], dtype=np.float32)
+            if support_foot == "left"
+            else np.array([0, 1], dtype=np.float32)
+        )
         t_since_contact_norm = 0.5
         t_since_burst_norm = 0.5
         E_current_norm = 1.0
@@ -163,22 +178,24 @@ def run_rl_walker_visual():
         base_torques_norm = np.zeros(4, dtype=np.float32)
         last_residuals_norm = np.zeros(4, dtype=np.float32)
 
-        obs = np.concatenate([
-            joint_angles,
-            joint_velocities,
-            hip_pos,
-            hip_vel,
-            contact_states,
-            left_phase_onehot,
-            right_phase_onehot,
-            support_onehot,
-            [t_since_contact_norm],
-            [t_since_burst_norm],
-            [E_current_norm],
-            [E_diff_norm],
-            base_torques_norm,
-            last_residuals_norm,
-        ]).astype(np.float32)
+        obs = np.concatenate(
+            [
+                joint_angles,
+                joint_velocities,
+                hip_pos,
+                hip_vel,
+                contact_states,
+                left_phase_onehot,
+                right_phase_onehot,
+                support_onehot,
+                [t_since_contact_norm],
+                [t_since_burst_norm],
+                [E_current_norm],
+                [E_diff_norm],
+                base_torques_norm,
+                last_residuals_norm,
+            ]
+        ).astype(np.float32)
 
         return obs
 
@@ -219,24 +236,44 @@ def run_rl_walker_visual():
 
             # V13.6 FSM 控制
             E_current = _mechanical_energy(v137_params.base, mj_data)
-            tau = control_v136(v137_params.fsm, mj_data, t, support_foot, burst_start_t, E_current)
+            tau = control_v136(
+                v137_params.fsm, mj_data, t, support_foot, burst_start_t, E_current
+            )
 
             l_hip_des, l_knee_des = tau[0], tau[1]
             r_hip_des, r_knee_des = tau[2], tau[3]
             left_phase, right_phase = str(tau[5]), str(tau[6])
 
             # 摩擦补偿
-            l_hip_des = _compensate(l_hip_des, float(mj_data.qvel[qvel_addr["left_hip"]]), v137_params.hip_motor)
-            l_knee_des = _compensate(l_knee_des, float(mj_data.qvel[qvel_addr["left_knee"]]), v137_params.knee_motor)
-            r_hip_des = _compensate(r_hip_des, float(mj_data.qvel[qvel_addr["right_hip"]]), v137_params.hip_motor)
-            r_knee_des = _compensate(r_knee_des, float(mj_data.qvel[qvel_addr["right_knee"]]), v137_params.knee_motor)
+            l_hip_des = _compensate(
+                l_hip_des,
+                float(mj_data.qvel[qvel_addr["left_hip"]]),
+                v137_params.hip_motor,
+            )
+            l_knee_des = _compensate(
+                l_knee_des,
+                float(mj_data.qvel[qvel_addr["left_knee"]]),
+                v137_params.knee_motor,
+            )
+            r_hip_des = _compensate(
+                r_hip_des,
+                float(mj_data.qvel[qvel_addr["right_hip"]]),
+                v137_params.hip_motor,
+            )
+            r_knee_des = _compensate(
+                r_knee_des,
+                float(mj_data.qvel[qvel_addr["right_knee"]]),
+                v137_params.knee_motor,
+            )
 
             # 每 5 步运行一次 PPO（200Hz）
             if step % 5 == 0:
                 obs = get_observation()
                 ppo_action, _ = model.predict(obs, deterministic=True)
                 # 转换 action: delta -> actual
-                actual_action = np.clip(prior_action + delta_scale * ppo_action, -1.0, 1.0)
+                actual_action = np.clip(
+                    prior_action + delta_scale * ppo_action, -1.0, 1.0
+                )
                 residual = actual_action * residual_scale
 
             # 添加 residual
@@ -244,10 +281,18 @@ def run_rl_walker_visual():
             r_hip_des += residual[1]
 
             # L1 电机模型
-            l_hip_out, _ = actuators["left_hip"].compute_actual_torque(l_hip_des, float(mj_data.qvel[qvel_addr["left_hip"]]))
-            l_knee_out, _ = actuators["left_knee"].compute_actual_torque(l_knee_des, float(mj_data.qvel[qvel_addr["left_knee"]]))
-            r_hip_out, _ = actuators["right_hip"].compute_actual_torque(r_hip_des, float(mj_data.qvel[qvel_addr["right_hip"]]))
-            r_knee_out, _ = actuators["right_knee"].compute_actual_torque(r_knee_des, float(mj_data.qvel[qvel_addr["right_knee"]]))
+            l_hip_out, _ = actuators["left_hip"].compute_actual_torque(
+                l_hip_des, float(mj_data.qvel[qvel_addr["left_hip"]])
+            )
+            l_knee_out, _ = actuators["left_knee"].compute_actual_torque(
+                l_knee_des, float(mj_data.qvel[qvel_addr["left_knee"]])
+            )
+            r_hip_out, _ = actuators["right_hip"].compute_actual_torque(
+                r_hip_des, float(mj_data.qvel[qvel_addr["right_hip"]])
+            )
+            r_knee_out, _ = actuators["right_knee"].compute_actual_torque(
+                r_knee_des, float(mj_data.qvel[qvel_addr["right_knee"]])
+            )
 
             # 应用控制
             mj_data.ctrl[0] = l_hip_out
@@ -266,7 +311,10 @@ def run_rl_walker_visual():
             hip_height = mj_data.qpos[2]
 
             if step % 100 == 0:  # 每 100ms 打印一次
-                print(f"\r时间: {t:.2f}s | 距离: {distance:.3f}m | 支撑脚: {support_foot} | 左相位: {left_phase} | 右相位: {right_phase}", end="")
+                print(
+                    f"\r时间: {t:.2f}s | 距离: {distance:.3f}m | 支撑脚: {support_foot} | 左相位: {left_phase} | 右相位: {right_phase}",
+                    end="",
+                )
 
             # 控制帧率
             time_until_next_step = dt - (time.time() - step_start)
@@ -297,4 +345,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n\n错误: {e}")
         import traceback
+
         traceback.print_exc()

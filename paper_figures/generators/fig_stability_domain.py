@@ -1,4 +1,4 @@
-﻿"""Stability Domain Heatmap: Parameter space exploration results."""
+"""Stability Domain Heatmap: Parameter space exploration results."""
 
 from __future__ import annotations
 

@@ -97,14 +97,19 @@ def example_stiffness_comparison():
             # Spring response depends on stiffness
             # Softer spring -> larger deflection
             deflection_scale = 1000.0 / params.k_sea
-            q_link = deflection_scale * 0.05 * math.exp(-5 * t) * math.sin(
-                params.spring_natural_frequency() * t
+            q_link = (
+                deflection_scale
+                * 0.05
+                * math.exp(-5 * t)
+                * math.sin(params.spring_natural_frequency() * t)
             )
             qd_link = (
                 deflection_scale
                 * 0.05
                 * (
-                    -5 * math.exp(-5 * t) * math.sin(params.spring_natural_frequency() * t)
+                    -5
+                    * math.exp(-5 * t)
+                    * math.sin(params.spring_natural_frequency() * t)
                     + params.spring_natural_frequency()
                     * math.exp(-5 * t)
                     * math.cos(params.spring_natural_frequency() * t)
@@ -124,7 +129,9 @@ def example_stiffness_comparison():
             }
         )
 
-    print(f"\n{'Preset':<15} {'k (N·m/rad)':<12} {'Max Deflection':<15} {'Damper Loss':<12} {'Max PE':<10}")
+    print(
+        f"\n{'Preset':<15} {'k (N·m/rad)':<12} {'Max Deflection':<15} {'Damper Loss':<12} {'Max PE':<10}"
+    )
     print("-" * 70)
     for r in results:
         print(
@@ -134,9 +141,15 @@ def example_stiffness_comparison():
         )
 
     print("\nObservations:")
-    print("  - Softer springs (k=500) allow larger deflections → better impact absorption")
-    print("  - Stiffer springs (k=10000) behave like rigid coupling → minimal compliance")
-    print("  - V15.1 experiments showed k=500 achieved best performance (4.92m forward)")
+    print(
+        "  - Softer springs (k=500) allow larger deflections → better impact absorption"
+    )
+    print(
+        "  - Stiffer springs (k=10000) behave like rigid coupling → minimal compliance"
+    )
+    print(
+        "  - V15.1 experiments showed k=500 achieved best performance (4.92m forward)"
+    )
 
 
 def example_v151_integration_pattern():

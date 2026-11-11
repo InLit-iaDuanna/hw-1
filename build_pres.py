@@ -2,7 +2,7 @@
 P = []
 a = P.append
 
-a('''<!DOCTYPE html>
+a("""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -39,4 +39,4 @@ a('''<!DOCTYPE html>
 .reveal .controls button{color:var(--t3)}
 .reveal .slide-number{font-family:var(--mono);font-size:11px;color:var(--t3);
   bottom:20px;right:28px}
-''')
+""")

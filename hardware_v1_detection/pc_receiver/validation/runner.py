@@ -65,7 +65,11 @@ class ValidationReport:
     final_clinical: dict = field(default_factory=dict)
 
     def summary_lines(self) -> list[str]:
-        lines = [f"frames replayed: {self.n_frames}", "", "L1 joint-angle round trip (deg):"]
+        lines = [
+            f"frames replayed: {self.n_frames}",
+            "",
+            "L1 joint-angle round trip (deg):",
+        ]
         for je in self.joint_errors:
             lines.append(
                 f"  {je.joint:11s}  rmse={je.rmse_deg:6.3f}  max={je.max_abs_deg:6.3f}  n={je.n}"
@@ -87,7 +91,9 @@ class ValidationReport:
         return lines
 
 
-def _truth_segment_pitch_deg(sample: TrajectorySample, joint: str, pelvis_pitch: float) -> float:
+def _truth_segment_pitch_deg(
+    sample: TrajectorySample, joint: str, pelvis_pitch: float
+) -> float:
     """Ground-truth joint angle in degrees (matches pipeline's joint defs)."""
 
     left_thigh = pelvis_pitch + sample.left_hip
@@ -96,9 +102,9 @@ def _truth_segment_pitch_deg(sample: TrajectorySample, joint: str, pelvis_pitch:
     right_shank = right_thigh - sample.right_knee
 
     table = {
-        "left_knee": left_thigh - left_shank,        # == left_knee angle
+        "left_knee": left_thigh - left_shank,  # == left_knee angle
         "right_knee": right_thigh - right_shank,
-        "left_hip": left_thigh - pelvis_pitch,       # == left_hip angle
+        "left_hip": left_thigh - pelvis_pitch,  # == left_hip angle
         "right_hip": right_thigh - pelvis_pitch,
         "left_ankle": (left_shank + sample.left_ankle) - left_shank,
         "right_ankle": (right_shank + sample.right_ankle) - right_shank,
@@ -141,7 +147,9 @@ def run_validation(
         max_abs = 0.0
         count = 0
         for idx in range(warmup_frames, len(samples)):
-            truth = _truth_segment_pitch_deg(samples[idx], joint, config.pelvis_pitch_rad)
+            truth = _truth_segment_pitch_deg(
+                samples[idx], joint, config.pelvis_pitch_rad
+            )
             est = derived[idx].joints.as_dict()[joint]
             err = est - truth
             sq += err * err

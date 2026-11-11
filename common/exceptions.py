@@ -82,6 +82,7 @@ class HW1Error(Exception):
 
 class ModelError(HW1Error):
     """模型相关错误的基类。"""
+
     pass
 
 
@@ -101,7 +102,9 @@ class ModelLoadError(ModelError):
             context["path"] = path
         if xml_hash:
             context["xml_hash"] = xml_hash
-        super().__init__(message, context=context, original_exception=original_exception)
+        super().__init__(
+            message, context=context, original_exception=original_exception
+        )
 
 
 class ModelValidationError(ModelError):
@@ -132,6 +135,7 @@ class ModelValidationError(ModelError):
 
 class SimulationError(HW1Error):
     """仿真相关错误的基类。"""
+
     pass
 
 
@@ -205,6 +209,7 @@ class SimulationNaNError(SimulationError):
 
 class DataError(HW1Error):
     """数据处理相关错误的基类。"""
+
     pass
 
 
@@ -245,7 +250,9 @@ class DataIOError(DataError):
             context["path"] = path
         if operation:
             context["operation"] = operation
-        super().__init__(message, context=context, original_exception=original_exception)
+        super().__init__(
+            message, context=context, original_exception=original_exception
+        )
 
 
 # ============================================================================
@@ -255,6 +262,7 @@ class DataIOError(DataError):
 
 class ControlError(HW1Error):
     """控制相关错误的基类。"""
+
     pass
 
 

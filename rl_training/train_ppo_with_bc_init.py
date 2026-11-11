@@ -29,6 +29,7 @@ def make_env(rank, seed=0):
         rank: 进程索引
         seed: 随机种子
     """
+
     def _init():
         from environment import CompassGaitEnv
 
@@ -36,7 +37,7 @@ def make_env(rank, seed=0):
             reward_type="energy_efficient",
             fall_height_threshold=0.2,
             max_steps=1000,
-            frame_skip=20
+            frame_skip=20,
         )
         env.reset(seed=seed + rank)
         return env
@@ -57,7 +58,7 @@ def load_bc_weights_into_ppo(ppo_model: PPO, bc_weights_path: str):
 
     # 加载BC权重
     checkpoint = torch.load(bc_weights_path, map_location=ppo_model.device)
-    bc_state_dict = checkpoint['model_state_dict']
+    bc_state_dict = checkpoint["model_state_dict"]
 
     print(f"BC模型训练信息:")
     print(f"  Epoch: {checkpoint.get('epoch', 'N/A')}")
@@ -73,16 +74,20 @@ def load_bc_weights_into_ppo(ppo_model: PPO, bc_weights_path: str):
 
     # 映射BC权重到PPO
     # BC layer 0 -> PPO mlp_extractor.policy_net.0
-    policy.mlp_extractor.policy_net[0].weight.data.copy_(bc_state_dict['network.0.weight'])
-    policy.mlp_extractor.policy_net[0].bias.data.copy_(bc_state_dict['network.0.bias'])
+    policy.mlp_extractor.policy_net[0].weight.data.copy_(
+        bc_state_dict["network.0.weight"]
+    )
+    policy.mlp_extractor.policy_net[0].bias.data.copy_(bc_state_dict["network.0.bias"])
 
     # BC layer 2 -> PPO mlp_extractor.policy_net.2
-    policy.mlp_extractor.policy_net[2].weight.data.copy_(bc_state_dict['network.2.weight'])
-    policy.mlp_extractor.policy_net[2].bias.data.copy_(bc_state_dict['network.2.bias'])
+    policy.mlp_extractor.policy_net[2].weight.data.copy_(
+        bc_state_dict["network.2.weight"]
+    )
+    policy.mlp_extractor.policy_net[2].bias.data.copy_(bc_state_dict["network.2.bias"])
 
     # BC layer 4 -> PPO action_net
-    policy.action_net.weight.data.copy_(bc_state_dict['network.4.weight'])
-    policy.action_net.bias.data.copy_(bc_state_dict['network.4.bias'])
+    policy.action_net.weight.data.copy_(bc_state_dict["network.4.weight"])
+    policy.action_net.bias.data.copy_(bc_state_dict["network.4.bias"])
 
     print("[OK] BC权重已成功加载到PPO policy")
     print()
@@ -97,7 +102,7 @@ def train_ppo_with_bc_init(
     batch_size: int = 64,
     checkpoint_freq: int = 50_000,
     log_dir: str = "./logs_bc_warmstart",
-    model_dir: str = "./models_bc_warmstart"
+    model_dir: str = "./models_bc_warmstart",
 ):
     """
     使用BC warm-start训练PPO
@@ -169,7 +174,7 @@ def train_ppo_with_bc_init(
         _init_setup_model=True,
         policy_kwargs=dict(
             net_arch=[dict(pi=[128, 128], vf=[128, 128])]  # 明确指定网络架构
-        )
+        ),
     )
 
     print(f"[OK] PPO模型初始化完成 (device: {model.device})")
@@ -192,7 +197,7 @@ def train_ppo_with_bc_init(
         save_path=checkpoint_dir,
         name_prefix="ppo_bc_warmstart",
         save_replay_buffer=False,
-        save_vecnormalize=True
+        save_vecnormalize=True,
     )
 
     print("=" * 80)
@@ -209,7 +214,7 @@ def train_ppo_with_bc_init(
             log_interval=10,
             tb_log_name="PPO_BC_warmstart",
             reset_num_timesteps=True,
-            progress_bar=False
+            progress_bar=False,
         )
 
         print()
@@ -239,25 +244,29 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="PPO训练 (BC Warm-Start)")
-    parser.add_argument("--bc-weights", type=str, default="best_bc_policy_weights.pth",
-                        help="BC权重路径")
-    parser.add_argument("--timesteps", type=int, default=5_000_000,
-                        help="总训练步数")
-    parser.add_argument("--envs", type=int, default=8,
-                        help="并行环境数")
-    parser.add_argument("--lr", type=float, default=3e-4,
-                        help="学习率")
-    parser.add_argument("--log-dir", type=str, default="./logs_bc_warmstart",
-                        help="日志目录")
-    parser.add_argument("--model-dir", type=str, default="./models_bc_warmstart",
-                        help="模型保存目录")
+    parser.add_argument(
+        "--bc-weights",
+        type=str,
+        default="best_bc_policy_weights.pth",
+        help="BC权重路径",
+    )
+    parser.add_argument("--timesteps", type=int, default=5_000_000, help="总训练步数")
+    parser.add_argument("--envs", type=int, default=8, help="并行环境数")
+    parser.add_argument("--lr", type=float, default=3e-4, help="学习率")
+    parser.add_argument(
+        "--log-dir", type=str, default="./logs_bc_warmstart", help="日志目录"
+    )
+    parser.add_argument(
+        "--model-dir", type=str, default="./models_bc_warmstart", help="模型保存目录"
+    )
 
     args = parser.parse_args()
 
     # 设置多进程启动方法（Windows兼容性）
     import multiprocessing
+
     try:
-        multiprocessing.set_start_method('spawn')
+        multiprocessing.set_start_method("spawn")
     except RuntimeError:
         pass
 
@@ -267,5 +276,5 @@ if __name__ == "__main__":
         num_envs=args.envs,
         learning_rate=args.lr,
         log_dir=args.log_dir,
-        model_dir=args.model_dir
+        model_dir=args.model_dir,
     )

@@ -17,7 +17,11 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from hardware_v1_detection.pc_receiver.protocol import BMI_SENSOR_NAMES, FrameParser, SampleFrame
+from hardware_v1_detection.pc_receiver.protocol import (
+    BMI_SENSOR_NAMES,
+    FrameParser,
+    SampleFrame,
+)
 
 
 def require_pyserial():
@@ -35,7 +39,9 @@ def require_pyserial():
 def calibrate(port: str, baud: int, duration_s: float, output: str | Path) -> Path:
     serial = require_pyserial()
     parser = FrameParser()
-    samples = {name: {"gx": [], "gy": [], "gz": []} for name in (*BMI_SENSOR_NAMES, "pelvis")}
+    samples = {
+        name: {"gx": [], "gy": [], "gz": []} for name in (*BMI_SENSOR_NAMES, "pelvis")
+    }
     deadline = time.time() + duration_s
 
     with serial.Serial(port, baudrate=baud, timeout=0.1) as ser:
@@ -76,7 +82,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--port", required=True)
     p.add_argument("--baud", type=int, default=921600)
     p.add_argument("--duration", type=float, default=10.0)
-    p.add_argument("--output", default="hardware_v1_detection/calibration/gyro_bias.json")
+    p.add_argument(
+        "--output", default="hardware_v1_detection/calibration/gyro_bias.json"
+    )
     args = p.parse_args(argv)
     out = calibrate(args.port, args.baud, args.duration, args.output)
     print(f"saved calibration: {out}")

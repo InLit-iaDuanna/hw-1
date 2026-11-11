@@ -44,10 +44,10 @@ class FrictionCompensator:
 
     # Default motor parameters (MX-64AR from V16)
     DEFAULT_PARAMS = {
-        'tau_c_eff': 0.20,      # Nm - effective Coulomb friction
-        'J': 2.8e-3,            # kg·m² - rotor inertia
-        'b': 0.05,              # Nm·s/rad - viscous damping
-        'epsilon': 0.01         # rad/s - sign smoothing parameter
+        "tau_c_eff": 0.20,  # Nm - effective Coulomb friction
+        "J": 2.8e-3,  # kg·m² - rotor inertia
+        "b": 0.05,  # Nm·s/rad - viscous damping
+        "epsilon": 0.01,  # rad/s - sign smoothing parameter
     }
 
     def __init__(
@@ -55,7 +55,7 @@ class FrictionCompensator:
         joint_names: list[str],
         tau_c_values: Optional[Dict[str, float]] = None,
         epsilon: float = 0.01,
-        enable_gravity_comp: bool = False
+        enable_gravity_comp: bool = False,
     ):
         """
         Initialize friction compensator.
@@ -74,23 +74,21 @@ class FrictionCompensator:
         # Set per-joint friction parameters
         if tau_c_values is None:
             self.tau_c = {
-                name: self.DEFAULT_PARAMS['tau_c_eff']
-                for name in joint_names
+                name: self.DEFAULT_PARAMS["tau_c_eff"] for name in joint_names
             }
         else:
             self.tau_c = tau_c_values.copy()
             # Fill missing joints with default
             for name in joint_names:
                 if name not in self.tau_c:
-                    self.tau_c[name] = self.DEFAULT_PARAMS['tau_c_eff']
+                    self.tau_c[name] = self.DEFAULT_PARAMS["tau_c_eff"]
 
         # Store other motor parameters (may be used for future extensions)
-        self.J = self.DEFAULT_PARAMS['J']
-        self.b = self.DEFAULT_PARAMS['b']
+        self.J = self.DEFAULT_PARAMS["J"]
+        self.b = self.DEFAULT_PARAMS["b"]
 
     def compute_friction_compensation(
-        self,
-        joint_velocities: Dict[str, float]
+        self, joint_velocities: Dict[str, float]
     ) -> Dict[str, float]:
         """
         Compute Coulomb friction compensation torques.
@@ -116,7 +114,7 @@ class FrictionCompensator:
         self,
         joint_positions: Dict[str, float],
         mass: float = 1.0,
-        link_lengths: Optional[Dict[str, float]] = None
+        link_lengths: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         """
         Compute gravity compensation torques (optional feature).
@@ -153,7 +151,7 @@ class FrictionCompensator:
         joint_velocities: Dict[str, float],
         joint_positions: Optional[Dict[str, float]] = None,
         mass: Optional[float] = None,
-        link_lengths: Optional[Dict[str, float]] = None
+        link_lengths: Optional[Dict[str, float]] = None,
     ) -> Dict[str, float]:
         """
         Compute total feedforward compensation (friction + gravity).
@@ -173,17 +171,14 @@ class FrictionCompensator:
         # Gravity compensation (if enabled and parameters provided)
         if self.enable_gravity_comp and joint_positions is not None:
             tau_gravity = self.compute_gravity_compensation(
-                joint_positions,
-                mass or 1.0,
-                link_lengths
+                joint_positions, mass or 1.0, link_lengths
             )
         else:
             tau_gravity = {name: 0.0 for name in self.joint_names}
 
         # Sum compensations
         tau_total = {
-            name: tau_friction[name] + tau_gravity[name]
-            for name in self.joint_names
+            name: tau_friction[name] + tau_gravity[name] for name in self.joint_names
         }
 
         return tau_total
@@ -209,37 +204,35 @@ class FrictionCompensator:
             Dictionary of all parameters
         """
         return {
-            'joint_names': self.joint_names,
-            'tau_c': self.tau_c.copy(),
-            'epsilon': self.epsilon,
-            'enable_gravity_comp': self.enable_gravity_comp,
-            'J': self.J,
-            'b': self.b
+            "joint_names": self.joint_names,
+            "tau_c": self.tau_c.copy(),
+            "epsilon": self.epsilon,
+            "enable_gravity_comp": self.enable_gravity_comp,
+            "J": self.J,
+            "b": self.b,
         }
 
 
 # Example usage
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Create compensator for 3-joint leg
-    joints = ['hip', 'knee', 'ankle']
+    joints = ["hip", "knee", "ankle"]
 
     # Option 1: Use default parameters for all joints
     compensator = FrictionCompensator(joints)
 
     # Option 2: Specify per-joint friction values
     custom_tau_c = {
-        'hip': 0.25,    # Higher friction at hip
-        'knee': 0.20,   # Default MX-64AR value
-        'ankle': 0.15   # Lower friction at ankle
+        "hip": 0.25,  # Higher friction at hip
+        "knee": 0.20,  # Default MX-64AR value
+        "ankle": 0.15,  # Lower friction at ankle
     }
     compensator_custom = FrictionCompensator(
-        joints,
-        tau_c_values=custom_tau_c,
-        epsilon=0.01
+        joints, tau_c_values=custom_tau_c, epsilon=0.01
     )
 
     # Test friction compensation
-    velocities = {'hip': 1.5, 'knee': -0.8, 'ankle': 0.3}
+    velocities = {"hip": 1.5, "knee": -0.8, "ankle": 0.3}
     tau_comp = compensator_custom.compute_friction_compensation(velocities)
 
     print("Friction Compensation Test:")
@@ -247,19 +240,13 @@ if __name__ == '__main__':
         print(f"  {joint}: ω={velocities[joint]:+.2f} rad/s → τ_comp={tau:+.3f} Nm")
 
     # Test with gravity compensation
-    compensator_with_gravity = FrictionCompensator(
-        joints,
-        enable_gravity_comp=True
-    )
+    compensator_with_gravity = FrictionCompensator(joints, enable_gravity_comp=True)
 
-    positions = {'hip': np.pi/6, 'knee': -np.pi/4, 'ankle': np.pi/12}
-    link_lengths = {'hip': 0.4, 'knee': 0.4, 'ankle': 0.2}
+    positions = {"hip": np.pi / 6, "knee": -np.pi / 4, "ankle": np.pi / 12}
+    link_lengths = {"hip": 0.4, "knee": 0.4, "ankle": 0.2}
 
     tau_total = compensator_with_gravity.compute_total_compensation(
-        velocities,
-        positions,
-        mass=1.5,
-        link_lengths=link_lengths
+        velocities, positions, mass=1.5, link_lengths=link_lengths
     )
 
     print("\nTotal Compensation (Friction + Gravity):")

@@ -36,7 +36,7 @@ class DataRestorer:
             验证报告字典
         """
         registry = self.tracker.registry
-        assets = registry.get('assets', [])
+        assets = registry.get("assets", [])
 
         results = {
             "verified_at": datetime.now().isoformat(),
@@ -52,18 +52,20 @@ class DataRestorer:
             if (i + 1) % 100 == 0:
                 print(f"  Progress: {i + 1}/{len(assets)}")
 
-            verification = self.tracker.verify_file_integrity(asset['file_path'])
+            verification = self.tracker.verify_file_integrity(asset["file_path"])
 
-            if verification['status'] == 'valid':
-                results["valid"].append(asset['file_path'])
-            elif verification['status'] == 'corrupted':
-                results["corrupted"].append({
-                    "file_path": asset['file_path'],
-                    "expected_hash": asset['hash'][:16],
-                    "actual_hash": verification.get('current_hash', 'N/A')[:16],
-                })
-            elif verification['status'] == 'missing':
-                results["missing"].append(asset['file_path'])
+            if verification["status"] == "valid":
+                results["valid"].append(asset["file_path"])
+            elif verification["status"] == "corrupted":
+                results["corrupted"].append(
+                    {
+                        "file_path": asset["file_path"],
+                        "expected_hash": asset["hash"][:16],
+                        "actual_hash": verification.get("current_hash", "N/A")[:16],
+                    }
+                )
+            elif verification["status"] == "missing":
+                results["missing"].append(asset["file_path"])
 
         results["summary"] = {
             "valid": len(results["valid"]),
@@ -115,7 +117,7 @@ class DataRestorer:
         if verify_hash:
             backup_hash = self.tracker._compute_file_hash(backup_file)
 
-            if backup_hash != asset['hash']:
+            if backup_hash != asset["hash"]:
                 print(f"Backup file hash mismatch!")
                 print(f"  Expected: {asset['hash'][:16]}")
                 print(f"  Actual:   {backup_hash[:16]}")
@@ -167,53 +169,61 @@ class DataRestorer:
             "skipped": [],
         }
 
-        print(f"{'Verifying' if verify_only else 'Restoring'} snapshot: {snapshot['name']}")
+        print(
+            f"{'Verifying' if verify_only else 'Restoring'} snapshot: {snapshot['name']}"
+        )
         print(f"  Assets: {len(snapshot['assets'])}")
 
-        for asset in snapshot['assets']:
-            file_path = self.project_root / asset['file_path']
+        for asset in snapshot["assets"]:
+            file_path = self.project_root / asset["file_path"]
 
             # 检查文件是否存在
             if not file_path.exists():
-                results["failed"].append({
-                    "file_path": asset['file_path'],
-                    "reason": "File missing from source",
-                })
+                results["failed"].append(
+                    {
+                        "file_path": asset["file_path"],
+                        "reason": "File missing from source",
+                    }
+                )
                 continue
 
             # 验证哈希
             current_hash = self.tracker._compute_file_hash(file_path)
 
-            if current_hash != asset['hash']:
-                results["failed"].append({
-                    "file_path": asset['file_path'],
-                    "reason": "Hash mismatch",
-                    "expected": asset['hash'][:16],
-                    "actual": current_hash[:16],
-                })
+            if current_hash != asset["hash"]:
+                results["failed"].append(
+                    {
+                        "file_path": asset["file_path"],
+                        "reason": "Hash mismatch",
+                        "expected": asset["hash"][:16],
+                        "actual": current_hash[:16],
+                    }
+                )
                 continue
 
             # 如果仅验证，跳过复制
             if verify_only:
-                results["success"].append(asset['file_path'])
+                results["success"].append(asset["file_path"])
                 continue
 
             # 恢复文件
-            target_path = target_dir / asset['file_path']
+            target_path = target_dir / asset["file_path"]
 
             if target_path.exists() and target_path != file_path:
                 # 目标文件已存在
-                results["skipped"].append({
-                    "file_path": asset['file_path'],
-                    "reason": "Target file already exists",
-                })
+                results["skipped"].append(
+                    {
+                        "file_path": asset["file_path"],
+                        "reason": "Target file already exists",
+                    }
+                )
                 continue
 
             if target_path != file_path:
                 target_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(file_path, target_path)
 
-            results["success"].append(asset['file_path'])
+            results["success"].append(asset["file_path"])
 
         results["summary"] = {
             "success": len(results["success"]),
@@ -236,7 +246,7 @@ class DataRestorer:
         history = self.tracker.get_file_history(file_path)
 
         # 按注册时间倒序排列
-        history.sort(key=lambda x: x['registered_at'], reverse=True)
+        history.sort(key=lambda x: x["registered_at"], reverse=True)
 
         return history
 
@@ -262,7 +272,7 @@ class DataRestorer:
         target_asset = None
 
         for asset in history:
-            if asset['hash'].startswith(target_hash):
+            if asset["hash"].startswith(target_hash):
                 target_asset = asset
                 break
 
@@ -277,21 +287,23 @@ class DataRestorer:
 
         # 备份当前版本
         if backup_current and file_path.exists():
-            backup_path = file_path.with_suffix(file_path.suffix + '.backup')
+            backup_path = file_path.with_suffix(file_path.suffix + ".backup")
             shutil.copy2(file_path, backup_path)
             print(f"Backed up current version to: {backup_path}")
 
         # 验证目标文件存在且哈希匹配
         current_hash = self.tracker._compute_file_hash(file_path)
 
-        if current_hash == target_asset['hash']:
+        if current_hash == target_asset["hash"]:
             print(f"File is already at target version: {target_hash[:16]}")
             return True
 
         # 实际上，由于我们只记录哈希，无法直接恢复
         # 需要从备份或快照中恢复
         print(f"Cannot rollback: file content not stored in version control.")
-        print(f"Use restore_snapshot() to restore from a snapshot containing this version.")
+        print(
+            f"Use restore_snapshot() to restore from a snapshot containing this version."
+        )
 
         return False
 
@@ -321,30 +333,32 @@ class DataRestorer:
 
         lines.append("SUMMARY")
         lines.append("-" * 80)
-        lines.append(f"  Valid:     {results['summary']['valid']} ({results['summary']['valid_pct']:.1f}%)")
+        lines.append(
+            f"  Valid:     {results['summary']['valid']} ({results['summary']['valid_pct']:.1f}%)"
+        )
         lines.append(f"  Corrupted: {results['summary']['corrupted']}")
         lines.append(f"  Missing:   {results['summary']['missing']}")
         lines.append("")
 
-        if results['corrupted']:
+        if results["corrupted"]:
             lines.append("CORRUPTED FILES")
             lines.append("-" * 80)
 
-            for item in results['corrupted']:
+            for item in results["corrupted"]:
                 lines.append(f"  {item['file_path']}")
                 lines.append(f"    Expected: {item['expected_hash']}")
                 lines.append(f"    Actual:   {item['actual_hash']}")
 
             lines.append("")
 
-        if results['missing']:
+        if results["missing"]:
             lines.append("MISSING FILES")
             lines.append("-" * 80)
 
-            for file_path in results['missing'][:20]:
+            for file_path in results["missing"][:20]:
                 lines.append(f"  {file_path}")
 
-            if len(results['missing']) > 20:
+            if len(results["missing"]) > 20:
                 lines.append(f"  ... and {len(results['missing']) - 20} more")
 
             lines.append("")
@@ -361,7 +375,7 @@ class DataRestorer:
 
             output_path.parent.mkdir(parents=True, exist_ok=True)
 
-            with open(output_path, 'w', encoding='utf-8') as f:
+            with open(output_path, "w", encoding="utf-8") as f:
                 f.write(text)
 
             print(f"Report saved to: {output_path}")
@@ -369,7 +383,7 @@ class DataRestorer:
         return text
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # 示例用法
     project_root = r"D:\Dunna\Documents\hw-1"
     restorer = DataRestorer(project_root)

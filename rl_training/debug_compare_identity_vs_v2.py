@@ -12,7 +12,14 @@ sys.path.insert(0, str(HW1_ROOT / "v13_6_event_driven_fsm"))
 sys.path.insert(0, str(HW1_ROOT / "v14_passive_arms"))
 
 from train_residual_rl_v2 import ResidualRLEnvV2
-from simulate_v13_7 import V137Params, make_v137_fsm, write_model_v137, MODEL_PATH, _compensate, _mechanical_energy
+from simulate_v13_7 import (
+    V137Params,
+    make_v137_fsm,
+    write_model_v137,
+    MODEL_PATH,
+    _compensate,
+    _mechanical_energy,
+)
 from simulate_v13_6 import control_v136
 from simulate_passive_arms_v14 import PassiveArmsParams, initialize, contact_flags
 from common.motor_dynamics import L1MotorActuator, PRESETS as MOTOR_PRESETS
@@ -39,7 +46,9 @@ overrides = dict(
 base = replace(base0, **overrides)
 fsm = make_v137_fsm(base)
 motor = MOTOR_PRESETS["mx64ar"]
-params = V137Params(base=base, fsm=fsm, hip_motor=motor, knee_motor=motor, compensate_friction=True)
+params = V137Params(
+    base=base, fsm=fsm, hip_motor=motor, knee_motor=motor, compensate_friction=True
+)
 
 # 写模型
 write_model_v137(params)
@@ -84,15 +93,27 @@ for step in range(12000):  # 12秒
 
     # 摩擦补偿
     l_hip_des = _compensate(l_hip_des, float(data.qvel[qvel_addr["left_hip"]]), motor)
-    l_knee_des = _compensate(l_knee_des, float(data.qvel[qvel_addr["left_knee"]]), motor)
+    l_knee_des = _compensate(
+        l_knee_des, float(data.qvel[qvel_addr["left_knee"]]), motor
+    )
     r_hip_des = _compensate(r_hip_des, float(data.qvel[qvel_addr["right_hip"]]), motor)
-    r_knee_des = _compensate(r_knee_des, float(data.qvel[qvel_addr["right_knee"]]), motor)
+    r_knee_des = _compensate(
+        r_knee_des, float(data.qvel[qvel_addr["right_knee"]]), motor
+    )
 
     # L1电机
-    l_hip_out, _ = actuators["left_hip"].compute_actual_torque(l_hip_des, float(data.qvel[qvel_addr["left_hip"]]))
-    l_knee_out, _ = actuators["left_knee"].compute_actual_torque(l_knee_des, float(data.qvel[qvel_addr["left_knee"]]))
-    r_hip_out, _ = actuators["right_hip"].compute_actual_torque(r_hip_des, float(data.qvel[qvel_addr["right_hip"]]))
-    r_knee_out, _ = actuators["right_knee"].compute_actual_torque(r_knee_des, float(data.qvel[qvel_addr["right_knee"]]))
+    l_hip_out, _ = actuators["left_hip"].compute_actual_torque(
+        l_hip_des, float(data.qvel[qvel_addr["left_hip"]])
+    )
+    l_knee_out, _ = actuators["left_knee"].compute_actual_torque(
+        l_knee_des, float(data.qvel[qvel_addr["left_knee"]])
+    )
+    r_hip_out, _ = actuators["right_hip"].compute_actual_torque(
+        r_hip_des, float(data.qvel[qvel_addr["right_hip"]])
+    )
+    r_knee_out, _ = actuators["right_knee"].compute_actual_torque(
+        r_knee_des, float(data.qvel[qvel_addr["right_knee"]])
+    )
 
     data.ctrl[:] = (l_hip_out, l_knee_out, r_hip_out, r_knee_out)
 
@@ -116,7 +137,11 @@ for step in range(12000):  # 12秒
             contact_reported[foot] = False
 
     for foot in stable_feet:
-        if (not contact_reported[foot] and foot != accepted_contact and t - last_event_t > base.min_event_interval):
+        if (
+            not contact_reported[foot]
+            and foot != accepted_contact
+            and t - last_event_t > base.min_event_interval
+        ):
             accepted_contact = foot
             support_foot = foot
             burst_start_t = t
@@ -126,7 +151,9 @@ for step in range(12000):  # 12秒
             break
 
     if step % 500 == 0:
-        print(f"{step:<6} {t:<8.3f} {data.qpos[0]:<10.6f} {support_foot:<8} {E_current:<10.3f}")
+        print(
+            f"{step:<6} {t:<8.3f} {data.qpos[0]:<10.6f} {support_foot:<8} {E_current:<10.3f}"
+        )
 
 print(f"\nIdentity Test FSM events: {len(fsm_events_identity)}")
 for i, e in enumerate(fsm_events_identity[:10]):

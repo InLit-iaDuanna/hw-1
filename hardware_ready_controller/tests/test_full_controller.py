@@ -19,7 +19,8 @@ from pathlib import Path
 import pytest
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')  # Non-interactive backend for testing
+
+matplotlib.use("Agg")  # Non-interactive backend for testing
 import matplotlib.pyplot as plt
 
 # Add hw-1 root to path
@@ -90,15 +91,20 @@ class TestFullControllerIntegration:
     @pytest.fixture(scope="class")
     def baseline_results(self, baseline_params):
         """Run V13.7 baseline simulation with friction compensation."""
-        rows, summary = run_simulation_v137(baseline_params, save_prefix=None, sample_hz=160.0)
+        rows, summary = run_simulation_v137(
+            baseline_params, save_prefix=None, sample_hz=160.0
+        )
         return summary
 
     @pytest.fixture(scope="class")
     def no_compensation_results(self, baseline_params):
         """Run simulation without friction compensation for comparison."""
         from dataclasses import replace
+
         params_no_comp = replace(baseline_params, compensate_friction=False)
-        rows, summary = run_simulation_v137(params_no_comp, save_prefix=None, sample_hz=160.0)
+        rows, summary = run_simulation_v137(
+            params_no_comp, save_prefix=None, sample_hz=160.0
+        )
         return summary
 
     def test_model_loads_successfully(self, baseline_params):
@@ -122,7 +128,10 @@ class TestFullControllerIntegration:
     def test_motor_parameters_injected(self, baseline_params):
         """Verify motor parameters are correctly injected into model."""
         from simulate_v13_7 import write_model_v137, MODEL_PATH
-        from common.motor_dynamics import joint_armature_with_motor, joint_damping_with_motor
+        from common.motor_dynamics import (
+            joint_armature_with_motor,
+            joint_damping_with_motor,
+        )
 
         write_model_v137(baseline_params)
         model = mujoco.MjModel.from_xml_path(str(MODEL_PATH))
@@ -150,59 +159,71 @@ class TestFullControllerIntegration:
             jid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
             actual_arm = model.dof_armature[jid]
             actual_damp = model.dof_damping[jid]
-            assert np.isclose(actual_arm, expected_hip_arm, rtol=1e-5), \
-                f"{joint_name} armature mismatch: {actual_arm} vs {expected_hip_arm}"
-            assert np.isclose(actual_damp, expected_hip_damp, rtol=1e-5), \
-                f"{joint_name} damping mismatch: {actual_damp} vs {expected_hip_damp}"
+            assert np.isclose(
+                actual_arm, expected_hip_arm, rtol=1e-5
+            ), f"{joint_name} armature mismatch: {actual_arm} vs {expected_hip_arm}"
+            assert np.isclose(
+                actual_damp, expected_hip_damp, rtol=1e-5
+            ), f"{joint_name} damping mismatch: {actual_damp} vs {expected_hip_damp}"
 
         for joint_name in knee_joints:
             jid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
             actual_arm = model.dof_armature[jid]
             actual_damp = model.dof_damping[jid]
-            assert np.isclose(actual_arm, expected_knee_arm, rtol=1e-5), \
-                f"{joint_name} armature mismatch: {actual_arm} vs {expected_knee_arm}"
-            assert np.isclose(actual_damp, expected_knee_damp, rtol=1e-5), \
-                f"{joint_name} damping mismatch: {actual_damp} vs {expected_knee_damp}"
+            assert np.isclose(
+                actual_arm, expected_knee_arm, rtol=1e-5
+            ), f"{joint_name} armature mismatch: {actual_arm} vs {expected_knee_arm}"
+            assert np.isclose(
+                actual_damp, expected_knee_damp, rtol=1e-5
+            ), f"{joint_name} damping mismatch: {actual_damp} vs {expected_knee_damp}"
 
     def test_baseline_success_criteria(self, baseline_results):
         """Test that baseline with friction compensation meets success criteria."""
         summary = baseline_results
 
         # Verify success flag
-        assert summary["success"], \
-            f"Baseline failed: {summary['failure']}, " \
-            f"forward={summary['forward_distance']:.2f}m, " \
-            f"alternations={summary['alternating_touchdowns']}, " \
+        assert summary["success"], (
+            f"Baseline failed: {summary['failure']}, "
+            f"forward={summary['forward_distance']:.2f}m, "
+            f"alternations={summary['alternating_touchdowns']}, "
             f"time={summary['simulated_time']:.2f}s"
+        )
 
         # Check individual metrics
-        assert summary["forward_distance"] >= SUCCESS_FORWARD, \
-            f"Forward distance {summary['forward_distance']:.2f}m < {SUCCESS_FORWARD}m"
+        assert (
+            summary["forward_distance"] >= SUCCESS_FORWARD
+        ), f"Forward distance {summary['forward_distance']:.2f}m < {SUCCESS_FORWARD}m"
 
-        assert summary["alternating_touchdowns"] >= SUCCESS_TOUCHDOWNS, \
-            f"Alternations {summary['alternating_touchdowns']} < {SUCCESS_TOUCHDOWNS}"
+        assert (
+            summary["alternating_touchdowns"] >= SUCCESS_TOUCHDOWNS
+        ), f"Alternations {summary['alternating_touchdowns']} < {SUCCESS_TOUCHDOWNS}"
 
-        assert summary["simulated_time"] >= SUCCESS_TIME, \
-            f"Simulated time {summary['simulated_time']:.2f}s < {SUCCESS_TIME}s"
+        assert (
+            summary["simulated_time"] >= SUCCESS_TIME
+        ), f"Simulated time {summary['simulated_time']:.2f}s < {SUCCESS_TIME}s"
 
-        assert summary["failure"] == "completed", \
-            f"Unexpected failure: {summary['failure']}"
+        assert (
+            summary["failure"] == "completed"
+        ), f"Unexpected failure: {summary['failure']}"
 
     def test_forward_distance_exceeds_threshold(self, baseline_results):
         """Verify forward walking distance > 4.0m."""
         forward_dist = baseline_results["forward_distance"]
-        assert forward_dist >= EXPECTED_FORWARD_DISTANCE, \
-            f"Forward distance {forward_dist:.3f}m < {EXPECTED_FORWARD_DISTANCE}m"
+        assert (
+            forward_dist >= EXPECTED_FORWARD_DISTANCE
+        ), f"Forward distance {forward_dist:.3f}m < {EXPECTED_FORWARD_DISTANCE}m"
 
         # Should walk reasonably far (not just barely passing)
-        assert forward_dist >= 4.5, \
-            f"Forward distance {forward_dist:.3f}m suspiciously low (expected ~5-6m)"
+        assert (
+            forward_dist >= 4.5
+        ), f"Forward distance {forward_dist:.3f}m suspiciously low (expected ~5-6m)"
 
     def test_alternating_gait_pattern(self, baseline_results):
         """Verify alternating touchdown pattern with >= 8 events."""
         alternations = baseline_results["alternating_touchdowns"]
-        assert alternations >= EXPECTED_ALTERNATIONS, \
-            f"Alternations {alternations} < {EXPECTED_ALTERNATIONS}"
+        assert (
+            alternations >= EXPECTED_ALTERNATIONS
+        ), f"Alternations {alternations} < {EXPECTED_ALTERNATIONS}"
 
         # Check contact events exist and alternate
         contact_events = baseline_results["contact_events"]
@@ -210,24 +231,25 @@ class TestFullControllerIntegration:
 
         # Verify events alternate between left and right
         if len(contact_events) >= 2:
-            feet = [evt["foot"] for evt in contact_events[:alternations + 1]]
+            feet = [evt["foot"] for evt in contact_events[: alternations + 1]]
             consecutive_same = sum(
                 1 for i in range(len(feet) - 1) if feet[i] == feet[i + 1]
             )
-            assert consecutive_same == 0, \
-                f"Non-alternating contacts detected: {feet[:10]}"
+            assert (
+                consecutive_same == 0
+            ), f"Non-alternating contacts detected: {feet[:10]}"
 
     def test_no_falls_or_failures(self, baseline_results):
         """Verify simulation completes without falls or numerical instability."""
         failure_type = baseline_results["failure"]
 
-        assert failure_type == "completed", \
-            f"Simulation failed: {failure_type}"
+        assert failure_type == "completed", f"Simulation failed: {failure_type}"
 
         # Check for specific failure modes
         bad_failures = ["nan_or_unstable", "fly_away", "penetration", "fall_backward"]
-        assert failure_type not in bad_failures, \
-            f"Critical failure mode: {failure_type}"
+        assert (
+            failure_type not in bad_failures
+        ), f"Critical failure mode: {failure_type}"
 
     def test_friction_compensation_improves_performance(
         self, baseline_results, no_compensation_results
@@ -242,45 +264,59 @@ class TestFullControllerIntegration:
 
         # If without compensation fails, just verify with-comp succeeds
         if not without_comp["success"]:
-            assert with_comp["success"], \
-                "Friction compensation should enable successful walking"
+            assert with_comp[
+                "success"
+            ], "Friction compensation should enable successful walking"
             return
 
         # If both succeed, verify improvement
         improvement = (dist_with - dist_without) / dist_without
-        assert improvement > -0.1, \
-            f"Friction compensation degrades performance: " \
+        assert improvement > -0.1, (
+            f"Friction compensation degrades performance: "
             f"{dist_with:.2f}m vs {dist_without:.2f}m ({improvement:.1%})"
+        )
 
         # Energy efficiency should improve
         energy_with = with_comp["active_input_energy_mech_j"]
         energy_without = without_comp["active_input_energy_mech_j"]
 
         # With compensation should use similar or less energy for better distance
-        specific_energy_with = energy_with / dist_with if dist_with > 0 else float('inf')
-        specific_energy_without = energy_without / dist_without if dist_without > 0 else float('inf')
+        specific_energy_with = (
+            energy_with / dist_with if dist_with > 0 else float("inf")
+        )
+        specific_energy_without = (
+            energy_without / dist_without if dist_without > 0 else float("inf")
+        )
 
-        assert specific_energy_with <= specific_energy_without * 1.5, \
-            f"Friction compensation increases specific energy: " \
+        assert specific_energy_with <= specific_energy_without * 1.5, (
+            f"Friction compensation increases specific energy: "
             f"{specific_energy_with:.2f} vs {specific_energy_without:.2f} J/m"
+        )
 
     def test_phase_transitions_occur(self, baseline_results):
         """Verify FSM phase transitions are happening."""
         phase_durations = baseline_results["phase_durations_s"]
 
         # All four phases should have non-zero duration
-        required_phases = ["stance_early", "stance_late", "swing_thrust", "swing_retract"]
+        required_phases = [
+            "stance_early",
+            "stance_late",
+            "swing_thrust",
+            "swing_retract",
+        ]
         for phase in required_phases:
             assert phase in phase_durations, f"Missing phase: {phase}"
-            assert phase_durations[phase] > 0.0, \
-                f"Phase {phase} never activated: duration={phase_durations[phase]}"
+            assert (
+                phase_durations[phase] > 0.0
+            ), f"Phase {phase} never activated: duration={phase_durations[phase]}"
 
         # Phase durations should be reasonable (not stuck in one phase)
         total_time = baseline_results["simulated_time"]
         for phase in required_phases:
             ratio = phase_durations[phase] / total_time
-            assert ratio < 0.8, \
-                f"Phase {phase} dominates timeline: {ratio:.1%} of total time"
+            assert (
+                ratio < 0.8
+            ), f"Phase {phase} dominates timeline: {ratio:.1%} of total time"
 
     def test_motor_saturation_acceptable(self, baseline_results):
         """Verify motor saturation is within acceptable limits."""
@@ -292,13 +328,13 @@ class TestFullControllerIntegration:
         total_steps = int(baseline_results["simulated_time"] / 0.001)
         sat_rate = total_sat / (4 * total_steps)  # 4 actuators
 
-        assert sat_rate < 0.3, \
-            f"Excessive motor saturation: {sat_rate:.1%} of control cycles"
+        assert (
+            sat_rate < 0.3
+        ), f"Excessive motor saturation: {sat_rate:.1%} of control cycles"
 
         # Per-phase saturation should be reasonable
         for phase, rate in phase_sat_rates.items():
-            assert rate < 0.5, \
-                f"Phase {phase} has excessive saturation: {rate:.1%}"
+            assert rate < 0.5, f"Phase {phase} has excessive saturation: {rate:.1%}"
 
     def test_energy_metrics_reasonable(self, baseline_results):
         """Verify energy consumption is in reasonable range."""
@@ -309,14 +345,16 @@ class TestFullControllerIntegration:
         assert energy > 0, f"Invalid energy metric: {energy} J"
 
         # Specific energy (J/m) should be reasonable for passive-like walker
-        specific_energy = energy / distance if distance > 0 else float('inf')
+        specific_energy = energy / distance if distance > 0 else float("inf")
 
         # V13.7 typically uses 20-40 J for 5-6m walk (~5-8 J/m)
-        assert specific_energy < 20.0, \
-            f"Excessive energy consumption: {specific_energy:.2f} J/m"
+        assert (
+            specific_energy < 20.0
+        ), f"Excessive energy consumption: {specific_energy:.2f} J/m"
 
-        assert specific_energy > 1.0, \
-            f"Suspiciously low energy: {specific_energy:.2f} J/m"
+        assert (
+            specific_energy > 1.0
+        ), f"Suspiciously low energy: {specific_energy:.2f} J/m"
 
     def test_compare_against_v137_baseline(self, baseline_results):
         """Compare results against documented V13.7 baseline performance."""
@@ -334,16 +372,19 @@ class TestFullControllerIntegration:
         energy = baseline_results["active_input_energy_mech_j"]
 
         # Allow deviation within tolerance
-        assert forward >= V137_BASELINE["forward_distance"] * (1 - tolerance), \
-            f"Forward distance {forward:.2f}m below baseline " \
+        assert forward >= V137_BASELINE["forward_distance"] * (1 - tolerance), (
+            f"Forward distance {forward:.2f}m below baseline "
             f"{V137_BASELINE['forward_distance']:.2f}m"
+        )
 
-        assert alternations >= V137_BASELINE["alternations"] * (1 - tolerance), \
-            f"Alternations {alternations} below baseline " \
+        assert alternations >= V137_BASELINE["alternations"] * (1 - tolerance), (
+            f"Alternations {alternations} below baseline "
             f"{V137_BASELINE['alternations']}"
+        )
 
-        assert energy <= V137_BASELINE["energy"] * (1 + 2 * tolerance), \
-            f"Energy {energy:.2f}J significantly exceeds baseline {V137_BASELINE['energy']:.2f}J"
+        assert energy <= V137_BASELINE["energy"] * (
+            1 + 2 * tolerance
+        ), f"Energy {energy:.2f}J significantly exceeds baseline {V137_BASELINE['energy']:.2f}J"
 
     @pytest.mark.slow
     def test_generate_comparison_plots(
@@ -352,8 +393,11 @@ class TestFullControllerIntegration:
         """Generate comparison plots for with/without friction compensation."""
 
         fig, axes = plt.subplots(2, 3, figsize=(15, 10))
-        fig.suptitle("V13.7 Controller: With vs Without Friction Compensation",
-                     fontsize=14, fontweight='bold')
+        fig.suptitle(
+            "V13.7 Controller: With vs Without Friction Compensation",
+            fontsize=14,
+            fontweight="bold",
+        )
 
         # Extract data
         with_comp = baseline_results
@@ -362,57 +406,71 @@ class TestFullControllerIntegration:
         # Plot 1: Forward distance comparison
         ax = axes[0, 0]
         categories = ["With\nCompensation", "Without\nCompensation"]
-        distances = [
-            with_comp["forward_distance"],
-            without_comp["forward_distance"]
+        distances = [with_comp["forward_distance"], without_comp["forward_distance"]]
+        colors = [
+            "#2ecc71" if with_comp["success"] else "#e74c3c",
+            "#2ecc71" if without_comp["success"] else "#e74c3c",
         ]
-        colors = ['#2ecc71' if with_comp["success"] else '#e74c3c',
-                  '#2ecc71' if without_comp["success"] else '#e74c3c']
         ax.bar(categories, distances, color=colors, alpha=0.7)
-        ax.axhline(y=SUCCESS_FORWARD, color='r', linestyle='--',
-                   label=f'Target: {SUCCESS_FORWARD}m')
-        ax.set_ylabel('Forward Distance (m)')
-        ax.set_title('Walking Distance')
+        ax.axhline(
+            y=SUCCESS_FORWARD,
+            color="r",
+            linestyle="--",
+            label=f"Target: {SUCCESS_FORWARD}m",
+        )
+        ax.set_ylabel("Forward Distance (m)")
+        ax.set_title("Walking Distance")
         ax.legend()
-        ax.grid(axis='y', alpha=0.3)
+        ax.grid(axis="y", alpha=0.3)
 
         # Plot 2: Alternations comparison
         ax = axes[0, 1]
         alternations = [
             with_comp["alternating_touchdowns"],
-            without_comp["alternating_touchdowns"]
+            without_comp["alternating_touchdowns"],
         ]
         ax.bar(categories, alternations, color=colors, alpha=0.7)
-        ax.axhline(y=SUCCESS_TOUCHDOWNS, color='r', linestyle='--',
-                   label=f'Target: {SUCCESS_TOUCHDOWNS}')
-        ax.set_ylabel('Touchdown Events')
-        ax.set_title('Gait Alternations')
+        ax.axhline(
+            y=SUCCESS_TOUCHDOWNS,
+            color="r",
+            linestyle="--",
+            label=f"Target: {SUCCESS_TOUCHDOWNS}",
+        )
+        ax.set_ylabel("Touchdown Events")
+        ax.set_title("Gait Alternations")
         ax.legend()
-        ax.grid(axis='y', alpha=0.3)
+        ax.grid(axis="y", alpha=0.3)
 
         # Plot 3: Energy consumption
         ax = axes[0, 2]
         energies = [
             with_comp["active_input_energy_mech_j"],
-            without_comp["active_input_energy_mech_j"]
+            without_comp["active_input_energy_mech_j"],
         ]
-        ax.bar(categories, energies, color=['#3498db', '#e67e22'], alpha=0.7)
-        ax.set_ylabel('Active Energy Input (J)')
-        ax.set_title('Energy Consumption')
-        ax.grid(axis='y', alpha=0.3)
+        ax.bar(categories, energies, color=["#3498db", "#e67e22"], alpha=0.7)
+        ax.set_ylabel("Active Energy Input (J)")
+        ax.set_title("Energy Consumption")
+        ax.grid(axis="y", alpha=0.3)
 
         # Plot 4: Specific energy (J/m)
         ax = axes[1, 0]
         specific_energies = [
-            with_comp["active_input_energy_mech_j"] / with_comp["forward_distance"]
-                if with_comp["forward_distance"] > 0 else 0,
-            without_comp["active_input_energy_mech_j"] / without_comp["forward_distance"]
-                if without_comp["forward_distance"] > 0 else 0
+            (
+                with_comp["active_input_energy_mech_j"] / with_comp["forward_distance"]
+                if with_comp["forward_distance"] > 0
+                else 0
+            ),
+            (
+                without_comp["active_input_energy_mech_j"]
+                / without_comp["forward_distance"]
+                if without_comp["forward_distance"] > 0
+                else 0
+            ),
         ]
-        ax.bar(categories, specific_energies, color=['#9b59b6', '#f39c12'], alpha=0.7)
-        ax.set_ylabel('Specific Energy (J/m)')
-        ax.set_title('Energy Efficiency')
-        ax.grid(axis='y', alpha=0.3)
+        ax.bar(categories, specific_energies, color=["#9b59b6", "#f39c12"], alpha=0.7)
+        ax.set_ylabel("Specific Energy (J/m)")
+        ax.set_title("Energy Efficiency")
+        ax.grid(axis="y", alpha=0.3)
 
         # Plot 5: Phase durations comparison
         ax = axes[1, 1]
@@ -424,18 +482,18 @@ class TestFullControllerIntegration:
 
         x = np.arange(len(phases))
         width = 0.35
-        ax.bar(x - width/2, with_phases, width, label='With Comp', alpha=0.7)
-        ax.bar(x + width/2, without_phases, width, label='Without Comp', alpha=0.7)
-        ax.set_ylabel('Total Duration (s)')
-        ax.set_title('Phase Durations')
+        ax.bar(x - width / 2, with_phases, width, label="With Comp", alpha=0.7)
+        ax.bar(x + width / 2, without_phases, width, label="Without Comp", alpha=0.7)
+        ax.set_ylabel("Total Duration (s)")
+        ax.set_title("Phase Durations")
         ax.set_xticks(x)
         ax.set_xticklabels(phase_labels)
         ax.legend()
-        ax.grid(axis='y', alpha=0.3)
+        ax.grid(axis="y", alpha=0.3)
 
         # Plot 6: Success summary
         ax = axes[1, 2]
-        ax.axis('off')
+        ax.axis("off")
 
         summary_text = f"""
         WITH FRICTION COMPENSATION:
@@ -455,14 +513,20 @@ class TestFullControllerIntegration:
         Failure: {without_comp['failure']}
         """
 
-        ax.text(0.1, 0.5, summary_text, fontsize=10, family='monospace',
-                verticalalignment='center')
+        ax.text(
+            0.1,
+            0.5,
+            summary_text,
+            fontsize=10,
+            family="monospace",
+            verticalalignment="center",
+        )
 
         plt.tight_layout()
 
         # Save plot
         output_path = tmp_path / "v137_comparison.png"
-        plt.savefig(output_path, dpi=150, bbox_inches='tight')
+        plt.savefig(output_path, dpi=150, bbox_inches="tight")
         plt.close()
 
         assert output_path.exists(), "Plot not generated"
@@ -499,11 +563,11 @@ class TestControllerRobustness:
         rows, summary = result
 
         # Should not crash or have NaN values in first 2 seconds
-        assert summary["failure"] != "nan_or_unstable", \
-            "Controller unstable during initialization"
+        assert (
+            summary["failure"] != "nan_or_unstable"
+        ), "Controller unstable during initialization"
 
-        assert summary["simulated_time"] >= 1.0, \
-            "Simulation terminated too early"
+        assert summary["simulated_time"] >= 1.0, "Simulation terminated too early"
 
     def test_phase_timing_consistency(self):
         """Verify phase durations are consistent with FSM configuration."""
@@ -541,8 +605,9 @@ class TestControllerRobustness:
             expected_ratio = expected_duration / sum(phase_config.values())
 
             # Allow 50% deviation (event-driven FSM varies timing)
-            assert abs(ratio - expected_ratio) < 0.3, \
-                f"Phase {phase} timing inconsistent: {ratio:.2f} vs {expected_ratio:.2f}"
+            assert (
+                abs(ratio - expected_ratio) < 0.3
+            ), f"Phase {phase} timing inconsistent: {ratio:.2f} vs {expected_ratio:.2f}"
 
 
 if __name__ == "__main__":

@@ -81,7 +81,10 @@ class BayesianOptimizer(Optimizer):
         # 高斯过程模型
         kernel = ConstantKernel(1.0) * Matern(length_scale=1.0, nu=2.5)
         self.gp = GaussianProcessRegressor(
-            kernel=kernel, n_restarts_optimizer=10, random_state=random_state, normalize_y=True
+            kernel=kernel,
+            n_restarts_optimizer=10,
+            random_state=random_state,
+            normalize_y=True,
         )
 
         # 历史数据
@@ -201,7 +204,9 @@ class BayesianOptimizer(Optimizer):
 
             if verbose:
                 y_best_so_far = np.max(self.y_observed)
-                print(f"Iteration {iteration+1}/{n_iterations}: y = {y_new:.4f}, best = {y_best_so_far:.4f}")
+                print(
+                    f"Iteration {iteration+1}/{n_iterations}: y = {y_new:.4f}, best = {y_best_so_far:.4f}"
+                )
 
         # 返回结果
         best_idx = np.argmax(self.y_observed)
@@ -412,7 +417,9 @@ class MultiObjectiveOptimizer(Optimizer):
         from pymoo.optimize import minimize as pymoo_minimize
 
         class MultiObjectiveProblem(Problem):
-            def __init__(self, opt: MultiObjectiveOptimizer, funcs: list, maximize_flags: list):
+            def __init__(
+                self, opt: MultiObjectiveOptimizer, funcs: list, maximize_flags: list
+            ):
                 super().__init__(
                     n_var=opt.n_params,
                     n_obj=len(funcs),
@@ -430,7 +437,9 @@ class MultiObjectiveOptimizer(Optimizer):
                     for j, func in enumerate(self.funcs):
                         obj_value = func(param_dict)
                         # pymoo 是最小化，所以最大化的目标要取负
-                        objectives[i, j] = -obj_value if self.maximize_flags[j] else obj_value
+                        objectives[i, j] = (
+                            -obj_value if self.maximize_flags[j] else obj_value
+                        )
                 out["F"] = objectives
 
         problem = MultiObjectiveProblem(self, objective_funcs, maximize)

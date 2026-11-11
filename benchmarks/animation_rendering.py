@@ -68,7 +68,9 @@ class ParallelBenchmarkResult:
 
 # 定义测试版本和渲染脚本映射
 RENDER_SCRIPTS = {
-    "V10": HW1_ROOT / "v10_rolling_foot_biomimetic_gait" / "render_rolling_foot_gait_v10.py",
+    "V10": HW1_ROOT
+    / "v10_rolling_foot_biomimetic_gait"
+    / "render_rolling_foot_gait_v10.py",
     "V13.6": HW1_ROOT / "v13_6_event_driven_fsm" / "render_v13_6.py",
     "V13.7": HW1_ROOT / "v13_7_friction_compensation" / "render_v13_7.py",
     "V14": HW1_ROOT / "v14_passive_arms" / "render_passive_arms_v14.py",
@@ -94,7 +96,9 @@ def get_simulation_duration(version: str) -> float:
     if not out_dir.exists():
         return 12.0  # 默认值
 
-    csv_files = sorted(out_dir.glob("*_data.csv"), key=lambda p: p.stat().st_mtime, reverse=True)
+    csv_files = sorted(
+        out_dir.glob("*_data.csv"), key=lambda p: p.stat().st_mtime, reverse=True
+    )
     if not csv_files:
         return 12.0
 
@@ -253,7 +257,9 @@ def benchmark_single_render(
         render_fps = frame_count / wall_time if wall_time > 0 else 0.0
         realtime_factor = sim_duration / wall_time if wall_time > 0 else 0.0
 
-        print(f"    Success: {wall_time:.2f}s, {file_size_mb:.2f}MB, {render_fps:.1f} fps")
+        print(
+            f"    Success: {wall_time:.2f}s, {file_size_mb:.2f}MB, {render_fps:.1f} fps"
+        )
 
         return RenderBenchmarkResult(
             version=version,
@@ -287,7 +293,9 @@ def benchmark_single_render(
         )
 
 
-def benchmark_all_versions(versions: list[str] | None = None) -> list[RenderBenchmarkResult]:
+def benchmark_all_versions(
+    versions: list[str] | None = None,
+) -> list[RenderBenchmarkResult]:
     """测试所有版本的渲染性能"""
     if versions is None:
         versions = list(RENDER_SCRIPTS.keys())
@@ -333,7 +341,9 @@ def benchmark_parallel_rendering(
         )
     )
 
-    print(f"  单线程: {baseline_time:.2f}s, 完成 {baseline_completed}/{len(versions)} 个任务")
+    print(
+        f"  单线程: {baseline_time:.2f}s, 完成 {baseline_completed}/{len(versions)} 个任务"
+    )
 
     # 多线程测试
     for thread_count in thread_counts:
@@ -373,7 +383,9 @@ def benchmark_parallel_rendering(
             )
         )
 
-        print(f"  {thread_count} 线程: {wall_time:.2f}s, 加速比 {speedup:.2f}x, 效率 {efficiency:.1%}")
+        print(
+            f"  {thread_count} 线程: {wall_time:.2f}s, 加速比 {speedup:.2f}x, 效率 {efficiency:.1%}"
+        )
 
     return results
 
@@ -392,7 +404,9 @@ def save_results(
     data = {
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
         "render_results": [asdict(r) for r in render_results],
-        "parallel_results": [asdict(r) for r in parallel_results] if parallel_results else [],
+        "parallel_results": (
+            [asdict(r) for r in parallel_results] if parallel_results else []
+        ),
     }
 
     with open(output_path, "w", encoding="utf-8") as f:
@@ -417,7 +431,9 @@ def generate_performance_report(
     # 1. 生成性能对比图
     if successful_results:
         fig, axes = plt.subplots(2, 3, figsize=(16, 10))
-        fig.suptitle("Animation Rendering Performance Analysis", fontsize=16, fontweight="bold")
+        fig.suptitle(
+            "Animation Rendering Performance Analysis", fontsize=16, fontweight="bold"
+        )
 
         versions = [r.version for r in successful_results]
         wall_times = [r.wall_time for r in successful_results]
@@ -454,7 +470,10 @@ def generate_performance_report(
         axes[1, 0].grid(axis="y", alpha=0.3)
 
         # 渲染效率（MB/秒）
-        efficiency = [r.file_size_mb / r.wall_time if r.wall_time > 0 else 0 for r in successful_results]
+        efficiency = [
+            r.file_size_mb / r.wall_time if r.wall_time > 0 else 0
+            for r in successful_results
+        ]
         axes[1, 1].bar(versions, efficiency, color="orange", alpha=0.7)
         axes[1, 1].set_ylabel("MB per Second")
         axes[1, 1].set_title("Rendering Efficiency (MB/s)")
@@ -470,9 +489,30 @@ def generate_performance_report(
             ax = axes[1, 2]
             ax2 = ax.twinx()
 
-            ax.plot(thread_counts, speedups, "o-", color="blue", linewidth=2, label="Speedup")
-            ax.plot(thread_counts, thread_counts, "--", color="gray", linewidth=1, label="Linear Speedup")
-            ax2.plot(thread_counts, efficiencies, "s-", color="red", linewidth=2, label="Efficiency")
+            ax.plot(
+                thread_counts,
+                speedups,
+                "o-",
+                color="blue",
+                linewidth=2,
+                label="Speedup",
+            )
+            ax.plot(
+                thread_counts,
+                thread_counts,
+                "--",
+                color="gray",
+                linewidth=1,
+                label="Linear Speedup",
+            )
+            ax2.plot(
+                thread_counts,
+                efficiencies,
+                "s-",
+                color="red",
+                linewidth=2,
+                label="Efficiency",
+            )
 
             ax.set_xlabel("Thread Count")
             ax.set_ylabel("Speedup", color="blue")
@@ -482,7 +522,9 @@ def generate_performance_report(
             ax.legend(loc="upper left")
             ax2.legend(loc="upper right")
         else:
-            axes[1, 2].text(0.5, 0.5, "No parallel benchmark data", ha="center", va="center")
+            axes[1, 2].text(
+                0.5, 0.5, "No parallel benchmark data", ha="center", va="center"
+            )
             axes[1, 2].set_title("Parallel Rendering Speedup")
 
         plt.tight_layout()
@@ -560,9 +602,15 @@ def generate_performance_report(
         )
 
         # 平均性能
-        avg_time = sum(r.wall_time for r in successful_results) / len(successful_results)
-        avg_fps = sum(r.render_fps for r in successful_results) / len(successful_results)
-        avg_size = sum(r.file_size_mb for r in successful_results) / len(successful_results)
+        avg_time = sum(r.wall_time for r in successful_results) / len(
+            successful_results
+        )
+        avg_fps = sum(r.render_fps for r in successful_results) / len(
+            successful_results
+        )
+        avg_size = sum(r.file_size_mb for r in successful_results) / len(
+            successful_results
+        )
 
         report_lines.extend(
             [
@@ -629,14 +677,16 @@ def generate_performance_report(
         if short_anims and long_anims:
             avg_short_time = sum(r.wall_time for r in short_anims) / len(short_anims)
             avg_long_time = sum(r.wall_time for r in long_anims) / len(long_anims)
-            report_lines.extend([
-                f"Short animations (< 6s simulation): avg {avg_short_time:.2f}s wall time",
-                f"Long animations (>= 6s simulation): avg {avg_long_time:.2f}s wall time",
-                "",
-                "Observation: Wall time is roughly constant regardless of simulation duration.",
-                "This suggests rendering overhead dominates (initialization, frame processing).",
-                "",
-            ])
+            report_lines.extend(
+                [
+                    f"Short animations (< 6s simulation): avg {avg_short_time:.2f}s wall time",
+                    f"Long animations (>= 6s simulation): avg {avg_long_time:.2f}s wall time",
+                    "",
+                    "Observation: Wall time is roughly constant regardless of simulation duration.",
+                    "This suggests rendering overhead dominates (initialization, frame processing).",
+                    "",
+                ]
+            )
 
         # 渲染速度分析
         slow_renders = [r for r in successful_results if r.render_fps < 30]
@@ -645,43 +695,49 @@ def generate_performance_report(
         if slow_renders:
             report_lines.append("Slow rendering versions (< 30 fps):")
             for r in slow_renders:
-                report_lines.append(f"  - {r.version}: {r.render_fps:.1f} fps, {r.frame_count} frames, {r.wall_time:.2f}s")
+                report_lines.append(
+                    f"  - {r.version}: {r.render_fps:.1f} fps, {r.frame_count} frames, {r.wall_time:.2f}s"
+                )
             report_lines.append("")
 
         if fast_renders:
             report_lines.append("Fast rendering versions (>= 30 fps):")
             for r in fast_renders:
-                report_lines.append(f"  - {r.version}: {r.render_fps:.1f} fps, {r.frame_count} frames, {r.wall_time:.2f}s")
+                report_lines.append(
+                    f"  - {r.version}: {r.render_fps:.1f} fps, {r.frame_count} frames, {r.wall_time:.2f}s"
+                )
             report_lines.append("")
 
         # 针对性优化建议
-        report_lines.extend([
-            "RECOMMENDATIONS:",
-            "",
-            "1. Reduce initialization overhead:",
-            "   - Pre-load models and renderer objects",
-            "   - Batch multiple animations in one run",
-            "",
-            "2. For slow versions (V10, V14, V16):",
-            "   - These have shorter simulations but similar wall time",
-            "   - Consider extending simulation duration to amortize startup cost",
-            "   - Or batch render multiple scenarios together",
-            "",
-            "3. Optimize frame rendering loop:",
-            "   - Profile annotation functions (PIL/ImageDraw operations)",
-            "   - Cache font objects and reduce text rendering calls",
-            "   - Pre-compute interpolation arrays instead of per-frame np.interp",
-            "",
-            "4. Parallel rendering:",
-            "   - Current wall time ~12s per version",
-            "   - Use --parallel flag to test multi-threaded rendering",
-            "   - Expected speedup: 2-3x with 4 threads",
-            "",
-            "5. Resolution/quality trade-offs:",
-            "   - Test 1080p rendering to compare file size vs time",
-            "   - Consider variable frame rate (30fps for previews, 60fps for final)",
-            "",
-        ])
+        report_lines.extend(
+            [
+                "RECOMMENDATIONS:",
+                "",
+                "1. Reduce initialization overhead:",
+                "   - Pre-load models and renderer objects",
+                "   - Batch multiple animations in one run",
+                "",
+                "2. For slow versions (V10, V14, V16):",
+                "   - These have shorter simulations but similar wall time",
+                "   - Consider extending simulation duration to amortize startup cost",
+                "   - Or batch render multiple scenarios together",
+                "",
+                "3. Optimize frame rendering loop:",
+                "   - Profile annotation functions (PIL/ImageDraw operations)",
+                "   - Cache font objects and reduce text rendering calls",
+                "   - Pre-compute interpolation arrays instead of per-frame np.interp",
+                "",
+                "4. Parallel rendering:",
+                "   - Current wall time ~12s per version",
+                "   - Use --parallel flag to test multi-threaded rendering",
+                "   - Expected speedup: 2-3x with 4 threads",
+                "",
+                "5. Resolution/quality trade-offs:",
+                "   - Test 1080p rendering to compare file size vs time",
+                "   - Consider variable frame rate (30fps for previews, 60fps for final)",
+                "",
+            ]
+        )
 
     report_lines.extend(
         [

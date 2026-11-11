@@ -58,6 +58,7 @@ from common.motor_dynamics import PRESETS as MOTOR_PRESETS, _sign_smooth
 @dataclass
 class EpisodeResult:
     """单个 episode 的结果记录"""
+
     strategy: str
     episode_id: int
     distance: float
@@ -169,12 +170,7 @@ class FSMController:
 
         # 调用 V13.6 FSM 控制律
         tau = control_v136(
-            self.params_fsm,
-            data,
-            t,
-            self.support_foot,
-            self.burst_start_t,
-            E_current
+            self.params_fsm, data, t, self.support_foot, self.burst_start_t, E_current
         )
         l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau[0], tau[1], tau[2], tau[3]
 
@@ -202,7 +198,9 @@ class FSMController:
             )
 
         # 返回 4 维动作
-        action = np.array([l_hip_des, l_knee_des, r_hip_des, r_knee_des], dtype=np.float32)
+        action = np.array(
+            [l_hip_des, l_knee_des, r_hip_des, r_knee_des], dtype=np.float32
+        )
         return action
 
     def _compensate(self, tau_fsm: float, omega_joint: float, motor) -> float:
@@ -273,7 +271,7 @@ def run_episode(
         hip_vel_x = info.get("hip_vel_x", 0.0)
         forward_reward += 5.0 * hip_vel_x
 
-        step_energy = np.sum(action ** 2)
+        step_energy = np.sum(action**2)
         energy_cost += 0.01 * step_energy
 
         if last_action is not None:
@@ -356,6 +354,7 @@ def run_comparison_experiment(
     print("加载 PPO 模型...")
     try:
         from stable_baselines3 import PPO
+
         ppo_model = PPO.load(r"C:\Users\duanj\models\ppo_gait_final.zip")
         print("[OK] PPO 模型加载成功")
     except Exception as e:
@@ -449,9 +448,12 @@ def print_summary_table(results: Dict[str, List[EpisodeResult]]):
         avg_duration = np.mean([r.duration for r in strategy_results])
 
         # 统计最常见的失败原因
-        failure_reasons = [r.termination_reason for r in strategy_results if not r.success]
+        failure_reasons = [
+            r.termination_reason for r in strategy_results if not r.success
+        ]
         if failure_reasons:
             from collections import Counter
+
             most_common_reason = Counter(failure_reasons).most_common(1)[0][0]
         else:
             most_common_reason = "N/A"
@@ -490,9 +492,13 @@ def print_summary_table(results: Dict[str, List[EpisodeResult]]):
         print(f"答案: 平均持续 {fsm_avg_duration:.2f}s，最长 {fsm_max_duration:.2f}s")
 
         # 判断失败模式
-        early_failures = sum(1 for r in fsm_results if r.duration < 2.0 and not r.success)
+        early_failures = sum(
+            1 for r in fsm_results if r.duration < 2.0 and not r.success
+        )
         if early_failures >= len(fsm_results) * 0.5:
-            print(f"\n诊断: FSM 在 RL 环境中也表现出早期失败（{early_failures}/{len(fsm_results)} episodes < 2s）")
+            print(
+                f"\n诊断: FSM 在 RL 环境中也表现出早期失败（{early_failures}/{len(fsm_results)} episodes < 2s）"
+            )
             print("可能原因:")
             print("  1. 环境初始化不一致（qpos/qvel 初始化差异）")
             print("  2. FSM 状态机初始状态设置错误")
@@ -537,8 +543,12 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="测试 FSM 在 RL 环境中的表现")
-    parser.add_argument("--episodes", type=int, default=5, help="每策略运行的 episode 数")
-    parser.add_argument("--max-steps", type=int, default=1000, help="每个 episode 最大步数")
+    parser.add_argument(
+        "--episodes", type=int, default=5, help="每策略运行的 episode 数"
+    )
+    parser.add_argument(
+        "--max-steps", type=int, default=1000, help="每个 episode 最大步数"
+    )
     parser.add_argument("--no-save", action="store_true", help="不保存结果到文件")
 
     args = parser.parse_args()

@@ -52,6 +52,8 @@ print(f"  Time: {env.sim_time:.2f}s / 12.00s")
 print(f"  Distance: {info['episode_distance']:.3f}m")
 print(f"  Terminated: {terminated}")
 print(f"  Truncated: {truncated}")
-print(f"  Expected baseline distance in {env.sim_time:.2f}s: {4.63 * env.sim_time / 12.0:.3f}m")
+print(
+    f"  Expected baseline distance in {env.sim_time:.2f}s: {4.63 * env.sim_time / 12.0:.3f}m"
+)
 
 env.close()

@@ -48,7 +48,9 @@ def create_v137_objective():
             if "swing_thrust_duration" in params:
                 v137_params.fsm.swing_thrust_duration = params["swing_thrust_duration"]
             if "swing_retract_duration" in params:
-                v137_params.fsm.swing_retract_duration = params["swing_retract_duration"]
+                v137_params.fsm.swing_retract_duration = params[
+                    "swing_retract_duration"
+                ]
 
             # 更新 PD 增益（如果提供）
             if "hip_kp" in params:
@@ -112,7 +114,9 @@ def explore_fsm_phase_timing():
 
     # 3. Morris 灵敏度筛选
     print("\n[Step 3] Morris Sensitivity Screening...")
-    morris_results = explorer.sensitivity_analysis(method="morris", n_samples=20, seed=42)
+    morris_results = explorer.sensitivity_analysis(
+        method="morris", n_samples=20, seed=42
+    )
 
     # 4. 贝叶斯优化
     print("\n[Step 4] Bayesian Optimization...")
@@ -126,7 +130,9 @@ def explore_fsm_phase_timing():
     print("\n[Step 6] Visualizing 3D Surfaces...")
     top_params = [name for name, _ in morris_results["ranked_params"][:2]]
     if len(top_params) >= 2:
-        explorer.visualize_3d_surface(top_params[0], top_params[1], fixed_params=best_results["best_params"])
+        explorer.visualize_3d_surface(
+            top_params[0], top_params[1], fixed_params=best_results["best_params"]
+        )
 
     # 7. 生成报告
     print("\n[Step 7] Generating Report...")

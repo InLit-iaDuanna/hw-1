@@ -8,6 +8,7 @@ sys.path.insert(0, str(HW1_ROOT))
 
 from rl_training.test_v137_identity import V137IdentitySimulator
 
+
 def debug_baseline_fsm():
     """运行baseline并打印FSM状态转换"""
 
@@ -54,21 +55,31 @@ def debug_baseline_fsm():
 
         E_current = _mechanical_energy(p, simulator.data)
 
-        tau = control_v136(fsm, simulator.data, t, support_foot, burst_start_t, E_current)
+        tau = control_v136(
+            fsm, simulator.data, t, support_foot, burst_start_t, E_current
+        )
         l_hip_des, l_knee_des, r_hip_des, r_knee_des = tau[0], tau[1], tau[2], tau[3]
 
         if simulator.params.compensate_friction:
             l_hip_des = simulator._compensate(
-                l_hip_des, float(simulator.data.qvel[simulator.qvel_addr["left_hip"]]), simulator.params.hip_motor
+                l_hip_des,
+                float(simulator.data.qvel[simulator.qvel_addr["left_hip"]]),
+                simulator.params.hip_motor,
             )
             l_knee_des = simulator._compensate(
-                l_knee_des, float(simulator.data.qvel[simulator.qvel_addr["left_knee"]]), simulator.params.knee_motor
+                l_knee_des,
+                float(simulator.data.qvel[simulator.qvel_addr["left_knee"]]),
+                simulator.params.knee_motor,
             )
             r_hip_des = simulator._compensate(
-                r_hip_des, float(simulator.data.qvel[simulator.qvel_addr["right_hip"]]), simulator.params.hip_motor
+                r_hip_des,
+                float(simulator.data.qvel[simulator.qvel_addr["right_hip"]]),
+                simulator.params.hip_motor,
             )
             r_knee_des = simulator._compensate(
-                r_knee_des, float(simulator.data.qvel[simulator.qvel_addr["right_knee"]]), simulator.params.knee_motor
+                r_knee_des,
+                float(simulator.data.qvel[simulator.qvel_addr["right_knee"]]),
+                simulator.params.knee_motor,
             )
 
         l_hip_out, _ = simulator.actuators["left_hip"].compute_actual_torque(
@@ -87,6 +98,7 @@ def debug_baseline_fsm():
         simulator.data.ctrl[:] = (l_hip_out, l_knee_out, r_hip_out, r_knee_out)
 
         import mujoco
+
         mujoco.mj_step(simulator.model, simulator.data)
 
         left_contact, right_contact = contact_flags(simulator.model, simulator.data)
@@ -130,6 +142,7 @@ def debug_baseline_fsm():
     print(f"  Final accepted_contact: '{accepted_contact}'")
     print(f"  Final support_foot: '{support_foot}'")
     print()
+
 
 if __name__ == "__main__":
     debug_baseline_fsm()

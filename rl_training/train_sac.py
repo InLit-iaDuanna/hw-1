@@ -80,13 +80,11 @@ def train_sac():
         sde_sample_freq=-1,
         use_sde_at_warmup=False,
         tensorboard_log=log_dir,
-        policy_kwargs=dict(
-            net_arch=dict(pi=[256, 256], qf=[256, 256])
-        ),
+        policy_kwargs=dict(net_arch=dict(pi=[256, 256], qf=[256, 256])),
         verbose=1,
         seed=None,
         device="auto",
-        _init_setup_model=True
+        _init_setup_model=True,
     )
 
     print(f"Using device: {model.device}")
@@ -97,7 +95,7 @@ def train_sac():
         save_path=checkpoint_dir,
         name_prefix="sac_gait_model",
         save_replay_buffer=True,
-        save_vecnormalize=True
+        save_vecnormalize=True,
     )
 
     # Create evaluation callback (evaluates policy every N steps)
@@ -109,7 +107,7 @@ def train_sac():
         n_eval_episodes=5,
         deterministic=True,
         render=False,
-        verbose=1
+        verbose=1,
     )
 
     print(f"\nStarting SAC training for {total_timesteps:,} timesteps...")
@@ -140,7 +138,7 @@ def train_sac():
             log_interval=10,
             tb_log_name="SAC_gait_training",
             reset_num_timesteps=True,
-            progress_bar=True
+            progress_bar=True,
         )
 
         print("\nTraining completed successfully!")

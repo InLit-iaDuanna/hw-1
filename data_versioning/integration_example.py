@@ -39,12 +39,14 @@ def run_example_simulation(output_dir: str, version_tag: str = "V99"):
     # 模拟生成数据
     np.random.seed(42)
     time = np.linspace(0, params["simulation_time"], 500)
-    data = pd.DataFrame({
-        "time": time,
-        "position": np.sin(2 * np.pi * 0.5 * time) + np.random.randn(500) * 0.1,
-        "velocity": np.cos(2 * np.pi * 0.5 * time) + np.random.randn(500) * 0.1,
-        "force": np.random.randn(500) * 5.0,
-    })
+    data = pd.DataFrame(
+        {
+            "time": time,
+            "position": np.sin(2 * np.pi * 0.5 * time) + np.random.randn(500) * 0.1,
+            "velocity": np.cos(2 * np.pi * 0.5 * time) + np.random.randn(500) * 0.1,
+            "force": np.random.randn(500) * 5.0,
+        }
+    )
 
     # 创建输出目录
     output_dir = Path(output_dir)
@@ -66,14 +68,15 @@ def run_example_simulation(output_dir: str, version_tag: str = "V99"):
             "mean_position": float(data["position"].mean()),
             "max_velocity": float(data["velocity"].max()),
             "total_samples": len(data),
-        }
+        },
     }
 
     # 保存摘要
     import json
+
     json_path = output_dir / f"sim_summary_{timestamp}.json"
 
-    with open(json_path, 'w') as f:
+    with open(json_path, "w") as f:
         json.dump(summary, f, indent=2)
 
     print(f"  Saved: {json_path}")
@@ -108,7 +111,7 @@ def main():
         output_file=str(csv_path),
         version_tag=version_tag,
         experiment_id=experiment_id,
-        params=params
+        params=params,
     )
 
     # 方法 2：手动注册（更多控制）
@@ -118,7 +121,7 @@ def main():
         version_tag=version_tag,
         experiment_id=experiment_id,
         description="Simulation summary with parameters and results",
-        metadata={"format": "json", "content_type": "summary"}
+        metadata={"format": "json", "content_type": "summary"},
     )
 
     print()
@@ -133,7 +136,9 @@ def main():
     print("To integrate into your simulation script:")
     print()
     print("1. Add at the top of your script:")
-    print("   from data_versioning import VersionTracker, auto_register_simulation_output")
+    print(
+        "   from data_versioning import VersionTracker, auto_register_simulation_output"
+    )
     print()
     print("2. After saving output files, add:")
     print("   tracker = VersionTracker(project_root)")
@@ -149,5 +154,5 @@ def main():
     print()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

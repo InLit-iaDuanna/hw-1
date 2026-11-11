@@ -144,7 +144,9 @@ class AlertingSystem:
                     )
                 )
 
-    def analyze_metrics(self, metrics: dict[str, Any], history: list[dict[str, Any]] | None = None):
+    def analyze_metrics(
+        self, metrics: dict[str, Any], history: list[dict[str, Any]] | None = None
+    ):
         """分析指标并生成告警"""
         # 检查测试覆盖率
         coverage = metrics.get("testing", {}).get("coverage_percentage")
@@ -245,7 +247,9 @@ class AlertingSystem:
         warning = sum(1 for a in self.alerts if a.level == AlertLevel.WARNING)
         info = sum(1 for a in self.alerts if a.level == AlertLevel.INFO)
 
-        summary = f"[SUMMARY] 告警摘要: {critical} 严重, {warning} 警告, {info} 信息\n\n"
+        summary = (
+            f"[SUMMARY] 告警摘要: {critical} 严重, {warning} 警告, {info} 信息\n\n"
+        )
 
         if critical > 0:
             summary += "[CRITICAL] 严重告警:\n"

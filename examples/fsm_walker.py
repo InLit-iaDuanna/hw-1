@@ -114,10 +114,10 @@ def initialize_walker(model: mujoco.MjModel, data: mujoco.MjData) -> None:
     """
     data.qpos[0] = 0.0  # x position
     data.qpos[1] = 0.6  # z position (hip height)
-    data.qpos[2] = np.radians(10.0)   # left hip: forward
-    data.qpos[3] = 0.0                # left knee: straight
+    data.qpos[2] = np.radians(10.0)  # left hip: forward
+    data.qpos[3] = 0.0  # left knee: straight
     data.qpos[5] = np.radians(-10.0)  # right hip: back
-    data.qpos[6] = 0.0                # right knee: straight
+    data.qpos[6] = 0.0  # right knee: straight
     mujoco.mj_forward(model, data)
 
 
@@ -148,9 +148,7 @@ def contact_flags(model: mujoco.MjModel, data: mujoco.MjData) -> tuple[bool, boo
 
 
 def apply_friction_compensation(
-    tau_fsm: float,
-    omega_joint: float,
-    motor_params
+    tau_fsm: float, omega_joint: float, motor_params
 ) -> float:
     """Apply feedforward friction compensation.
 
@@ -195,26 +193,26 @@ def run_fsm_walker_demo(
     # Configure FSM parameters
     fsm_params = FSMParams(
         stance_early=PhaseParams(
-            k_E=0.0,      # PD-only during early stance
-            k_PD=30.0,    # Strong position tracking
+            k_E=0.0,  # PD-only during early stance
+            k_PD=30.0,  # Strong position tracking
             tau_max=4.0,
             kd=6.0,
         ),
         stance_late=PhaseParams(
-            k_E=0.0,      # PD-only during late stance
+            k_E=0.0,  # PD-only during late stance
             k_PD=30.0,
             tau_max=4.0,
             kd=6.0,
         ),
         swing_thrust=PhaseParams(
-            k_E=7.5,      # Energy shaping active
-            k_PD=10.0,    # Reduced PD gain
+            k_E=7.5,  # Energy shaping active
+            k_PD=10.0,  # Reduced PD gain
             tau_max=4.0,
             kd=6.0,
             E_target=52.66,  # Target mechanical energy (J)
         ),
         swing_retract=PhaseParams(
-            k_E=0.0,      # PD-only during retraction
+            k_E=0.0,  # PD-only during retraction
             k_PD=30.0,
             tau_max=2.0,  # Reduced torque limit
             kd=6.0,
@@ -279,7 +277,9 @@ def run_fsm_walker_demo(
         print("FSM Walker Demo with V13.7 Friction Compensation")
         print("=" * 60)
         print(f"Duration: {duration}s, Timestep: {timestep}s")
-        print(f"Friction compensation: {'ENABLED' if enable_friction_comp else 'DISABLED'}")
+        print(
+            f"Friction compensation: {'ENABLED' if enable_friction_comp else 'DISABLED'}"
+        )
         print(f"Motor: {motor.name}")
         print(f"  - Coulomb friction: {motor.tau_C_motor:.4f} Nm")
         print(f"  - Joint-side effective: {motor.joint_tau_C_eff():.4f} Nm")
@@ -293,8 +293,15 @@ def run_fsm_walker_demo(
         # Compute FSM control
         E_current = fsm.mechanical_energy(data)
         (
-            l_hip_tau, l_knee_tau, r_hip_tau, r_knee_tau,
-            mode_label, left_phase, right_phase, e_E_swing, A_swing
+            l_hip_tau,
+            l_knee_tau,
+            r_hip_tau,
+            r_knee_tau,
+            mode_label,
+            left_phase,
+            right_phase,
+            e_E_swing,
+            A_swing,
         ) = fsm.compute_control(data, t, support_foot, burst_start_t, E_current)
 
         # Apply friction compensation if enabled
@@ -368,15 +375,19 @@ def run_fsm_walker_demo(
                         last_event_t = t
                         contact_reported[foot] = True
 
-                        contact_events.append({
-                            "time": t,
-                            "foot": foot,
-                            "from": old_support,
-                            "energy": E_current,
-                        })
+                        contact_events.append(
+                            {
+                                "time": t,
+                                "foot": foot,
+                                "from": old_support,
+                                "energy": E_current,
+                            }
+                        )
 
                         if verbose and len(contact_events) <= 10:
-                            print(f"t={t:.3f}s: Contact {foot} -> support={support_foot}, E={E_current:.2f}J")
+                            print(
+                                f"t={t:.3f}s: Contact {foot} -> support={support_foot}, E={E_current:.2f}J"
+                            )
             else:
                 candidate_start_t[foot] = None
                 contact_reported[foot] = False
@@ -384,7 +395,9 @@ def run_fsm_walker_demo(
         # Progress indicator
         if verbose and step % 10000 == 0:
             progress = 100 * step / n_steps
-            print(f"Progress: {progress:.1f}% | t={t:.2f}s | E={E_current:.2f}J | x={data.qpos[0]:.2f}m")
+            print(
+                f"Progress: {progress:.1f}% | t={t:.2f}s | E={E_current:.2f}J | x={data.qpos[0]:.2f}m"
+            )
 
     # Final results
     final_x = float(data.qpos[0])
@@ -434,9 +447,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Disable friction compensation",
     )
-    parser.add_argument(
-        "--quiet", action="store_true", help="Suppress verbose output"
-    )
+    parser.add_argument("--quiet", action="store_true", help="Suppress verbose output")
 
     args = parser.parse_args()
 

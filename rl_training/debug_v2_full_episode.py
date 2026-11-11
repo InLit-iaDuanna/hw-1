@@ -32,7 +32,9 @@ print(f"  hip_x: {info['hip_x']:.6f}")
 print(f"  hip_vx: {env.data.qvel[0]:.6f}")
 
 print(f"\nRunning episode...")
-print(f"{'Step':<8} {'Time(s)':<10} {'hip_x':<12} {'Distance':<12} {'hip_vx':<12} {'Status':<10}")
+print(
+    f"{'Step':<8} {'Time(s)':<10} {'hip_x':<12} {'Distance':<12} {'hip_vx':<12} {'Status':<10}"
+)
 print("-" * 80)
 
 max_distance = 0.0
@@ -42,7 +44,7 @@ time_at_max = 0.0
 for step in range(2400):
     obs, reward, terminated, truncated, info = env.step(action)
 
-    current_distance = info['episode_distance']
+    current_distance = info["episode_distance"]
 
     if current_distance > max_distance:
         max_distance = current_distance
@@ -72,12 +74,16 @@ for step in range(2400):
 print("\n" + "=" * 80)
 print("ANALYSIS")
 print("=" * 80)
-print(f"Max forward distance: {max_distance:.6f}m at step {step_at_max} (t={time_at_max:.3f}s)")
+print(
+    f"Max forward distance: {max_distance:.6f}m at step {step_at_max} (t={time_at_max:.3f}s)"
+)
 print(f"Final distance: {info['episode_distance']:.6f}m at t={env.sim_time:.3f}s")
 print(f"Distance change: {info['episode_distance'] - max_distance:+.6f}m")
 
-if info['episode_distance'] < max_distance - 0.01:
-    print(f"\n[PROBLEM DETECTED] Robot started moving backward after {time_at_max:.3f}s")
+if info["episode_distance"] < max_distance - 0.01:
+    print(
+        f"\n[PROBLEM DETECTED] Robot started moving backward after {time_at_max:.3f}s"
+    )
     print(f"  This suggests FSM or control issue after ~{time_at_max:.1f}s")
 else:
     print(f"\n[OK] Robot continuously moved forward")

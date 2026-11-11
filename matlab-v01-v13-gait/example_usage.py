@@ -1,6 +1,7 @@
 """
 Example: Using Python to MATLAB Exporter Programmatically
 """
+
 from pathlib import Path
 from python_to_matlab_exporter import export_version, export_all_versions
 
@@ -18,7 +19,7 @@ def example_single_version():
         version_id="v10",
         version_dir=REPO_ROOT / "v10_rolling_foot_biomimetic_gait",
         output_dir=OUTPUT_DIR,
-        version_title="V10 rolling-foot biomimetic gait"
+        version_title="V10 rolling-foot biomimetic gait",
     )
 
     if success:

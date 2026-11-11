@@ -11,6 +11,7 @@ import mujoco
 from PIL import Image, ImageDraw, ImageFont
 
 import sys
+
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -44,22 +45,30 @@ class SimRecorder:
         self.hz_q, _ = get_joint_address(model, "hip_z")
         self.hr_q, _ = get_joint_address(model, "hip_roll")
 
-    def record(self, t: float, left_contact: bool, right_contact: bool,
-               support_foot: str, alternations: int):
+    def record(
+        self,
+        t: float,
+        left_contact: bool,
+        right_contact: bool,
+        support_foot: str,
+        alternations: int,
+    ):
         """Record current frame state."""
-        self.frames_data.append({
-            "time": t,
-            "qpos": self.data.qpos.copy(),
-            "qvel": self.data.qvel.copy(),
-            "hip_x": float(self.data.qpos[self.hx_q]),
-            "hip_y": float(self.data.qpos[self.hy_q]),
-            "hip_z": float(self.data.qpos[self.hz_q]),
-            "hip_roll": float(self.data.qpos[self.hr_q]),
-            "left_contact": left_contact,
-            "right_contact": right_contact,
-            "support_foot": support_foot,
-            "alternations": alternations,
-        })
+        self.frames_data.append(
+            {
+                "time": t,
+                "qpos": self.data.qpos.copy(),
+                "qvel": self.data.qvel.copy(),
+                "hip_x": float(self.data.qpos[self.hx_q]),
+                "hip_y": float(self.data.qpos[self.hy_q]),
+                "hip_z": float(self.data.qpos[self.hz_q]),
+                "hip_roll": float(self.data.qpos[self.hr_q]),
+                "left_contact": left_contact,
+                "right_contact": right_contact,
+                "support_foot": support_foot,
+                "alternations": alternations,
+            }
+        )
 
 
 def run_and_record_v18(params: Lateral3DParams, target_duration: float = 8.0):
@@ -90,7 +99,9 @@ def run_and_record_v18(params: Lateral3DParams, target_duration: float = 8.0):
     p = params
     u0 = smoothstep(p.release_phase)
     alpha = np.arcsin(p.step_length / (2.0 * p.leg_length))
-    support_z = ramp_height(0.0, gamma=p.gamma) + p.foot_radius / max(0.2, np.cos(p.gamma))
+    support_z = ramp_height(0.0, gamma=p.gamma) + p.foot_radius / max(
+        0.2, np.cos(p.gamma)
+    )
     left_hip_init = p.gamma + alpha - 2.0 * alpha * u0
     hip_x_init = p.leg_length * np.sin(left_hip_init)
     hip_z_init = support_z + p.leg_length * np.cos(left_hip_init)
@@ -99,16 +110,24 @@ def run_and_record_v18(params: Lateral3DParams, target_duration: float = 8.0):
     px = hip_x_init - p.swing_foot_x
     pz = hip_z_init - (support_z + p.swing_foot_clearance)
     d = np.hypot(px, pz)
-    d = float(np.clip(d, abs(p.thigh_length - p.shank_length) + 1e-5, p.leg_length - 1e-5))
+    d = float(
+        np.clip(d, abs(p.thigh_length - p.shank_length) + 1e-5, p.leg_length - 1e-5)
+    )
     base = np.arctan2(px, pz)
-    cos_delta = (p.thigh_length**2 + d**2 - p.shank_length**2) / (2.0 * p.thigh_length * d)
+    cos_delta = (p.thigh_length**2 + d**2 - p.shank_length**2) / (
+        2.0 * p.thigh_length * d
+    )
     delta = np.arccos(float(np.clip(cos_delta, -1.0, 1.0)))
     right_hip_init = base - delta
     thigh_angle = right_hip_init
     knee_x = hip_x_init - p.thigh_length * np.sin(thigh_angle)
     knee_z = hip_z_init - p.thigh_length * np.cos(thigh_angle)
-    shank_angle = np.arctan2(knee_x - p.swing_foot_x, knee_z - (support_z + p.swing_foot_clearance))
-    right_knee_init = float(np.clip(shank_angle - thigh_angle, 0.0, np.radians(p.knee_limit_deg)))
+    shank_angle = np.arctan2(
+        knee_x - p.swing_foot_x, knee_z - (support_z + p.swing_foot_clearance)
+    )
+    right_knee_init = float(
+        np.clip(shank_angle - thigh_angle, 0.0, np.radians(p.knee_limit_deg))
+    )
 
     data.qpos[hx_q] = hip_x_init
     data.qpos[hy_q] = p.init_hip_y
@@ -153,33 +172,59 @@ def run_and_record_v18(params: Lateral3DParams, target_duration: float = 8.0):
             u = min(u, 0.55)
         s = smoothstep(u)
         offset = p.gamma
-        stance_target = offset + np.radians(p.stance_front_deg + (p.stance_back_deg - p.stance_front_deg) * s)
-        swing_target = offset + np.radians(p.swing_back_deg + (p.swing_front_deg - p.swing_back_deg) * s)
+        stance_target = offset + np.radians(
+            p.stance_front_deg + (p.stance_back_deg - p.stance_front_deg) * s
+        )
+        swing_target = offset + np.radians(
+            p.swing_back_deg + (p.swing_front_deg - p.swing_back_deg) * s
+        )
         swing_knee = np.radians(p.swing_knee_flex_deg * np.sin(np.pi * u))
         stance_knee = np.radians(p.stance_knee_deg)
 
         left_is_support = support_foot == "left"
-        lh_tau = limited_pd(float(data.qpos[lh_q]), float(data.qvel[lh_v]),
-                           stance_target if left_is_support else swing_target,
-                           p.hip_kp, p.hip_kd, p.hip_torque_limit)
-        lk_tau = limited_pd(float(data.qpos[lk_q]), float(data.qvel[lk_v]),
-                           stance_knee if left_is_support else swing_knee,
-                           p.knee_kp, p.knee_kd, p.knee_torque_limit)
-        rh_tau = limited_pd(float(data.qpos[rh_q]), float(data.qvel[rh_v]),
-                           stance_target if not left_is_support else swing_target,
-                           p.hip_kp, p.hip_kd, p.hip_torque_limit)
-        rk_tau = limited_pd(float(data.qpos[rk_q]), float(data.qvel[rk_v]),
-                           stance_knee if not left_is_support else swing_knee,
-                           p.knee_kp, p.knee_kd, p.knee_torque_limit)
+        lh_tau = limited_pd(
+            float(data.qpos[lh_q]),
+            float(data.qvel[lh_v]),
+            stance_target if left_is_support else swing_target,
+            p.hip_kp,
+            p.hip_kd,
+            p.hip_torque_limit,
+        )
+        lk_tau = limited_pd(
+            float(data.qpos[lk_q]),
+            float(data.qvel[lk_v]),
+            stance_knee if left_is_support else swing_knee,
+            p.knee_kp,
+            p.knee_kd,
+            p.knee_torque_limit,
+        )
+        rh_tau = limited_pd(
+            float(data.qpos[rh_q]),
+            float(data.qvel[rh_v]),
+            stance_target if not left_is_support else swing_target,
+            p.hip_kp,
+            p.hip_kd,
+            p.hip_torque_limit,
+        )
+        rk_tau = limited_pd(
+            float(data.qpos[rk_q]),
+            float(data.qvel[rk_v]),
+            stance_knee if not left_is_support else swing_knee,
+            p.knee_kp,
+            p.knee_kd,
+            p.knee_torque_limit,
+        )
         data.ctrl[:] = (lh_tau, lk_tau, rh_tau, rk_tau)
 
         mujoco.mj_step(model, data)
 
         # Contact detection
         left_c, right_c = get_contact_flags(
-            model, data, "ramp",
+            model,
+            data,
+            "ramp",
             ["left_heel", "left_sole", "left_toe", "left_sole_lat"],
-            ["right_heel", "right_sole", "right_toe", "right_sole_lat"]
+            ["right_heel", "right_sole", "right_toe", "right_sole_lat"],
         )
 
         contacts = {"left": left_c, "right": right_c}
@@ -196,8 +241,11 @@ def run_and_record_v18(params: Lateral3DParams, target_duration: float = 8.0):
                 contact_reported[foot] = False
 
         for foot in stable_feet:
-            if (not contact_reported[foot] and foot != accepted_contact
-                and t - last_event_t > p.min_event_interval):
+            if (
+                not contact_reported[foot]
+                and foot != accepted_contact
+                and t - last_event_t > p.min_event_interval
+            ):
                 if accepted_contact in {"left", "right"}:
                     alternations += 1
                 accepted_contact = foot
@@ -225,8 +273,9 @@ def run_and_record_v18(params: Lateral3DParams, target_duration: float = 8.0):
     return recorder.frames_data
 
 
-def annotate(frame: np.ndarray, frame_data: dict, params: Lateral3DParams,
-              view_name: str = "") -> np.ndarray:
+def annotate(
+    frame: np.ndarray, frame_data: dict, params: Lateral3DParams, view_name: str = ""
+) -> np.ndarray:
     """Add Chinese annotations to frame."""
     import numpy as np
 
@@ -254,25 +303,53 @@ def annotate(frame: np.ndarray, frame_data: dict, params: Lateral3DParams,
 
     # Parameters box
     draw.rectangle((image.width - 380, 20, image.width - 20, 120), fill=(0, 0, 0, 200))
-    draw.text((image.width - 360, 30), f"Roll刚度: {params.hip_roll_stiffness:.0f}",
-              font=small_font, fill=(150, 200, 255))
-    draw.text((image.width - 360, 60), f"Roll阻尼: {params.hip_roll_damping:.1f}",
-              font=small_font, fill=(150, 200, 255))
-    draw.text((image.width - 360, 90), f"初始扰动: {params.init_hip_roll_deg:.1f}°",
-              font=small_font, fill=(150, 200, 255))
+    draw.text(
+        (image.width - 360, 30),
+        f"Roll刚度: {params.hip_roll_stiffness:.0f}",
+        font=small_font,
+        fill=(150, 200, 255),
+    )
+    draw.text(
+        (image.width - 360, 60),
+        f"Roll阻尼: {params.hip_roll_damping:.1f}",
+        font=small_font,
+        fill=(150, 200, 255),
+    )
+    draw.text(
+        (image.width - 360, 90),
+        f"初始扰动: {params.init_hip_roll_deg:.1f}°",
+        font=small_font,
+        fill=(150, 200, 255),
+    )
 
     # View label
     if view_name:
-        draw.rectangle((image.width // 2 - 100, image.height - 60,
-                       image.width // 2 + 100, image.height - 20), fill=(0, 0, 0, 180))
-        draw.text((image.width // 2 - 80, image.height - 50), view_name,
-                 font=title_font, fill=(255, 255, 255))
+        draw.rectangle(
+            (
+                image.width // 2 - 100,
+                image.height - 60,
+                image.width // 2 + 100,
+                image.height - 20,
+            ),
+            fill=(0, 0, 0, 180),
+        )
+        draw.text(
+            (image.width // 2 - 80, image.height - 50),
+            view_name,
+            font=title_font,
+            fill=(255, 255, 255),
+        )
 
     return np.array(image)
 
 
-def render_view(frames_data: list, params: Lateral3DParams, view_mode: str,
-                width: int = 1280, height: int = 720) -> list:
+def render_view(
+    frames_data: list,
+    params: Lateral3DParams,
+    view_mode: str,
+    width: int = 1280,
+    height: int = 720,
+) -> list:
     """Render frames for a specific view."""
     import numpy as np
 
@@ -322,8 +399,13 @@ def render_view(frames_data: list, params: Lateral3DParams, view_mode: str,
     return rendered_frames
 
 
-def render_comparison(frames_list: list, params_list: list, labels: list,
-                      width: int = 1280, height: int = 720) -> list:
+def render_comparison(
+    frames_list: list,
+    params_list: list,
+    labels: list,
+    width: int = 1280,
+    height: int = 720,
+) -> list:
     """Render side-by-side comparison video."""
     import numpy as np
 
@@ -353,8 +435,9 @@ def render_comparison(frames_list: list, params_list: list, labels: list,
             draw = ImageDraw.Draw(tile, "RGBA")
 
             # Condition label at bottom
-            draw.rectangle((10, height - 70, tile_width - 10, height - 10),
-                          fill=(0, 0, 0, 220))
+            draw.rectangle(
+                (10, height - 70, tile_width - 10, height - 10), fill=(0, 0, 0, 220)
+            )
             draw.text((20, height - 60), label, font=title_font, fill=(255, 255, 255))
 
             tiles.append(np.array(tile))
@@ -368,7 +451,9 @@ def main():
     import numpy as np
 
     parser = argparse.ArgumentParser(description="V18 渲染脚本")
-    parser.add_argument("--mode", choices=["single", "dual", "comparison"], default="single")
+    parser.add_argument(
+        "--mode", choices=["single", "dual", "comparison"], default="single"
+    )
     parser.add_argument("--fps", type=int, default=60)
     parser.add_argument("--duration", type=float, default=8.0)
     parser.add_argument("--roll-perturb", type=float, default=3.0)
@@ -392,7 +477,7 @@ def main():
         print("渲染侧视图...")
         frames_sag = render_view(frames_data, params, "sagittal")
         out_sag = OUT_DIR / f"v18_rollk{int(args.roll_stiffness)}_sagittal.mp4"
-        with imageio.get_writer(out_sag, fps=args.fps, codec='libx264', quality=8) as w:
+        with imageio.get_writer(out_sag, fps=args.fps, codec="libx264", quality=8) as w:
             for f in frames_sag:
                 w.append_data(f)
         print(f"[OK] 保存: {out_sag}")
@@ -400,7 +485,9 @@ def main():
         print("渲染前视图...")
         frames_front = render_view(frames_data, params, "frontal")
         out_front = OUT_DIR / f"v18_rollk{int(args.roll_stiffness)}_frontal.mp4"
-        with imageio.get_writer(out_front, fps=args.fps, codec='libx264', quality=8) as w:
+        with imageio.get_writer(
+            out_front, fps=args.fps, codec="libx264", quality=8
+        ) as w:
             for f in frames_front:
                 w.append_data(f)
         print(f"[OK] 保存: {out_front}")
@@ -422,10 +509,11 @@ def main():
         frames_front = render_view(frames_data, params, "frontal", 640, 720)
 
         import numpy as np
+
         composite = [np.hstack([s, f]) for s, f in zip(frames_sag, frames_front)]
 
         out = OUT_DIR / f"v18_rollk{int(args.roll_stiffness)}_dual.mp4"
-        with imageio.get_writer(out, fps=args.fps, codec='libx264', quality=8) as w:
+        with imageio.get_writer(out, fps=args.fps, codec="libx264", quality=8) as w:
             for f in composite:
                 w.append_data(f)
         print(f"[OK] 保存: {out}")
@@ -452,21 +540,25 @@ def main():
 
         print("\n[1/2] 仿真 roll_k=100 (失败)...")
         frames_fail = run_and_record_v18(params_fail, target_duration=args.duration)
-        print(f"  记录 {len(frames_fail)} 帧, 最终步数={frames_fail[-1]['alternations']}")
+        print(
+            f"  记录 {len(frames_fail)} 帧, 最终步数={frames_fail[-1]['alternations']}"
+        )
 
         print("\n[2/2] 仿真 roll_k=500 (稳定)...")
         frames_stable = run_and_record_v18(params_stable, target_duration=args.duration)
-        print(f"  记录 {len(frames_stable)} 帧, 最终步数={frames_stable[-1]['alternations']}")
+        print(
+            f"  记录 {len(frames_stable)} 帧, 最终步数={frames_stable[-1]['alternations']}"
+        )
 
         print("\n渲染对比视频...")
         composite = render_comparison(
             [frames_fail, frames_stable],
             [params_fail, params_stable],
-            ["roll_k=100 (失败)", "roll_k=500 (稳定)"]
+            ["roll_k=100 (失败)", "roll_k=500 (稳定)"],
         )
 
         out = OUT_DIR / "v18_comparison.mp4"
-        with imageio.get_writer(out, fps=args.fps, codec='libx264', quality=8) as w:
+        with imageio.get_writer(out, fps=args.fps, codec="libx264", quality=8) as w:
             for f in composite:
                 w.append_data(f)
         print(f"[OK] 保存: {out}")
@@ -475,19 +567,21 @@ def main():
         metadata = {
             "fail_case": {
                 "roll_stiffness": params_fail.hip_roll_stiffness,
-                "final_steps": frames_fail[-1]['alternations'],
-                "final_roll_deg": float(np.degrees(frames_fail[-1]['hip_roll'])),
-                "final_hip_y": float(frames_fail[-1]['hip_y']),
+                "final_steps": frames_fail[-1]["alternations"],
+                "final_roll_deg": float(np.degrees(frames_fail[-1]["hip_roll"])),
+                "final_hip_y": float(frames_fail[-1]["hip_y"]),
             },
             "stable_case": {
                 "roll_stiffness": params_stable.hip_roll_stiffness,
-                "final_steps": frames_stable[-1]['alternations'],
-                "final_roll_deg": float(np.degrees(frames_stable[-1]['hip_roll'])),
-                "final_hip_y": float(frames_stable[-1]['hip_y']),
-            }
+                "final_steps": frames_stable[-1]["alternations"],
+                "final_roll_deg": float(np.degrees(frames_stable[-1]["hip_roll"])),
+                "final_hip_y": float(frames_stable[-1]["hip_y"]),
+            },
         }
         metadata_path = OUT_DIR / "v18_comparison_metadata.json"
-        metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding='utf-8')
+        metadata_path.write_text(
+            json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
         print(f"[OK] 元数据: {metadata_path}")
 
     print("\n渲染完成！")

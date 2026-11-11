@@ -199,7 +199,11 @@ class NodeDebugFrame:
                 f"got {len(payload)}"
             )
         unpacked = struct.unpack(
-            NODE_DEBUG_PAYLOAD_FORMAT if len(payload) == NODE_DEBUG_PAYLOAD_SIZE else NODE_DEBUG_PAYLOAD_FORMAT_V1,
+            (
+                NODE_DEBUG_PAYLOAD_FORMAT
+                if len(payload) == NODE_DEBUG_PAYLOAD_SIZE
+                else NODE_DEBUG_PAYLOAD_FORMAT_V1
+            ),
             payload,
         )
         (
@@ -396,7 +400,9 @@ class CaptureStats:
         if not self.timestamp_deltas_us:
             return 0.0
         expected_us = 1_000_000.0 / self.expected_sample_rate_hz
-        jitters = sorted(abs(delta - expected_us) / 1000.0 for delta in self.timestamp_deltas_us)
+        jitters = sorted(
+            abs(delta - expected_us) / 1000.0 for delta in self.timestamp_deltas_us
+        )
         index = min(len(jitters) - 1, int(round(0.95 * (len(jitters) - 1))))
         return jitters[index]
 
@@ -444,8 +450,12 @@ def encode_frame(
     return packet_without_crc + struct.pack("<H", crc16_ccitt(packet_without_crc))
 
 
-def encode_sample_frame(seq: int, ts_us: int, status: int, values: Iterable[int]) -> bytes:
-    return encode_frame(FRAME_TYPE_SAMPLE, seq, ts_us, status, build_sample_payload(values))
+def encode_sample_frame(
+    seq: int, ts_us: int, status: int, values: Iterable[int]
+) -> bytes:
+    return encode_frame(
+        FRAME_TYPE_SAMPLE, seq, ts_us, status, build_sample_payload(values)
+    )
 
 
 def build_node_debug_payload(
@@ -511,13 +521,21 @@ def encode_node_debug_frame(
         ts_us,
         status,
         build_node_debug_payload(
-            node_id, node_status, age_ms, c3_seq, c3_ts_us, s3_rx_ts_us, imu,
-            temp_centi_c
+            node_id,
+            node_status,
+            age_ms,
+            c3_seq,
+            c3_ts_us,
+            s3_rx_ts_us,
+            imu,
+            temp_centi_c,
         ),
     )
 
 
-def scale_sensor(sensor_name: str, values: Imu6 | Imu9, gyro_bias: dict | None = None) -> dict:
+def scale_sensor(
+    sensor_name: str, values: Imu6 | Imu9, gyro_bias: dict | None = None
+) -> dict:
     """Return engineering units for display while preserving raw data elsewhere."""
 
     if sensor_name == "pelvis":

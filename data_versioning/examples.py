@@ -35,15 +35,15 @@ def example_version_tracking():
 
     # 按类别查看
     print(f"\nBy category:")
-    for category, count in stats['categories'].items():
+    for category, count in stats["categories"].items():
         print(f"  {category}: {count}")
 
     # 验证单个文件
-    if stats['total_assets'] > 0:
+    if stats["total_assets"] > 0:
         print(f"\nVerifying file integrity:")
         result = tracker.verify_file_integrity("data_storage/hw1_data.db")
         print(f"  Status: {result['status']}")
-        if result['status'] == 'valid':
+        if result["status"] == "valid":
             print(f"  Hash: {result['hash'][:16]}...")
 
 
@@ -90,13 +90,17 @@ def example_data_comparison():
         # 显示结构差异
         if "structure_diff" in report:
             rows = report["structure_diff"]["rows"]
-            print(f"  Row count: {rows['file1']} -> {rows['file2']} (diff: {rows['difference']:+d})")
+            print(
+                f"  Row count: {rows['file1']} -> {rows['file2']} (diff: {rows['difference']:+d})"
+            )
 
         # 显示统计差异（前3个）
         if "statistical_diff" in report:
             print(f"  Statistical differences (top 3):")
-            for i, (col, stats) in enumerate(list(report["statistical_diff"].items())[:3]):
-                pct = stats.get('mean_pct_change')
+            for i, (col, stats) in enumerate(
+                list(report["statistical_diff"].items())[:3]
+            ):
+                pct = stats.get("mean_pct_change")
                 if pct is not None:
                     print(f"    {col}: {pct:+.2f}% change in mean")
     else:
@@ -116,14 +120,18 @@ def example_integrity_check():
 
     print(f"\nIntegrity Summary:")
     print(f"  Total: {results['total_assets']}")
-    print(f"  Valid: {results['summary']['valid']} ({results['summary']['valid_pct']:.1f}%)")
+    print(
+        f"  Valid: {results['summary']['valid']} ({results['summary']['valid_pct']:.1f}%)"
+    )
     print(f"  Corrupted: {results['summary']['corrupted']}")
     print(f"  Missing: {results['summary']['missing']}")
 
-    if results['summary']['corrupted'] > 0:
-        print(f"\n  WARNING: {results['summary']['corrupted']} corrupted files detected!")
+    if results["summary"]["corrupted"] > 0:
+        print(
+            f"\n  WARNING: {results['summary']['corrupted']} corrupted files detected!"
+        )
 
-    if results['summary']['missing'] > 0:
+    if results["summary"]["missing"] > 0:
         print(f"\n  WARNING: {results['summary']['missing']} files missing!")
 
 
@@ -139,7 +147,7 @@ def example_snapshot_verification():
 
     if snapshots:
         # 验证第一个快照
-        snapshot_id = snapshots[0]['snapshot_id']
+        snapshot_id = snapshots[0]["snapshot_id"]
         print(f"\nVerifying snapshot: {snapshots[0]['name']}")
 
         result = manager.verify_snapshot_integrity(snapshot_id)
@@ -169,6 +177,7 @@ def main():
     except Exception as e:
         print(f"\nError: {e}")
         import traceback
+
         traceback.print_exc()
 
     print("\n" + "=" * 80)
@@ -180,5 +189,5 @@ def main():
     print()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

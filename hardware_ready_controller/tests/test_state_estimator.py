@@ -255,7 +255,9 @@ class TestKalmanFilterNoiseReduction:
             measurement = true_angle + np.random.normal(0, noise_std)
 
             # Finite difference velocity
-            fd_velocity = estimate_velocity_finite_diff(measurement, prev_measurement, dt)
+            fd_velocity = estimate_velocity_finite_diff(
+                measurement, prev_measurement, dt
+            )
             finite_diff_velocities.append(fd_velocity)
             prev_measurement = measurement
 
@@ -280,9 +282,7 @@ class TestEncoderQuantization:
         cpr = 4096
         quantization_rad = 2 * np.pi / cpr  # ~0.77 mrad
 
-        config = KalmanConfig(
-            measurement_noise_encoder=quantization_rad ** 2
-        )
+        config = KalmanConfig(measurement_noise_encoder=quantization_rad**2)
         kf = KalmanFilter(config, dt=0.001)
 
         # Simulate quantized encoder readings
@@ -338,9 +338,9 @@ class TestJointStateEstimator:
     def test_multi_joint_initialization(self, joint_estimator):
         """All joints should initialize correctly."""
         states = joint_estimator.get_all_states()
-        assert 'hip' in states
-        assert 'knee' in states
-        assert 'ankle' in states
+        assert "hip" in states
+        assert "knee" in states
+        assert "ankle" in states
 
         for joint_name, (angle, velocity) in states.items():
             assert angle == 0.0
@@ -349,9 +349,9 @@ class TestJointStateEstimator:
     def test_independent_joint_filtering(self, joint_estimator):
         """Each joint should filter independently."""
         # Update each joint with different values
-        hip_state = joint_estimator.update_joint('hip', 0.5)
-        knee_state = joint_estimator.update_joint('knee', 1.0)
-        ankle_state = joint_estimator.update_joint('ankle', -0.3)
+        hip_state = joint_estimator.update_joint("hip", 0.5)
+        knee_state = joint_estimator.update_joint("knee", 1.0)
+        ankle_state = joint_estimator.update_joint("ankle", -0.3)
 
         # States should be different
         assert not np.isclose(hip_state[0], knee_state[0])
@@ -360,17 +360,15 @@ class TestJointStateEstimator:
     def test_update_all_joints(self, joint_estimator):
         """Should update all joints simultaneously."""
         states = joint_estimator.update_all_joints(
-            hip_angle=0.5,
-            knee_angle=1.0,
-            ankle_angle=-0.3
+            hip_angle=0.5, knee_angle=1.0, ankle_angle=-0.3
         )
 
-        assert 'hip' in states
-        assert 'knee' in states
-        assert 'ankle' in states
+        assert "hip" in states
+        assert "knee" in states
+        assert "ankle" in states
 
         # Each should have filtered the input
-        hip_angle, _ = states['hip']
+        hip_angle, _ = states["hip"]
         assert hip_angle != 0.0  # Changed from initial zero
 
     def test_reset_all_joints(self, joint_estimator):
@@ -416,7 +414,9 @@ class TestForwardKinematics:
         knee_angle_flexed = np.pi / 4  # 45 degrees
         ankle_angle = 0.0
 
-        _, y_straight = fk.compute_hip_position(hip_angle, knee_angle_straight, ankle_angle)
+        _, y_straight = fk.compute_hip_position(
+            hip_angle, knee_angle_straight, ankle_angle
+        )
         _, y_flexed = fk.compute_hip_position(hip_angle, knee_angle_flexed, ankle_angle)
 
         # Flexed knee should lower hip
@@ -450,10 +450,7 @@ class TestContactDetector:
     @pytest.fixture
     def contact_detector(self):
         """Create contact detector."""
-        config = KalmanConfig(
-            contact_force_threshold=5.0,
-            contact_debounce_samples=3
-        )
+        config = KalmanConfig(contact_force_threshold=5.0, contact_debounce_samples=3)
         return ContactDetector(config, dt=0.001)
 
     def test_no_contact_initially(self, contact_detector):
@@ -512,52 +509,44 @@ class TestStateEstimator:
     @pytest.fixture
     def state_estimator(self):
         """Create complete state estimator."""
-        return StateEstimator(
-            config=None,
-            dt=0.001,
-            thigh_length=0.4,
-            shank_length=0.4
-        )
+        return StateEstimator(config=None, dt=0.001, thigh_length=0.4, shank_length=0.4)
 
     def test_complete_state_update(self, state_estimator):
         """Should update complete state from sensor inputs."""
         result = state_estimator.update(
-            hip_angle=0.1,
-            knee_angle=0.2,
-            ankle_angle=0.05,
-            ground_force=10.0
+            hip_angle=0.1, knee_angle=0.2, ankle_angle=0.05, ground_force=10.0
         )
 
         # Should have all expected keys
-        assert 'joints' in result
-        assert 'hip_position' in result
-        assert 'hip_velocity' in result
-        assert 'contact' in result
-        assert 'timestamp' in result
+        assert "joints" in result
+        assert "hip_position" in result
+        assert "hip_velocity" in result
+        assert "contact" in result
+        assert "timestamp" in result
 
     def test_joint_states_in_result(self, state_estimator):
         """Result should contain filtered joint states."""
         result = state_estimator.update(0.1, 0.2, 0.05, 10.0)
 
-        assert 'hip' in result['joints']
-        assert 'knee' in result['joints']
-        assert 'ankle' in result['joints']
+        assert "hip" in result["joints"]
+        assert "knee" in result["joints"]
+        assert "ankle" in result["joints"]
 
         # Each joint should have angle and velocity
-        hip_state = result['joints']['hip']
-        assert 'angle' in hip_state
-        assert 'velocity' in hip_state
+        hip_state = result["joints"]["hip"]
+        assert "angle" in hip_state
+        assert "velocity" in hip_state
 
     def test_hip_position_computed(self, state_estimator):
         """Should compute hip position via forward kinematics."""
         result = state_estimator.update(0.0, 0.0, 0.0, 10.0)
 
-        hip_pos = result['hip_position']
-        assert 'x' in hip_pos
-        assert 'y' in hip_pos
+        hip_pos = result["hip_position"]
+        assert "x" in hip_pos
+        assert "y" in hip_pos
 
         # For zero angles (straight leg), should be directly above
-        assert np.isclose(hip_pos['x'], 0.0, atol=0.01)
+        assert np.isclose(hip_pos["x"], 0.0, atol=0.01)
 
     def test_hip_velocity_computed(self, state_estimator):
         """Should compute hip velocity via Jacobian."""
@@ -565,27 +554,27 @@ class TestStateEstimator:
         for _ in range(10):
             result = state_estimator.update(0.0, 0.0, 0.0, 10.0)
 
-        hip_vel = result['hip_velocity']
-        assert 'x' in hip_vel
-        assert 'y' in hip_vel
+        hip_vel = result["hip_velocity"]
+        assert "x" in hip_vel
+        assert "y" in hip_vel
 
     def test_contact_state_in_result(self, state_estimator):
         """Should include contact detection result."""
         result = state_estimator.update(0.1, 0.2, 0.05, 15.0)
 
-        contact = result['contact']
-        assert 'state' in contact
-        assert 'force' in contact
-        assert isinstance(contact['state'], bool)
-        assert contact['force'] == 15.0
+        contact = result["contact"]
+        assert "state" in contact
+        assert "force" in contact
+        assert isinstance(contact["state"], bool)
+        assert contact["force"] == 15.0
 
     def test_timestamp_increments(self, state_estimator):
         """Timestamp should increment with each update."""
         result1 = state_estimator.update(0.1, 0.2, 0.05, 10.0)
         result2 = state_estimator.update(0.1, 0.2, 0.05, 10.0)
 
-        assert result2['timestamp'] > result1['timestamp']
-        assert np.isclose(result2['timestamp'] - result1['timestamp'], 0.001)
+        assert result2["timestamp"] > result1["timestamp"]
+        assert np.isclose(result2["timestamp"] - result1["timestamp"], 0.001)
 
     def test_state_estimator_reset(self, state_estimator):
         """Reset should restore initial conditions."""
@@ -619,14 +608,14 @@ class TestV17IntegrationScenarios:
 
             # Sinusoidal joint angles (simplified gait)
             hip_angle = 0.3 * np.sin(omega * time)
-            knee_angle = 0.5 * np.sin(omega * time + np.pi/4)
-            ankle_angle = 0.2 * np.sin(omega * time - np.pi/4)
+            knee_angle = 0.5 * np.sin(omega * time + np.pi / 4)
+            ankle_angle = 0.2 * np.sin(omega * time - np.pi / 4)
 
             # Ground force (alternating contact)
             ground_force = 20.0 if np.sin(omega * time) > 0 else 0.0
 
             result = estimator.update(hip_angle, knee_angle, ankle_angle, ground_force)
-            hip_positions.append(result['hip_position']['y'])
+            hip_positions.append(result["hip_position"]["y"])
 
         # Hip height should vary periodically
         hip_std = np.std(hip_positions)
@@ -649,13 +638,12 @@ class TestV17IntegrationScenarios:
         for _ in range(1000):
             # Add noise to measurements
             noisy_angles = [
-                angle + np.random.normal(0, noise_std)
-                for angle in true_angles
+                angle + np.random.normal(0, noise_std) for angle in true_angles
             ]
             raw_measurements.append(noisy_angles[0])
 
             result = estimator.update(*noisy_angles, ground_force=10.0)
-            filtered_estimates.append(result['joints']['hip']['angle'])
+            filtered_estimates.append(result["joints"]["hip"]["angle"])
 
         # Filtered estimates should be less noisy
         raw_std = np.std(raw_measurements[500:])

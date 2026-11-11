@@ -102,7 +102,8 @@ def check_stage_progress():
 
             # 从文件名提取步数
             import re
-            match = re.search(r'(\d+)_steps', latest_ckpt.name)
+
+            match = re.search(r"(\d+)_steps", latest_ckpt.name)
             if match:
                 steps = int(match.group(1))
                 progress = steps / 5_000_000 * 100
@@ -140,7 +141,9 @@ def check_stage_progress():
         for result in results:
             stats = result["statistics"]
             print(f"\n    [{result['model_name']}]")
-            print(f"      平均奖励: {stats['mean_reward']:.2f} ± {stats['std_reward']:.2f}")
+            print(
+                f"      平均奖励: {stats['mean_reward']:.2f} ± {stats['std_reward']:.2f}"
+            )
             print(f"      平均距离: {stats['mean_distance']:.3f}m")
             print(f"      成功率: {stats['success_rate']*100:.1f}%")
 

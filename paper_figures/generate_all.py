@@ -1,4 +1,5 @@
-﻿"""Generate all paper figures in batch."""
+"""Generate all paper figures in batch."""
+
 from __future__ import annotations
 
 import sys
@@ -24,7 +25,7 @@ def generate_all_figures():
     print("=" * 60)
     print("Generating Paper Figures for HW-1 Project")
     print("=" * 60)
-    
+
     figures = [
         ("Figure 1: Version Evolution Timeline", create_timeline_figure),
         ("Figure 2: Stability Domain Heatmap", create_stability_heatmap),
@@ -32,13 +33,13 @@ def generate_all_figures():
         ("Figure 4: Phase Portrait", create_phase_portrait),
         ("Figure 5: Hardware Specifications", create_hardware_specs_figure),
     ]
-    
+
     generated_files = []
-    
+
     for i, (title, generator_func) in enumerate(figures, 1):
         print(f"\n[{i}/{len(figures)}] Generating {title}...")
         start_time = time.time()
-        
+
         try:
             result_path = generator_func()
             elapsed = time.time() - start_time
@@ -47,20 +48,21 @@ def generate_all_figures():
         except Exception as e:
             print(f"    [ERROR] {e}")
             import traceback
+
             traceback.print_exc()
-    
+
     print("\n" + "=" * 60)
     print(f"Generation Complete: {len(generated_files)}/{len(figures)} figures")
     print("=" * 60)
-    
+
     print(f"\nOutput directory: {OUTPUT_DIR}")
     print("\nGenerated files:")
-    for fmt in ['svg', 'pdf', 'png']:
+    for fmt in ["svg", "pdf", "png"]:
         print(f"\n  {fmt.upper()} files:")
         fmt_files = list(OUTPUT_DIR.glob(f"*.{fmt}"))
         for f in sorted(fmt_files):
             print(f"    - {f.name}")
-    
+
     return generated_files
 
 
@@ -123,7 +125,7 @@ def generate_latex_index():
 %% Phase portraits in Figure~\ref{fig:phase_portrait} confirm limit cycle behavior...
 %% Hardware specifications (Figure~\ref{fig:hardware_specs}) detail the V22 design...
 """
-    
+
     index_path = OUTPUT_DIR.parent / "figures_index.tex"
     with open(index_path, "w", encoding="utf-8") as f:
         f.write(latex_content)

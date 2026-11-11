@@ -9,6 +9,7 @@ sys.path.insert(0, str(HW1_ROOT))
 
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
+
 def debug_control_torques():
     """对比V2环境在前100ms的控制力矩"""
 
@@ -62,6 +63,7 @@ def debug_control_torques():
     print()
 
     env.close()
+
 
 if __name__ == "__main__":
     debug_control_torques()

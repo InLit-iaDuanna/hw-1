@@ -8,6 +8,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 
+
 def show_rl_results():
     """展示RL训练结果"""
     print("=" * 80)
@@ -21,8 +22,8 @@ def show_rl_results():
         with open(report_path) as f:
             data = json.load(f)
 
-        baseline = data['baseline']['mean_distance_m']
-        final = data['final_eval']['mean_distance_m']
+        baseline = data["baseline"]["mean_distance_m"]
+        final = data["final_eval"]["mean_distance_m"]
         improvement = (final - baseline) / baseline * 100
 
         print(f"Baseline (V13.7):     {baseline:.3f}m")
@@ -32,14 +33,15 @@ def show_rl_results():
         print()
 
         print("Training Curve:")
-        for eval_point in data['eval_history']:
-            ts = eval_point['timestep']
-            dist = eval_point['mean_distance_m']
+        for eval_point in data["eval_history"]:
+            ts = eval_point["timestep"]
+            dist = eval_point["mean_distance_m"]
             imp = (dist - baseline) / baseline * 100
             print(f"  {ts:6d} steps: {dist:.3f}m ({imp:+.2f}%)")
     else:
         print("[ERROR] Training report not found")
     print()
+
 
 def show_sweep_results():
     """展示Sweep最佳结果"""
@@ -53,8 +55,10 @@ def show_sweep_results():
         with open(sweep_path) as f:
             data = json.load(f)
 
-        best = data['best_result']
-        print(f"Best Action:          [{best['left_action']:.1f}, {best['right_action']:.1f}]")
+        best = data["best_result"]
+        print(
+            f"Best Action:          [{best['left_action']:.1f}, {best['right_action']:.1f}]"
+        )
         print(f"Residual Scale:       {best['residual_scale']:.2f}")
         print(f"Distance:             {best['mean_distance_m']:.3f}m")
         print(f"Improvement:          +{best['improvement_pct']:.2f}%")
@@ -62,6 +66,7 @@ def show_sweep_results():
     else:
         print("[ERROR] Sweep results not found")
     print()
+
 
 def show_project_stats():
     """展示项目统计"""
@@ -76,8 +81,16 @@ def show_project_stats():
     py_files = len(list(root.rglob("*.py")))
     readme_files = len(list(root.rglob("README.md")))
     version_dirs = len([d for d in root.glob("v*") if d.is_dir()])
-    md_reports = len([f for f in root.glob("*.md")
-                     if any(keyword in f.name for keyword in ['SUMMARY', 'REPORT', 'COMPLETE', 'HEALTH'])])
+    md_reports = len(
+        [
+            f
+            for f in root.glob("*.md")
+            if any(
+                keyword in f.name
+                for keyword in ["SUMMARY", "REPORT", "COMPLETE", "HEALTH"]
+            )
+        ]
+    )
 
     print(f"Python Files:         {py_files:,}")
     print(f"README Files:         {readme_files}")
@@ -99,6 +112,7 @@ def show_project_stats():
 
     print()
 
+
 def show_git_status():
     """展示Git状态"""
     print("=" * 80)
@@ -110,19 +124,21 @@ def show_git_status():
 
     try:
         # 最近的提交
-        result = subprocess.run(['git', 'log', '--oneline', '-5'],
-                              capture_output=True, text=True)
+        result = subprocess.run(
+            ["git", "log", "--oneline", "-5"], capture_output=True, text=True
+        )
         if result.returncode == 0:
             print("Recent Commits:")
-            for line in result.stdout.strip().split('\n'):
+            for line in result.stdout.strip().split("\n"):
                 print(f"  {line}")
             print()
 
         # 当前状态
-        result = subprocess.run(['git', 'status', '--short'],
-                              capture_output=True, text=True)
+        result = subprocess.run(
+            ["git", "status", "--short"], capture_output=True, text=True
+        )
         if result.returncode == 0:
-            lines = [l for l in result.stdout.strip().split('\n') if l]
+            lines = [l for l in result.stdout.strip().split("\n") if l]
             if lines:
                 print(f"Uncommitted Changes: {len(lines)} files")
                 for line in lines[:5]:
@@ -136,6 +152,7 @@ def show_git_status():
 
     print()
 
+
 def show_code_quality():
     """展示代码质量报告"""
     print("=" * 80)
@@ -148,7 +165,7 @@ def show_code_quality():
         with open(report_path) as f:
             data = json.load(f)
 
-        stats = data['stats']
+        stats = data["stats"]
         print(f"Import * Usage:       {stats['import_star']} files")
         print(f"TODO Markers:         {stats['todos']}")
         print(f"Hardcoded Paths:      {stats['hardcoded_paths']} files")
@@ -158,9 +175,11 @@ def show_code_quality():
         print()
 
         # 计算评分
-        issues = (stats['import_star'] +
-                 stats['hardcoded_paths'] +
-                 stats['long_functions'] // 10)
+        issues = (
+            stats["import_star"]
+            + stats["hardcoded_paths"]
+            + stats["long_functions"] // 10
+        )
 
         if issues < 10:
             grade = "A"
@@ -175,6 +194,7 @@ def show_code_quality():
         print("Run: python check_code_quality.py")
 
     print()
+
 
 def main():
     print()
@@ -196,10 +216,13 @@ def main():
     print("=" * 80)
     print()
     print("Next Steps:")
-    print("  1. View visualizations: start analysis_output\\residual_rl_v2_analysis.png")
+    print(
+        "  1. View visualizations: start analysis_output\\residual_rl_v2_analysis.png"
+    )
     print("  2. Read reports: README.md, FINAL_REPORT.md")
     print("  3. Run analysis: python analyze_rl_results.py")
     print()
+
 
 if __name__ == "__main__":
     main()

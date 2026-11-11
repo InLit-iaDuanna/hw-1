@@ -12,11 +12,7 @@ class Solution:
     """解决方案对象。"""
 
     def __init__(
-        self,
-        action: str,
-        details: str,
-        code: str | None = None,
-        priority: int = 0
+        self, action: str, details: str, code: str | None = None, priority: int = 0
     ):
         self.action = action
         self.details = details
@@ -29,10 +25,7 @@ class Solution:
     def format(self, indent: int = 0) -> str:
         """格式化输出解决方案。"""
         prefix = " " * indent
-        lines = [
-            f"{prefix}操作: {self.action}",
-            f"{prefix}详情: {self.details}"
-        ]
+        lines = [f"{prefix}操作: {self.action}", f"{prefix}详情: {self.details}"]
         if self.code:
             lines.append(f"{prefix}代码:")
             for line in self.code.split("\n"):
@@ -50,7 +43,7 @@ class ErrorEntry:
         causes: list[str],
         solutions: list[Solution],
         references: list[str],
-        severity: str = "medium"
+        severity: str = "medium",
     ):
         self.error_type = error_type
         self.symptoms = symptoms
@@ -128,7 +121,7 @@ class SolutionDatabase:
                         action=sol_dict.get("action", ""),
                         details=sol_dict.get("details", ""),
                         code=sol_dict.get("code"),
-                        priority=i
+                        priority=i,
                     )
                     solutions.append(solution)
 
@@ -139,7 +132,7 @@ class SolutionDatabase:
                     causes=error_dict.get("causes", []),
                     solutions=solutions,
                     references=error_dict.get("references", []),
-                    severity=error_dict.get("severity", "medium")
+                    severity=error_dict.get("severity", "medium"),
                 )
 
                 self.entries[error_type] = entry
@@ -189,9 +182,7 @@ class SolutionDatabase:
         return entry.solutions if entry else []
 
     def recommend_solutions(
-        self,
-        error_types: list[str],
-        max_solutions_per_error: int = 3
+        self, error_types: list[str], max_solutions_per_error: int = 3
     ) -> dict[str, list[Solution]]:
         """为多个错误类型推荐解决方案。
 
@@ -221,7 +212,7 @@ class SolutionDatabase:
             f"共收录 {len(self.entries)} 个常见错误及解决方案。",
             "",
             "## 目录",
-            ""
+            "",
         ]
 
         # 生成目录
