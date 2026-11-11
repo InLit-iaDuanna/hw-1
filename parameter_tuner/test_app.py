@@ -1,4 +1,4 @@
-﻿"""测试脚本 - 验证 parameter_tuner 是否正常工作"""
+"""测试脚本 - 验证 parameter_tuner 是否正常工作"""
 
 import sys
 from pathlib import Path
@@ -11,6 +11,7 @@ print("=== Parameter Tuner 测试 ===\n")
 # 测试 1: 导入版本适配器
 try:
     from parameter_tuner.version_adapter import get_version_adapter
+
     print("✓ version_adapter 导入成功")
 except Exception as e:
     print(f"✗ version_adapter 导入失败: {e}")

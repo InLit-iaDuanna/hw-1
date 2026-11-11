@@ -1,4 +1,4 @@
-﻿"""Hardware Specifications: V22 mechanical design schematic."""
+"""Hardware Specifications: V22 mechanical design schematic."""
 
 from __future__ import annotations
 

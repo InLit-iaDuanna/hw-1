@@ -1,4 +1,4 @@
-﻿"""Test script for RollingFootGait model.
+"""Test script for RollingFootGait model.
 
 Verifies:
 - Model instantiation
@@ -58,8 +58,14 @@ def test_xml_generation(gait: RollingFootGait):
 
     # Verify joints
     expected_joints = [
-        "hip_x", "hip_z", "left_hip", "left_knee", "left_ankle",
-        "right_hip", "right_knee", "right_ankle"
+        "hip_x",
+        "hip_z",
+        "left_hip",
+        "left_knee",
+        "left_ankle",
+        "right_hip",
+        "right_knee",
+        "right_ankle",
     ]
     for joint_name in expected_joints:
         jid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, joint_name)
@@ -68,8 +74,10 @@ def test_xml_generation(gait: RollingFootGait):
 
     # Verify actuators
     expected_actuators = [
-        "left_hip_muscle", "left_knee_stabilizer",
-        "right_hip_muscle", "right_knee_stabilizer"
+        "left_hip_muscle",
+        "left_knee_stabilizer",
+        "right_hip_muscle",
+        "right_knee_stabilizer",
     ]
     for act_name in expected_actuators:
         aid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_ACTUATOR, act_name)
@@ -78,8 +86,12 @@ def test_xml_generation(gait: RollingFootGait):
 
     # Verify foot geoms
     foot_geoms = [
-        "left_heel", "left_sole", "left_toe",
-        "right_heel", "right_sole", "right_toe"
+        "left_heel",
+        "left_sole",
+        "left_toe",
+        "right_heel",
+        "right_sole",
+        "right_toe",
     ]
     for geom_name in foot_geoms:
         gid = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, geom_name)
@@ -184,8 +196,9 @@ def test_control_computation(gait: RollingFootGait):
     support_foot = "left"
     burst_start_t = 0.0
 
-    left_hip_tau, left_knee_tau, right_hip_tau, right_knee_tau, mode = \
+    left_hip_tau, left_knee_tau, right_hip_tau, right_knee_tau, mode = (
         gait.compute_control(t, support_foot, burst_start_t)
+    )
 
     print(f"  Time: {t}s, Support: {support_foot}, Mode: {mode}")
     print(f"  Torques:")
@@ -196,10 +209,18 @@ def test_control_computation(gait: RollingFootGait):
 
     # Verify torques are within limits
     p = gait.params
-    assert abs(left_hip_tau) <= p.hip_torque_limit + 1e-6, "Left hip torque exceeds limit"
-    assert abs(right_hip_tau) <= p.hip_torque_limit + 1e-6, "Right hip torque exceeds limit"
-    assert abs(left_knee_tau) <= p.knee_torque_limit + 1e-6, "Left knee torque exceeds limit"
-    assert abs(right_knee_tau) <= p.knee_torque_limit + 1e-6, "Right knee torque exceeds limit"
+    assert (
+        abs(left_hip_tau) <= p.hip_torque_limit + 1e-6
+    ), "Left hip torque exceeds limit"
+    assert (
+        abs(right_hip_tau) <= p.hip_torque_limit + 1e-6
+    ), "Right hip torque exceeds limit"
+    assert (
+        abs(left_knee_tau) <= p.knee_torque_limit + 1e-6
+    ), "Left knee torque exceeds limit"
+    assert (
+        abs(right_knee_tau) <= p.knee_torque_limit + 1e-6
+    ), "Right knee torque exceeds limit"
 
     print(f"[OK] Control computation working, torques within limits")
     print()
@@ -308,6 +329,7 @@ def main():
         print("=" * 60)
         print(f"Error: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 
@@ -316,4 +338,3 @@ def main():
 
 if __name__ == "__main__":
     sys.exit(main())
-
