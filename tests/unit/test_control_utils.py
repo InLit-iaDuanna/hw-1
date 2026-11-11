@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
+import math
 import sys
 from pathlib import Path
 
-import math
 import pytest
 
 HW1_ROOT = Path(__file__).resolve().parents[2]

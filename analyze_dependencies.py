@@ -107,7 +107,7 @@ class DependencyAnalyzer:
         """收集所有依赖及其版本"""
         for req_file in self.requirements_files:
             try:
-                with open(req_file, "r", encoding="utf-8") as f:
+                with open(req_file, encoding="utf-8") as f:
                     for line in f:
                         result = self.parse_requirement_line(line)
                         if result:
@@ -128,7 +128,7 @@ class DependencyAnalyzer:
 
         for py_file in py_files:
             try:
-                with open(py_file, "r", encoding="utf-8") as f:
+                with open(py_file, encoding="utf-8") as f:
                     for line in f:
                         match = import_pattern.match(line)
                         if match:
@@ -149,10 +149,7 @@ class DependencyAnalyzer:
             if len(versions) > 1:
                 # 检查是否有完全不兼容的版本（如 ==3.3.7 vs ==2.3.0）
                 exact_versions = [v for v in versions if v.startswith("==")]
-                if len(exact_versions) > 1:
-                    self.version_conflicts.append((package, sorted(versions)))
-                # 检查是否有冲突的下界（如 >=3.0 vs >=1.24）
-                elif len(versions) > 1:
+                if len(exact_versions) > 1 or len(versions) > 1:
                     self.version_conflicts.append((package, sorted(versions)))
 
     def categorize_imports(self) -> Dict[str, Set[str]]:
@@ -309,7 +306,7 @@ class DependencyAnalyzer:
                     for f in self.requirements_files
                     if any(
                         package in line
-                        for line in open(f, "r", encoding="utf-8", errors="ignore")
+                        for line in open(f, encoding="utf-8", errors="ignore")
                     )
                 ]
             )

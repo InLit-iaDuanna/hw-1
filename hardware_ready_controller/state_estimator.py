@@ -8,9 +8,10 @@ Specifications from V17:
 - Target: smooth velocity estimates for PD control
 """
 
-import numpy as np
-from typing import Tuple, Optional
 from dataclasses import dataclass
+from typing import Optional, Tuple
+
+import numpy as np
 
 
 @dataclass

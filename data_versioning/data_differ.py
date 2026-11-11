@@ -6,11 +6,12 @@
 """
 
 import json
-from pathlib import Path
-from typing import Dict, Any, List, Optional, Tuple
-import pandas as pd
-import numpy as np
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import numpy as np
+import pandas as pd
 
 
 class DataDiffer:
@@ -156,10 +157,10 @@ class DataDiffer:
         file1 = self._resolve_path(file1)
         file2 = self._resolve_path(file2)
 
-        with open(file1, "r", encoding="utf-8") as f:
+        with open(file1, encoding="utf-8") as f:
             data1 = json.load(f)
 
-        with open(file2, "r", encoding="utf-8") as f:
+        with open(file2, encoding="utf-8") as f:
             data2 = json.load(f)
 
         report = {
@@ -265,10 +266,10 @@ class DataDiffer:
         file1 = self._resolve_path(file1)
         file2 = self._resolve_path(file2)
 
-        with open(file1, "r", encoding="utf-8") as f:
+        with open(file1, encoding="utf-8") as f:
             lines1 = f.readlines()
 
-        with open(file2, "r", encoding="utf-8") as f:
+        with open(file2, encoding="utf-8") as f:
             lines2 = f.readlines()
 
         import difflib

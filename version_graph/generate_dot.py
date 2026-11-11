@@ -9,7 +9,7 @@ import json
 def load_graph_data():
     """加载图数据"""
     with open(
-        "D:/Dunna/Documents/hw-1/version_graph/graph_data.json", "r", encoding="utf-8"
+        "D:/Dunna/Documents/hw-1/version_graph/graph_data.json", encoding="utf-8"
     ) as f:
         return json.load(f)
 
@@ -83,7 +83,7 @@ def generate_dot_file():
             dot_lines.append(f'            fillcolor="{stage_colors[stage]}",')
             dot_lines.append(f'            color="{color}",')
             dot_lines.append(f"            penwidth={penwidth}")
-            dot_lines.append(f"        ];")
+            dot_lines.append("        ];")
 
         dot_lines.append("    }")
         dot_lines.append("")
@@ -114,7 +114,7 @@ def generate_dot_file():
         dot_lines.append(f"        style={style},")
         dot_lines.append(f"        penwidth={penwidth},")
         dot_lines.append(f'        color="{color}"')
-        dot_lines.append(f"    ];")
+        dot_lines.append("    ];")
 
     dot_lines.append("}")
 
@@ -163,11 +163,11 @@ def generate_mainline_dot(data):
 
         dot_lines.append(f'    "{node["id"]}" [')
         dot_lines.append(f'        label="{label}",')
-        dot_lines.append(f"        shape=box,")
+        dot_lines.append("        shape=box,")
         dot_lines.append(f'        fillcolor="{stage_colors[node["stage"]]}",')
-        dot_lines.append(f'        color="#D32F2F",')
-        dot_lines.append(f"        penwidth=2.5")
-        dot_lines.append(f"    ];")
+        dot_lines.append('        color="#D32F2F",')
+        dot_lines.append("        penwidth=2.5")
+        dot_lines.append("    ];")
 
     dot_lines.append("")
 
@@ -176,10 +176,10 @@ def generate_mainline_dot(data):
         if edge["source"] in main_line and edge["target"] in main_line:
             dot_lines.append(f'    "{edge["source"]}" -> "{edge["target"]}" [')
             dot_lines.append(f'        label="{edge["description"]}",')
-            dot_lines.append(f"        style=solid,")
-            dot_lines.append(f"        penwidth=2.0,")
-            dot_lines.append(f'        color="#1976D2"')
-            dot_lines.append(f"    ];")
+            dot_lines.append("        style=solid,")
+            dot_lines.append("        penwidth=2.0,")
+            dot_lines.append('        color="#1976D2"')
+            dot_lines.append("    ];")
 
     dot_lines.append("}")
 

@@ -4,11 +4,10 @@
 检查代码问题、一致性、最佳实践
 """
 
-import os
-import re
-from pathlib import Path
-from collections import defaultdict
 import json
+import re
+from collections import defaultdict
+from pathlib import Path
 
 
 class CodeQualityChecker:

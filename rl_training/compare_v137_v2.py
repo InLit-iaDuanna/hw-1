@@ -17,9 +17,9 @@ sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 sys.path.insert(0, str(RL_TRAINING_DIR))
 
+import numpy as np
 from test_v137_identity import V137IdentitySimulator
 from train_residual_rl_v2 import ResidualRLEnvV2
-import numpy as np
 
 print("=" * 80)
 print("Comparison: V137IdentitySimulator vs ResidualRLEnvV2")
@@ -77,7 +77,7 @@ v137_sim.burst_start_t = -v137_sim.params.base.gait_period
 # V2
 v2_env.reset(seed=0)
 
-print(f"Initial state:")
+print("Initial state:")
 print(f"  v137: hip_x={v137_sim.data.qpos[0]:.4f}, hip_vx={v137_sim.data.qvel[0]:.4f}")
 print(f"  v2:   hip_x={v2_env.data.qpos[0]:.4f}, hip_vx={v2_env.data.qvel[0]:.4f}")
 print()

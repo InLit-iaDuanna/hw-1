@@ -4,8 +4,8 @@ Git 提交助手 - 帮助整理和提交未提交的文件
 """
 
 import subprocess
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
 
 def get_git_status():
@@ -96,23 +96,23 @@ def generate_commit_message(categories):
 
     # 详细描述
     if categories["docs"]:
-        lines.append(f"Documentation:")
+        lines.append("Documentation:")
         lines.append(f"- Add {len(categories['docs'])} documentation files")
 
     if categories["rl"]:
-        lines.append(f"RL Training:")
+        lines.append("RL Training:")
         lines.append(f"- Add {len(categories['rl'])} RL training scripts and tools")
 
     if categories["scripts"]:
-        lines.append(f"Scripts:")
+        lines.append("Scripts:")
         lines.append(f"- Add {len(categories['scripts'])} analysis and utility scripts")
 
     if categories["common"]:
-        lines.append(f"Common Library:")
+        lines.append("Common Library:")
         lines.append(f"- Update {len(categories['common'])} common library files")
 
     if categories["versions"]:
-        lines.append(f"Versions:")
+        lines.append("Versions:")
         lines.append(f"- Update {len(categories['versions'])} version directories")
 
     lines.append("")

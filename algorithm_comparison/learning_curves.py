@@ -3,13 +3,14 @@ Learning Curves Visualization for RL Algorithm Comparison
 Plots training metrics from TensorBoard logs for PPO, SAC, and Imitation Learning
 """
 
+import glob
 import os
-import numpy as np
+from pathlib import Path
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.gridspec import GridSpec
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
-import glob
-from pathlib import Path
 
 
 class LearningCurvePlotter:
@@ -445,7 +446,7 @@ class LearningCurvePlotter:
                     smoothed = self.smooth_curve(rewards, weight=0.9)
                     conv_step = self.find_convergence_point(steps, rewards)
 
-                    f.write(f"Episode Reward:\n")
+                    f.write("Episode Reward:\n")
                     f.write(f"  Initial:    {smoothed[0]:.2f}\n")
                     f.write(f"  Final:      {smoothed[-1]:.2f}\n")
                     f.write(f"  Max:        {np.max(smoothed):.2f}\n")
@@ -458,7 +459,7 @@ class LearningCurvePlotter:
                     steps, lengths = self.data[algo]["rollout/ep_len_mean"]
                     smoothed = self.smooth_curve(lengths, weight=0.9)
 
-                    f.write(f"\nEpisode Length:\n")
+                    f.write("\nEpisode Length:\n")
                     f.write(f"  Initial:    {smoothed[0]:.2f}\n")
                     f.write(f"  Final:      {smoothed[-1]:.2f}\n")
                     f.write(f"  Mean:       {np.mean(smoothed):.2f}\n")
@@ -535,7 +536,7 @@ def main():
     print("\nDone! Generated:")
     print(f"  - Main comparison: {args.output}")
     if args.individual:
-        print(f"  - Individual plots: individual_curves/")
+        print("  - Individual plots: individual_curves/")
     print(f"  - Summary stats: {args.summary}")
 
 

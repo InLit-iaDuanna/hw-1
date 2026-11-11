@@ -7,14 +7,14 @@ from __future__ import annotations
 
 import argparse
 from pathlib import Path
-import yaml
 
+import yaml
 from data_loader import DataLoader
-from preprocessor import DataPreprocessor
 from feature_extractor import FeatureExtractor
+from preprocessor import DataPreprocessor
+from report_generator import ReportGenerator
 from statistical_analyzer import StatisticalAnalyzer
 from visualizer import Visualizer
-from report_generator import ReportGenerator
 
 
 class AnalysisPipeline:
@@ -28,7 +28,7 @@ class AnalysisPipeline:
             config_path: 配置文件路径
         """
         self.config_path = Path(config_path)
-        with open(self.config_path, "r", encoding="utf-8") as f:
+        with open(self.config_path, encoding="utf-8") as f:
             self.config = yaml.safe_load(f)
 
         # 初始化各个模块

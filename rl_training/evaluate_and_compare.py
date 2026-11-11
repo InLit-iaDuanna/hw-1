@@ -7,20 +7,20 @@
 3. 原始PPO模型（从零训练）
 """
 
+import json
 import os
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
-import json
+from typing import Dict, List
 
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
-import matplotlib.pyplot as plt
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from stable_baselines3 import PPO
 from environment import CompassGaitEnv
+from stable_baselines3 import PPO
 
 
 class BCPolicyWrapper:
@@ -158,7 +158,7 @@ def evaluate_model(
         "std_energy": float(np.std(energies)),
     }
 
-    print(f"\n统计结果:")
+    print("\n统计结果:")
     print(
         f"  平均奖励: {results['statistics']['mean_reward']:.2f} ± {results['statistics']['std_reward']:.2f}"
     )

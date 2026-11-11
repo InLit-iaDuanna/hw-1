@@ -3,8 +3,8 @@
 """
 
 import json
-from typing import Dict, List, Optional
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
+from typing import Dict
 
 
 @dataclass

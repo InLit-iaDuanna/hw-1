@@ -3,12 +3,12 @@
 引导用户一步步诊断问题，并提供个性化的解决方案。
 """
 
+import sys
 from pathlib import Path
 from typing import Any
-import sys
 
-from .solution_database import SolutionDatabase
 from .error_detector import ErrorDetector
+from .solution_database import SolutionDatabase
 
 
 class DiagnosticWizard:
@@ -110,7 +110,7 @@ class DiagnosticWizard:
                     print(f"\n  方案 {i}: {sol.action}")
                     print(f"  详情: {sol.details}")
                     if sol.code:
-                        print(f"  代码:")
+                        print("  代码:")
                         for line in sol.code.split("\n"):
                             print(f"    {line}")
             else:

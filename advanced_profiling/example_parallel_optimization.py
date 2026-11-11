@@ -109,10 +109,10 @@ def benchmark_parallel_speedup(n_params: int = 12):
     print("=" * 80)
     print("并行化优化效果验证")
     print("=" * 80)
-    print(f"\n测试配置:")
+    print("\n测试配置:")
     print(f"  - 参数数量: {n_params}")
-    print(f"  - 仿真时长: 2.0s")
-    print(f"  - 采样频率: 20.0 Hz")
+    print("  - 仿真时长: 2.0s")
+    print("  - 采样频率: 20.0 Hz")
 
     # 串行执行
     results_seq = scan_parameters_sequential(n_params)
@@ -137,23 +137,23 @@ def benchmark_parallel_speedup(n_params: int = 12):
         success_seq = sum(1 for r in results_seq if r.get("success", False))
         success_par = sum(1 for r in results_par if r.get("success", False))
 
-        print(f"\n串行结果:")
+        print("\n串行结果:")
         print(f"  - 成功: {success_seq}/{n_params}")
         print(f"  - 失败: {n_params - success_seq}/{n_params}")
 
-        print(f"\n并行结果:")
+        print("\n并行结果:")
         print(f"  - 成功: {success_par}/{n_params}")
         print(f"  - 失败: {n_params - success_par}/{n_params}")
 
         if success_seq == success_par:
-            print(f"\n✓ 结果验证: 一致")
+            print("\n✓ 结果验证: 一致")
         else:
-            print(f"\n⚠ 结果验证: 不一致 (可能是数值误差)")
+            print("\n⚠ 结果验证: 不一致 (可能是数值误差)")
 
         # 计算加速比
-        print(f"\n性能提升:")
-        print(f"  - 加速比: 以上时间对比")
-        print(f"  - 结论: 并行化显著提升参数扫描效率")
+        print("\n性能提升:")
+        print("  - 加速比: 以上时间对比")
+        print("  - 结论: 并行化显著提升参数扫描效率")
 
 
 # ============================================================================

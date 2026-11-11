@@ -21,7 +21,6 @@ matplotlib.use("Agg")  # 使用非交互式后端
 import matplotlib.pyplot as plt
 import mujoco
 import numpy as np
-from matplotlib.patches import Circle
 from PIL import Image, ImageDraw, ImageFont
 
 # 设置中文字体
@@ -107,7 +106,7 @@ def render_gait_frame(
     rows_for_section = []
     for i in range(len(data["time"])):
         row = {}
-        for key in data.keys():
+        for key in data:
             val = data[key][i]
             if isinstance(val, (int, float, np.number)):
                 row[key] = float(val)
@@ -475,7 +474,7 @@ def main() -> None:
     cases = summary["cases"]
     params = RollingFootParams(**summary["baseline_params"])
 
-    print(f"[render] V13b 扰动恢复可视化")
+    print("[render] V13b 扰动恢复可视化")
     print(f"[render] 固定点: {fixed_point}")
     print(f"[render] Floquet 慢模: |λ| = {lambda_slow:.4f}")
     print(f"[render] 扰动场景数: {len(cases)}")

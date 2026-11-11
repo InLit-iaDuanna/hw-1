@@ -9,13 +9,14 @@
 
 from __future__ import annotations
 
-import numpy as np
-from typing import Literal, Callable
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
+from typing import Callable, Literal
 
-from .poincare import collect_section, plot_section, floquet_multipliers
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
+
+from .poincare import floquet_multipliers, plot_section
 
 
 class PoincareAnalyzer:
@@ -281,9 +282,9 @@ class PoincareAnalyzer:
         lines.append("=== Poincaré Stability Analysis ===")
         lines.append(f"Section points: {result['n_pairs'] + 1}")
         lines.append(f"Fixed point: {fp}")
-        lines.append(f"\nJacobian (return map):")
+        lines.append("\nJacobian (return map):")
         lines.append(str(jacobian))
-        lines.append(f"\nFloquet multipliers (eigenvalues):")
+        lines.append("\nFloquet multipliers (eigenvalues):")
 
         max_mag = 0.0
         for i, lam in enumerate(eigvals):

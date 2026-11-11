@@ -6,7 +6,6 @@
 from __future__ import annotations
 
 import gc
-import sys
 import tracemalloc
 from pathlib import Path
 from typing import Any, Callable
@@ -259,7 +258,6 @@ def identify_preallocation_opportunities(
     Returns:
         预分配建议
     """
-    import numpy as np
 
     n_steps = len(simulation_data)
     n_fields = len(data_keys)

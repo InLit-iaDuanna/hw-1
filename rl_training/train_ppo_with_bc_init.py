@@ -10,15 +10,13 @@ import sys
 from pathlib import Path
 
 import torch
-import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import SubprocVecEnv
 from stable_baselines3.common.callbacks import CheckpointCallback
 from stable_baselines3.common.utils import set_random_seed
-from stable_baselines3.common.policies import ActorCriticPolicy
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
 
 def make_env(rank, seed=0):
@@ -60,7 +58,7 @@ def load_bc_weights_into_ppo(ppo_model: PPO, bc_weights_path: str):
     checkpoint = torch.load(bc_weights_path, map_location=ppo_model.device)
     bc_state_dict = checkpoint["model_state_dict"]
 
-    print(f"BC模型训练信息:")
+    print("BC模型训练信息:")
     print(f"  Epoch: {checkpoint.get('epoch', 'N/A')}")
     print(f"  Train Loss: {checkpoint.get('train_loss', 'N/A'):.6f}")
     print(f"  Val Loss: {checkpoint.get('val_loss', 'N/A'):.6f}")
@@ -131,7 +129,7 @@ def train_ppo_with_bc_init(
     os.makedirs(tensorboard_dir, exist_ok=True)
     os.makedirs(checkpoint_dir, exist_ok=True)
 
-    print(f"配置:")
+    print("配置:")
     print(f"  总步数: {total_timesteps:,}")
     print(f"  并行环境: {num_envs}")
     print(f"  学习率: {learning_rate}")

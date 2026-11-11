@@ -12,10 +12,10 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from data_versioning import (
-    VersionTracker,
     DataDiffer,
-    SnapshotManager,
     DataRestorer,
+    SnapshotManager,
+    VersionTracker,
 )
 
 
@@ -29,18 +29,18 @@ def example_version_tracking():
 
     # 查看统计信息
     stats = tracker.get_statistics()
-    print(f"\nRegistry Statistics:")
+    print("\nRegistry Statistics:")
     print(f"  Total assets: {stats['total_assets']}")
     print(f"  Total size: {stats['total_size_mb']:.2f} MB")
 
     # 按类别查看
-    print(f"\nBy category:")
+    print("\nBy category:")
     for category, count in stats["categories"].items():
         print(f"  {category}: {count}")
 
     # 验证单个文件
     if stats["total_assets"] > 0:
-        print(f"\nVerifying file integrity:")
+        print("\nVerifying file integrity:")
         result = tracker.verify_file_integrity("data_storage/hw1_data.db")
         print(f"  Status: {result['status']}")
         if result["status"] == "valid":
@@ -80,7 +80,7 @@ def example_data_comparison():
     trial_01 = project_root / "out" / "trial_01.csv"
 
     if trial_00.exists() and trial_01.exists():
-        print(f"\nComparing trial_00.csv vs trial_01.csv:")
+        print("\nComparing trial_00.csv vs trial_01.csv:")
 
         report = differ.compare_csv_files(
             str(trial_00),
@@ -96,7 +96,7 @@ def example_data_comparison():
 
         # 显示统计差异（前3个）
         if "statistical_diff" in report:
-            print(f"  Statistical differences (top 3):")
+            print("  Statistical differences (top 3):")
             for i, (col, stats) in enumerate(
                 list(report["statistical_diff"].items())[:3]
             ):
@@ -118,7 +118,7 @@ def example_integrity_check():
     print("\nVerifying all registered assets...")
     results = restorer.verify_all_assets()
 
-    print(f"\nIntegrity Summary:")
+    print("\nIntegrity Summary:")
     print(f"  Total: {results['total_assets']}")
     print(
         f"  Valid: {results['summary']['valid']} ({results['summary']['valid_pct']:.1f}%)"
@@ -152,7 +152,7 @@ def example_snapshot_verification():
 
         result = manager.verify_snapshot_integrity(snapshot_id)
 
-        print(f"\nSnapshot Integrity:")
+        print("\nSnapshot Integrity:")
         print(f"  Total assets: {result['summary']['total']}")
         print(f"  Valid: {result['summary']['valid']}")
         print(f"  Corrupted: {result['summary']['corrupted']}")

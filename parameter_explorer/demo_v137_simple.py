@@ -13,8 +13,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from space_sampler import ParameterRange
 from run_exploration import ParameterExplorer
+from space_sampler import ParameterRange
 
 
 def create_mock_objective():
@@ -128,7 +128,7 @@ def demo_exploration():
     print("\n[Step 5/7] Bayesian Optimization (30 iterations)...")
     best_results = explorer.optimize(method="bayesian", n_iterations=30, seed=42)
 
-    print(f"\nBest Parameters Found:")
+    print("\nBest Parameters Found:")
     for name, value in best_results["best_params"].items():
         print(f"  {name}: {value:.6f}")
     print(f"Best Objective: {best_results['best_value']:.4f} m")
@@ -154,23 +154,23 @@ def demo_exploration():
     explorer.generate_report()
 
     print(f"\n{'=' * 80}")
-    print(f"Exploration Complete!")
+    print("Exploration Complete!")
     print(f"{'=' * 80}")
     print(f"\nResults saved to: {output_dir}")
-    print(f"\nGenerated files:")
-    print(f"  - initial_sampling.json")
-    print(f"  - sensitivity_morris.json & .png")
-    print(f"  - sensitivity_sobol.json & .png")
-    print(f"  - interaction_heatmap.png")
-    print(f"  - optimization_bayesian.json & .png")
-    print(f"  - slice_2d_*.png (4 files)")
-    print(f"  - surface_3d_*.png & contour_*.png (6 files)")
-    print(f"  - exploration_report.txt")
-    print(f"\nRecommended Next Steps:")
-    print(f"  1. Review sensitivity analysis to identify critical parameters")
-    print(f"  2. Examine 3D surfaces to understand parameter interactions")
-    print(f"  3. Validate best parameters with full V13.7 simulation")
-    print(f"  4. Fine-tune around optimal region with denser sampling")
+    print("\nGenerated files:")
+    print("  - initial_sampling.json")
+    print("  - sensitivity_morris.json & .png")
+    print("  - sensitivity_sobol.json & .png")
+    print("  - interaction_heatmap.png")
+    print("  - optimization_bayesian.json & .png")
+    print("  - slice_2d_*.png (4 files)")
+    print("  - surface_3d_*.png & contour_*.png (6 files)")
+    print("  - exploration_report.txt")
+    print("\nRecommended Next Steps:")
+    print("  1. Review sensitivity analysis to identify critical parameters")
+    print("  2. Examine 3D surfaces to understand parameter interactions")
+    print("  3. Validate best parameters with full V13.7 simulation")
+    print("  4. Fine-tune around optimal region with denser sampling")
 
     return explorer, best_results
 

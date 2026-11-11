@@ -33,7 +33,7 @@ def test_model_creation():
     params = RollingFootParams()
     gait = RollingFootGait(params)
 
-    print(f"[OK] RollingFootGait instance created")
+    print("[OK] RollingFootGait instance created")
     print(f"  Slope: {params.slope_deg}°")
     print(f"  Foot length: {params.foot_length}m")
     print(f"  Leg length: {params.leg_length}m")
@@ -50,7 +50,7 @@ def test_xml_generation(gait: RollingFootGait):
 
     model = gait.model
 
-    print(f"[OK] Model loaded successfully")
+    print("[OK] Model loaded successfully")
     print(f"  nq (position dims): {model.nq}")
     print(f"  nv (velocity dims): {model.nv}")
     print(f"  nu (actuators): {model.nu}")
@@ -109,7 +109,7 @@ def test_initialization(gait: RollingFootGait):
     gait.initialize()
     data = gait.data
 
-    print(f"[OK] Initialization completed")
+    print("[OK] Initialization completed")
     print(f"  Hip position: ({data.qpos[0]:.3f}, {data.qpos[1]:.3f})m")
     print(f"  Hip velocity: ({data.qvel[0]:.3f}, {data.qvel[1]:.3f})m/s")
     print(f"  Left hip angle: {np.rad2deg(data.qpos[2]):.1f}°")
@@ -118,7 +118,7 @@ def test_initialization(gait: RollingFootGait):
     # Verify state is finite
     assert np.all(np.isfinite(data.qpos)), "qpos contains non-finite values"
     assert np.all(np.isfinite(data.qvel)), "qvel contains non-finite values"
-    print(f"[OK] All states are finite")
+    print("[OK] All states are finite")
     print()
 
 
@@ -150,7 +150,7 @@ def test_geometry_utilities(gait: RollingFootGait):
     hip_angle, knee_angle = gait.leg_ik_front_knee(hip_x, hip_z, foot_x, foot_z)
     print(f"  IK: hip={np.rad2deg(hip_angle):.1f}°, knee={np.rad2deg(knee_angle):.1f}°")
 
-    print(f"[OK] Geometry utilities working")
+    print("[OK] Geometry utilities working")
     print()
 
 
@@ -164,7 +164,7 @@ def test_contact_detection(gait: RollingFootGait):
 
     # Get contact detail
     detail = gait.foot_contact_detail()
-    print(f"  Contact detail:")
+    print("  Contact detail:")
     for key, value in detail.items():
         print(f"    {key}: {value}")
 
@@ -175,12 +175,12 @@ def test_contact_detection(gait: RollingFootGait):
 
     # Get site margins
     sites = ["left_heel_site", "left_toe_site", "right_heel_site", "right_toe_site"]
-    print(f"  Site margins:")
+    print("  Site margins:")
     for site in sites:
         margin = gait.site_margin(site)
         print(f"    {site}: {margin:.4f}m")
 
-    print(f"[OK] Contact detection working")
+    print("[OK] Contact detection working")
     print()
 
 
@@ -201,7 +201,7 @@ def test_control_computation(gait: RollingFootGait):
     )
 
     print(f"  Time: {t}s, Support: {support_foot}, Mode: {mode}")
-    print(f"  Torques:")
+    print("  Torques:")
     print(f"    Left hip: {left_hip_tau:.3f} Nm")
     print(f"    Left knee: {left_knee_tau:.3f} Nm")
     print(f"    Right hip: {right_hip_tau:.3f} Nm")
@@ -222,7 +222,7 @@ def test_control_computation(gait: RollingFootGait):
         abs(right_knee_tau) <= p.knee_torque_limit + 1e-6
     ), "Right knee torque exceeds limit"
 
-    print(f"[OK] Control computation working, torques within limits")
+    print("[OK] Control computation working, torques within limits")
     print()
 
 
@@ -281,7 +281,7 @@ def test_custom_parameters():
     gait = RollingFootGait(custom_params)
     model = gait.model
 
-    print(f"[OK] Model created with custom parameters")
+    print("[OK] Model created with custom parameters")
     print(f"  Slope: {custom_params.slope_deg}°")
     print(f"  Foot radius: {custom_params.foot_radius}m")
     print(f"  Hip mass: {custom_params.hip_mass}kg")
@@ -290,7 +290,7 @@ def test_custom_parameters():
     # Initialize and verify
     gait.initialize()
     assert np.all(np.isfinite(gait.data.qpos)), "Custom params: qpos not finite"
-    print(f"[OK] Custom parameters model initialized successfully")
+    print("[OK] Custom parameters model initialized successfully")
     print()
 
 

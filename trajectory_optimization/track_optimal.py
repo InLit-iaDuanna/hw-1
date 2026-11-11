@@ -10,13 +10,13 @@ Features:
 - Comparative analysis with baseline (no tracking)
 """
 
-import numpy as np
+from dataclasses import dataclass
+from typing import Callable, Dict, Tuple
+
 import matplotlib.pyplot as plt
+import numpy as np
 from scipy.integrate import solve_ivp
 from scipy.interpolate import interp1d
-from dataclasses import dataclass
-from typing import Tuple, Dict, Callable
-import json
 
 
 @dataclass

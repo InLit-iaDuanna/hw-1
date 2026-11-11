@@ -244,7 +244,7 @@ def render_scan_heatmap() -> None:
     # 生成静态热图
     fig, axes = plt.subplots(1, 2, figsize=(14, 6), constrained_layout=True)
     fig.suptitle(
-        f"V13.5 Plan C 扫描：0/36 成功 vs V10 6/36 (16.7%) — 能量整形方案被否决",
+        "V13.5 Plan C 扫描：0/36 成功 vs V10 6/36 (16.7%) — 能量整形方案被否决",
         fontsize=15,
     )
 

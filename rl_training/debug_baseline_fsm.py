@@ -19,8 +19,8 @@ def debug_baseline_fsm():
     simulator = V137IdentitySimulator()
 
     # 手动运行仿真循环以追踪FSM
-    from simulate_passive_arms_v14 import initialize, contact_flags
-    from simulate_v13_6 import control_v136, _mechanical_energy
+    from simulate_passive_arms_v14 import contact_flags, initialize
+    from simulate_v13_6 import _mechanical_energy, control_v136
 
     p = simulator.params.base
     fsm = simulator.params.fsm
@@ -38,7 +38,7 @@ def debug_baseline_fsm():
     last_event_t = -1.0
     burst_start_t = -p.gait_period
 
-    print(f"\nInitial state:")
+    print("\nInitial state:")
     print(f"  support_foot: {support_foot}")
     print(f"  burst_start_t: {burst_start_t:.4f}")
     print(f"  accepted_contact: '{accepted_contact}'")
@@ -135,7 +135,7 @@ def debug_baseline_fsm():
                 break
 
     print("-" * 80)
-    print(f"\nFinal Results:")
+    print("\nFinal Results:")
     print(f"  Sim time: {t:.2f}s")
     hip_x = float(simulator.data.qpos[0])
     print(f"  Distance: {hip_x - start_x:.3f}m")

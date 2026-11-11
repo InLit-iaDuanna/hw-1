@@ -9,14 +9,14 @@
 from __future__ import annotations
 
 import sys
+from dataclasses import replace
 from pathlib import Path
-from typing import Optional, Dict, Any, Tuple
+from typing import Any, Dict, Optional
 
 import gymnasium as gym
-from gymnasium import spaces
 import mujoco
 import numpy as np
-from dataclasses import replace
+from gymnasium import spaces
 
 # 添加路径
 HW1_ROOT = Path(__file__).resolve().parent.parent
@@ -24,22 +24,24 @@ sys.path.insert(0, str(HW1_ROOT / "v13_7_friction_compensation"))
 sys.path.insert(0, str(HW1_ROOT / "v13_6_event_driven_fsm"))
 sys.path.insert(0, str(HW1_ROOT / "v14_passive_arms"))
 
-from simulate_v13_7 import (
-    V137Params,
-    make_v137_fsm,
-    write_model_v137,
-    MODEL_PATH,
-    _compensate,
-    _mechanical_energy,
-)
-from simulate_v13_6 import control_v136
 from simulate_passive_arms_v14 import (
     PassiveArmsParams,
-    initialize,
-    contact_flags,
     classify_failure,
+    contact_flags,
+    initialize,
 )
-from common.motor_dynamics import L1MotorActuator, PRESETS as MOTOR_PRESETS
+from simulate_v13_6 import control_v136
+from simulate_v13_7 import (
+    MODEL_PATH,
+    V137Params,
+    _compensate,
+    _mechanical_energy,
+    make_v137_fsm,
+    write_model_v137,
+)
+
+from common.motor_dynamics import PRESETS as MOTOR_PRESETS
+from common.motor_dynamics import L1MotorActuator
 
 
 class ResidualRLEnvV2Simple(gym.Env):

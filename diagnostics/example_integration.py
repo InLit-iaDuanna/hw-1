@@ -83,7 +83,7 @@ def run_simulation_with_diagnostics(config: dict) -> dict:
                     print(f"\n  方案 {i}: {solution.action}")
                     print(f"  详情: {solution.details}")
                     if solution.code:
-                        print(f"  代码示例:")
+                        print("  代码示例:")
                         for line in solution.code.split("\n"):
                             print(f"    {line}")
 

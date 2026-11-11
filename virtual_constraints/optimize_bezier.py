@@ -4,10 +4,10 @@ Optimizes Bezier polynomial coefficients for hip trajectory control
 Compares performance against V13.7 FSM baseline
 """
 
-import numpy as np
-import mujoco
-import os
 from pathlib import Path
+
+import mujoco
+import numpy as np
 
 try:
     import cma
@@ -298,7 +298,7 @@ def cma_es_optimize(xml_path, duration=5.0, max_evals=100):
     best_params = es.result.xbest
     best_cost = es.result.fbest
 
-    print(f"\nOptimization complete!")
+    print("\nOptimization complete!")
     print(f"Best cost: {best_cost:.3f}")
     print(f"Best params: {[f'{p:.3f}' for p in best_params]}")
 
@@ -331,7 +331,7 @@ def compare_with_v13_fsm(xml_path, bezier_params, duration=10.0):
     # TODO: Load and run V13.7 FSM controller if available
     fsm_cost_estimate = 0.5  # Placeholder - replace with actual run
 
-    print(f"\nComparison:")
+    print("\nComparison:")
     print(f"  Bezier Cost: {bezier_cost:.3f}")
     print(f"  FSM Cost (est): {fsm_cost_estimate:.3f}")
     print(

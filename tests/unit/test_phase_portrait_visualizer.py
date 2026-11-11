@@ -7,9 +7,10 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
+
+import matplotlib
 import numpy as np
 import pytest
-import matplotlib
 
 matplotlib.use("Agg")  # Use non-interactive backend for testing
 import matplotlib.pyplot as plt

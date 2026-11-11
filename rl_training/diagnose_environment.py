@@ -2,8 +2,8 @@
 诊断脚本 - 检查环境和依赖
 """
 
-import sys
 import io
+import sys
 from pathlib import Path
 
 # 设置UTF-8输出

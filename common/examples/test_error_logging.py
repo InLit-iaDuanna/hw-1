@@ -25,10 +25,10 @@ def test_imports():
     try:
         # 测试异常模块
         from common.exceptions import (
+            DataValidationError,
             HW1Error,
             ModelLoadError,
             SimulationFailureError,
-            DataValidationError,
             wrap_exception,
         )
 
@@ -36,30 +36,30 @@ def test_imports():
 
         # 测试日志模块
         from common.logging_config import (
-            setup_logging,
+            LogContext,
             get_logger,
             log_execution_time,
-            LogContext,
+            setup_logging,
         )
 
         print("[OK] logging_config module imported successfully")
 
         # 测试错误处理模块
         from common.error_handler import (
+            ErrorContext,
             handle_errors,
             retry_on_failure,
             safe_execute,
-            ErrorContext,
         )
 
         print("[OK] error_handler module imported successfully")
 
         # 测试监控模块
         from common.monitoring import (
-            SystemMonitor,
-            SimulationMonitor,
-            PerformanceTracker,
             AlertManager,
+            PerformanceTracker,
+            SimulationMonitor,
+            SystemMonitor,
         )
 
         print("[OK] monitoring module imported successfully")
@@ -77,7 +77,6 @@ def test_exceptions():
 
     from common.exceptions import (
         SimulationFailureError,
-        DataValidationError,
         wrap_exception,
     )
 
@@ -120,13 +119,14 @@ def test_logging():
     """测试日志系统。"""
     print("\nTesting logging system...")
 
+    import time
+
     from common.logging_config import (
-        setup_logging,
+        LogContext,
         get_logger,
         log_execution_time,
-        LogContext,
+        setup_logging,
     )
-    import time
 
     try:
         # 设置日志
@@ -174,11 +174,11 @@ def test_error_handler():
     print("\nTesting error handler...")
 
     from common.error_handler import (
+        ErrorContext,
+        FallbackStrategy,
         handle_errors,
         retry_on_failure,
         safe_execute,
-        ErrorContext,
-        FallbackStrategy,
         safe_execute_with_recovery,
     )
     from common.exceptions import SimulationError
@@ -254,13 +254,14 @@ def test_monitoring():
     """测试监控系统。"""
     print("\nTesting monitoring system...")
 
-    from common.monitoring import (
-        SystemMonitor,
-        SimulationMonitor,
-        PerformanceTracker,
-        AlertManager,
-    )
     import time
+
+    from common.monitoring import (
+        AlertManager,
+        PerformanceTracker,
+        SimulationMonitor,
+        SystemMonitor,
+    )
 
     try:
         # 测试系统监控

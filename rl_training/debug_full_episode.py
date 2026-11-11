@@ -8,8 +8,9 @@ from pathlib import Path
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
-from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 import numpy as np
+
+from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
 # 创建环境
 env = ResidualRLEnvV2(
@@ -46,7 +47,7 @@ for step in range(2400):
         break
 
 print()
-print(f"Episode ended:")
+print("Episode ended:")
 print(f"  Steps: {step_count} / 2400")
 print(f"  Time: {env.sim_time:.2f}s / 12.00s")
 print(f"  Distance: {info['episode_distance']:.3f}m")

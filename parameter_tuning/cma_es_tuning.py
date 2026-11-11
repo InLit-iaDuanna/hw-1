@@ -11,17 +11,17 @@ Usage:
     python cma_es_tuning.py --config config.yaml --generations 100
 """
 
-import numpy as np
-import cma
 import argparse
-import yaml
 import json
-from pathlib import Path
-from datetime import datetime
-from typing import Dict, List, Tuple, Optional, Callable
-import multiprocessing as mp
-from functools import partial
 import logging
+import multiprocessing as mp
+from datetime import datetime
+from pathlib import Path
+from typing import Callable, Dict, Optional, Tuple
+
+import cma
+import numpy as np
+import yaml
 
 # Setup logging
 logging.basicConfig(
@@ -277,7 +277,7 @@ def create_objective_function(
 
 def load_config(config_path: str) -> Dict:
     """Load configuration from YAML file"""
-    with open(config_path, "r") as f:
+    with open(config_path) as f:
         return yaml.safe_load(f)
 
 

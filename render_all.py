@@ -17,13 +17,13 @@ hw-1 批量渲染脚本
 """
 
 import argparse
+import json
 import subprocess
 import sys
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from typing import List, Dict, Optional
-import json
 from datetime import datetime
+from pathlib import Path
+from typing import Dict, List
 
 # 项目根目录
 ROOT = Path(__file__).parent.resolve()

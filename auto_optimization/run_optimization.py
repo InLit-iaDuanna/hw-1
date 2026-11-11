@@ -29,8 +29,8 @@ from auto_optimization.objectives.objective_functions import (
     minimize_cot,
 )
 from auto_optimization.optimizers import (
-    BayesianOptimizer,
     CMAES,
+    BayesianOptimizer,
     GeneticAlgorithm,
     GridSearch,
     RandomSearch,
@@ -46,7 +46,7 @@ def load_config(config_path: Path) -> dict:
     Returns:
         配置字典
     """
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = yaml.safe_load(f)
     return config
 
@@ -269,7 +269,7 @@ def run_optimization(config_path: Path, optimizer_name: str, output_dir: Path):
     print("\n" + "=" * 60)
     print("优化完成!")
     print("=" * 60)
-    print(f"最优参数:")
+    print("最优参数:")
     for key, value in result.best_params.items():
         print(
             f"  {key}: {value:.6f}" if isinstance(value, float) else f"  {key}: {value}"

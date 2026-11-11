@@ -1,16 +1,18 @@
 """Debug contact detection timing around 1.3s"""
 
 import sys
-import numpy as np
 from pathlib import Path
+
 import mujoco
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
+from simulate_passive_arms_v14 import contact_flags
+
 from rl_training.test_v137_identity import V137IdentitySimulator
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
-from simulate_passive_arms_v14 import contact_flags
 
 
 def debug_contact_timing():
@@ -23,7 +25,7 @@ def debug_contact_timing():
     # === BASELINE ===
     baseline_sim = V137IdentitySimulator()
     from simulate_passive_arms_v14 import initialize
-    from simulate_v13_6 import control_v136, _mechanical_energy
+    from simulate_v13_6 import _mechanical_energy, control_v136
 
     p_base = baseline_sim.params.base
     fsm_base = baseline_sim.params.fsm

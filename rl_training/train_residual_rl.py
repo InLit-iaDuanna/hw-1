@@ -13,8 +13,8 @@
 - 训练稳定（不会破坏基础步态）
 
 运行方式：
-    cd D:\Dunna\Documents\hw-1
-    .venv-mujoco\Scripts\activate
+    cd D:\\Dunna\\Documents\\hw-1
+    .venv-mujoco\\Scripts\activate
     python rl_training\train_residual_rl.py --total-timesteps 500000
 """
 
@@ -23,14 +23,14 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional
 
 import gymnasium as gym
-from gymnasium import spaces
 import mujoco
 import numpy as np
+from gymnasium import spaces
 from stable_baselines3 import PPO
-from stable_baselines3.common.callbacks import EvalCallback, CheckpointCallback
+from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
 # 添加路径
@@ -44,6 +44,8 @@ sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(V136_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 
+from simulate_passive_arms_v14 import contact_flags
+from simulate_v13_6 import control_v136
 from simulate_v13_7 import (
     MODEL_PATH,
     V137Params,
@@ -51,9 +53,9 @@ from simulate_v13_7 import (
     _mechanical_energy,
     write_model_v137,
 )
-from simulate_v13_6 import control_v136
-from simulate_passive_arms_v14 import contact_flags
-from common.motor_dynamics import L1MotorActuator, PRESETS as MOTOR_PRESETS
+
+from common.motor_dynamics import PRESETS as MOTOR_PRESETS
+from common.motor_dynamics import L1MotorActuator
 
 
 class ResidualRLEnv(gym.Env):

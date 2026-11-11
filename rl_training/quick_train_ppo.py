@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Short PPO pipeline smoke-train.
 
@@ -9,21 +8,19 @@ Run:
   .venv-mujoco\\Scripts\\python.exe rl_training\\quick_train_ppo.py --steps 20000
 """
 
+import argparse
 import sys
 import time
-import argparse
 from pathlib import Path
 
 RL_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(RL_DIR))
 
-import numpy as np
 import torch
-from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv
-from stable_baselines3.common.monitor import Monitor
-
 from environment import CompassGaitEnv
+from stable_baselines3 import PPO
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.vec_env import DummyVecEnv
 
 
 def make_env(reward_type, seed):

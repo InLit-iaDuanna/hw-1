@@ -3,11 +3,10 @@
 检查环境配置、依赖包、数据完整性等，并执行 smoke test。
 """
 
+import importlib.util
 import sys
 from pathlib import Path
 from typing import Any
-import subprocess
-import importlib.util
 
 
 class HealthChecker:

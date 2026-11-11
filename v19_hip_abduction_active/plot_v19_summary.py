@@ -161,9 +161,9 @@ def generate_verdict_summary(summaries: dict[str, dict]) -> None:
     print(f"测试配置数：{total_configs}")
     print(f"最大交替步数：{max_alt}")
     print(f"平均交替步数：{avg_alt:.1f}")
-    print(f"结论：Hip_y PD 控制器无法稳定侧向摆动")
-    print(f"      所有配置仍在 3-4 个交替步内失败")
-    print(f"      Verdict: 单纯增加髋外展致动器不足以稳定 3D 步态")
+    print("结论：Hip_y PD 控制器无法稳定侧向摆动")
+    print("      所有配置仍在 3-4 个交替步内失败")
+    print("      Verdict: 单纯增加髋外展致动器不足以稳定 3D 步态")
     print("=" * 70 + "\n")
 
 

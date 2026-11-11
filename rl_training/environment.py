@@ -5,12 +5,13 @@ This environment wraps the MuJoCo compass gait walker for reinforcement learning
 It supports multiple reward functions and includes realistic physics simulation.
 """
 
-import numpy as np
-import gymnasium as gym
-from gymnasium import spaces
-import mujoco
 from pathlib import Path
-from typing import Optional, Dict, Any, Tuple
+from typing import Any, Dict, Optional, Tuple
+
+import gymnasium as gym
+import mujoco
+import numpy as np
+from gymnasium import spaces
 
 
 class CompassGaitEnv(gym.Env):

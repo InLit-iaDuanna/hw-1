@@ -310,9 +310,9 @@ class ParameterExplorer:
             raise ValueError(f"Unknown method: {method}")
 
         if self.verbose:
-            print(f"\nOptimization completed!")
+            print("\nOptimization completed!")
             print(f"Best value: {results['best_value']:.4f}")
-            print(f"Best parameters:")
+            print("Best parameters:")
             for name, value in results["best_params"].items():
                 print(f"  {name}: {value:.6f}")
 
@@ -352,7 +352,7 @@ class ParameterExplorer:
         """
         if self.verbose:
             print(f"\n{'='*60}")
-            print(f"Multi-Objective Optimization")
+            print("Multi-Objective Optimization")
             print(f"{'='*60}")
 
         optimizer = MultiObjectiveOptimizer(
@@ -408,7 +408,7 @@ class ParameterExplorer:
 
         if self.verbose:
             print(f"\n{'='*60}")
-            print(f"Generating 2D Slices")
+            print("Generating 2D Slices")
             print(f"{'='*60}")
 
         # 确定固定参数值

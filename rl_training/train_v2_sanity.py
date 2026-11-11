@@ -14,20 +14,21 @@
 
 from __future__ import annotations
 
-import sys
 import json
-import numpy as np
+import sys
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from dataclasses import dataclass, asdict
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
+import numpy as np
 
 # 添加路径
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
@@ -71,7 +72,7 @@ class EvalCallbackV2(BaseCallback):
                 print(f"  Average reward: {result.avg_reward:.1f}")
                 print(f"  Success rate: {result.success_rate * 100:.0f}%")
                 print(f"  Failure rate: {result.failure_rate * 100:.0f}%")
-                print(f"  Baseline: 4.63m")
+                print("  Baseline: 4.63m")
                 print(
                     f"  Improvement: {result.avg_distance - 4.63:+.3f}m ({(result.avg_distance / 4.63 - 1) * 100:+.1f}%)"
                 )

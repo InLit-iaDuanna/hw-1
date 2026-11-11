@@ -7,8 +7,8 @@ Reproduces the V05 hybrid compass walker with complete diagnostic output:
 - Poincare return map analysis
 - Limit cycle convergence evidence
 
-Based on: D:\Dunna\Documents\hw-1\v05_hybrid_compass_proof\simulate_hybrid_compass.py
-Model: D:\Dunna\Documents\hw-1\v05_hybrid_compass_proof\models\hybrid_compass_visual.xml
+Based on: D:\\Dunna\\Documents\\hw-1\v05_hybrid_compass_proof\\simulate_hybrid_compass.py
+Model: D:\\Dunna\\Documents\\hw-1\v05_hybrid_compass_proof\\models\\hybrid_compass_visual.xml
 """
 
 from __future__ import annotations
@@ -461,7 +461,7 @@ def main() -> None:
     print(f"\nNo actuators: {evidence['no_actuators']}")
     print(f"No reward function: {evidence['no_reward_function']}")
     print(f"Pure passive dynamics: {evidence['pure_passive_dynamics']}")
-    print(f"\nOutput files:")
+    print("\nOutput files:")
     print(f"  {out_dir / 'passive_walker_trajectory.csv'}")
     print(f"  {out_dir / 'passive_walker_poincare.csv'}")
     print(f"  {out_dir / 'passive_walker_evidence.json'}")

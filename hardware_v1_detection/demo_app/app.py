@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import math
 import sys
-import time
 from collections import deque
 from pathlib import Path
 
@@ -15,24 +14,13 @@ if str(ROOT) not in sys.path:
 try:
     import pyqtgraph as pg
     import serial
-    from serial.tools import list_ports
     from PyQt5 import QtCore, QtWidgets
+    from serial.tools import list_ports
 except ImportError as exc:  # pragma: no cover - GUI dependency guard
     raise SystemExit(
         "Missing GUI dependency. Install gait_medical_system/requirements.txt "
         "or pip install pyserial PyQt5 pyqtgraph."
     ) from exc
-
-from hardware_v1_detection.pc_receiver.protocol import (
-    BMI_SENSOR_NAMES,
-    FrameParser,
-    NodeDebugFrame,
-    SampleFrame,
-    SENSOR_NAMES,
-    scale_sensor,
-)
-from hardware_v1_detection.pc_receiver.pipeline import DerivedSample, RealtimePipeline
-from hardware_v1_detection.pc_receiver.session import SessionWriter, load_gyro_bias
 
 from theme import (
     EVENT_COLORS,
@@ -43,6 +31,17 @@ from theme import (
     qss,
     style_plot,
 )
+
+from hardware_v1_detection.pc_receiver.pipeline import DerivedSample, RealtimePipeline
+from hardware_v1_detection.pc_receiver.protocol import (
+    BMI_SENSOR_NAMES,
+    SENSOR_NAMES,
+    FrameParser,
+    NodeDebugFrame,
+    SampleFrame,
+    scale_sensor,
+)
+from hardware_v1_detection.pc_receiver.session import SessionWriter, load_gyro_bias
 
 
 class CaptureWorker(QtCore.QThread):

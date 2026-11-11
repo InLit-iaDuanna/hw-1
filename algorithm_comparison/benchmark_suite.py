@@ -3,15 +3,15 @@ Unified Benchmark Suite for Algorithm Comparison
 Compares V10 PD, V13.7 FSM, RL (PPO), RL (SAC), Trajectory Optimization, and Virtual Constraints
 """
 
-import numpy as np
-import mujoco
-import os
+import csv
 import sys
 import time
-from pathlib import Path
 from dataclasses import dataclass
-from typing import Dict, List, Tuple, Optional
-import csv
+from pathlib import Path
+from typing import List, Tuple
+
+import mujoco
+import numpy as np
 from scipy import stats
 
 # Add parent directory to path for imports
@@ -386,11 +386,7 @@ class BenchmarkSuite:
                     [self.data.qpos[:11], self.data.qvel[:10], contact_forces]
                 )
                 action, _ = controller.predict(obs, deterministic=True)
-            elif algorithm == "Virtual_Constraints":
-                action = controller.get_action(
-                    self.data.qpos, self.data.qvel, contact_forces
-                )
-            elif algorithm == "V13_FSM":
+            elif algorithm == "Virtual_Constraints" or algorithm == "V13_FSM":
                 action = controller.get_action(
                     self.data.qpos, self.data.qvel, contact_forces
                 )

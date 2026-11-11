@@ -7,21 +7,23 @@
 """
 
 import sys
-from pathlib import Path
-import numpy as np
-from stable_baselines3 import PPO
-import gymnasium as gym
-from gymnasium import spaces
 from dataclasses import replace
+from pathlib import Path
+
+import gymnasium as gym
+import numpy as np
+from gymnasium import spaces
+from stable_baselines3 import PPO
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 V137_DIR = HW1_ROOT / "v13_7_friction_compensation"
 sys.path.insert(0, str(V137_DIR))
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
 
-from train_residual_rl_v2 import ResidualRLEnvV2
-from simulate_v13_7 import V137Params, make_v137_fsm
 from simulate_passive_arms_v14 import PassiveArmsParams
+from simulate_v13_7 import V137Params, make_v137_fsm
+from train_residual_rl_v2 import ResidualRLEnvV2
+
 from common.motor_dynamics import PRESETS as MOTOR_PRESETS
 
 
@@ -166,7 +168,7 @@ def main():
     )
 
     if not model_path.exists():
-        print(f"错误：模型文件不存在")
+        print("错误：模型文件不存在")
         return
 
     print("正在加载 PPO 模型...")
@@ -245,7 +247,7 @@ def main():
     rl_success_count = sum(1 for r in rl_results if r["success_rate"] == 1.0)
     const_success_count = sum(1 for r in constant_results if r["success_rate"] == 1.0)
 
-    print(f"1. 泛化能力:")
+    print("1. 泛化能力:")
     print(f"   - RL 在 {rl_success_count}/{len(slopes)} 种地形上达到 100% 成功率")
     print(
         f"   - Constant 在 {const_success_count}/{len(slopes)} 种地形上达到 100% 成功率"
@@ -260,24 +262,24 @@ def main():
     ]
 
     if len(rl_better) > 0:
-        print(f"2. RL 优势地形:")
+        print("2. RL 优势地形:")
         for r in rl_better:
             print(f"   - {r['slope_deg']:+3d}度: RL 更优")
     else:
-        print(f"2. RL 优势地形: 无（Constant 在所有地形都不差于 RL）")
+        print("2. RL 优势地形: 无（Constant 在所有地形都不差于 RL）")
 
     print()
 
     # 训练建议
     if rl_success_count < len(slopes):
-        print(f"3. 改进建议:")
-        print(f"   - 当前 RL 只在平地（0度）训练")
-        print(f"   - 建议：随机化坡度训练（Domain Randomization）")
-        print(f"   - 训练时坡度范围: [-15度, +15度]")
-        print(f"   - 这将提升 RL 的地形泛化能力")
+        print("3. 改进建议:")
+        print("   - 当前 RL 只在平地（0度）训练")
+        print("   - 建议：随机化坡度训练（Domain Randomization）")
+        print("   - 训练时坡度范围: [-15度, +15度]")
+        print("   - 这将提升 RL 的地形泛化能力")
     else:
-        print(f"3. 泛化能力优秀！")
-        print(f"   - 在平地训练的 RL 成功泛化到所有测试地形")
+        print("3. 泛化能力优秀！")
+        print("   - 在平地训练的 RL 成功泛化到所有测试地形")
 
     print()
     print("=" * 80)

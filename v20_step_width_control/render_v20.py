@@ -1,19 +1,20 @@
 """Simple V20 renderer using imageio."""
 
 import argparse
+import math
 import sys
 from pathlib import Path
 
-import mujoco
 import imageio.v2 as imageio
+import mujoco
 import numpy as np
-import math
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from model_3d_v20 import V20Params, MODEL_PATH, write_model
 import simulate_v20
+from model_3d_v20 import MODEL_PATH, V20Params, write_model
+
 from common import (
     get_contact_flags,
     get_joint_address,

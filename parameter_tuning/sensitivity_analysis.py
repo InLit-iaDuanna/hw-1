@@ -23,12 +23,11 @@ import numpy as np
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+from common.compass_gait import CompassGait, CompassGaitParams
+from common.simulation_runner import run_simulation_safe
 from parameter_explorer.sensitivity_analyzer import (
-    SensitivityAnalyzer,
     comprehensive_sensitivity_analysis,
 )
-from common.compass_gait import CompassGaitParams, CompassGait
-from common.simulation_runner import run_simulation_safe
 
 
 def create_objective_function(

@@ -10,7 +10,7 @@ from __future__ import annotations
 import math
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Callable, Literal
+from typing import Literal
 
 import mujoco
 import numpy as np

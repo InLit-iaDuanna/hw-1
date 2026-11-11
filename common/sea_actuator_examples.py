@@ -17,7 +17,7 @@ from pathlib import Path
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT / "common"))
 
-from sea_actuator import SEAActuator, SEAParams, PRESETS
+from sea_actuator import PRESETS, SEAActuator
 
 
 def example_basic_usage():
@@ -33,7 +33,7 @@ def example_basic_usage():
     # Initialize before simulation
     left_hip_sea.initialize(q_link_initial=0.0)
 
-    print(f"\nSEA Configuration:")
+    print("\nSEA Configuration:")
     print(f"  k_sea: {sea_params.k_sea} N·m/rad")
     print(f"  c_sea: {sea_params.damping_resolved():.4f} N·m·s/rad")
     print(f"  Natural frequency: {sea_params.spring_natural_frequency():.1f} rad/s")
@@ -64,7 +64,7 @@ def example_basic_usage():
     q_link_final = 0.0
     audit = left_hip_sea.finalize_energy_audit(q_link_final)
 
-    print(f"\nEnergy Audit Report:")
+    print("\nEnergy Audit Report:")
     print(f"  Motor input work: {audit['W_motor_input_J']:.4f} J")
     print(f"  Link useful work: {audit['W_link_useful_J']:.4f} J")
     print(f"  Damper loss: {audit['W_damper_loss_J']:.4f} J")

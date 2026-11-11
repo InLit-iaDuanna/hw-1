@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 """
 Quick Test Script for Algorithm Toolkit
 Verify all tools are working correctly
 """
 
-import sys
 from pathlib import Path
 
 

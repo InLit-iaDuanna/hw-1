@@ -8,8 +8,9 @@ from pathlib import Path
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
-from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 import numpy as np
+
+from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
 # 创建环境
 env = ResidualRLEnvV2(
@@ -21,7 +22,7 @@ env = ResidualRLEnvV2(
 print("=" * 80)
 print("Debug: Initialization Parameters")
 print("=" * 80)
-print(f"Parameters:")
+print("Parameters:")
 print(f"  initial_vx: {env.params.base.initial_vx}")
 print(f"  swing_hip_vel: {env.params.base.swing_hip_vel}")
 print(f"  swing_knee_vel: {env.params.base.swing_knee_vel}")

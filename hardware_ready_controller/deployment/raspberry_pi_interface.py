@@ -3,9 +3,10 @@ Raspberry Pi Hardware Interface Implementation
 Provides real hardware drivers for Dynamixel motors, SPI encoders, and GPIO sensors.
 """
 
-import time
 import threading
-from typing import Optional, Tuple
+import time
+from typing import Optional
+
 import numpy as np
 
 try:
@@ -38,7 +39,7 @@ except ImportError:
     DXL_HIBYTE = lambda x: (x >> 8) & 0xFF
     DXL_HIWORD = lambda x: (x >> 16) & 0xFFFF
 
-from ..core.hardware_interface import HardwareInterface, HardwareConfig
+from ..core.hardware_interface import HardwareConfig, HardwareInterface
 
 
 class RaspberryPiInterface(HardwareInterface):

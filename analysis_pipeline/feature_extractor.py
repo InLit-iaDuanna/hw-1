@@ -9,8 +9,6 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
-from scipy import signal
-
 from data_loader import GaitData
 
 
@@ -486,12 +484,13 @@ class FeatureExtractor:
 def main():
     """测试特征提取"""
     from pathlib import Path
+
     import yaml
     from data_loader import DataLoader
     from preprocessor import DataPreprocessor
 
     config_path = Path(__file__).parent / "pipeline_config.yaml"
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     loader = DataLoader(config_path)
@@ -509,7 +508,7 @@ def main():
     # 提取特征
     features = extractor.extract_all_features(processed)
 
-    print(f"\nExtracted features:")
+    print("\nExtracted features:")
     print(
         f"  Period: {features.period_length:.3f}s"
         if features.period_length

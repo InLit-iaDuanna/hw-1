@@ -9,8 +9,8 @@ hw-1 动画渲染性能测试套件
 5. 生成性能报告和优化建议
 
 使用方法：
-    cd D:\Dunna\Documents\hw-1\benchmarks
-    D:\Dunna\Documents\hw-1\.venv-mujoco\Scripts\python.exe animation_rendering.py
+    cd D:\\Dunna\\Documents\\hw-1\benchmarks
+    D:\\Dunna\\Documents\\hw-1\\.venv-mujoco\\Scripts\\python.exe animation_rendering.py
 
 作者：段泽琪
 日期：2026/06/05
@@ -28,7 +28,6 @@ from pathlib import Path
 from typing import Any
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 ROOT = Path(__file__).resolve().parent
 HW1_ROOT = ROOT.parent
@@ -105,7 +104,7 @@ def get_simulation_duration(version: str) -> float:
     try:
         import csv
 
-        with open(csv_files[0], "r", encoding="utf-8") as f:
+        with open(csv_files[0], encoding="utf-8") as f:
             reader = csv.DictReader(f)
             rows = list(reader)
             if rows:

@@ -11,12 +11,12 @@ import numpy as np
 
 from .protocol import (
     BMI_SENSOR_NAMES,
+    SENSOR_NAMES,
     CaptureStats,
     FrameParser,
     Imu6,
     NodeDebugFrame,
     SampleFrame,
-    SENSOR_NAMES,
     scale_sensor,
 )
 
@@ -261,7 +261,7 @@ class SessionWriter:
             json.dump(summary, f, indent=2, ensure_ascii=False)
         return self.path
 
-    def __enter__(self) -> "SessionWriter":
+    def __enter__(self) -> SessionWriter:
         return self
 
     def __exit__(self, exc_type, exc, tb) -> None:

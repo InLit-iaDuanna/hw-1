@@ -12,7 +12,6 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 
 # 添加 common 到路径
@@ -161,9 +160,9 @@ def generate_verdict_summary(summaries: dict[str, dict]) -> None:
     print("=" * 70)
     print(f"测试配置数：{total_configs}")
     print(f"最大交替步数：{max_alt}")
-    print(f"结论：步宽控制器未能恢复稳定行走")
-    print(f"      所有配置仍在 3 个交替步内失败")
-    print(f"      Verdict: V18-V20 三连失败，3D 化路线遇到根本性障碍")
+    print("结论：步宽控制器未能恢复稳定行走")
+    print("      所有配置仍在 3 个交替步内失败")
+    print("      Verdict: V18-V20 三连失败，3D 化路线遇到根本性障碍")
     print("=" * 70 + "\n")
 
 

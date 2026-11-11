@@ -3,13 +3,14 @@
 """
 
 import json
+
 from graphviz import Digraph
 
 
 def load_graph_data():
     """加载图数据"""
     with open(
-        "D:/Dunna/Documents/hw-1/version_graph/graph_data.json", "r", encoding="utf-8"
+        "D:/Dunna/Documents/hw-1/version_graph/graph_data.json", encoding="utf-8"
     ) as f:
         return json.load(f)
 

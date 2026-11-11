@@ -27,13 +27,12 @@ sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(HW1_ROOT / "common"))
 
 import mujoco
+from motor_dynamics import PRESETS as MOTOR_PRESETS
 from sensor_model import SensorModel, SensorNoiseParams
-from state_estimator import HipFK, JointKalmanFilter, StateEstimator
 from simulate_passive_arms_v14 import PassiveArmsParams, build_model_xml, initialize
 from simulate_v13_7 import V137Params, make_v137_fsm
 from simulate_v17 import V17Params, make_v17_fsm, run_simulation_v17
-
-from motor_dynamics import PRESETS as MOTOR_PRESETS
+from state_estimator import HipFK, StateEstimator
 
 
 @pytest.fixture

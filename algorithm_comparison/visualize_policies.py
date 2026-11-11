@@ -4,15 +4,15 @@ Generates publication-quality figures comparing torque profiles, phase portraits
 Poincare sections, and control effort across different algorithms.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
-from matplotlib.patches import Ellipse
-import seaborn as sns
-import pandas as pd
-from pathlib import Path
-from typing import Dict, List, Tuple
 import sys
+from pathlib import Path
+from typing import Dict
+
+import matplotlib.gridspec as gridspec
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from matplotlib.patches import Ellipse
 
 # Add parent directory to path
 sys.path.append(str(Path(__file__).parent.parent))
@@ -146,11 +146,7 @@ class PolicyDataCollector:
                     [self.data.qpos[:11], self.data.qvel[:10], contact_forces]
                 )
                 action, _ = controller.predict(obs, deterministic=True)
-            elif algorithm == "Virtual_Constraints":
-                action = controller.get_action(
-                    self.data.qpos, self.data.qvel, contact_forces
-                )
-            elif algorithm == "V13_FSM":
+            elif algorithm == "Virtual_Constraints" or algorithm == "V13_FSM":
                 action = controller.get_action(
                     self.data.qpos, self.data.qvel, contact_forces
                 )
@@ -686,7 +682,7 @@ def main():
     model_path = base_dir / "biped_model_V13.xml"
 
     if not model_path.exists():
-        print(f"Looking for model files...")
+        print("Looking for model files...")
         alternatives = list(base_dir.glob("biped_model_V*.xml"))
         if alternatives:
             model_path = alternatives[-1]

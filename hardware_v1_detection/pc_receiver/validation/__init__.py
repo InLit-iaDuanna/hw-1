@@ -20,13 +20,13 @@ default) and it does **not** establish clinical validity. Clinical validity
 still requires real patient data. Keep these claims separate in any report.
 """
 
+from .runner import EventScore, JointError, ValidationReport, run_validation
 from .synth import (
-    TrajectorySynthesizer,
     SynthConfig,
     TrajectorySample,
+    TrajectorySynthesizer,
     load_trajectory_csv,
 )
-from .runner import run_validation, ValidationReport, JointError, EventScore
 
 __all__ = [
     "TrajectorySynthesizer",

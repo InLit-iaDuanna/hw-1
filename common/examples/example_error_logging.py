@@ -7,35 +7,34 @@
 4. 系统监控和告警
 """
 
-from pathlib import Path
-import math
 import time
+from pathlib import Path
 
 import mujoco
 import numpy as np
 
 # 导入错误处理和日志模块
 from common import (
-    # 日志
-    setup_logging,
-    get_logger,
-    log_simulation_start,
-    log_simulation_end,
+    AlertManager,
+    ErrorContext,
     LogContext,
     # 异常
     ModelLoadError,
+    PerformanceTracker,
     SimulationFailureError,
+    SimulationMonitor,
     SimulationNaNError,
-    # 错误处理
-    handle_errors,
-    retry_on_failure,
-    safe_execute,
-    ErrorContext,
     # 监控
     SystemMonitor,
-    SimulationMonitor,
-    PerformanceTracker,
-    AlertManager,
+    get_logger,
+    # 错误处理
+    handle_errors,
+    log_simulation_end,
+    log_simulation_start,
+    retry_on_failure,
+    safe_execute,
+    # 日志
+    setup_logging,
 )
 
 # ============================================================================
@@ -333,7 +332,7 @@ def main():
             output_path = OUT_DIR / "example_results.json"
             save_results(result, output_path)
 
-        except Exception as e:
+        except Exception:
             elapsed = time.time() - start_time
             logger.error(f"Simulation failed after {elapsed:.2f}s", exc_info=True)
 

@@ -20,12 +20,12 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, Tuple
 
 import matplotlib.pyplot as plt
 import mujoco
 import numpy as np
-from scipy.optimize import minimize, NonlinearConstraint
+from scipy.optimize import minimize
 
 # Configuration
 ROOT = Path(__file__).resolve().parent

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Smoke test for CompassGaitEnv.
 
@@ -18,8 +17,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import numpy as np
 import mujoco
+import numpy as np
 from environment import CompassGaitEnv
 
 

@@ -6,13 +6,14 @@
 参考：logs/residual_rl_v2/GPT5_ANALYSIS_RESPONSE.md 优先级1
 """
 
+import json
 import sys
 from pathlib import Path
+from typing import Any, Dict
+
 import numpy as np
 import pandas as pd
 from stable_baselines3 import PPO
-import json
-from typing import Dict, Any
 
 # 添加路径
 HW1_ROOT = Path(__file__).resolve().parent.parent
@@ -118,14 +119,14 @@ def analyze_checkpoint(
     df = collect_fingerprint(checkpoint_path, env, episodes=10)
 
     # 1. 全局统计
-    print(f"\n## Global Statistics")
+    print("\n## Global Statistics")
     global_stats = df[
         ["action_l", "action_r", "delta_l", "delta_r", "hip_height", "reward"]
     ].describe()
     print(global_stats)
 
     # 2. Phase-conditioned 统计
-    print(f"\n## Phase-Conditioned Action Delta")
+    print("\n## Phase-Conditioned Action Delta")
     phase_stats = df.groupby(["left_phase", "right_phase"])[
         ["delta_l", "delta_r", "hip_height", "reward"]
     ].agg(["mean", "std", "min", "max", "count"])
@@ -135,12 +136,12 @@ def analyze_checkpoint(
     failed_episodes = df[df["terminated"] == True].groupby("episode").first()
     success_count = 10 - len(failed_episodes)
 
-    print(f"\n## Success/Failure Summary")
+    print("\n## Success/Failure Summary")
     print(f"Success: {success_count}/10")
     print(f"Failure: {len(failed_episodes)}/10")
 
     if len(failed_episodes) > 0:
-        print(f"\n## Failure Details")
+        print("\n## Failure Details")
         print(f"Mean failure time: {failed_episodes['t'].mean():.3f}s")
         print(f"Mean failure distance: {failed_episodes['x_position'].mean():.3f}m")
 
@@ -174,7 +175,7 @@ def analyze_checkpoint(
         ep_data = df[df["episode"] == ep]
         final_distances.append(ep_data["x_position"].iloc[-1])
 
-    print(f"\n## Final Distance Statistics")
+    print("\n## Final Distance Statistics")
     print(f"Mean: {np.mean(final_distances):.3f}m")
     print(f"Std: {np.std(final_distances):.3f}m")
     print(f"Min: {np.min(final_distances):.3f}m")
@@ -204,7 +205,7 @@ def compare_checkpoints(results: Dict[str, Dict[str, Any]]):
     print(f"{'='*80}")
 
     # 1. 成功率和距离对比
-    print(f"\n## Performance Comparison")
+    print("\n## Performance Comparison")
     print(
         f"{'Checkpoint':<10} {'Success Rate':<15} {'Mean Distance':<15} {'Std Distance':<15}"
     )
@@ -217,7 +218,7 @@ def compare_checkpoints(results: Dict[str, Dict[str, Any]]):
             )
 
     # 2. 读取原始数据进行 phase-level 对比
-    print(f"\n## Phase-Level Action Delta Comparison (200k vs 350k)")
+    print("\n## Phase-Level Action Delta Comparison (200k vs 350k)")
 
     if "200k" in results and "350k" in results:
         df_200k = pd.read_csv(

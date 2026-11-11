@@ -15,8 +15,6 @@ import time
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import numpy as np
-import yaml
 
 ROOT = Path(__file__).resolve().parent
 HW1_ROOT = ROOT.parent

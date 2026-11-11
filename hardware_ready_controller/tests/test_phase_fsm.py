@@ -8,16 +8,16 @@ Tests cover:
 - Edge cases (missed contact, rapid transitions, reset)
 """
 
-import unittest
-import time
-from unittest.mock import Mock
-import sys
 import os
+import sys
+import time
+import unittest
+from unittest.mock import Mock
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from phase_fsm import PhaseStateMachine, PhaseState
+from phase_fsm import PhaseState, PhaseStateMachine
 
 
 class TestPhaseStateMachine(unittest.TestCase):

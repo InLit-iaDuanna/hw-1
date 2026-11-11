@@ -16,9 +16,10 @@ Test Environment:
 
 import sys
 from pathlib import Path
-import pytest
-import numpy as np
+
 import matplotlib
+import numpy as np
+import pytest
 
 matplotlib.use("Agg")  # Non-interactive backend for testing
 import matplotlib.pyplot as plt
@@ -37,12 +38,11 @@ V137_DIR = HW1_ROOT / "v13_7_friction_compensation"
 sys.path.insert(0, str(V137_DIR))
 
 from simulate_v13_7 import (
-    V137Params,
-    make_v137_fsm,
-    run_simulation_v137,
     SUCCESS_FORWARD,
     SUCCESS_TIME,
     SUCCESS_TOUCHDOWNS,
+    V137Params,
+    run_simulation_v137,
 )
 from simulate_v14c import make_v14c_params
 
@@ -59,9 +59,11 @@ class TestFullControllerIntegration:
     @pytest.fixture(scope="class")
     def baseline_params(self):
         """Load V13.7 baseline parameters matching the successful command-line defaults."""
-        from simulate_passive_arms_v14 import PassiveArmsParams
-        from common.motor_dynamics import PRESETS as MOTOR_PRESETS
         from dataclasses import replace
+
+        from simulate_passive_arms_v14 import PassiveArmsParams
+
+        from common.motor_dynamics import PRESETS as MOTOR_PRESETS
 
         # Use V13.7 successful baseline: default params with lighter arms and scaled legs
         base0 = PassiveArmsParams()
@@ -109,7 +111,7 @@ class TestFullControllerIntegration:
 
     def test_model_loads_successfully(self, baseline_params):
         """Test that V13.7 model XML loads without errors."""
-        from simulate_v13_7 import write_model_v137, MODEL_PATH
+        from simulate_v13_7 import MODEL_PATH, write_model_v137
 
         write_model_v137(baseline_params)
         assert MODEL_PATH.exists(), f"Model file not created: {MODEL_PATH}"
@@ -127,7 +129,8 @@ class TestFullControllerIntegration:
 
     def test_motor_parameters_injected(self, baseline_params):
         """Verify motor parameters are correctly injected into model."""
-        from simulate_v13_7 import write_model_v137, MODEL_PATH
+        from simulate_v13_7 import MODEL_PATH, write_model_v137
+
         from common.motor_dynamics import (
             joint_armature_with_motor,
             joint_damping_with_motor,
@@ -541,6 +544,7 @@ class TestControllerRobustness:
     def test_handles_initial_transients(self, tmp_path):
         """Verify controller handles initial transients gracefully."""
         from simulate_passive_arms_v14 import PassiveArmsParams
+
         from common.motor_dynamics import PRESETS
 
         base_params = PassiveArmsParams(
@@ -572,6 +576,7 @@ class TestControllerRobustness:
     def test_phase_timing_consistency(self):
         """Verify phase durations are consistent with FSM configuration."""
         from simulate_passive_arms_v14 import PassiveArmsParams
+
         from common.motor_dynamics import PRESETS
 
         base_params = PassiveArmsParams(duration=12.0, timestep=0.001)

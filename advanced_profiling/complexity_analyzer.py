@@ -7,7 +7,6 @@ from __future__ import annotations
 
 import ast
 import inspect
-import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -44,7 +43,7 @@ class ComplexityAnalyzer:
 
             source = textwrap.dedent(source)
             tree = ast.parse(source)
-        except (OSError, TypeError, IndentationError) as e:
+        except (OSError, TypeError, IndentationError):
             return []
 
         issues = []

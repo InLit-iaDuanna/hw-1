@@ -241,7 +241,7 @@ if __name__ == "__main__":
     v10_path = HW1_ROOT / "v10_rolling_foot_biomimetic_gait"
     sys.path.insert(0, str(v10_path))
 
-    from simulate_rolling_foot_gait_v10 import RollingFootParams, run_simulation
+    from simulate_rolling_foot_gait_v10 import RollingFootParams
 
     # 使用短时仿真进行分析
     params = RollingFootParams(duration=3.0)

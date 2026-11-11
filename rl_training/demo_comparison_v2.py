@@ -4,12 +4,13 @@
 """
 
 import sys
-from pathlib import Path
-import numpy as np
-from stable_baselines3 import PPO
 import time
+from pathlib import Path
+
 import gymnasium as gym
+import numpy as np
 from gymnasium import spaces
+from stable_baselines3 import PPO
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
@@ -93,7 +94,7 @@ def run_constant_residual(episodes=5):
     success_rate = np.mean(successes)
 
     print()
-    print(f"结果汇总:")
+    print("结果汇总:")
     print(f"  平均距离: {mean_dist:.3f} ± {std_dist:.3f} m")
     print(f"  成功率: {success_rate*100:.0f}%")
     print(f"  行走速度: ~{mean_dist/12:.3f} m/s")
@@ -188,7 +189,7 @@ def run_rl_policy(episodes=5):
     std_action = actual_actions_arr.std(axis=0)
 
     print()
-    print(f"结果汇总:")
+    print("结果汇总:")
     print(f"  平均距离: {mean_dist:.3f} ± {std_dist:.3f} m")
     print(f"  成功率: {success_rate*100:.0f}%")
     print(f"  行走速度: ~{mean_dist/12:.3f} m/s")
@@ -252,25 +253,25 @@ def print_comparison(constant_result, rl_result):
         if rl_dist > const_dist:
             print(f"  [+] PPO RL 优于 Constant，提升 {pct_dist:.1f}%")
         elif abs(diff_dist) < 0.1:
-            print(f"  [=] 两者性能相当（差异 < 0.1m）")
+            print("  [=] 两者性能相当（差异 < 0.1m）")
         else:
             print(f"  [-] Constant 优于 PPO RL，领先 {-pct_dist:.1f}%")
     elif rl_success == 0:
-        print(f"  [-] PPO RL 完全失败")
+        print("  [-] PPO RL 完全失败")
     elif const_success == 0:
-        print(f"  [-] Constant 完全失败")
+        print("  [-] Constant 完全失败")
 
     if const_success == 1.0 and rl_success == 1.0:
-        print(f"  [+] 两种方案都达到 100% 成功率，都是可用的策略")
+        print("  [+] 两种方案都达到 100% 成功率，都是可用的策略")
     elif rl_success == 1.0:
-        print(f"  [+] PPO RL 达到 100% 成功率")
+        print("  [+] PPO RL 达到 100% 成功率")
     elif const_success == 1.0:
-        print(f"  [+] Constant 达到 100% 成功率")
+        print("  [+] Constant 达到 100% 成功率")
 
     if rl_std < const_std:
         print(f"  [+] PPO RL 更稳定（标准差 {rl_std:.3f}m < {const_std:.3f}m）")
     elif abs(rl_std - const_std) < 0.001:
-        print(f"  [=] 两者稳定性相当")
+        print("  [=] 两者稳定性相当")
     else:
         print(f"  [+] Constant 更稳定（标准差 {const_std:.3f}m < {rl_std:.3f}m）")
 
@@ -295,7 +296,7 @@ def main():
     print("ResidualRL V2 行走策略对比演示（正确配置版）")
     print("=" * 80)
     print(f"每个方案运行 {args.episodes} 个 episodes，每个 episode 12 秒")
-    print(f"配置: residual_scale=0.2, inner_steps=5, prior=[0.5, 1.0]")
+    print("配置: residual_scale=0.2, inner_steps=5, prior=[0.5, 1.0]")
     print()
 
     constant_result = None

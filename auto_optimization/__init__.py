@@ -16,12 +16,12 @@
 - 对比实验（不同算法性能）
 """
 
+from .constraints.parameter_bounds import Parameter, ParameterSpace
 from .objectives.objective_functions import (
+    combined_objective,
     maximize_distance,
     minimize_cot,
-    combined_objective,
 )
-from .constraints.parameter_bounds import ParameterSpace, Parameter
 from .optimizers.bayesian_optimizer import BayesianOptimizer
 from .optimizers.genetic_algorithm import GeneticAlgorithm
 

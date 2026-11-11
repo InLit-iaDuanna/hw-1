@@ -8,7 +8,7 @@
 # 1. 初始化和基本使用
 # ============================================================================
 
-from data_versioning import VersionTracker, SnapshotManager, DataRestorer
+from data_versioning import DataRestorer, SnapshotManager, VersionTracker
 
 project_root = r"D:\Dunna\Documents\hw-1"
 

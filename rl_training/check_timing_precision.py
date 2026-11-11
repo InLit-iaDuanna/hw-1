@@ -6,8 +6,9 @@ from pathlib import Path
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
-from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 import numpy as np
+
+from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
 
 def check_timing_precision():
@@ -37,7 +38,7 @@ def check_timing_precision():
                 expected_time = 100 * inner_steps * 0.001
                 actual_time = env.sim_time
                 error = actual_time - expected_time
-                print(f"  After 100 PPO steps:")
+                print("  After 100 PPO steps:")
                 print(f"    Expected sim_time: {expected_time:.10f}")
                 print(f"    Actual sim_time: {actual_time:.10f}")
                 print(f"    Error: {error:.10e}")

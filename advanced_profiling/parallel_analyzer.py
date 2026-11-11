@@ -385,7 +385,7 @@ def save_parallel_report(
         lines.append(f"   独立性得分: {opp.independence_score:.2f}")
         lines.append(f"   实现难度: {opp.difficulty}")
         lines.append(f"   建议: {opp.recommendation}")
-        lines.append(f"\n   代码片段:")
+        lines.append("\n   代码片段:")
         lines.append(f"   {opp.code_snippet[:150]}")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)

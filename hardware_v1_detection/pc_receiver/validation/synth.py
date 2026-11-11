@@ -39,11 +39,11 @@ from hardware_v1_detection.pc_receiver.protocol import (
     BMX_ACCEL_LSB_PER_G,
     BMX_GYRO_LSB_PER_DPS,
     FRAME_TYPE_SAMPLE,
+    SENSOR_NAMES,
+    VERSION,
     Imu6,
     Imu9,
     SampleFrame,
-    SENSOR_NAMES,
-    VERSION,
 )
 
 _INT16_MIN = -32768
@@ -168,9 +168,12 @@ class TrajectorySynthesizer:
             bmi: list[Imu6] = []
             for name in _BMI_NAMES:
                 impact = 0.0
-                if name == "left_foot" and i in impact_left:
-                    impact = self.config.heel_impact_g
-                elif name == "right_foot" and i in impact_right:
+                if (
+                    name == "left_foot"
+                    and i in impact_left
+                    or name == "right_foot"
+                    and i in impact_right
+                ):
                     impact = self.config.heel_impact_g
                 bmi.append(self._bmi_imu(pitches[name], rates[name], impact))
             pelvis = self._pelvis_imu(pitches["pelvis"], rates["pelvis"])

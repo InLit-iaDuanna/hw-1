@@ -14,8 +14,9 @@ References:
 import json
 import logging
 from dataclasses import dataclass, field
-from typing import Dict, List, Tuple, Optional
 from pathlib import Path
+from typing import Dict, Optional
+
 import numpy as np
 
 
@@ -224,7 +225,7 @@ class HardwareReadyController:
     @classmethod
     def from_v137_config(cls, config_path: str) -> "HardwareReadyController":
         """Load controller from V13.7 JSON configuration file"""
-        with open(config_path, "r") as f:
+        with open(config_path) as f:
             cfg = json.load(f)
 
         hip_spec = MotorSpec(**cfg["v13_7_motor"]["hip"])
@@ -608,7 +609,7 @@ class HardwareReadyController:
 
         self.phase_durations = {phase: [] for phase in self.phase_durations}
         self.contact_events.clear()
-        self.saturation_count = {joint: 0 for joint in self.saturation_count}
+        self.saturation_count = dict.fromkeys(self.saturation_count, 0)
 
         self.logger.info("Controller state reset")
 
@@ -627,7 +628,7 @@ if __name__ == "__main__":
 
     if config_path.exists():
         controller = HardwareReadyController.from_v137_config(str(config_path))
-        print(f"\nController loaded successfully")
+        print("\nController loaded successfully")
         print(f"FSM phases: {list(controller.phase_durations.keys())}")
         print(f"Friction compensation: {controller.compensate_friction}")
         print(

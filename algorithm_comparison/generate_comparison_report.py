@@ -8,15 +8,14 @@ Exports to PDF using matplotlib and ReportLab.
 """
 
 import json
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.backends.backend_pdf import PdfPages
 from datetime import datetime
 from pathlib import Path
-from scipy import stats
+
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import seaborn as sns
+from matplotlib.backends.backend_pdf import PdfPages
 
 # Set style for professional plots
 plt.style.use("seaborn-v0_8-darkgrid")
@@ -41,7 +40,7 @@ class ComparisonReportGenerator:
         if not self.results_file.exists():
             raise FileNotFoundError(f"Results file not found: {self.results_file}")
 
-        with open(self.results_file, "r", encoding="utf-8") as f:
+        with open(self.results_file, encoding="utf-8") as f:
             self.data = json.load(f)
 
         self.algorithms = list(self.data["algorithms"].keys())
@@ -676,7 +675,7 @@ TOP 3 ALGORITHMS:"""
 
         output_path = self.output_dir / output_filename
 
-        print(f"Generating comprehensive report...")
+        print("Generating comprehensive report...")
         print(f"Output: {output_path}")
 
         with PdfPages(output_path) as pdf:
@@ -803,7 +802,7 @@ TOP 3 ALGORITHMS:"""
             d["CreationDate"] = datetime.now()
 
         print(f"\n{'='*80}")
-        print(f"Report generated successfully!")
+        print("Report generated successfully!")
         print(f"Location: {output_path.absolute()}")
         print(f"File size: {output_path.stat().st_size / 1024:.1f} KB")
         print(f"{'='*80}\n")

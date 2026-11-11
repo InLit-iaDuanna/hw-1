@@ -18,9 +18,7 @@ import argparse
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Dict, Optional
-import json
-from datetime import datetime
+from typing import List, Optional
 
 ROOT = Path(__file__).parent.resolve()
 
@@ -348,7 +346,7 @@ def create_showcase(
 
             # 创建标题卡
             title_card = temp_dir / f"title_{i:02d}.mp4"
-            print(f"  生成标题卡...")
+            print("  生成标题卡...")
             create_title_card(
                 clip["title"], clip["description"], title_card, duration=3.0
             )
@@ -361,7 +359,7 @@ def create_showcase(
             all_clips.append(trimmed)
 
             total_duration += 3.0 + clip["duration"]
-            print(f"  ✓ 完成")
+            print("  ✓ 完成")
 
         if not all_clips:
             print("\n错误: 没有可用的视频片段", file=sys.stderr)
@@ -372,7 +370,7 @@ def create_showcase(
         concatenate_videos(all_clips, output)
 
         print("\n" + "=" * 80)
-        print(f"✓ 合集创建成功!")
+        print("✓ 合集创建成功!")
         print(f"  输出文件: {output}")
         print(f"  总时长: {total_duration:.1f}秒 ({total_duration/60:.1f}分钟)")
         print(f"  片段数: {len(all_clips)//2}")

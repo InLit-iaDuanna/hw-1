@@ -341,9 +341,10 @@ def save_to_database(
     """
     try:
         # 延迟导入，避免强依赖
-        from data_storage import get_connection, import_summary_json
-        import tempfile
         import json
+        import tempfile
+
+        from data_storage import get_connection, import_summary_json
 
         if db_path is None:
             # 默认数据库路径

@@ -7,8 +7,8 @@
 4. 中期验证和性能监控
 
 运行方式：
-    cd D:\Dunna\Documents\hw-1
-    .venv-mujoco\Scripts\activate
+    cd D:\\Dunna\\Documents\\hw-1
+    .venv-mujoco\\Scripts\activate
     python rl_training\train_residual_rl_curriculum.py --total-timesteps 500000 --n-envs 8
 """
 
@@ -17,16 +17,14 @@ from __future__ import annotations
 import argparse
 import sys
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import (
     BaseCallback,
-    EvalCallback,
     CheckpointCallback,
 )
-from stable_baselines3.common.vec_env import DummyVecEnv, SubprocVecEnv, VecNormalize
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
 # 添加路径
 HW1_ROOT = Path(__file__).resolve().parent.parent

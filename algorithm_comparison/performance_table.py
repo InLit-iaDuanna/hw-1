@@ -5,9 +5,10 @@ Loads benchmark results and generates LaTeX and Markdown tables for publication
 """
 
 import json
-import numpy as np
 from pathlib import Path
-from typing import Dict, List, Tuple, Any
+from typing import Any, Dict, List, Tuple
+
+import numpy as np
 from scipy import stats
 
 
@@ -30,7 +31,7 @@ class PerformanceTableGenerator:
             print(f"Warning: Results file not found at {self.results_path}")
             return self._get_dummy_results()
 
-        with open(self.results_path, "r") as f:
+        with open(self.results_path) as f:
             return json.load(f)
 
     def _get_dummy_results(self) -> Dict[str, Any]:

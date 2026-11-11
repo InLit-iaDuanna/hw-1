@@ -521,7 +521,7 @@ if __name__ == "__main__":
         sea.update_energy(tau_motor, qd_motor, q_link, qd_link, dt)
 
     audit = sea.finalize_energy_audit(q_link_final=0.0)
-    print(f"\nEnergy Audit:")
+    print("\nEnergy Audit:")
     print(f"  W_motor_input: {audit['W_motor_input_J']:.3f} J")
     print(f"  W_link_useful: {audit['W_link_useful_J']:.3f} J")
     print(f"  W_damper_loss: {audit['W_damper_loss_J']:.3f} J")

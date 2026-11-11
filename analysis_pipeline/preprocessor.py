@@ -5,13 +5,10 @@
 
 from __future__ import annotations
 
-from typing import Literal
-
 import numpy as np
+from data_loader import GaitData
 from scipy import interpolate, signal
 from scipy.stats import zscore
-
-from data_loader import GaitData
 
 
 class DataPreprocessor:
@@ -380,19 +377,19 @@ class DataPreprocessor:
             _, hip_z = self.resample_uniform(old_time, hip_z, target_rate)
 
             # 重采样关节角度
-            for key in joint_angles.keys():
+            for key in joint_angles:
                 _, joint_angles[key] = self.resample_uniform(
                     old_time, joint_angles[key], target_rate
                 )
 
             # 重采样关节速度
-            for key in joint_velocities.keys():
+            for key in joint_velocities:
                 _, joint_velocities[key] = self.resample_uniform(
                     old_time, joint_velocities[key], target_rate
                 )
 
             # 重采样力矩
-            for key in torques.keys():
+            for key in torques:
                 _, torques[key] = self.resample_uniform(
                     old_time, torques[key], target_rate
                 )
@@ -441,11 +438,12 @@ class DataPreprocessor:
 def main():
     """测试预处理"""
     from pathlib import Path
+
     import yaml
     from data_loader import DataLoader
 
     config_path = Path(__file__).parent / "pipeline_config.yaml"
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     loader = DataLoader(config_path)
@@ -461,7 +459,7 @@ def main():
     # 预处理
     processed = preprocessor.preprocess_gait_data(gait_data)
 
-    print(f"\nPreprocessing complete:")
+    print("\nPreprocessing complete:")
     print(f"  Original samples: {gait_data.num_samples}")
     print(f"  Processed samples: {processed.num_samples}")
     print(f"  Original duration: {gait_data.duration:.2f}s")

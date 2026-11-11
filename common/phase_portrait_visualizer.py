@@ -11,15 +11,14 @@
 
 from __future__ import annotations
 
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
-from matplotlib.patches import FancyArrowPatch
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Line3DCollection
-from typing import Optional, Literal, Callable, Any
 from dataclasses import dataclass
+from typing import Any, Callable, Optional
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
+from mpl_toolkits.mplot3d.art3d import Line3DCollection
 
 from .plot_styles import PALETTE, create_figure, save_figure
 

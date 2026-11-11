@@ -13,12 +13,13 @@
 
 from __future__ import annotations
 
-import sys
 import json
-import numpy as np
+import sys
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from dataclasses import dataclass, asdict
 from typing import List
+
+import numpy as np
 
 # 添加路径
 HW1_ROOT = Path(__file__).resolve().parent.parent
@@ -137,18 +138,18 @@ def test_zero_residual(num_episodes: int = 10, save_trajectory: bool = False) ->
     avg_time = np.mean(times)
     success_rate = sum(successes) / len(successes)
 
-    print(f"Distance Statistics:")
+    print("Distance Statistics:")
     print(f"  Average: {avg_distance:.3f} +/- {std_distance:.3f} m")
     print(f"  Range: [{min_distance:.3f}, {max_distance:.3f}] m")
-    print(f"  Baseline: 4.630 m")
+    print("  Baseline: 4.630 m")
     print(
         f"  Deviation: {avg_distance - 4.63:+.3f} m ({(avg_distance / 4.63 - 1) * 100:+.1f}%)"
     )
     print()
 
-    print(f"Time Statistics:")
+    print("Time Statistics:")
     print(f"  Average: {avg_time:.2f} s")
-    print(f"  Expected: 12.00 s (max_steps=2400, inner_steps=5)")
+    print("  Expected: 12.00 s (max_steps=2400, inner_steps=5)")
     print()
 
     print(

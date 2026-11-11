@@ -27,7 +27,6 @@ from .exceptions import (
     HW1Error,
     ModelError,
     SimulationError,
-    wrap_exception,
 )
 from .logging_config import get_logger
 
@@ -278,7 +277,7 @@ class RetryStrategy(ErrorRecoveryStrategy):
             try:
                 logger.info(f"Retry attempt {attempt}/{self.max_attempts}")
                 return self.func()
-            except Exception as e:
+            except Exception:
                 if attempt == self.max_attempts:
                     raise
                 time.sleep(self.delay)

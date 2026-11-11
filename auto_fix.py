@@ -4,9 +4,8 @@
 """
 
 import re
-import shutil
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
 
 class AutoFixer:
@@ -117,7 +116,7 @@ class AutoFixer:
                 pass
 
         print(f"  Found {found_count} files with import *")
-        print(f"  [INFO] import * requires manual review (analyzing usage)")
+        print("  [INFO] import * requires manual review (analyzing usage)")
         print()
 
     def consolidate_requirements(self):
@@ -154,7 +153,7 @@ class AutoFixer:
         }
 
         if duplicates:
-            print(f"  [INFO] Consider consolidating to single requirements.txt")
+            print("  [INFO] Consider consolidating to single requirements.txt")
         print()
 
     def _should_skip(self, path):
@@ -191,7 +190,7 @@ class AutoFixer:
 
         # requirements
         if self.changes["requirements"]:
-            print(f"## Requirements.txt:")
+            print("## Requirements.txt:")
             print(f"  - Total files: {self.changes['requirements']['total']}")
             print(f"  - Unique contents: {self.changes['requirements']['unique']}")
             print(f"  - Duplicate groups: {self.changes['requirements']['duplicates']}")

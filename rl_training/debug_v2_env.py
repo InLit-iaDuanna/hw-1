@@ -8,8 +8,9 @@ from pathlib import Path
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
-from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 import numpy as np
+
+from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
 # 创建环境
 env = ResidualRLEnvV2(
@@ -21,7 +22,7 @@ env = ResidualRLEnvV2(
 print("=" * 80)
 print("Debug: Check V13.7 Controller in ResidualRLEnvV2")
 print("=" * 80)
-print(f"Parameters:")
+print("Parameters:")
 print(f"  gait_period: {env.params.base.gait_period}")
 print(f"  timestep: {env.params.base.timestep}")
 print(f"  hip_motor: {env.params.hip_motor.name}")
@@ -31,7 +32,7 @@ print()
 # Reset
 obs, info = env.reset(seed=0)
 
-print(f"Initial state:")
+print("Initial state:")
 print(f"  hip_x: {env.data.qpos[0]:.3f}")
 print(f"  hip_z: {env.data.qpos[1]:.3f}")
 print(f"  support_foot: {env.support_foot}")

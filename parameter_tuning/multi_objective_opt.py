@@ -4,20 +4,20 @@ Optimizes both walking distance (maximize) and energy cost of transport (minimiz
 Uses NSGA-II algorithm to find Pareto front solutions
 """
 
-import numpy as np
+import json
+from pathlib import Path
+from typing import Dict, Tuple
+
+import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.core.problem import Problem
-from pymoo.optimize import minimize
 from pymoo.operators.crossover.sbx import SBX
 from pymoo.operators.mutation.pm import PM
 from pymoo.operators.sampling.rnd import FloatRandomSampling
+from pymoo.optimize import minimize
 from pymoo.termination import get_termination
-from pymoo.util.ref_dirs import get_reference_directions
-import json
-from pathlib import Path
-from typing import Dict, Tuple, List
-import matplotlib
 
 matplotlib.use("Agg")  # Non-interactive backend
 
@@ -404,7 +404,6 @@ def create_3d_visualization(
     """
     Create 3D scatter plot with solution quality metric
     """
-    from mpl_toolkits.mplot3d import Axes3D
 
     # Calculate a combined quality metric (normalized)
     dist_norm = (distance - distance.min()) / (distance.max() - distance.min() + 1e-6)

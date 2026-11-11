@@ -4,10 +4,10 @@
 实时监控Imitation Learning流水线的执行进度
 """
 
-import time
-from pathlib import Path
 import json
+import time
 from datetime import datetime
+from pathlib import Path
 
 
 def check_stage_progress():
@@ -30,20 +30,20 @@ def check_stage_progress():
     if traj_pkl.exists():
         size_mb = traj_pkl.stat().st_size / 1024 / 1024
         modified = datetime.fromtimestamp(traj_pkl.stat().st_mtime)
-        print(f"  ✓ 轨迹文件已生成")
+        print("  ✓ 轨迹文件已生成")
         print(f"    文件: {traj_pkl.name}")
         print(f"    大小: {size_mb:.2f} MB")
         print(f"    修改时间: {modified.strftime('%Y-%m-%d %H:%M:%S')}")
 
         if traj_json.exists():
-            with open(traj_json, "r", encoding="utf-8") as f:
+            with open(traj_json, encoding="utf-8") as f:
                 stats = json.load(f)
             print(f"    Episodes: {stats['num_episodes']}")
             print(f"    Transitions: {stats['total_transitions']}")
             print(f"    平均距离: {stats['avg_distance']:.3f}m")
             print(f"    平均触地: {stats['avg_touchdowns']:.1f}")
     else:
-        print(f"  ⏳ 等待生成中...")
+        print("  ⏳ 等待生成中...")
         print(f"    预期文件: {traj_pkl.name}")
 
     print()
@@ -58,12 +58,12 @@ def check_stage_progress():
 
     if bc_weights.exists():
         size_mb = bc_weights.stat().st_size / 1024 / 1024
-        print(f"  ✓ BC模型已训练完成")
+        print("  ✓ BC模型已训练完成")
         print(f"    模型文件: {bc_weights.name}")
         print(f"    大小: {size_mb:.2f} MB")
 
         if bc_history.exists():
-            with open(bc_history, "r", encoding="utf-8") as f:
+            with open(bc_history, encoding="utf-8") as f:
                 history = json.load(f)
             print(f"    最佳验证损失: {history['best_val_loss']:.6f}")
             print(f"    最终训练损失: {history['final_train_loss']:.6f}")
@@ -72,7 +72,7 @@ def check_stage_progress():
         if bc_curve.exists():
             print(f"    训练曲线: {bc_curve.name}")
     else:
-        print(f"  ⏳ 等待训练...")
+        print("  ⏳ 等待训练...")
         print(f"    预期文件: {bc_weights.name}")
 
     print()
@@ -89,7 +89,7 @@ def check_stage_progress():
     if ppo_final.exists():
         size_mb = ppo_final.stat().st_size / 1024 / 1024
         modified = datetime.fromtimestamp(ppo_final.stat().st_mtime)
-        print(f"  ✓ PPO训练已完成")
+        print("  ✓ PPO训练已完成")
         print(f"    模型文件: {ppo_final.name}")
         print(f"    大小: {size_mb:.2f} MB")
         print(f"    完成时间: {modified.strftime('%Y-%m-%d %H:%M:%S')}")
@@ -107,17 +107,17 @@ def check_stage_progress():
             if match:
                 steps = int(match.group(1))
                 progress = steps / 5_000_000 * 100
-                print(f"  🔄 PPO训练进行中...")
+                print("  🔄 PPO训练进行中...")
                 print(f"    最新检查点: {latest_ckpt.name}")
                 print(f"    训练步数: {steps:,} / 5,000,000 ({progress:.1f}%)")
                 print(f"    更新时间: {modified.strftime('%Y-%m-%d %H:%M:%S')}")
             else:
-                print(f"  🔄 PPO训练进行中...")
+                print("  🔄 PPO训练进行中...")
                 print(f"    最新检查点: {latest_ckpt.name}")
         else:
-            print(f"  ⏳ 等待训练启动...")
+            print("  ⏳ 等待训练启动...")
     else:
-        print(f"  ⏳ 等待训练启动...")
+        print("  ⏳ 等待训练启动...")
         print(f"    预期目录: {checkpoint_dir}")
 
     print()
@@ -131,10 +131,10 @@ def check_stage_progress():
     eval_plot = eval_dir / "comparison_plot.png"
 
     if eval_results.exists():
-        with open(eval_results, "r", encoding="utf-8") as f:
+        with open(eval_results, encoding="utf-8") as f:
             results = json.load(f)
 
-        print(f"  ✓ 评估已完成")
+        print("  ✓ 评估已完成")
         print(f"    结果文件: {eval_results.name}")
         print(f"    评估模型数: {len(results)}")
 
@@ -150,7 +150,7 @@ def check_stage_progress():
         if eval_plot.exists():
             print(f"\n    对比图表: {eval_plot.name}")
     else:
-        print(f"  ⏳ 等待评估...")
+        print("  ⏳ 等待评估...")
         print(f"    预期文件: {eval_results.name}")
 
     print()

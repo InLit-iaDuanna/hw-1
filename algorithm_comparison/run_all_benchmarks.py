@@ -3,14 +3,14 @@ Master script to run all benchmarks sequentially or in parallel.
 Includes progress bar and ETA tracking.
 """
 
+import argparse
 import subprocess
 import sys
 import time
-import argparse
-from pathlib import Path
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import timedelta
-from typing import List, Dict, Tuple
+from pathlib import Path
+from typing import Dict, List, Tuple
 
 
 class ProgressBar:

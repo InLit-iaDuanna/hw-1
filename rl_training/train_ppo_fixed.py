@@ -12,10 +12,9 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import SubprocVecEnv
 from stable_baselines3.common.callbacks import CheckpointCallback
 from stable_baselines3.common.utils import set_random_seed
-import torch
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
 
 def make_env(rank, seed=0):
@@ -104,12 +103,12 @@ def train_ppo():
     )
 
     print(f"\nStarting training for {total_timesteps:,} timesteps...")
-    print(f"Hyperparameters:")
+    print("Hyperparameters:")
     print(f"  - Learning rate: {learning_rate}")
     print(f"  - Steps per update: {n_steps}")
     print(f"  - Batch size: {batch_size}")
     print(f"  - Parallel environments: {num_envs}")
-    print(f"  - Fall height threshold: 0.2 m (FIXED)")
+    print("  - Fall height threshold: 0.2 m (FIXED)")
     print(f"  - Checkpoint frequency: every {checkpoint_freq:,} steps")
     print(f"  - TensorBoard logs: {log_dir}")
     print(f"  - Checkpoints: {checkpoint_dir}")

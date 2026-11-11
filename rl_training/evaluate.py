@@ -3,15 +3,15 @@ Evaluation Script for RL-trained Gait Controller
 Loads trained PPO model and compares against V13.7 FSM baseline
 """
 
+import argparse
+import json
 import os
 import sys
-import json
-import argparse
 from pathlib import Path
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.gridspec import GridSpec
-import mujoco
 from stable_baselines3 import PPO
 
 # Add this directory to path for imports
@@ -520,7 +520,7 @@ def main():
     # Load baseline if provided
     baseline = None
     if args.baseline_file and os.path.exists(args.baseline_file):
-        with open(args.baseline_file, "r") as f:
+        with open(args.baseline_file) as f:
             baseline = json.load(f)
         print(f"Loaded baseline from: {args.baseline_file}")
 
