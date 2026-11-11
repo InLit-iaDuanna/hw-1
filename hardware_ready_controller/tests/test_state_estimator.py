@@ -9,22 +9,21 @@ Test Coverage:
 - Based on V17 test cases and specifications
 """
 
-import numpy as np
-import pytest
-from typing import List, Tuple
-
 import sys
 from pathlib import Path
+
+import numpy as np
+import pytest
 
 # Add repository root to path for package imports.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from hardware_ready_controller.state_estimator import (
-    KalmanFilter,
-    KalmanConfig,
-    JointStateEstimator,
-    ForwardKinematics,
     ContactDetector,
+    ForwardKinematics,
+    JointStateEstimator,
+    KalmanConfig,
+    KalmanFilter,
     StateEstimator,
     encoder_counts_to_radians,
     estimate_velocity_finite_diff,

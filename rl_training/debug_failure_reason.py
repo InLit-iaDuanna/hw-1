@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 import numpy as np
 
 sys.path.insert(0, str(Path("../v13_7_friction_compensation")))
@@ -9,8 +10,8 @@ sys.path.insert(0, str(Path("../v14_passive_arms")))
 sys.path.insert(0, str(Path("../v13_6_event_driven_fsm")))
 sys.path.insert(0, str(Path("..")))
 
-from train_residual_rl_v2 import ResidualRLEnvV2
 from simulate_passive_arms_v14 import classify_failure
+from train_residual_rl_v2 import ResidualRLEnvV2
 
 env = ResidualRLEnvV2(residual_scale=0.05, inner_steps=5, max_steps=2400)
 obs, info = env.reset()

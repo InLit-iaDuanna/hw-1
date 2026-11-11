@@ -12,8 +12,8 @@ sys.path.insert(0, str(HW1_ROOT / "common"))
 
 from motor_dynamics import (
     PRESETS,
-    MotorParams,
     L1MotorActuator,
+    MotorParams,
     _sign_smooth,
     joint_armature_with_motor,
     joint_damping_with_motor,

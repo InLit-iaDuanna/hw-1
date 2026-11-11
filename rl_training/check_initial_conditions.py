@@ -1,15 +1,17 @@
 """Check if initial conditions match exactly"""
 
 import sys
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
+from simulate_passive_arms_v14 import initialize
+
 from rl_training.test_v137_identity import V137IdentitySimulator
 from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
-from simulate_passive_arms_v14 import initialize
 
 
 def check_initial_conditions():

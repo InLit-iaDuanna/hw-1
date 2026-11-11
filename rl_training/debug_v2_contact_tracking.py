@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
@@ -10,8 +11,8 @@ sys.path.insert(0, str(HW1_ROOT / "v13_7_friction_compensation"))
 sys.path.insert(0, str(HW1_ROOT / "v13_6_event_driven_fsm"))
 sys.path.insert(0, str(HW1_ROOT / "v14_passive_arms"))
 
-from train_residual_rl_v2 import ResidualRLEnvV2
 from simulate_passive_arms_v14 import contact_flags
+from train_residual_rl_v2 import ResidualRLEnvV2
 
 print("=" * 80)
 print("Contact State Tracking (1.0s - 2.5s)")
@@ -25,7 +26,7 @@ action = np.array([0.0, 0.0], dtype=np.float32)
 for step in range(200):
     obs, reward, terminated, truncated, info = env.step(action)
 
-print(f"\nStarting from t=1.0s (after Event 3)")
+print("\nStarting from t=1.0s (after Event 3)")
 print(f"Current support: {env.support_foot}")
 print(f"Last event: {env.last_event_t:.3f}s")
 print(f"Accepted contact: '{env.accepted_contact}'")
@@ -71,7 +72,7 @@ print("=" * 80)
 
 print(f"Final support foot: {env.support_foot}")
 print(f"Last FSM event: {env.last_event_t:.3f}s")
-print(f"Expected next event: ~1.7s (left contact after 1.3s right burst)")
+print("Expected next event: ~1.7s (left contact after 1.3s right burst)")
 
 if env.last_event_t < 1.5:
     print("\n[PROBLEM] FSM stopped switching after 1.3s")

@@ -9,9 +9,10 @@ Key concepts:
 - Virtual constraints enforce: h(q) → h_d(s) via feedback linearization
 """
 
-import numpy as np
-from typing import Callable, Tuple, Optional
 from dataclasses import dataclass
+from typing import Callable, Tuple
+
+import numpy as np
 
 
 @dataclass

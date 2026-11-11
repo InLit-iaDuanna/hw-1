@@ -5,8 +5,8 @@ Algorithm Performance Table Generator
 """
 
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 
 def load_all_results():
@@ -137,9 +137,7 @@ def generate_markdown_table(results, baseline_key="v137_baseline"):
     lines.append(
         f"- **Zero-shot Transfer**: Prior action achieves {results['prior_action']['distance']:.3f}m without training"
     )
-    lines.append(
-        f"- **Robustness**: All methods achieve 100% success rate with std ≈ 0"
-    )
+    lines.append("- **Robustness**: All methods achieve 100% success rate with std ≈ 0")
     lines.append("")
 
     return "\n".join(lines)

@@ -1,8 +1,9 @@
 """Debug control torques at each timestep"""
 
 import sys
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
@@ -25,7 +26,7 @@ def debug_control_torques():
 
     obs, info = env.reset(seed=0)
 
-    print(f"\nInitial state (t=0.000s):")
+    print("\nInitial state (t=0.000s):")
     print(f"  qpos[0:8]: {env.data.qpos[0:8]}")
     print(f"  qvel[0:7]: {env.data.qvel[0:7]}")
     print()

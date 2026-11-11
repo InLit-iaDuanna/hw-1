@@ -1,7 +1,7 @@
 """测试诊断系统功能。"""
 
-import sys
 import os
+import sys
 from pathlib import Path
 
 # 设置控制台编码为 UTF-8
@@ -14,8 +14,8 @@ sys.path.insert(0, str(project_root))
 
 from diagnostics import (
     ErrorDetector,
-    SolutionDatabase,
     HealthChecker,
+    SolutionDatabase,
 )
 
 
@@ -104,7 +104,7 @@ def test_solution_database():
     recommendations = db.recommend_solutions(
         ["simulation_nan", "fall_down"], max_solutions_per_error=2
     )
-    print(f"\n[OK] 为 2 个错误推荐解决方案:")
+    print("\n[OK] 为 2 个错误推荐解决方案:")
     for error_type, solutions in recommendations.items():
         print(f"  [{error_type}]: {len(solutions)} 个方案")
         for sol in solutions:
@@ -177,7 +177,7 @@ def test_integration():
     # 分析结果
     report = detector.analyze_simulation_result(simulation_result)
 
-    print(f"\n诊断报告:")
+    print("\n诊断报告:")
     print(f"  - 检测到错误: {report['has_errors']}")
     print(f"  - 错误数量: {report['error_count']}")
     print(f"  - 主要错误: {report['primary_error']}")
@@ -185,7 +185,7 @@ def test_integration():
 
     # 获取解决方案
     if report["has_errors"]:
-        print(f"\n推荐解决方案:")
+        print("\n推荐解决方案:")
         for error_info in report["errors"][:2]:  # 显示前 2 个
             error_type = error_info["type"]
             entry = db.get(error_type)

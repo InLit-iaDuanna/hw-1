@@ -1,14 +1,13 @@
 """监控Residual RL训练进度。
 
 运行方式：
-    cd D:\Dunna\Documents\hw-1
-    .venv-mujoco\Scripts\activate
-    python rl_training\monitor_training.py
+    cd D:\\Dunna\\Documents\\hw-1
+    .venv-mujoco\\Scripts\activate
+    python rl_training\\monitor_training.py
 """
 
-import sys
-from pathlib import Path
 import time
+from pathlib import Path
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 
@@ -35,14 +34,14 @@ def monitor_training():
     print("=" * 80)
 
     if not output_file.exists():
-        print(f"\n[警告] 日志文件不存在，训练可能尚未启动")
+        print("\n[警告] 日志文件不存在，训练可能尚未启动")
         return
 
     last_position = 0
 
     try:
         while True:
-            with open(output_file, "r", encoding="utf-8", errors="ignore") as f:
+            with open(output_file, encoding="utf-8", errors="ignore") as f:
                 f.seek(last_position)
                 new_content = f.read()
                 last_position = f.tell()

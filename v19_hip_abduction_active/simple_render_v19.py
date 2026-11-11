@@ -4,15 +4,15 @@ import argparse
 import sys
 from pathlib import Path
 
-import mujoco
 import imageio.v2 as imageio
+import mujoco
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from model_3d_v19 import V19Params, MODEL_PATH, write_model
 import simulate_v19
+from model_3d_v19 import MODEL_PATH, V19Params, write_model
 
 ROOT = Path(__file__).resolve().parent
 OUT_DIR = ROOT / "out"
@@ -50,6 +50,7 @@ def main():
 
     # Re-run simulation
     import math
+
     from common.control_utils import limited_pd, ramp_height, smoothstep
 
     def _jaddr(model, name):

@@ -13,7 +13,7 @@ from typing import Any
 import numpy as np
 from scipy.interpolate import Rbf
 from sklearn.gaussian_process import GaussianProcessRegressor
-from sklearn.gaussian_process.kernels import ConstantKernel, Matern, RBF, WhiteKernel
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel, Matern, WhiteKernel
 from sklearn.linear_model import LinearRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import PolynomialFeatures, StandardScaler

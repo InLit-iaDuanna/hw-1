@@ -13,9 +13,8 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from dataclasses import asdict, replace
+from dataclasses import replace
 from pathlib import Path
-from typing import Any
 
 import optuna
 from optuna.samplers import TPESampler
@@ -30,13 +29,12 @@ sys.path.insert(0, str(V137_DIR))
 sys.path.insert(0, str(V136_DIR))
 sys.path.insert(0, str(V14_DIR))
 
+from simulate_passive_arms_v14 import PassiveArmsParams  # noqa: E402
+from simulate_v13_6 import PhaseParams, V136Params  # noqa: E402
 from simulate_v13_7 import (  # noqa: E402
     V137Params,
     run_simulation_v137,
-    make_v137_fsm,
 )
-from simulate_v13_6 import PhaseParams, V136Params  # noqa: E402
-from simulate_passive_arms_v14 import PassiveArmsParams  # noqa: E402
 
 OUT_DIR = ROOT / "results"
 OUT_DIR.mkdir(parents=True, exist_ok=True)

@@ -14,14 +14,15 @@ Requirements:
 """
 
 import argparse
+import json
 import sys
 import time
-from pathlib import Path
-import numpy as np
-import matplotlib.pyplot as plt
 from dataclasses import dataclass, field
-from typing import List, Dict
-import json
+from pathlib import Path
+from typing import Dict, List
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Add parent directory to path to import controller
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -34,11 +35,11 @@ except ImportError:
     sys.exit(1)
 
 from controller import (
-    HardwareReadyController,
-    SensorData,
-    MotorSpec,
     FSMConfig,
+    HardwareReadyController,
+    MotorSpec,
     PhaseConfig,
+    SensorData,
 )
 
 

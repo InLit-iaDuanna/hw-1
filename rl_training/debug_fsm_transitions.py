@@ -1,8 +1,9 @@
 """Debug FSM transitions in train_residual_rl_v2.py"""
 
 import sys
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
@@ -26,7 +27,7 @@ def debug_fsm_transitions():
 
     obs, info = env.reset(seed=0)
 
-    print(f"\nInitial state:")
+    print("\nInitial state:")
     print(f"  support_foot: {env.support_foot}")
     print(f"  burst_start_t: {env.burst_start_t:.4f}")
     print(f"  accepted_contact: '{env.accepted_contact}'")
@@ -64,7 +65,7 @@ def debug_fsm_transitions():
         step_count += 1
 
     print("-" * 80)
-    print(f"\nFinal Results:")
+    print("\nFinal Results:")
     print(f"  Steps completed: {step_count}")
     print(f"  Sim time: {env.sim_time:.2f}s")
     print(f"  Distance: {info['episode_distance']:.3f}m")

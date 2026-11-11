@@ -82,7 +82,7 @@ class DataLoader:
             config_path: pipeline_config.yaml 路径
         """
         self.config_path = Path(config_path)
-        with open(self.config_path, "r", encoding="utf-8") as f:
+        with open(self.config_path, encoding="utf-8") as f:
             self.config = yaml.safe_load(f)
 
         self.data_sources = self.config.get("data_sources", {})
@@ -103,7 +103,7 @@ class DataLoader:
 
         data: dict[str, list[float]] = {}
 
-        with open(csv_path, "r", encoding="utf-8") as f:
+        with open(csv_path, encoding="utf-8") as f:
             reader = csv.DictReader(f)
             headers = reader.fieldnames
             if headers is None:
@@ -171,8 +171,8 @@ class DataLoader:
                 torques[key] = raw_data[key]
 
         # 提取功率和能量
-        power = raw_data.get("input_power", None)
-        energy = raw_data.get("input_energy", None)
+        power = raw_data.get("input_power")
+        energy = raw_data.get("input_energy")
 
         # 元数据
         metadata = {

@@ -9,9 +9,8 @@ from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
-from scipy import stats
-
 from feature_extractor import GaitFeatures
+from scipy import stats
 
 
 @dataclass
@@ -401,13 +400,14 @@ class StatisticalAnalyzer:
 def main():
     """测试统计分析"""
     from pathlib import Path
+
     import yaml
     from data_loader import DataLoader
-    from preprocessor import DataPreprocessor
     from feature_extractor import FeatureExtractor
+    from preprocessor import DataPreprocessor
 
     config_path = Path(__file__).parent / "pipeline_config.yaml"
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     loader = DataLoader(config_path)

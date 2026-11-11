@@ -24,14 +24,14 @@ V13.7 Identity Reproduction Test
 
 from __future__ import annotations
 
-import sys
 import json
+import sys
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from dataclasses import dataclass, asdict
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
-import numpy as np
 import mujoco
+import numpy as np
 
 # 添加路径
 RL_TRAINING_DIR = Path(__file__).resolve().parent
@@ -47,21 +47,24 @@ sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(V14C_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 
+from simulate_passive_arms_v14 import (
+    classify_failure,
+    contact_flags,
+    initialize,
+)
+from simulate_v13_6 import _mechanical_energy, control_v136
 from simulate_v13_7 import (
-    V137Params,
+    MODEL_PATH,
     PassiveArmsParams,
+    V137Params,
     make_v137_fsm,
     write_model_v137,
-    MODEL_PATH,
 )
-from simulate_v13_6 import control_v136, _mechanical_energy
-from simulate_passive_arms_v14 import (
-    initialize,
-    contact_flags,
-    classify_failure,
-)
+
 from common.motor_dynamics import (
     PRESETS as MOTOR_PRESETS,
+)
+from common.motor_dynamics import (
     L1MotorActuator,
     _sign_smooth,
 )
@@ -329,7 +332,7 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
     print("=" * 80)
     print("V13.7 Identity Reproduction Test")
     print("=" * 80)
-    print(f"Goal: Reproduce V13.7 baseline of 4.63m in isolated environment")
+    print("Goal: Reproduce V13.7 baseline of 4.63m in isolated environment")
     print(f"Number of episodes: {num_episodes}")
     print()
 
@@ -391,23 +394,23 @@ def run_identity_test(num_episodes: int = 5) -> Dict[str, Any]:
     success_rate = sum(successes) / len(successes)
     match_rate = sum(matches) / len(matches)
 
-    print(f"Distance Statistics:")
+    print("Distance Statistics:")
     print(f"  Average: {avg_distance:.3f} +/- {std_distance:.3f} m")
     print(f"  Range: [{min_distance:.3f}, {max_distance:.3f}] m")
-    print(f"  Baseline: 4.630 m")
+    print("  Baseline: 4.630 m")
     print(
         f"  Deviation: {avg_distance - 4.63:+.3f} m ({(avg_distance / 4.63 - 1) * 100:+.1f}%)"
     )
     print()
 
-    print(f"Time Statistics:")
+    print("Time Statistics:")
     print(f"  Average: {avg_time:.2f} s")
-    print(f"  Baseline: 11.99 s")
+    print("  Baseline: 11.99 s")
     print()
 
-    print(f"Touchdown Statistics:")
+    print("Touchdown Statistics:")
     print(f"  Average: {avg_touchdowns:.1f} touchdowns")
-    print(f"  Baseline: 10 touchdowns")
+    print("  Baseline: 10 touchdowns")
     print()
 
     print(

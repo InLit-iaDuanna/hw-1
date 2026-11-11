@@ -10,10 +10,10 @@
 可选择从任意阶段开始执行
 """
 
-import sys
-import subprocess
-from pathlib import Path
 import argparse
+import subprocess
+import sys
+from pathlib import Path
 
 
 def run_stage(stage_name: str, script_name: str, args: list = None):
@@ -211,7 +211,7 @@ def main():
         # 不是最后一个阶段时，询问是否继续
         if i < len(stages):
             print()
-            response = input(f"继续执行下一阶段? [Y/n]: ").strip().lower()
+            response = input("继续执行下一阶段? [Y/n]: ").strip().lower()
             if response in ["n", "no"]:
                 print("流程已停止")
                 return

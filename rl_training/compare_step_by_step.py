@@ -1,9 +1,10 @@
 """Side-by-side comparison of baseline vs V2 at same timesteps"""
 
 import sys
-import numpy as np
 from pathlib import Path
+
 import mujoco
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
@@ -21,8 +22,8 @@ def compare_baseline_vs_v2():
 
     # === BASELINE ===
     baseline_sim = V137IdentitySimulator()
-    from simulate_passive_arms_v14 import initialize, contact_flags
-    from simulate_v13_6 import control_v136, _mechanical_energy
+    from simulate_passive_arms_v14 import contact_flags, initialize
+    from simulate_v13_6 import _mechanical_energy, control_v136
 
     p_base = baseline_sim.params.base
     fsm_base = baseline_sim.params.fsm

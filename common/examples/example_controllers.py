@@ -93,8 +93,8 @@ def example_trajectory_tracking():
     dt = 0.01
     t_array = np.arange(0, 2.0, dt)
 
-    print(f"跟踪正弦轨迹（周期 1.0s，幅值 0.2 rad）")
-    print(f"时间 (s) | 目标 (rad) | 当前 (rad) | 速度 (rad/s) | 力矩 (N·m)")
+    print("跟踪正弦轨迹（周期 1.0s，幅值 0.2 rad）")
+    print("时间 (s) | 目标 (rad) | 当前 (rad) | 速度 (rad/s) | 力矩 (N·m)")
     print("-" * 70)
 
     # 初始状态

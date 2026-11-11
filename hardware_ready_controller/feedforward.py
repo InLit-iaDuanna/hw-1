@@ -10,8 +10,9 @@ Motor Parameters (MX-64AR):
 - b: 0.05 Nm·s/rad (viscous damping)
 """
 
+from typing import Dict, Optional
+
 import numpy as np
-from typing import Optional, Dict
 
 
 def sign_smooth(value: float, epsilon: float = 0.01) -> float:
@@ -73,9 +74,7 @@ class FrictionCompensator:
 
         # Set per-joint friction parameters
         if tau_c_values is None:
-            self.tau_c = {
-                name: self.DEFAULT_PARAMS["tau_c_eff"] for name in joint_names
-            }
+            self.tau_c = dict.fromkeys(joint_names, self.DEFAULT_PARAMS["tau_c_eff"])
         else:
             self.tau_c = tau_c_values.copy()
             # Fill missing joints with default
@@ -132,7 +131,7 @@ class FrictionCompensator:
             Gravity compensation torques {joint_name: τ_g} in Nm
         """
         if not self.enable_gravity_comp or link_lengths is None:
-            return {name: 0.0 for name in self.joint_names}
+            return dict.fromkeys(self.joint_names, 0.0)
 
         g = 9.81  # m/s²
         tau_g = {}
@@ -174,7 +173,7 @@ class FrictionCompensator:
                 joint_positions, mass or 1.0, link_lengths
             )
         else:
-            tau_gravity = {name: 0.0 for name in self.joint_names}
+            tau_gravity = dict.fromkeys(self.joint_names, 0.0)
 
         # Sum compensations
         tau_total = {

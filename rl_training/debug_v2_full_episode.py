@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 import numpy as np
 
 # 添加路径
@@ -27,11 +28,11 @@ env = ResidualRLEnvV2(
 obs, info = env.reset()
 action = np.array([0.0, 0.0], dtype=np.float32)
 
-print(f"\nInitial state:")
+print("\nInitial state:")
 print(f"  hip_x: {info['hip_x']:.6f}")
 print(f"  hip_vx: {env.data.qvel[0]:.6f}")
 
-print(f"\nRunning episode...")
+print("\nRunning episode...")
 print(
     f"{'Step':<8} {'Time(s)':<10} {'hip_x':<12} {'Distance':<12} {'hip_vx':<12} {'Status':<10}"
 )
@@ -68,7 +69,7 @@ for step in range(2400):
         break
 
     if truncated:
-        print(f"\n[COMPLETED] Full episode")
+        print("\n[COMPLETED] Full episode")
         break
 
 print("\n" + "=" * 80)
@@ -86,6 +87,6 @@ if info["episode_distance"] < max_distance - 0.01:
     )
     print(f"  This suggests FSM or control issue after ~{time_at_max:.1f}s")
 else:
-    print(f"\n[OK] Robot continuously moved forward")
+    print("\n[OK] Robot continuously moved forward")
 
 env.close()

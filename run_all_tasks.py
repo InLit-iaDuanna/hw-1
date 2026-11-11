@@ -6,8 +6,8 @@
 
 import json
 import subprocess
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 
 def print_header(title):
@@ -22,9 +22,9 @@ def task1_verify_environment():
     print_header("TASK 1: Environment Verification")
 
     try:
-        import numpy as np
-        import mujoco
         import matplotlib
+        import mujoco
+        import numpy as np
         import stable_baselines3
 
         print(f"[OK] NumPy: {np.__version__}")

@@ -13,15 +13,14 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any, Callable
 import warnings
+from pathlib import Path
+from typing import Any
 
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
+import numpy as np
 from matplotlib.backends.backend_pdf import PdfPages
 from matplotlib.gridspec import GridSpec
-import numpy as np
 
 
 class AutoReportGenerator:

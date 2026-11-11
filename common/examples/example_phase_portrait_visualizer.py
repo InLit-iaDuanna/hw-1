@@ -13,8 +13,9 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-import numpy as np
+
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Add project root to path
 ROOT = Path(__file__).resolve().parents[2]

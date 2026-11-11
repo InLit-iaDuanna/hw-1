@@ -36,26 +36,29 @@ sys.path.insert(0, str(V137_DIR))
 sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 
-from simulate_rolling_foot_gait_v10 import (
-    MODEL_PATH,
-    SUCCESS_FORWARD,
-    SUCCESS_TIME,
-    SUCCESS_TOUCHDOWNS,
-    RollingFootParams as V10Params,
-    classify_failure,
-    contact_flags,
-    initialize as initialize_v10,
-    write_model,
-)
 from simulate_passive_arms_v14 import (
     initialize as initialize_v14,
 )
+from simulate_rolling_foot_gait_v10 import (
+    SUCCESS_FORWARD,
+    SUCCESS_TIME,
+    SUCCESS_TOUCHDOWNS,
+    contact_flags,
+    write_model,
+)
+from simulate_rolling_foot_gait_v10 import (
+    RollingFootParams as V10Params,
+)
+from simulate_rolling_foot_gait_v10 import (
+    initialize as initialize_v10,
+)
 from simulate_v13_6 import V136Params, _mechanical_energy, control_v136
-from simulate_v13_7 import V137Params, MODEL_PATH as V137_MODEL_PATH, write_model_v137
+from simulate_v13_7 import V137Params, write_model_v137
 
 from common.comparison_tool import ComparisonTool, ControllerResult
 from common.controllers import PassiveController, PDController
-from common.motor_dynamics import PRESETS as MOTOR_PRESETS, L1MotorActuator
+from common.motor_dynamics import PRESETS as MOTOR_PRESETS
+from common.motor_dynamics import L1MotorActuator
 from common.simulation_framework import (
     Callback,
     Controller,
@@ -348,9 +351,12 @@ class ComparisonCallback(Callback):
             self.touchdown_count += 1
 
             # Detect alternations (foot switching)
-            if left_touchdown and self.support_foot == "right":
-                self.alternation_count += 1
-            elif right_touchdown and self.support_foot == "left":
+            if (
+                left_touchdown
+                and self.support_foot == "right"
+                or right_touchdown
+                and self.support_foot == "left"
+            ):
                 self.alternation_count += 1
 
         self.last_left_contact = left_contact
@@ -696,11 +702,11 @@ def main():
 
     print(f"\nAll outputs saved to: {OUT_DIR}")
     print("\nFiles generated:")
-    print(f"  - metrics_comparison.png")
-    print(f"  - time_series_comparison.png")
-    print(f"  - comparison_table.csv")
-    print(f"  - comparison_results.json")
-    print(f"  - comparison_report.html")
+    print("  - metrics_comparison.png")
+    print("  - time_series_comparison.png")
+    print("  - comparison_table.csv")
+    print("  - comparison_results.json")
+    print("  - comparison_report.html")
 
 
 if __name__ == "__main__":

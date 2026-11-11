@@ -19,13 +19,13 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(V137_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 
-from space_sampler import ParameterRange
 from run_exploration import ParameterExplorer
+from space_sampler import ParameterRange
 
 
 def create_v137_objective():
     """创建 V13.7 目标函数。"""
-    from simulate_v137_refactored import V137Params, make_v137_params, run_simulation
+    from simulate_v137_refactored import make_v137_params, run_simulation
 
     def objective_func(params: dict[str, float]) -> float:
         """V13.7 目标函数：最大化前进距离。
@@ -139,7 +139,7 @@ def explore_fsm_phase_timing():
     explorer.generate_report()
 
     print(f"\n{'=' * 80}")
-    print(f"Exploration Complete!")
+    print("Exploration Complete!")
     print(f"Results saved to: {output_dir}")
     print(f"{'=' * 80}")
 
@@ -208,7 +208,7 @@ def explore_pd_gains():
     explorer.generate_report()
 
     print(f"\n{'=' * 80}")
-    print(f"Exploration Complete!")
+    print("Exploration Complete!")
     print(f"Results saved to: {output_dir}")
     print(f"{'=' * 80}")
 
@@ -317,15 +317,15 @@ def multiobjective_distance_cot():
 
     print("\nPareto Front Analysis:")
     print(f"  Total solutions: {len(pareto_params)}")
-    print(f"\n  Solution A (Max Distance):")
+    print("\n  Solution A (Max Distance):")
     print(f"    Distance: {pareto_objectives[max_dist_idx, 0]:.4f} m")
     print(f"    Efficiency: {pareto_objectives[max_dist_idx, 1]:.4f}")
     print(f"    Params: {pareto_params[max_dist_idx]}")
-    print(f"\n  Solution B (Max Efficiency):")
+    print("\n  Solution B (Max Efficiency):")
     print(f"    Distance: {pareto_objectives[max_eff_idx, 0]:.4f} m")
     print(f"    Efficiency: {pareto_objectives[max_eff_idx, 1]:.4f}")
     print(f"    Params: {pareto_params[max_eff_idx]}")
-    print(f"\n  Solution C (Balanced):")
+    print("\n  Solution C (Balanced):")
     print(f"    Distance: {pareto_objectives[balanced_idx, 0]:.4f} m")
     print(f"    Efficiency: {pareto_objectives[balanced_idx, 1]:.4f}")
     print(f"    Params: {pareto_params[balanced_idx]}")
@@ -335,7 +335,7 @@ def multiobjective_distance_cot():
     explorer.generate_report()
 
     print(f"\n{'=' * 80}")
-    print(f"Multi-Objective Optimization Complete!")
+    print("Multi-Objective Optimization Complete!")
     print(f"Results saved to: {output_dir}")
     print(f"{'=' * 80}")
 

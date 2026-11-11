@@ -13,7 +13,6 @@ import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 # 添加 common 到路径
 ROOT = Path(__file__).resolve().parent.parent
@@ -154,9 +153,9 @@ def generate_verdict_summary(summaries: dict[str, dict]) -> None:
     print("=" * 70)
     print(f"测试配置数：{total_configs}")
     print(f"最大交替步数：{max_alt} (全部失败)")
-    print(f"结论：所有配置均在 3 个交替步内失败")
-    print(f"      侧向 inverted pendulum 无法通过几何约束实现被动稳定")
-    print(f"      Verdict: 3D 纯被动不可行，必须引入侧向主动控制")
+    print("结论：所有配置均在 3 个交替步内失败")
+    print("      侧向 inverted pendulum 无法通过几何约束实现被动稳定")
+    print("      Verdict: 3D 纯被动不可行，必须引入侧向主动控制")
     print("=" * 70 + "\n")
 
 

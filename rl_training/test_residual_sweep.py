@@ -17,12 +17,13 @@ Phase-gated策略：
 
 from __future__ import annotations
 
-import sys
 import json
-import numpy as np
+import sys
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from dataclasses import dataclass, asdict
-from typing import List, Tuple
+from typing import List
+
+import numpy as np
 
 # 添加路径
 HW1_ROOT = Path(__file__).resolve().parent.parent
@@ -278,7 +279,7 @@ def test_residual_sweep() -> dict:
         print("Recommendation: Proceed with PPO training to learn adaptive residuals.")
         diagnosis = "PASS"
     else:
-        print(f"[FAIL] No configuration achieved +3% improvement")
+        print("[FAIL] No configuration achieved +3% improvement")
         print(
             f"  Best: {best_result.strategy} with {best_result.improvement_pct:+.1f}%"
         )

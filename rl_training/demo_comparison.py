@@ -4,10 +4,11 @@
 """
 
 import sys
+import time
 from pathlib import Path
+
 import numpy as np
 from stable_baselines3 import PPO
-import time
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
@@ -62,7 +63,7 @@ def run_constant_residual(episodes=5, render=False):
     success_rate = np.mean(successes)
 
     print()
-    print(f"结果汇总:")
+    print("结果汇总:")
     print(f"  平均距离: {mean_dist:.3f} ± {std_dist:.3f} m")
     print(f"  成功率: {success_rate*100:.0f}%")
     print(f"  行走速度: ~{mean_dist/12:.3f} m/s")
@@ -137,7 +138,7 @@ def run_rl_policy(episodes=5, render=False):
     success_rate = np.mean(successes)
 
     print()
-    print(f"结果汇总:")
+    print("结果汇总:")
     print(f"  平均距离: {mean_dist:.3f} ± {std_dist:.3f} m")
     print(f"  成功率: {success_rate*100:.0f}%")
     print(f"  行走速度: ~{mean_dist/12:.3f} m/s")
@@ -191,16 +192,16 @@ def print_comparison(constant_result, rl_result):
         print(f"  [-] Constant 优于 PPO RL，领先 {-pct_dist:.1f}%")
 
     if const_success == 1.0 and rl_success == 1.0:
-        print(f"  [+] 两种方案都达到 100% 成功率")
+        print("  [+] 两种方案都达到 100% 成功率")
     elif rl_success == 1.0:
-        print(f"  [+] PPO RL 达到 100% 成功率")
+        print("  [+] PPO RL 达到 100% 成功率")
     elif const_success == 1.0:
-        print(f"  [+] Constant 达到 100% 成功率")
+        print("  [+] Constant 达到 100% 成功率")
 
     if rl_std < const_std:
-        print(f"  [+] PPO RL 更稳定（标准差更小）")
+        print("  [+] PPO RL 更稳定（标准差更小）")
     else:
-        print(f"  [-] Constant 更稳定（标准差更小）")
+        print("  [-] Constant 更稳定（标准差更小）")
 
     print()
     print("=" * 80)

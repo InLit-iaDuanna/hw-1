@@ -13,12 +13,12 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from space_sampler import ParameterRange, SpaceSampler
+from optimizer import BayesianOptimizer
 from response_surface import build_response_surface
-from sensitivity_analyzer import SensitivityAnalyzer
-from optimizer import BayesianOptimizer, GeneticAlgorithmOptimizer
-from visualizer import ParameterVisualizer
 from run_exploration import ParameterExplorer
+from sensitivity_analyzer import SensitivityAnalyzer
+from space_sampler import ParameterRange, SpaceSampler
+from visualizer import ParameterVisualizer
 
 
 def test_sampling():

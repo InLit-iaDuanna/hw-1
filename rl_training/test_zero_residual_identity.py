@@ -4,8 +4,8 @@
 如果不能，则说明环境实现有差异，需要诊断并修复。
 
 运行方式：
-    cd D:\Dunna\Documents\hw-1
-    .venv-mujoco\Scripts\activate
+    cd D:\\Dunna\\Documents\\hw-1
+    .venv-mujoco\\Scripts\activate
     python rl_training\test_zero_residual_identity.py
 """
 
@@ -66,7 +66,7 @@ def test_zero_residual_identity(n_episodes: int = 20):
     print("=" * 80)
     print("Zero Residual Identity Test")
     print("=" * 80)
-    print(f"\n目标: 在residual=0条件下复现V13.7基线性能 (1.05m±0.012m)")
+    print("\n目标: 在residual=0条件下复现V13.7基线性能 (1.05m±0.012m)")
     print(f"测试episodes: {n_episodes}")
     print("\n创建环境...")
 
@@ -118,7 +118,7 @@ def test_zero_residual_identity(n_episodes: int = 20):
     print("\n" + "=" * 80)
     print("统计结果")
     print("=" * 80)
-    print(f"前进距离:")
+    print("前进距离:")
     print(f"  Mean:    {mean_dist:.4f}m")
     print(f"  Std:     {std_dist:.4f}m")
     print(f"  Min:     {min_dist:.4f}m")
@@ -146,7 +146,7 @@ def test_zero_residual_identity(n_episodes: int = 20):
     print("\n" + "=" * 80)
     if mean_diff_pct < tolerance:
         print("[PASS] Zero Residual Identity Test passed!")
-        print(f"  Environment correctly reproduces V13.7 baseline at residual=0")
+        print("  Environment correctly reproduces V13.7 baseline at residual=0")
         print(
             f"  Error within {tolerance*100:.0f}% tolerance ({mean_diff_pct*100:.2f}%)"
         )

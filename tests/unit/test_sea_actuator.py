@@ -19,9 +19,9 @@ HW1_ROOT = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(HW1_ROOT / "common"))
 
 from sea_actuator import (
+    PRESETS,
     SEAActuator,
     SEAParams,
-    PRESETS,
     build_sea_xml_fragment,
 )
 
@@ -252,7 +252,7 @@ class TestXMLGeneration:
         assert "right_motor_rotor" in xml
         assert "right_hip_motor" in xml
         assert "right_hip_link" in xml
-        assert f'pos="0 0.055 0"' in xml
+        assert 'pos="0 0.055 0"' in xml
 
     def test_xml_parameters_correct(self):
         """Test XML contains correct parameter values."""

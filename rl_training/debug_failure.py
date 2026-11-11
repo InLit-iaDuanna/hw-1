@@ -8,8 +8,9 @@ from pathlib import Path
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
-from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 import numpy as np
+
+from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
 # 创建环境
 env = ResidualRLEnvV2(

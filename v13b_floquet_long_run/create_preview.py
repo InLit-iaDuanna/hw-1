@@ -1,6 +1,7 @@
 """生成视频预览图。"""
 
 from pathlib import Path
+
 import imageio.v2 as imageio
 
 OUT_DIR = Path(__file__).resolve().parent / "out"

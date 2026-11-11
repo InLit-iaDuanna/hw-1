@@ -23,12 +23,10 @@ from advanced_profiling.memory_profiler import (
     detect_memory_leaks,
     identify_preallocation_opportunities,
     profile_memory,
-    save_memory_report,
 )
 from advanced_profiling.optimization_advisor import OptimizationAdvisor
 from advanced_profiling.parallel_analyzer import (
     analyze_scan_parallelization,
-    save_parallel_report,
 )
 
 try:
@@ -384,6 +382,7 @@ def main():
         sys.path.insert(0, str(HW1_ROOT / "v14_passive_arms"))
         sys.path.insert(0, str(HW1_ROOT / "common"))
         from simulate_passive_arms_v14 import PassiveArmsParams
+
         from common.motor_dynamics import PRESETS
 
         base = PassiveArmsParams(duration=duration)

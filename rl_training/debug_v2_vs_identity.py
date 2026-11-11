@@ -18,10 +18,11 @@ HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
 
-from rl_training.test_v137_identity import V137IdentitySimulator
-from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 from simulate_passive_arms_v14 import contact_flags, initialize
 from simulate_v13_6 import _mechanical_energy, control_v136
+
+from rl_training.test_v137_identity import V137IdentitySimulator
+from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
 
 def _fmt_bool_pair(left: bool, right: bool) -> str:

@@ -1,14 +1,16 @@
 """Debug what happens between 3.2s and 3.7s in V2"""
 
 import sys
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
-from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 from simulate_passive_arms_v14 import contact_flags
+
+from rl_training.train_residual_rl_v2 import ResidualRLEnvV2
 
 
 def debug_3_2s_to_3_7s():
@@ -26,7 +28,7 @@ def debug_3_2s_to_3_7s():
         action = np.array([0.0, 0.0], dtype=np.float32)
         obs, reward, terminated, truncated, info = env.step(action)
 
-    print(f"\nAt t=3.200s:")
+    print("\nAt t=3.200s:")
     print(f"  hip_x: {env.data.qpos[0]:.4f}m")
     print(f"  support_foot: {env.support_foot}")
     print(f"  burst_start_t: {env.burst_start_t:.4f}s")
@@ -68,7 +70,7 @@ def debug_3_2s_to_3_7s():
             break
 
     print("-" * 80)
-    print(f"\nFinal state:")
+    print("\nFinal state:")
     print(f"  hip_x: {env.data.qpos[0]:.4f}m")
     print(f"  support_foot: {env.support_foot}")
     print(f"  burst_start_t: {env.burst_start_t:.4f}s")

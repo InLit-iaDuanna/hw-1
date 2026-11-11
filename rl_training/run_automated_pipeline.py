@@ -10,12 +10,12 @@
 监控进度并生成中间报告
 """
 
-import time
+import json
 import subprocess
 import sys
-from pathlib import Path
-import json
+import time
 from datetime import datetime
+from pathlib import Path
 
 
 def check_file_exists(file_path: Path) -> bool:
@@ -165,7 +165,7 @@ def main():
     # 加载阶段1统计信息
     stage1_stats_path = RL_TRAINING_DIR / "v137_expert_trajectories.json"
     if stage1_stats_path.exists():
-        with open(stage1_stats_path, "r", encoding="utf-8") as f:
+        with open(stage1_stats_path, encoding="utf-8") as f:
             stage1_stats = json.load(f)
         print("\n阶段1统计:")
         print(f"  Episodes: {stage1_stats['num_episodes']}")
@@ -198,7 +198,7 @@ def main():
     # 加载阶段2统计信息
     stage2_stats_path = RL_TRAINING_DIR / "bc_training_history.json"
     if stage2_stats_path.exists():
-        with open(stage2_stats_path, "r", encoding="utf-8") as f:
+        with open(stage2_stats_path, encoding="utf-8") as f:
             stage2_stats = json.load(f)
         print("\n阶段2统计:")
         print(f"  最佳验证损失: {stage2_stats['best_val_loss']:.6f}")
@@ -249,7 +249,7 @@ def main():
                 cmd, stdout=f, stderr=subprocess.STDOUT, cwd=RL_TRAINING_DIR
             )
 
-        print(f"[OK] PPO训练已在后台启动")
+        print("[OK] PPO训练已在后台启动")
         print(f"日志文件: {log_file}")
         print()
         print("您可以:")

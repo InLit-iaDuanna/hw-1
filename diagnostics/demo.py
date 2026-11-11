@@ -10,7 +10,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from diagnostics import ErrorDetector, SolutionDatabase, HealthChecker
+from diagnostics import ErrorDetector, HealthChecker, SolutionDatabase
 
 
 def demo_error_detection():
@@ -103,7 +103,7 @@ def demo_health_check():
     print("\n正在运行系统健康检查...")
     summary = checker.run_all_checks(verbose=False)
 
-    print(f"\n检查结果:")
+    print("\n检查结果:")
     print(f"  总检查项: {summary['total_checks']}")
     print(f"  通过: {summary['passed_checks']}")
     print(f"  失败: {summary['failed_checks']}")

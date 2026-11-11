@@ -4,19 +4,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from pathlib import Path
 
 import imageio.v2 as imageio
 import mujoco
 from PIL import Image, ImageDraw, ImageFont
 
-import sys
-
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from model_3d import Lateral3DParams, MODEL_PATH, write_model
-from simulate_v18 import run_simulation_v18
+from model_3d import MODEL_PATH, Lateral3DParams, write_model
+
 from common.mujoco_utils import get_joint_address
 
 ROOT = Path(__file__).resolve().parent
@@ -74,6 +73,7 @@ class SimRecorder:
 def run_and_record_v18(params: Lateral3DParams, target_duration: float = 8.0):
     """Run V18 simulation with recording."""
     import numpy as np
+
     from common.control_utils import limited_pd, ramp_height, smoothstep
     from common.mujoco_utils import get_contact_flags, get_joint_address
 
@@ -351,7 +351,6 @@ def render_view(
     height: int = 720,
 ) -> list:
     """Render frames for a specific view."""
-    import numpy as np
 
     write_model(params)
     model = mujoco.MjModel.from_xml_path(str(MODEL_PATH))
@@ -383,9 +382,7 @@ def render_view(
 
         # Camera follows hip
         hip_x = frame_data["hip_x"]
-        if view_mode == "sagittal":
-            camera.lookat[:] = [hip_x, 0.0, 0.5]
-        elif view_mode == "frontal":
+        if view_mode == "sagittal" or view_mode == "frontal":
             camera.lookat[:] = [hip_x, 0.0, 0.5]
         else:
             camera.lookat[:] = [hip_x, 0.0, 0.5]

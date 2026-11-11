@@ -386,15 +386,15 @@ row = make_row(..., left_contact, right_contact, cached_detail)""",
         report = self.generate_report()
 
         print(f"\n总计: {report['total_optimizations']} 个优化建议")
-        print(f"\n按类别:")
+        print("\n按类别:")
         for cat, count in report["by_category"].items():
             print(f"  {cat}: {count}")
 
-        print(f"\n按影响力:")
+        print("\n按影响力:")
         for imp, count in report["by_impact"].items():
             print(f"  {imp}: {count}")
 
-        print(f"\n按难度:")
+        print("\n按难度:")
         for eff, count in report["by_effort"].items():
             print(f"  {eff}: {count}")
 
@@ -451,19 +451,19 @@ row = make_row(..., left_contact, right_contact, cached_detail)""",
             lines.append(f"难度: {opt.effort}")
             lines.append(f"优先级分数: {opt.priority_score:.1f}")
             lines.append(f"预期加速: {opt.expected_speedup}")
-            lines.append(f"\n描述:")
+            lines.append("\n描述:")
             lines.append(f"  {opt.description}")
-            lines.append(f"\n实施步骤:")
+            lines.append("\n实施步骤:")
             for step in opt.implementation_steps:
                 lines.append(f"  {step}")
-            lines.append(f"\n代码示例:")
+            lines.append("\n代码示例:")
             for line in opt.code_example.split("\n"):
                 lines.append(f"  {line}")
-            lines.append(f"\n影响的文件:")
+            lines.append("\n影响的文件:")
             for file in opt.affected_files:
                 lines.append(f"  - {file}")
             if opt.risks:
-                lines.append(f"\n风险:")
+                lines.append("\n风险:")
                 for risk in opt.risks:
                     lines.append(f"  - {risk}")
             lines.append("")

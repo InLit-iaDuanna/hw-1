@@ -26,11 +26,10 @@ sys.path.insert(0, str(V137_DIR))
 sys.path.insert(0, str(HW1_ROOT / "common"))
 
 import mujoco
+from energy_metrics import cost_of_transport, mechanical_energy_series
+from motor_dynamics import PRESETS as MOTOR_PRESETS
 from simulate_passive_arms_v14 import PassiveArmsParams, build_model_xml, initialize
 from simulate_v13_7 import V137Params, make_v137_fsm, simulate
-
-from motor_dynamics import PRESETS as MOTOR_PRESETS
-from energy_metrics import cost_of_transport, mechanical_energy_series
 
 
 @pytest.fixture

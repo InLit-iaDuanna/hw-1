@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
@@ -71,14 +72,14 @@ for i, event in enumerate(fsm_events):
     )
 
 print(f"\nTotal FSM events: {len(fsm_events)}")
-print(f"Expected: ~2 events per second (left->right->left...)")
-print(f"Expected total in 3s: ~6 events")
+print("Expected: ~2 events per second (left->right->left...)")
+print("Expected total in 3s: ~6 events")
 
 if len(fsm_events) < 4:
-    print(f"\n[WARNING] Too few FSM events! FSM may not be switching properly.")
+    print("\n[WARNING] Too few FSM events! FSM may not be switching properly.")
 elif len(fsm_events) > 10:
-    print(f"\n[WARNING] Too many FSM events! FSM may be oscillating.")
+    print("\n[WARNING] Too many FSM events! FSM may be oscillating.")
 else:
-    print(f"\n[OK] FSM event count looks reasonable.")
+    print("\n[OK] FSM event count looks reasonable.")
 
 env.close()

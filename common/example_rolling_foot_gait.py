@@ -15,7 +15,6 @@ import sys
 from pathlib import Path
 
 import mujoco
-import numpy as np
 
 # Add project root to path
 ROOT = Path(__file__).resolve().parent.parent
@@ -37,7 +36,7 @@ def run_simulation_example(
     Returns:
         Summary dictionary with simulation results
     """
-    print(f"Initializing RollingFootGait model...")
+    print("Initializing RollingFootGait model...")
     print(f"  Slope: {params.slope_deg} degrees")
     print(f"  Duration: {params.duration}s")
     print(f"  Timestep: {params.timestep}s")

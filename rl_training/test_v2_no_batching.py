@@ -2,6 +2,7 @@
 
 import sys
 from pathlib import Path
+
 import numpy as np
 
 sys.path.insert(0, str(Path("../v13_7_friction_compensation")))

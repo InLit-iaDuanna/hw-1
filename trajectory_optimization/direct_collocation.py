@@ -19,11 +19,12 @@ Dependencies:
     - pandas: Loading trajectory data from CSV (optional)
 """
 
-import numpy as np
-import casadi as ca
-from pathlib import Path
-from typing import Dict, Tuple, Optional, Callable
 import json
+from pathlib import Path
+from typing import Dict, Optional, Tuple
+
+import casadi as ca
+import numpy as np
 
 
 class DirectCollocation:
@@ -560,7 +561,7 @@ def main():
     result = optimizer.optimize()
 
     if result["success"]:
-        print(f"Optimization succeeded!")
+        print("Optimization succeeded!")
         print(f"  Cost: {result['cost']:.4f}")
         print(f"  Iterations: {result['iterations']}")
     else:

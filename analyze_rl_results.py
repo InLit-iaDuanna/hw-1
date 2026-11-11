@@ -5,9 +5,10 @@ Residual RL Performance Analyzer
 """
 
 import json
-import numpy as np
-import matplotlib.pyplot as plt
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def load_results():
@@ -95,14 +96,14 @@ def print_summary(results):
         print("【3】Residual Sweep Results")
         print("-" * 80)
         best = sweep["best_result"]
-        print(f"  最佳策略:")
+        print("  最佳策略:")
         print(f"    Action: [{best['left_action']:.1f}, {best['right_action']:.1f}]")
         print(f"    Scale: {best['residual_scale']:.2f}")
         print(f"    距离: {best['mean_distance_m']:.3f}m")
         print(f"    提升: +{best['improvement_pct']:.2f}%")
         print()
 
-        print(f"  扫描统计:")
+        print("  扫描统计:")
         print(f"    总样本数: {sweep['num_results']}")
         print(
             f"    有效样本: {sweep['num_good_results']} (>{sweep['pass_improvement_pct']:.0f}% 提升)"

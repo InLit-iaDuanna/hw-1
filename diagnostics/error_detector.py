@@ -3,10 +3,11 @@
 分析仿真输出、日志文件和数据，自动检测并分类常见错误。
 """
 
+import json
 import re
 from pathlib import Path
 from typing import Any
-import json
+
 import numpy as np
 
 
@@ -178,7 +179,7 @@ class ErrorDetector:
             return [("data_file_not_found", "high")]
 
         try:
-            with open(json_path, "r", encoding="utf-8") as f:
+            with open(json_path, encoding="utf-8") as f:
                 data = json.load(f)
         except json.JSONDecodeError:
             return [("json_corrupted", "medium")]

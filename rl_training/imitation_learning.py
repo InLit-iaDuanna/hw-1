@@ -11,18 +11,19 @@ V13.7 is chosen as the expert policy because it represents the best-performing
 rule-based controller with smooth trajectories and optimal gait patterns.
 """
 
+import json
+import pickle
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, List
+
+import matplotlib.pyplot as plt
 import numpy as np
+import scipy.io as sio
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
-import pickle
-import json
-from pathlib import Path
-from typing import List, Dict, Tuple, Optional
-import matplotlib.pyplot as plt
-from datetime import datetime
-import scipy.io as sio
+from torch.utils.data import DataLoader, Dataset
 from tqdm import tqdm
 
 

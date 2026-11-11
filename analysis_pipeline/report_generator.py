@@ -5,13 +5,11 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict
 from datetime import datetime
 from pathlib import Path
 from typing import Any
 
 import numpy as np
-
 from data_loader import GaitData
 from feature_extractor import GaitFeatures
 from statistical_analyzer import ComparisonResult
@@ -416,13 +414,14 @@ class ReportGenerator:
 def main():
     """测试报告生成"""
     from pathlib import Path
+
     import yaml
     from data_loader import DataLoader
-    from preprocessor import DataPreprocessor
     from feature_extractor import FeatureExtractor
+    from preprocessor import DataPreprocessor
 
     config_path = Path(__file__).parent / "pipeline_config.yaml"
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     loader = DataLoader(config_path)

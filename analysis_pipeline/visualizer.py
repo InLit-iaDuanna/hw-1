@@ -6,14 +6,11 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
-
 from data_loader import GaitData
 from feature_extractor import GaitFeatures
-from statistical_analyzer import ComparisonResult
 
 
 class Visualizer:
@@ -113,7 +110,7 @@ class Visualizer:
         y_data = gait_data.get_column(y_signal)
 
         if x_data is None or y_data is None:
-            print(f"  Warning: Could not plot phase diagram, signals not found")
+            print("  Warning: Could not plot phase diagram, signals not found")
             return
 
         fig, ax = plt.subplots(figsize=self.figure_size)
@@ -290,7 +287,7 @@ class Visualizer:
 
         for metric in metrics:
             values = []
-            for version in features_dict.keys():
+            for version in features_dict:
                 value = getattr(features_dict[version], metric, None)
                 if value is not None and not np.isnan(value):
                     values.append(value)
@@ -303,7 +300,7 @@ class Visualizer:
                 valid_metrics.append(metric)
 
         if len(data_matrix) < 2:
-            print(f"  Warning: Not enough valid metrics for correlation heatmap")
+            print("  Warning: Not enough valid metrics for correlation heatmap")
             return
 
         data_matrix = np.array(data_matrix)
@@ -456,13 +453,14 @@ class Visualizer:
 def main():
     """测试可视化"""
     from pathlib import Path
+
     import yaml
     from data_loader import DataLoader
-    from preprocessor import DataPreprocessor
     from feature_extractor import FeatureExtractor
+    from preprocessor import DataPreprocessor
 
     config_path = Path(__file__).parent / "pipeline_config.yaml"
-    with open(config_path, "r", encoding="utf-8") as f:
+    with open(config_path, encoding="utf-8") as f:
         config = yaml.safe_load(f)
 
     loader = DataLoader(config_path)

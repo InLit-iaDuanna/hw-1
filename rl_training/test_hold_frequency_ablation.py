@@ -9,8 +9,8 @@
 - 记录：forward_distance, success_rate, alternating_touchdowns
 
 运行方式：
-    cd D:\Dunna\Documents\hw-1
-    .venv-mujoco\Scripts\activate
+    cd D:\\Dunna\\Documents\\hw-1
+    .venv-mujoco\\Scripts\activate
     python rl_training\test_hold_frequency_ablation.py
 """
 
@@ -35,6 +35,13 @@ sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(V136_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 
+from simulate_passive_arms_v14 import (
+    SUCCESS_FORWARD,
+    SUCCESS_TIME,
+    SUCCESS_TOUCHDOWNS,
+    contact_flags,
+)
+from simulate_v13_6 import control_v136
 from simulate_v13_7 import (
     MODEL_PATH,
     V137Params,
@@ -42,15 +49,9 @@ from simulate_v13_7 import (
     _mechanical_energy,
     write_model_v137,
 )
-from simulate_v13_6 import control_v136
-from simulate_passive_arms_v14 import (
-    SUCCESS_FORWARD,
-    SUCCESS_TIME,
-    SUCCESS_TOUCHDOWNS,
-    contact_flags,
-    classify_failure,
-)
-from common.motor_dynamics import L1MotorActuator, PRESETS as MOTOR_PRESETS
+
+from common.motor_dynamics import PRESETS as MOTOR_PRESETS
+from common.motor_dynamics import L1MotorActuator
 
 
 class V137HoldFrequencyTester:
@@ -373,7 +374,7 @@ def run_ablation_study():
         print(f"最低可接受频率: {best['freq_hz']}Hz (hold={best['hold_ms']}ms)")
         print(f"  - 成功率: {best['success_rate']:.1%}")
         print(f"  - 平均前进距离: {best['avg_forward_distance']:.2f}m")
-        print(f"\n推荐Residual RL配置:")
+        print("\n推荐Residual RL配置:")
         print(f"  - PPO频率: {best['freq_hz']}Hz")
         print(f"  - 内环hold: {best['hold_ms']}个1ms步")
     else:

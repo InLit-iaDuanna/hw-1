@@ -9,23 +9,25 @@
 """
 
 import sys
-from pathlib import Path
-import numpy as np
-import gymnasium as gym
-from gymnasium import spaces
 from dataclasses import replace
+from pathlib import Path
+
+import gymnasium as gym
+import numpy as np
+from gymnasium import spaces
 from stable_baselines3 import PPO
-from stable_baselines3.common.vec_env import SubprocVecEnv
 from stable_baselines3.common.callbacks import CheckpointCallback
+from stable_baselines3.common.vec_env import SubprocVecEnv
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 V137_DIR = HW1_ROOT / "v13_7_friction_compensation"
 sys.path.insert(0, str(V137_DIR))
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
 
-from train_residual_rl_v2 import ResidualRLEnvV2
-from simulate_v13_7 import V137Params, make_v137_fsm
 from simulate_passive_arms_v14 import PassiveArmsParams
+from simulate_v13_7 import V137Params, make_v137_fsm
+from train_residual_rl_v2 import ResidualRLEnvV2
+
 from common.motor_dynamics import PRESETS as MOTOR_PRESETS
 
 
@@ -75,8 +77,8 @@ class DomainRandomizationEnv(gym.Wrapper):
         self.env.params = params
 
         # 重新加载模型（必须更新 XML）
-        from simulate_v13_7 import write_model_v137, MODEL_PATH
         import mujoco
+        from simulate_v13_7 import MODEL_PATH, write_model_v137
 
         write_model_v137(params)
         self.env.model = mujoco.MjModel.from_xml_path(str(MODEL_PATH))

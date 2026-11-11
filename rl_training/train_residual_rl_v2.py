@@ -21,15 +21,13 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from typing import Optional, Dict, Any
-import json
+from typing import Optional
 
 import gymnasium as gym
-from gymnasium import spaces
 import mujoco
 import numpy as np
+from gymnasium import spaces
 from stable_baselines3 import PPO
-from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
 
 # 添加路径
@@ -43,18 +41,19 @@ sys.path.insert(0, str(V14_DIR))
 sys.path.insert(0, str(V136_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 
+from simulate_passive_arms_v14 import classify_failure, contact_flags, initialize
+from simulate_v13_6 import control_v136
 from simulate_v13_7 import (
     MODEL_PATH,
     V137Params,
     _compensate,
     _mechanical_energy,
-    write_model_v137,
     make_v137_fsm,
+    write_model_v137,
 )
-from simulate_v13_6 import control_v136
-from simulate_passive_arms_v14 import contact_flags, initialize, classify_failure
-from simulate_v14c import make_v14c_params
-from common.motor_dynamics import L1MotorActuator, PRESETS as MOTOR_PRESETS
+
+from common.motor_dynamics import PRESETS as MOTOR_PRESETS
+from common.motor_dynamics import L1MotorActuator
 
 
 class ResidualRLEnvV2(gym.Env):
@@ -83,8 +82,9 @@ class ResidualRLEnvV2(gym.Env):
 
         # 参数（与test_v137_identity.py一致）
         if params is None:
-            from simulate_passive_arms_v14 import PassiveArmsParams
             from dataclasses import replace
+
+            from simulate_passive_arms_v14 import PassiveArmsParams
 
             base0 = PassiveArmsParams()
             overrides = dict(
@@ -719,8 +719,8 @@ def train_residual_rl_v2(
     print(f"PPO频率: {1000 / inner_steps:.0f} Hz (inner_steps={inner_steps})")
     print(f"Episode长度: {max_steps} steps = {max_steps * inner_steps / 1000:.2f}s")
     print(f"Residual scale: {residual_scale}")
-    print(f"Action维度: 2 (hip-only)")
-    print(f"Observation维度: 42 (20原始 + 22新增)")
+    print("Action维度: 2 (hip-only)")
+    print("Observation维度: 42 (20原始 + 22新增)")
     print(f"学习率: {learning_rate}")
     print("=" * 80)
 

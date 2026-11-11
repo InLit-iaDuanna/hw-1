@@ -158,9 +158,12 @@ class EnergyAnalyzer:
         for i in range(n_steps):
             row = {}
             for key, values in trajectory.items():
-                if isinstance(values, np.ndarray) and len(values) == n_steps:
-                    row[key] = values[i]
-                elif isinstance(values, (list, tuple)) and len(values) == n_steps:
+                if (
+                    isinstance(values, np.ndarray)
+                    and len(values) == n_steps
+                    or isinstance(values, (list, tuple))
+                    and len(values) == n_steps
+                ):
                     row[key] = values[i]
             rows.append(row)
 

@@ -14,7 +14,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from stable_baselines3 import SAC
 from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
 from stable_baselines3.common.monitor import Monitor
-import torch
 
 
 def train_sac():
@@ -111,7 +110,7 @@ def train_sac():
     )
 
     print(f"\nStarting SAC training for {total_timesteps:,} timesteps...")
-    print(f"Hyperparameters:")
+    print("Hyperparameters:")
     print(f"  - Learning rate: {learning_rate}")
     print(f"  - Replay buffer size: {buffer_size:,}")
     print(f"  - Learning starts: {learning_starts:,}")
@@ -121,7 +120,7 @@ def train_sac():
     print(f"  - Train frequency: {train_freq} step(s)")
     print(f"  - Gradient steps: {gradient_steps}")
     print(f"  - Checkpoint frequency: every {checkpoint_freq:,} steps")
-    print(f"  - Evaluation frequency: every 5,000 steps")
+    print("  - Evaluation frequency: every 5,000 steps")
     print(f"  - TensorBoard logs: {log_dir}")
     print(f"  - Checkpoints: {checkpoint_dir}")
     print("\nSAC Advantages:")

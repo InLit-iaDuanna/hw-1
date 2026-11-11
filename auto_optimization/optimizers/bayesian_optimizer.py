@@ -14,11 +14,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
-import numpy as np
-
 try:
     from skopt import gp_minimize
-    from skopt.space import Real, Integer, Categorical
+    from skopt.space import Categorical, Integer, Real
     from skopt.utils import use_named_args
 
     SKOPT_AVAILABLE = True

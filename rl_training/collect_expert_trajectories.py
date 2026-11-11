@@ -7,15 +7,15 @@
 
 from __future__ import annotations
 
-import sys
-import pickle
 import json
-from pathlib import Path
-from typing import List, Dict, Any
+import pickle
+import sys
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Any, Dict, List
 
-import numpy as np
 import mujoco
+import numpy as np
 
 # 添加路径
 RL_TRAINING_DIR = Path(__file__).resolve().parent
@@ -32,21 +32,24 @@ sys.path.insert(0, str(V14C_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 sys.path.insert(0, str(RL_TRAINING_DIR))
 
+from simulate_passive_arms_v14 import (
+    classify_failure,
+    contact_flags,
+    initialize,
+)
+from simulate_v13_6 import _mechanical_energy, control_v136
 from simulate_v13_7 import (
-    V137Params,
+    MODEL_PATH,
     PassiveArmsParams,
+    V137Params,
     make_v137_fsm,
     write_model_v137,
-    MODEL_PATH,
 )
-from simulate_v13_6 import control_v136, _mechanical_energy
-from simulate_passive_arms_v14 import (
-    initialize,
-    contact_flags,
-    classify_failure,
-)
+
 from common.motor_dynamics import (
     PRESETS as MOTOR_PRESETS,
+)
+from common.motor_dynamics import (
     L1MotorActuator,
     _sign_smooth,
 )
@@ -478,9 +481,9 @@ def collect_expert_trajectories(
     print("收集V13.7专家轨迹（1kHz仿真 → 50Hz采样）")
     print("=" * 80)
     print(f"目标episodes: {num_episodes}")
-    print(f"仿真频率: 1000 Hz (1ms timestep)")
-    print(f"采样频率: 50 Hz (20ms, 每20步采样一次)")
-    print(f"预期transitions/episode: ~600 (12s / 0.02s)")
+    print("仿真频率: 1000 Hz (1ms timestep)")
+    print("采样频率: 50 Hz (20ms, 每20步采样一次)")
+    print("预期transitions/episode: ~600 (12s / 0.02s)")
     print()
 
     # 创建专家收集器

@@ -2,8 +2,9 @@
 
 import sys
 from pathlib import Path
-import numpy as np
+
 import mujoco
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
@@ -11,19 +12,22 @@ sys.path.insert(0, str(HW1_ROOT / "v13_7_friction_compensation"))
 sys.path.insert(0, str(HW1_ROOT / "v13_6_event_driven_fsm"))
 sys.path.insert(0, str(HW1_ROOT / "v14_passive_arms"))
 
-from train_residual_rl_v2 import ResidualRLEnvV2
+from dataclasses import replace
+
+from simulate_passive_arms_v14 import PassiveArmsParams, contact_flags, initialize
+from simulate_v13_6 import control_v136
 from simulate_v13_7 import (
-    V137Params,
-    make_v137_fsm,
-    write_model_v137,
     MODEL_PATH,
+    V137Params,
     _compensate,
     _mechanical_energy,
+    make_v137_fsm,
+    write_model_v137,
 )
-from simulate_v13_6 import control_v136
-from simulate_passive_arms_v14 import PassiveArmsParams, initialize, contact_flags
-from common.motor_dynamics import L1MotorActuator, PRESETS as MOTOR_PRESETS
-from dataclasses import replace
+from train_residual_rl_v2 import ResidualRLEnvV2
+
+from common.motor_dynamics import PRESETS as MOTOR_PRESETS
+from common.motor_dynamics import L1MotorActuator
 
 print("=" * 80)
 print("Side-by-Side Comparison: V2 vs Identity Test")

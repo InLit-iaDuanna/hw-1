@@ -20,7 +20,6 @@ import sys
 from dataclasses import asdict, dataclass
 from datetime import datetime
 from pathlib import Path
-from typing import Any
 
 import gymnasium as gym
 import numpy as np
@@ -443,8 +442,8 @@ def main():
     print(f"Success rate: {final_result.success_rate * 100:.0f}%")
     print()
     print("Comparison:")
-    print(f"  100k uncorrected: 4.779m")
-    print(f"  Constant best:    4.973m")
+    print("  100k uncorrected: 4.779m")
+    print("  Constant best:    4.973m")
     print(f"  Corrected final:  {final_result.mean_distance_m:.3f}m")
     print()
     if final_result.mean_distance_m > 4.973:

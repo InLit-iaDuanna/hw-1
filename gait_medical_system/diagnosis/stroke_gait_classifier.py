@@ -3,8 +3,7 @@
 基于V01-V24仿真研究成果的健康基准进行异常检测
 """
 
-import numpy as np
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
 
 class StrokeGaitClassifier:
@@ -317,7 +316,7 @@ if __name__ == "__main__":
     print(f"患侧: {diagnosis['affected_side']}")
     print(f"诊断信心: {diagnosis['confidence']*100:.0f}%")
 
-    print(f"\n步态特征:")
+    print("\n步态特征:")
     for key, value in diagnosis["features"].items():
         print(f"  {key}: {value}")
 

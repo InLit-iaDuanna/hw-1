@@ -19,9 +19,9 @@ import argparse
 import io
 
 from data_storage import (
-    get_connection,
-    get_best_simulations,
     compare_versions,
+    get_best_simulations,
+    get_connection,
     get_version_summary,
     query_by_param_range,
     query_simulations,

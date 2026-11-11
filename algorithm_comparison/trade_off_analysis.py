@@ -4,17 +4,15 @@ Analyzes multi-objective trade-offs between distance, energy, robustness, and co
 Includes Pareto front analysis and interactive Plotly dashboard
 """
 
+from pathlib import Path
+from typing import List
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import plotly.express as px
-from plotly.subplots import make_subplots
-from pathlib import Path
-from typing import List, Tuple, Dict
 import seaborn as sns
-from scipy.spatial import ConvexHull
-from sklearn.preprocessing import StandardScaler
+from plotly.subplots import make_subplots
 
 
 class TradeOffAnalyzer:

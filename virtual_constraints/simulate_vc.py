@@ -11,13 +11,12 @@ This script demonstrates:
 
 import argparse
 import math
-
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.gridspec import GridSpec
 from dataclasses import dataclass
-from typing import Tuple, List, Optional
-import sys
+from typing import List, Tuple
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.gridspec import GridSpec
 
 
 @dataclass
@@ -462,7 +461,7 @@ def main():
     dt = 0.001  # 1 ms time step
     simulator = GaitSimulator(controller, stride_frequency, dt)
 
-    print(f"Simulation parameters:")
+    print("Simulation parameters:")
     print(f"  - Stride frequency: {stride_frequency} Hz")
     print(f"  - Time step: {dt*1000} ms")
     print()

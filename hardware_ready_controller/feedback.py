@@ -5,9 +5,10 @@ Based on V13.7 successful runs with phase-aware torque control.
 Motor: Dynamixel MX-64AR (6.0 N·m rated torque)
 """
 
-import numpy as np
-from typing import Dict, Optional, Tuple
 from enum import Enum
+from typing import Dict, Optional, Tuple
+
+import numpy as np
 
 
 class GaitPhase(Enum):

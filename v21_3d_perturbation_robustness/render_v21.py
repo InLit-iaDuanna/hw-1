@@ -14,7 +14,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import math
 import sys
 from pathlib import Path
@@ -29,14 +28,14 @@ PROJECT_ROOT = ROOT.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from simulate_v21_perturbation import (
+    PerturbationScenario,
+)  # noqa: E402
+
 from v19_hip_abduction_active.model_3d_v19 import (
     MODEL_PATH,
     V19Params,
     write_model,
-)  # noqa: E402
-from simulate_v21_perturbation import (
-    PerturbationScenario,
-    run_simulation_v21,
 )  # noqa: E402
 
 OUT_DIR = ROOT / "out"
@@ -54,15 +53,16 @@ def _ramp_h(x, gamma):
 
 def simulate_and_record(p: V19Params, scenario: PerturbationScenario, dt=0.001):
     """运行仿真并记录完整轨迹。"""
+    from dataclasses import replace
+
     from simulate_v21_perturbation import (
         _contacts,
         _jaddr,
         _lpd,
-        _ramp_h,
         _smoothstep,
     )
+
     from common import disturbance
-    from dataclasses import asdict, replace
 
     # 覆盖 init_hip_roll_deg
     p = replace(p, init_hip_roll_deg=scenario.init_hip_roll_deg)
@@ -332,7 +332,7 @@ def annotate_frame(frame, t, state, scenario, result, mode="single") -> np.ndarr
     # 配置信息
     draw.text(
         (38, 70),
-        f"V19 配置: abd_kp=40.0  abd_kd=4.0  abd_τ_limit=6.0 N·m",
+        "V19 配置: abd_kp=40.0  abd_kd=4.0  abd_τ_limit=6.0 N·m",
         font=font,
         fill=(232, 238, 244),
     )
@@ -362,7 +362,7 @@ def annotate_frame(frame, t, state, scenario, result, mode="single") -> np.ndarr
     if mode == "cascade" and abs(scenario.init_hip_roll_deg) > 0:
         draw.text(
             (38, 155),
-            f"非单调响应：初始扰动 < 1° 即影响性能",
+            "非单调响应：初始扰动 < 1° 即影响性能",
             font=font,
             fill=(255, 200, 100),
         )
@@ -528,7 +528,7 @@ def render_failures(output: str, fps=60):
     camera.azimuth = 75
     camera.elevation = -15
 
-    print(f"正在渲染失败模式集合...")
+    print("正在渲染失败模式集合...")
     all_frames = []
 
     for roll_deg in perturbations:

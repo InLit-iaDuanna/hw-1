@@ -5,7 +5,7 @@ Based on V13.6 event-driven FSM with 4-phase structure
 
 import time
 from enum import IntEnum
-from typing import Optional, Callable
+from typing import Callable, Optional
 
 
 class PhaseState(IntEnum):
@@ -47,7 +47,7 @@ class PhaseStateMachine:
 
         # Transition counters for diagnostics
         self.transition_count = 0
-        self.phase_counts = {phase: 0 for phase in PhaseState}
+        self.phase_counts = dict.fromkeys(PhaseState, 0)
         self.phase_counts[PhaseState.STANCE_EARLY] = 1
 
     def update(self, contact: bool) -> bool:

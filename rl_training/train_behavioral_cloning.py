@@ -5,17 +5,16 @@
 网络架构与PPO一致，用于warm-start
 """
 
-import pickle
 import json
+import pickle
 from pathlib import Path
-from typing import List, Tuple
 
+import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
-import matplotlib.pyplot as plt
+from torch.utils.data import DataLoader, Dataset
 
 
 class ExpertDataset(Dataset):
@@ -46,7 +45,7 @@ class ExpertDataset(Dataset):
         self.observations = np.array(self.observations, dtype=np.float32)
         self.actions = np.array(self.actions, dtype=np.float32)
 
-        print(f"数据集加载完成:")
+        print("数据集加载完成:")
         print(f"  Episodes: {len(self.episodes)}")
         print(f"  Transitions: {len(self.observations)}")
         print(f"  Observation shape: {self.observations.shape}")
@@ -146,7 +145,7 @@ def train_behavioral_cloning(
         dataset, [n_train, n_val], generator=torch.Generator().manual_seed(42)
     )
 
-    print(f"数据分割:")
+    print("数据分割:")
     print(f"  训练集: {n_train} transitions")
     print(f"  验证集: {n_val} transitions")
     print()

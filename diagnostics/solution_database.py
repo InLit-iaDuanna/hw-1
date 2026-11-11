@@ -4,7 +4,7 @@
 """
 
 from pathlib import Path
-from typing import Any
+
 import yaml
 
 
@@ -103,7 +103,7 @@ class SolutionDatabase:
 
     def load(self) -> None:
         """从 YAML 文件加载知识库。"""
-        with open(self.yaml_path, "r", encoding="utf-8") as f:
+        with open(self.yaml_path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
 
         # 解析各个类别
@@ -252,10 +252,10 @@ class SolutionDatabase:
                     lines.append(f"\n{i}. **{sol.action}**")
                     lines.append(f"   - {sol.details}")
                     if sol.code:
-                        lines.append(f"   - 代码示例:")
-                        lines.append(f"     ```python")
+                        lines.append("   - 代码示例:")
+                        lines.append("     ```python")
                         lines.append(f"     {sol.code}")
-                        lines.append(f"     ```")
+                        lines.append("     ```")
                 lines.append("")
 
                 if entry.references:

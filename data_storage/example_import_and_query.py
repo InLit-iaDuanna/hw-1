@@ -15,22 +15,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from data_storage import (
-    create_database,
-    get_connection,
-    import_version_batch,
-    import_benchmark_table,
-    query_simulations,
-    get_best_simulations,
     compare_versions,
-    get_version_summary,
+    create_database,
     get_benchmark_summary,
+    get_best_simulations,
+    get_connection,
+    get_version_summary,
+    import_benchmark_table,
+    import_version_batch,
     query_by_param_range,
+    query_simulations,
 )
 
 
 def main():
     # 设置 UTF-8 输出（Windows 兼容）
-    import locale
     import io
 
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
@@ -86,7 +85,7 @@ def main():
         except Exception as e:
             print(f"  [ERROR] 导入失败: {e}")
 
-    print(f"\n总计导入:")
+    print("\n总计导入:")
     print(f"  - 参数扫描记录: {total_stats['scan_csv']}")
     print(f"  - 摘要记录: {total_stats['summary_json']}")
 

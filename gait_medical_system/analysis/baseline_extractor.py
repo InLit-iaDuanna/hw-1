@@ -3,7 +3,6 @@
 用于医疗步态检测系统的对比分析
 """
 
-import numpy as np
 import json
 from pathlib import Path
 

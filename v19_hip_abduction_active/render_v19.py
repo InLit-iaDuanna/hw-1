@@ -26,6 +26,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT.parent))
 
 from model_3d_v19 import MODEL_PATH, V19Params, write_model
+
 from common.control_utils import limited_pd, ramp_height, smoothstep
 
 OUT_DIR = ROOT / "out"
@@ -590,7 +591,7 @@ def main():
     print("=" * 60)
     print("V19 髋外展主动控制 - 侧向漂移失败可视化")
     print("=" * 60)
-    print(f"参数配置:")
+    print("参数配置:")
     print(f"  abd_kp: {p.abd_kp}")
     print(f"  abd_kd: {p.abd_kd}")
     print(f"  abd_torque_limit: {p.abd_torque_limit} Nm")

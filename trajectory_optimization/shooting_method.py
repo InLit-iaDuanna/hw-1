@@ -11,11 +11,12 @@ optimizing only the control trajectory. Simpler but less robust than
 multiple shooting or collocation for unstable or highly nonlinear systems.
 """
 
-import numpy as np
-from scipy.optimize import minimize
-from scipy.integrate import solve_ivp
-from typing import Callable, Dict, Tuple, Optional
+from typing import Callable, Dict, Optional, Tuple
+
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.integrate import solve_ivp
+from scipy.optimize import minimize
 
 
 class SingleShootingOptimizer:

@@ -7,10 +7,10 @@
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
 
-from .version_tracker import VersionTracker
 from .snapshot_manager import SnapshotManager
+from .version_tracker import VersionTracker
 
 
 class DataRestorer:
@@ -118,7 +118,7 @@ class DataRestorer:
             backup_hash = self.tracker._compute_file_hash(backup_file)
 
             if backup_hash != asset["hash"]:
-                print(f"Backup file hash mismatch!")
+                print("Backup file hash mismatch!")
                 print(f"  Expected: {asset['hash'][:16]}")
                 print(f"  Actual:   {backup_hash[:16]}")
                 return False
@@ -300,9 +300,9 @@ class DataRestorer:
 
         # 实际上，由于我们只记录哈希，无法直接恢复
         # 需要从备份或快照中恢复
-        print(f"Cannot rollback: file content not stored in version control.")
+        print("Cannot rollback: file content not stored in version control.")
         print(
-            f"Use restore_snapshot() to restore from a snapshot containing this version."
+            "Use restore_snapshot() to restore from a snapshot containing this version."
         )
 
         return False

@@ -1,8 +1,8 @@
 """测试Residual RL环境是否正常工作。
 
 运行方式：
-    cd D:\Dunna\Documents\hw-1
-    .venv-mujoco\Scripts\activate
+    cd D:\\Dunna\\Documents\\hw-1
+    .venv-mujoco\\Scripts\activate
     python rl_training\test_residual_env.py
 """
 

@@ -11,19 +11,20 @@ Supports:
 Based on V13.7 architecture with phase-dependent gain scheduling.
 """
 
-import numpy as np
 import json
-import time
-from pathlib import Path
-from dataclasses import dataclass, asdict
-from typing import List, Dict, Tuple, Optional, Callable
-from concurrent.futures import ProcessPoolExecutor, as_completed
 import sys
+import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from typing import Dict, List, Tuple
+
+import numpy as np
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from feedback import PDController, GaitPhase
+from feedback import GaitPhase, PDController
 
 
 @dataclass
@@ -489,10 +490,10 @@ def print_results(
 
     for rank, (params, metrics) in enumerate(results[:top_n], 1):
         print(f"Rank {rank}:")
-        print(f"  Parameters:")
+        print("  Parameters:")
         print(f"    kp_stance={params.kp_stance:.2f}, kd_stance={params.kd_stance:.2f}")
         print(f"    kp_swing={params.kp_swing:.2f}, kd_swing={params.kd_swing:.2f}")
-        print(f"  Performance:")
+        print("  Performance:")
         print(f"    Composite Score: {metrics.composite_score:.4f}")
         print(f"    RMS Position Error: {metrics.rms_position_error:.4f} rad")
         print(f"    Control Effort: {metrics.control_effort:.3f} Nm")

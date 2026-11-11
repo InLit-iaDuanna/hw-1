@@ -4,10 +4,11 @@
 """
 
 import sys
+import time
 from pathlib import Path
+
 import numpy as np
 from stable_baselines3 import PPO
-import time
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
@@ -28,7 +29,7 @@ def demo_rl_policy():
     )
 
     if not model_path.exists():
-        print(f"错误：模型文件不存在")
+        print("错误：模型文件不存在")
         print(f"路径：{model_path}")
         return
 

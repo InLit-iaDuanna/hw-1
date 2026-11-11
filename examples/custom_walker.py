@@ -12,19 +12,18 @@
 from __future__ import annotations
 
 import math
-from dataclasses import asdict, dataclass
-from pathlib import Path
-
-import mujoco
-import numpy as np
 
 # 从 common 模块导入基类
 import sys
+from dataclasses import asdict, dataclass
+from pathlib import Path
+
+import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from common.controllers import Controller, PDController
 from common.compass_gait import CompassGait, CompassGaitParams
+from common.controllers import Controller, PDController
 
 # ============================================================================
 # 1. 自定义控制器示例
@@ -491,7 +490,7 @@ def example_custom_params():
 
     # 1. 鲁棒配置
     robust_params = RobustWalkerParams.from_template("robust")
-    print(f"\n鲁棒配置:")
+    print("\n鲁棒配置:")
     print(f"  坡度: {robust_params.slope_deg:.1f}°")
     print(f"  扰动抑制: {robust_params.disturbance_rejection:.2f}")
     print(f"  恢复速度: {robust_params.recovery_speed:.2f}")
@@ -499,14 +498,14 @@ def example_custom_params():
 
     # 2. 高效配置
     efficient_params = RobustWalkerParams.from_template("efficient")
-    print(f"\n高效配置:")
+    print("\n高效配置:")
     print(f"  坡度: {efficient_params.slope_deg:.1f}°")
     print(f"  目标效率: {efficient_params.energy_efficiency_target:.2f}")
     print(f"  再生制动: {efficient_params.regenerative_braking}")
 
     # 3. 激进配置
     aggressive_params = RobustWalkerParams.from_template("aggressive")
-    print(f"\n激进配置:")
+    print("\n激进配置:")
     print(f"  初始速度: {aggressive_params.initial_speed:.2f} m/s")
     print(f"  最大倾斜角: {aggressive_params.max_lean_angle_deg:.1f}°")
     print(f"  扰动抑制: {aggressive_params.disturbance_rejection:.2f}")

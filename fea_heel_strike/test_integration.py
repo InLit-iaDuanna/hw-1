@@ -22,7 +22,6 @@ def test_imports():
     print("=" * 70)
 
     try:
-        import extract_contact_forces
 
         print("[PASS] extract_contact_forces")
     except Exception as e:
@@ -30,7 +29,6 @@ def test_imports():
         return False
 
     try:
-        import generate_fea_boundary_conditions
 
         print("[PASS] generate_fea_boundary_conditions")
     except Exception as e:
@@ -38,7 +36,6 @@ def test_imports():
         return False
 
     try:
-        import parse_fea_results
 
         print("[PASS] parse_fea_results")
     except Exception as e:
@@ -46,7 +43,6 @@ def test_imports():
         return False
 
     try:
-        import design_constraint_validator
 
         print("[PASS] design_constraint_validator")
     except Exception as e:
@@ -54,7 +50,6 @@ def test_imports():
         return False
 
     try:
-        import workflow_example
 
         print("[PASS] workflow_example")
     except Exception as e:
@@ -71,10 +66,10 @@ def test_data_structures():
     print("TEST 2: Data Structures")
     print("=" * 70)
 
-    from extract_contact_forces import ContactEvent, ContactForceHistory
+    from design_constraint_validator import DesignRequirements
+    from extract_contact_forces import ContactEvent
     from generate_fea_boundary_conditions import FEABoundaryCondition
-    from parse_fea_results import MaterialProperties, StressAnalysisResult
-    from design_constraint_validator import DesignRequirements, ValidationResult
+    from parse_fea_results import MaterialProperties
 
     # Test ContactEvent
     event = ContactEvent(
@@ -215,9 +210,10 @@ def test_result_parsing():
     print("TEST 5: FEA Result Parsing")
     print("=" * 70)
 
-    from parse_fea_results import parse_abaqus_json_results, MATERIALS
     import json
     import tempfile
+
+    from parse_fea_results import parse_abaqus_json_results
 
     # Create synthetic FEA results
     fea_results = {
@@ -261,8 +257,8 @@ def test_design_validation():
     print("=" * 70)
 
     from design_constraint_validator import (
-        validate_structural_integrity,
         DesignRequirements,
+        validate_structural_integrity,
     )
 
     # Synthetic FEA results
@@ -311,9 +307,9 @@ def test_workflow_class():
         print(f"  Material: {workflow.material}")
         print(f"  Output: {workflow.output_dir}")
 
-    except FileNotFoundError as e:
-        print(f"⚠ Workflow initialization skipped (version not found)")
-        print(f"  This is OK if v10 directory doesn't exist")
+    except FileNotFoundError:
+        print("⚠ Workflow initialization skipped (version not found)")
+        print("  This is OK if v10 directory doesn't exist")
     except Exception as e:
         print(f"✗ Workflow initialization failed: {e}")
         return False

@@ -11,11 +11,11 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 # Import all figure generators
-from generators.fig_version_evolution import create_timeline_figure
-from generators.fig_stability_domain import create_stability_heatmap
 from generators.fig_energy_analysis import create_energy_analysis_figure
-from generators.fig_phase_portrait import create_phase_portrait
 from generators.fig_hardware_specs import create_hardware_specs_figure
+from generators.fig_phase_portrait import create_phase_portrait
+from generators.fig_stability_domain import create_stability_heatmap
+from generators.fig_version_evolution import create_timeline_figure
 
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import struct
 import time
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Iterable
 
 MAGIC = 0xA55A
 MAGIC_BYTES = struct.pack("<H", MAGIC)
@@ -110,7 +110,7 @@ class SampleFrame:
         ts_us: int,
         status: int,
         payload: bytes,
-    ) -> "SampleFrame":
+    ) -> SampleFrame:
         if frame_type != FRAME_TYPE_SAMPLE:
             raise ValueError(f"unsupported frame type: {frame_type}")
         if len(payload) != SAMPLE_PAYLOAD_SIZE:
@@ -189,7 +189,7 @@ class NodeDebugFrame:
         ts_us: int,
         status: int,
         payload: bytes,
-    ) -> "NodeDebugFrame":
+    ) -> NodeDebugFrame:
         if frame_type != FRAME_TYPE_NODE_DEBUG:
             raise ValueError(f"unsupported node debug frame type: {frame_type}")
         if len(payload) not in (NODE_DEBUG_PAYLOAD_SIZE_V1, NODE_DEBUG_PAYLOAD_SIZE):
@@ -346,7 +346,7 @@ class CaptureStats:
     frames: int = 0
     dropped_frames: int = 0
     status_counts: dict[str, int] = field(
-        default_factory=lambda: {name: 0 for name in STATUS_BITS.values()}
+        default_factory=lambda: dict.fromkeys(STATUS_BITS.values(), 0)
     )
     first_seq: int | None = None
     last_seq: int | None = None

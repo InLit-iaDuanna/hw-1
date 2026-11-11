@@ -28,9 +28,11 @@ import numpy as np
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))
 
-from common.fsm_controller import FSMController, FSMParams, BaseGaitParams, PhaseParams
+from common.fsm_controller import BaseGaitParams, FSMController, FSMParams, PhaseParams
 from common.motor_dynamics import (
     PRESETS as MOTOR_PRESETS,
+)
+from common.motor_dynamics import (
     L1MotorActuator,
     _sign_smooth,
 )

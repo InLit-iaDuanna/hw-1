@@ -46,7 +46,7 @@ except Exception as e:
 # 测试 5: 参数摘要
 try:
     summary = adapter.get_param_summary(params)
-    print(f"✓ 参数摘要生成成功:")
+    print("✓ 参数摘要生成成功:")
     for key, value in summary.items():
         print(f"  - {key}: {value}")
 except Exception as e:

@@ -2,13 +2,13 @@ import numpy as np
 
 from hardware_v1_detection.pc_receiver.protocol import (
     BMI_SENSOR_NAMES,
-    CaptureStats,
-    FrameParser,
-    Imu6,
     NODE_DEBUG_PAYLOAD_SIZE,
     SAMPLE_PAYLOAD_SIZE,
     SAMPLE_VALUE_COUNT,
     SENSOR_NAMES,
+    CaptureStats,
+    FrameParser,
+    Imu6,
     crc16_ccitt,
     encode_node_debug_frame,
     encode_sample_frame,

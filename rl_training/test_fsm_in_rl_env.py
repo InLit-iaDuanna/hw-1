@@ -20,14 +20,13 @@
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-from dataclasses import dataclass
-from typing import List, Dict, Any, Tuple
 import json
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict, List, Tuple
 
 import numpy as np
-import mujoco
 
 # 添加路径以导入环境和 FSM 控制器
 RL_TRAINING_DIR = Path(__file__).resolve().parent
@@ -45,14 +44,14 @@ sys.path.insert(0, str(V14C_DIR))
 sys.path.insert(0, str(HW1_ROOT))
 
 from environment import CompassGaitEnv
+from simulate_v13_6 import _mechanical_energy, control_v136
 from simulate_v13_7 import (
-    V137Params,
     PassiveArmsParams,
     make_v137_fsm,
-    build_model_xml_v137,
 )
-from simulate_v13_6 import control_v136, _mechanical_energy
-from common.motor_dynamics import PRESETS as MOTOR_PRESETS, _sign_smooth
+
+from common.motor_dynamics import PRESETS as MOTOR_PRESETS
+from common.motor_dynamics import _sign_smooth
 
 
 @dataclass
@@ -486,9 +485,9 @@ def print_summary_table(results: Dict[str, List[EpisodeResult]]):
         fsm_max_distance = max([r.distance for r in fsm_results])
         fsm_max_duration = max([r.duration for r in fsm_results])
 
-        print(f"\n问题: V13.7 FSM 在 RL 环境中能走多远？")
+        print("\n问题: V13.7 FSM 在 RL 环境中能走多远？")
         print(f"答案: 平均 {fsm_avg_distance:.2f}m，最远 {fsm_max_distance:.2f}m")
-        print(f"\n问题: V13.7 FSM 是否也在约 1.3 秒失败？")
+        print("\n问题: V13.7 FSM 是否也在约 1.3 秒失败？")
         print(f"答案: 平均持续 {fsm_avg_duration:.2f}s，最长 {fsm_max_duration:.2f}s")
 
         # 判断失败模式
@@ -504,7 +503,7 @@ def print_summary_table(results: Dict[str, List[EpisodeResult]]):
             print("  2. FSM 状态机初始状态设置错误")
             print("  3. 物理参数不匹配（armature/damping/friction）")
         else:
-            print(f"\n诊断: FSM 在 RL 环境中表现正常（大部分 episodes > 2s）")
+            print("\n诊断: FSM 在 RL 环境中表现正常（大部分 episodes > 2s）")
             print("可能原因:")
             print("  1. RL reward 设计可能与 FSM 目标不匹配")
             print("  2. RL 训练可能受困于局部最优")

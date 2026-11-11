@@ -1,8 +1,9 @@
 """Test zero residual with inner_steps=1 to isolate the issue"""
 
 import sys
-import numpy as np
 from pathlib import Path
+
+import numpy as np
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT))

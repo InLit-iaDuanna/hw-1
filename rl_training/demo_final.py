@@ -5,11 +5,11 @@
 
 import sys
 from pathlib import Path
-import numpy as np
-from stable_baselines3 import PPO
-import time
+
 import gymnasium as gym
+import numpy as np
 from gymnasium import spaces
+from stable_baselines3 import PPO
 
 HW1_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HW1_ROOT / "rl_training"))
@@ -47,7 +47,7 @@ def demo_rl_with_wrapper():
     )
 
     if not model_path.exists():
-        print(f"错误：模型文件不存在")
+        print("错误：模型文件不存在")
         return
 
     print("正在加载 PPO 模型...")
@@ -142,7 +142,7 @@ def demo_rl_with_wrapper():
     std_dist = np.std(distances)
     success_rate = np.mean(successes)
 
-    print(f"统计结果:")
+    print("统计结果:")
     print(f"  平均距离: {mean_dist:.3f} ± {std_dist:.3f} m")
     print(f"  成功率: {success_rate*100:.0f}%")
     print(f"  行走速度: ~{mean_dist/12:.3f} m/s")
@@ -231,7 +231,7 @@ def demo_constant():
     std_dist = np.std(distances)
     success_rate = np.mean(successes)
 
-    print(f"统计结果:")
+    print("统计结果:")
     print(f"  平均距离: {mean_dist:.3f} ± {std_dist:.3f} m")
     print(f"  成功率: {success_rate*100:.0f}%")
     print(f"  行走速度: ~{mean_dist/12:.3f} m/s")

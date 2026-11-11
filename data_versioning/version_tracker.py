@@ -7,10 +7,10 @@
 
 import hashlib
 import json
-import os
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
+
 import yaml
 
 
@@ -38,7 +38,7 @@ class VersionTracker:
         if not self.registry_path.exists():
             raise FileNotFoundError(f"Registry not found: {self.registry_path}")
 
-        with open(self.registry_path, "r", encoding="utf-8") as f:
+        with open(self.registry_path, encoding="utf-8") as f:
             return yaml.safe_load(f)
 
     def _save_registry(self):

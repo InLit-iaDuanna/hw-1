@@ -268,7 +268,7 @@ def create_data_tables_package():
         writer = csv.writer(f)
         writer.writerows(version_summary)
 
-    print(f"  Created: version_summary.csv")
+    print("  Created: version_summary.csv")
 
     # Create performance metrics table
     performance_data = [
@@ -287,7 +287,7 @@ def create_data_tables_package():
         writer = csv.writer(f)
         writer.writerows(performance_data)
 
-    print(f"  Created: performance_metrics.csv")
+    print("  Created: performance_metrics.csv")
     print(f"\n[OK] Data tables package: {tables_dir}")
     return tables_dir
 

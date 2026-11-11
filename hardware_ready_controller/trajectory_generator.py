@@ -362,7 +362,6 @@ class TrajectoryGenerator:
 
 # Example usage and testing
 if __name__ == "__main__":
-    import time
 
     print("Trajectory Generator Test - V13.7 Configuration")
     print("=" * 60)
@@ -370,7 +369,7 @@ if __name__ == "__main__":
     # Create generator with default V13.7 profile
     generator = TrajectoryGenerator(enable_smoothing=True)
 
-    print(f"\nProfile Parameters:")
+    print("\nProfile Parameters:")
     print(f"  Stance front: {generator.profile.stance_front_deg}°")
     print(f"  Stance back: {generator.profile.stance_back_deg}°")
     print(f"  Swing back: {generator.profile.swing_back_deg}°")
